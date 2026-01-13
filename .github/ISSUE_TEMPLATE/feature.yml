@@ -1,0 +1,28 @@
+name: Feature
+description: Nouvelle fonctionnalité EasySave
+title: "[FEAT] "
+labels: ["feat"]
+body:
+  - type: textarea
+    id: goal
+    attributes:
+      label: Objectif
+      description: Décris le résultat attendu.
+    validations:
+      required: true
+  - type: textarea
+    id: todo
+    attributes:
+      label: À faire
+      description: Liste les tâches concrètes.
+      placeholder: "- [ ] ..."
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Critères d’acceptation
+      description: Comment sait-on que c’est fini ?
+      placeholder: "- [ ] ..."
+    validations:
+      required: true
