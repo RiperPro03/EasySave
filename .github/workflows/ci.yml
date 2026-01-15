@@ -8,6 +8,7 @@ on:
 
 permissions:
   contents: read
+  pull-requests: read
 
 env:
   DOTNET_VERSION: "8.0.x"
@@ -29,6 +30,7 @@ jobs:
         uses: dorny/paths-filter@v3
         id: filter
         with:
+          token: ${{ secrets.GITHUB_TOKEN }}
           filters: |
             code:
               - "src/**"
