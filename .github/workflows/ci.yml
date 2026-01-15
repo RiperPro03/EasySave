@@ -111,4 +111,4 @@ jobs:
     if: ${{ needs.detect_changes.outputs.code_changed != 'true' }}
     runs-on: ubuntu-latest
     steps:
-      - run: echo "Docs-only change -> no tests/build. Pipeline validated ✅"
+      - run: echo "Docs-only change -> no tests/build. Pipeline validated"
