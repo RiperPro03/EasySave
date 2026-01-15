@@ -6,24 +6,91 @@ on:
   push:
     branches: [ "main" ]
 
+permissions:
+  contents: read
+
+env:
+  DOTNET_VERSION: "8.0.x"
+  CONFIGURATION: "Release"
+
 jobs:
-  build-test:
-    runs-on: windows-latest
-
+  # -------------------------
+  # STAGE 0 — Detect changes
+  # -------------------------
+  detect_changes:
+    name: "Stage 0 - Detect changes"
+    runs-on: ubuntu-latest
+    outputs:
+      code_changed: ${{ steps.filter.outputs.code }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup .NET
+      - name: "Detect code changes"
+        uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            code:
+              - "src/**"
+              - "tests/**"
+              - "**/*.sln"
+              - "**/*.csproj"
+              - "**/*.cs"
+              - "Directory.Build.props"
+              - "Directory.Build.targets"
+              - ".editorconfig"
+
+  # -------------------------
+  # STAGE 1 — Unit tests
+  # -------------------------
+  unit_tests:
+    name: "Stage 1 - Unit tests"
+    needs: detect_changes
+    if: ${{ needs.detect_changes.outputs.code_changed == 'true' }}
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: "Setup .NET"
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: "8.0.x"
+          dotnet-version: ${{ env.DOTNET_VERSION }}
 
-      - name: Restore
+      - name: "Restore"
         run: dotnet restore
 
-      - name: Build
-        run: dotnet build -c Release --no-restore
+      - name: "Test"
+        run: dotnet test -c ${{ env.CONFIGURATION }} --verbosity normal
 
-      - name: Test
-        run: dotnet test -c Release --no-build --verbosity normal
+  # -------------------------
+  # STAGE 2 — Build (only if tests OK)
+  # -------------------------
+  build:
+    name: "Stage 2 - Build"
+    needs: unit_tests
+    if: ${{ needs.detect_changes.outputs.code_changed == 'true' }}
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: "Setup .NET"
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: "Restore"
+        run: dotnet restore
+
+      - name: "Build"
+        run: dotnet build -c ${{ env.CONFIGURATION }} --no-restore
+
+  # -------------------------
+  # STAGE SKIP — Docs only => green pipeline
+  # -------------------------
+  docs_only_ok:
+    name: "Stage - Docs only (skip)"
+    needs: detect_changes
+    if: ${{ needs.detect_changes.outputs.code_changed != 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Docs-only change -> no tests/build. Pipeline validated ✅"
