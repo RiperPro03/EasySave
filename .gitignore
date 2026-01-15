@@ -416,3 +416,33 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+
+############################################
+# JetBrains Rider / IntelliJ
+############################################
+.idea/
+*.sln.iml
+# Rider cache / index (souvent sous .idea, mais on sécurise)
+.idea/**
+
+############################################
+# Additional .NET / Rider generated artifacts
+############################################
+# dotnet publish output (si utilisé localement)
+publish/
+# build artifacts (si tu crées un dossier artifacts local)
+artifacts/
+
+############################################
+# Optional: JetBrains tooling (rare)
+############################################
+# (généralement pas nécessaire, mais safe)
+*.DotSettings
+*.DotSettings.user
+
+############################################
+# Extra safety: lock files / temporary
+############################################
+*.lock
+*.swp
+*.swo
