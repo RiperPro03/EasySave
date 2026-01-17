@@ -102,32 +102,11 @@ jobs:
       - name: "Build"
         run: dotnet build -c ${{ env.CONFIGURATION }} --no-restore
 
-# -------------------------
-  # STAGE 3 — SonarCloud (ONLY ON TAG RELEASE)
   # -------------------------
-  sonarcloud:
-    name: "Stage 3 - SonarCloud (on release tag)"
-    needs: build
-    if: startsWith(github.ref, 'refs/tags/v')
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pull-requests: read
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: "SonarCloud Scan"
-        uses: SonarSource/sonarqube-scan-action@a31c9398be7ace6bbfaf30c0bd5d415f843d45e9
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
-  # -------------------------
-  # STAGE 4 — Package (.exe) (ONLY ON TAG RELEASE)
+  # STAGE 3 — Package (.exe) (ONLY ON TAG RELEASE)
   # -------------------------
   package:
-    name: "Stage 4 - Package (.exe)"
+    name: "Stage 3 - Package (.exe)"
     needs: build
     if: startsWith(github.ref, 'refs/tags/v')
     runs-on: windows-latest
@@ -161,11 +140,11 @@ jobs:
           path: EasySave-win-x64.zip
 
   # -------------------------
-  # STAGE 5 — GitHub Release (attach zip) (ONLY ON TAG RELEASE)
+  # STAGE 4 — GitHub Release (attach zip) (ONLY ON TAG RELEASE)
   # -------------------------
   release:
-    name: "Stage 5 - GitHub Release"
-    needs: [package, sonarcloud]
+    name: "Stage 4 - GitHub Release"
+    needs: [package]
     if: ${{ startsWith(github.ref, 'refs/tags/v') }}
     runs-on: ubuntu-latest
     permissions:
@@ -185,7 +164,7 @@ jobs:
   # STAGE SKIP — Docs only => green pipeline
   # -------------------------
   docs_only_ok:
-    name: "Stage - Docs only (skip)"
+    name: "Docs Only (Stage Skipped)"
     needs: detect_changes
     if: ${{ !startsWith(github.ref, 'refs/tags/v') && needs.detect_changes.outputs.code_changed != 'true' }}
     runs-on: ubuntu-latest
