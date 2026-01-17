@@ -18,6 +18,9 @@ jobs:
   detect_changes:
     name: "Stage 0 - Detect changes"
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
     outputs:
       code_changed: ${{ steps.filter.outputs.code }}
     steps:
