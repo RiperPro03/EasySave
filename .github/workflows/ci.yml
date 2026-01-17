@@ -24,10 +24,10 @@ jobs:
     outputs:
       code_changed: ${{ steps.filter.outputs.code }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8
 
       - name: "Detect code changes"
-        uses: dorny/paths-filter@v3
+        uses: dorny/paths-filter@de90cc6fb38fc0963ad72b210f1f284cd68cea36
         id: filter
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -48,18 +48,18 @@ jobs:
   unit_tests:
     name: "Stage 1 - Unit tests"
     needs: detect_changes
-    if: ${{ needs.detect_changes.outputs.code_changed == 'true' }}
+    if: startsWith(github.ref, 'refs/tags/v') || needs.detect_changes.outputs.code_changed == 'true'
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8
 
       - name: "Setup .NET"
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@baa11fbfe1d6520db94683bd5c7a3818018e4309
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
           
       - name: Cache NuGet
-        uses: actions/cache@v4
+        uses: actions/cache@8b402f58fbc84540c8b491a91e594a4576fec3d7
         with:
           path: ~/.nuget/packages
           key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj') }}
@@ -78,18 +78,18 @@ jobs:
   build:
     name: "Stage 2 - Build"
     needs: [detect_changes, unit_tests]
-    if: ${{ needs.detect_changes.outputs.code_changed == 'true' }}
+    if: startsWith(github.ref, 'refs/tags/v') || needs.detect_changes.outputs.code_changed == 'true'
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8
 
       - name: "Setup .NET"
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@baa11fbfe1d6520db94683bd5c7a3818018e4309
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
           
       - name: Cache NuGet
-        uses: actions/cache@v4
+        uses: actions/cache@8b402f58fbc84540c8b491a91e594a4576fec3d7
         with:
           path: ~/.nuget/packages
           key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj') }}
@@ -114,12 +114,12 @@ jobs:
       contents: read
       pull-requests: read
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8
         with:
           fetch-depth: 0
 
       - name: "SonarCloud Scan"
-        uses: SonarSource/sonarcloud-github-action@ba3875ecf642b2129de2b589510c81a8b53dbf4e
+        uses: SonarSource/sonarqube-scan-action@a31c9398be7ace6bbfaf30c0bd5d415f843d45e9
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
@@ -132,10 +132,10 @@ jobs:
     if: startsWith(github.ref, 'refs/tags/v')
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8
 
       - name: "Setup .NET"
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@baa11fbfe1d6520db94683bd5c7a3818018e4309
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
@@ -155,7 +155,7 @@ jobs:
           Compress-Archive -Path out/publish/* -DestinationPath EasySave-win-x64.zip -Force
 
       - name: "Upload artifact"
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
         with:
           name: EasySave-win-x64
           path: EasySave-win-x64.zip
@@ -172,12 +172,12 @@ jobs:
       contents: write
     steps:
       - name: "Download artifact"
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131
         with:
           name: EasySave-win-x64
 
       - name: "Create GitHub Release"
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@a06a81a03ee405af7f2048a818ed3f03bbf83c7b
         with:
           files: EasySave-win-x64.zip
 
@@ -187,7 +187,7 @@ jobs:
   docs_only_ok:
     name: "Stage - Docs only (skip)"
     needs: detect_changes
-    if: ${{ needs.detect_changes.outputs.code_changed != 'true' }}
+    if: !startsWith(github.ref, 'refs/tags/v') && needs.detect_changes.outputs.code_changed != 'true'
     runs-on: ubuntu-latest
     steps:
       - run: echo "Docs-only change -> no tests/build. Pipeline validated"
