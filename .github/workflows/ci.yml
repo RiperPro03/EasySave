@@ -117,8 +117,8 @@ jobs:
         uses: actions/setup-dotnet@baa11fbfe1d6520db94683bd5c7a3818018e4309
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
-
-      - name: "Publish (win-x64)"
+      # --- Console ---
+      - name: "Publish Console (win-x64)"
         run: >
           dotnet publish src/EasySave.App.Console/EasySave.App.Console.csproj
           -c ${{ env.CONFIGURATION }}
@@ -126,18 +126,40 @@ jobs:
           --self-contained false
           /p:PublishSingleFile=true
           /p:DebugType=None
-          -o ./out/publish
+          -o ./out/publish/console
 
-      - name: "Zip artifact"
+      - name: "Zip Console"
         shell: pwsh
         run: |
-          Compress-Archive -Path out/publish/* -DestinationPath EasySave-win-x64.zip -Force
+          Compress-Archive -Path out/publish/console/* -DestinationPath EasySave-Console-win-x64.zip -Force
 
-      - name: "Upload artifact"
+      - name: "Upload Console artifact"
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
         with:
-          name: EasySave-win-x64
-          path: EasySave-win-x64.zip
+          name: EasySave-Console-win-x64
+          path: EasySave-Console-win-x64.zip
+
+      # --- GUI / WPF ---
+      # - name: "Publish GUI (win-x64)"
+      #   run: >
+      #     dotnet publish src/EasySave.App.Wpf/EasySave.App.Wpf.csproj
+      #     -c ${{ env.CONFIGURATION }}
+      #     -r win-x64
+      #     --self-contained false
+      #     /p:PublishSingleFile=true
+      #     /p:DebugType=None
+      #     -o ./out/publish/gui
+
+      # - name: "Zip GUI"
+      #   shell: pwsh
+      #   run: |
+      #     Compress-Archive -Path out/publish/gui/* -DestinationPath EasySave-GUI-win-x64.zip -Force
+
+      # - name: "Upload GUI artifact"
+      #   uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+      #   with:
+      #     name: EasySave-GUI-win-x64
+      #     path: EasySave-GUI-win-x64.zip
 
   # -------------------------
   # STAGE 4 — GitHub Release (attach zip) (ONLY ON TAG RELEASE)
@@ -150,15 +172,22 @@ jobs:
     permissions:
       contents: write
     steps:
-      - name: "Download artifact"
+      - name: "Download Console artifact"
         uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131
         with:
-          name: EasySave-win-x64
+          name: EasySave-Console-win-x64
+
+      - name: "Download GUI artifact"
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131
+        with:
+          name: EasySave-GUI-win-x64
 
       - name: "Create GitHub Release"
         uses: softprops/action-gh-release@a06a81a03ee405af7f2048a818ed3f03bbf83c7b
         with:
-          files: EasySave-win-x64.zip
+          files: |
+            EasySave-Console-win-x64.zip
+            EasySave-GUI-win-x64.zip
 
   # -------------------------
   # STAGE SKIP — Docs only => green pipeline
