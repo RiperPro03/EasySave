@@ -4,11 +4,7 @@ Closes #ID
 - 
 
 ## Changements
-- 
-
-## Tests
-- [ ] dotnet build
-- [ ] dotnet test
+-
 
 ## Checklist
 - [ ] Code compilable
