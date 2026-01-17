@@ -1,1 +1,2 @@
 # EasySave
+add SonarCloud
