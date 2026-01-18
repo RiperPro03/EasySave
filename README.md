@@ -10,7 +10,7 @@
     <a href="https://learn.microsoft.com/en-us/dotnet/csharp/" target="_blank">
       <img src="https://img.shields.io/badge/Language-C%23-purple.svg" alt="C# Documentation">
     </a>
-    <a href="https://learn.microsoft.com/en-us/dotnet/whats-new/dotnet-9" target="_blank">
+    <a href="https://learn.microsoft.com/fr-fr/dotnet/core/whats-new/dotnet-8/overview" target="_blank">
       <img src="https://img.shields.io/badge/Framework-.NET%208-darkblue.svg" alt=".NET 8 Documentation">
     </a>
     <a href="https://www.sonarsource.com/" target="_blank">
