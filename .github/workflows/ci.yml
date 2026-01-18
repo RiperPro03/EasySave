@@ -5,14 +5,12 @@ on:
     branches: [ "main" ]
   push:
     branches: [ "main" ]
-
-permissions:
-  contents: read
-  pull-requests: read
+    tags: [ "v*.*.*" ]
 
 env:
   DOTNET_VERSION: "8.0.x"
   CONFIGURATION: "Release"
+  RUNTIME: win-x64
 
 jobs:
   # -------------------------
@@ -21,13 +19,16 @@ jobs:
   detect_changes:
     name: "Stage 0 - Detect changes"
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
     outputs:
       code_changed: ${{ steps.filter.outputs.code }}
     steps:
       - uses: actions/checkout@v4
 
       - name: "Detect code changes"
-        uses: dorny/paths-filter@v3
+        uses: dorny/paths-filter@de90cc6fb38fc0963ad72b210f1f284cd68cea36
         id: filter
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -48,18 +49,18 @@ jobs:
   unit_tests:
     name: "Stage 1 - Unit tests"
     needs: detect_changes
-    if: ${{ needs.detect_changes.outputs.code_changed == 'true' }}
+    if: startsWith(github.ref, 'refs/tags/v') || needs.detect_changes.outputs.code_changed == 'true'
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
 
       - name: "Setup .NET"
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@baa11fbfe1d6520db94683bd5c7a3818018e4309
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
           
       - name: Cache NuGet
-        uses: actions/cache@v4
+        uses: actions/cache@8b402f58fbc84540c8b491a91e594a4576fec3d7
         with:
           path: ~/.nuget/packages
           key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj') }}
@@ -77,19 +78,19 @@ jobs:
   # -------------------------
   build:
     name: "Stage 2 - Build"
-    needs: unit_tests
-    if: ${{ needs.detect_changes.outputs.code_changed == 'true' }}
+    needs: [detect_changes, unit_tests]
+    if: startsWith(github.ref, 'refs/tags/v') || needs.detect_changes.outputs.code_changed == 'true'
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8
 
       - name: "Setup .NET"
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@baa11fbfe1d6520db94683bd5c7a3818018e4309
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
           
       - name: Cache NuGet
-        uses: actions/cache@v4
+        uses: actions/cache@8b402f58fbc84540c8b491a91e594a4576fec3d7
         with:
           path: ~/.nuget/packages
           key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj') }}
@@ -103,12 +104,100 @@ jobs:
         run: dotnet build -c ${{ env.CONFIGURATION }} --no-restore
 
   # -------------------------
+  # STAGE 3 — Package (.exe) (ONLY ON TAG RELEASE)
+  # -------------------------
+  package:
+    name: "Stage 3 - Package (.exe)"
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: "Setup .NET"
+        uses: actions/setup-dotnet@baa11fbfe1d6520db94683bd5c7a3818018e4309
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      # --- Console ---
+      - name: "Publish Console (${{ env.RUNTIME }})"
+        run: >
+          dotnet publish src/EasySave.App.Console/EasySave.App.Console.csproj
+          -c ${{ env.CONFIGURATION }}
+          -r ${{ env.RUNTIME }}
+          --self-contained false
+          /p:PublishSingleFile=true
+          /p:DebugType=None
+          -o ./out/publish/console
+
+      - name: "Zip Console"
+        shell: pwsh
+        run: |
+          Compress-Archive -Path out/publish/console/* -DestinationPath EasySave-Console-${{ env.RUNTIME }}.zip -Force
+
+      - name: "Upload Console artifact"
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+        with:
+          name: EasySave-Console-${{ env.RUNTIME }}
+          path: EasySave-Console-${{ env.RUNTIME }}.zip
+
+      # --- GUI / WPF ---
+      # - name: "Publish GUI (win-x64)"
+      #   run: >
+      #     dotnet publish src/EasySave.App.Wpf/EasySave.App.Wpf.csproj
+      #     -c ${{ env.CONFIGURATION }}
+      #     -r win-x64
+      #     --self-contained false
+      #     /p:PublishSingleFile=true
+      #     /p:DebugType=None
+      #     -o ./out/publish/gui
+
+      # - name: "Zip GUI"
+      #   shell: pwsh
+      #   run: |
+      #     Compress-Archive -Path out/publish/gui/* -DestinationPath EasySave-GUI-win-x64.zip -Force
+
+      # - name: "Upload GUI artifact"
+      #   uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+      #   with:
+      #     name: EasySave-GUI-win-x64
+      #     path: EasySave-GUI-win-x64.zip
+
+  # -------------------------
+  # STAGE 4 — GitHub Release (attach zip) (ONLY ON TAG RELEASE)
+  # -------------------------
+  release:
+    name: "Stage 4 - GitHub Release"
+    needs: [package]
+    if: ${{ startsWith(github.ref, 'refs/tags/v') }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: "Download Console artifact"
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131
+        with:
+          name: EasySave-Console-${{ env.RUNTIME }}
+
+      - name: "Download GUI artifact"
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131
+        with:
+          name: EasySave-GUI-${{ env.RUNTIME }}
+
+      - name: "Create GitHub Release"
+        uses: softprops/action-gh-release@a06a81a03ee405af7f2048a818ed3f03bbf83c7b
+        with:
+          files: |
+            EasySave-Console-${{ env.RUNTIME }}.zip
+            EasySave-GUI-${{ env.RUNTIME }}.zip
+
+  # -------------------------
   # STAGE SKIP — Docs only => green pipeline
   # -------------------------
   docs_only_ok:
-    name: "Stage - Docs only (skip)"
+    name: "Docs Only (Stage Skipped)"
     needs: detect_changes
-    if: ${{ needs.detect_changes.outputs.code_changed != 'true' }}
+    if: ${{ !startsWith(github.ref, 'refs/tags/v') && needs.detect_changes.outputs.code_changed != 'true' }}
     runs-on: ubuntu-latest
     steps:
       - run: echo "Docs-only change -> no tests/build. Pipeline validated"
