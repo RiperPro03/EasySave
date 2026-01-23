@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasySave.App.Gui", "src\Eas
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasySave.Core", "src\EasySave.Core\EasySave.Core.csproj", "{53A2ED31-B595-4A5E-BDB1-CA61B032911F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasySave.EasyLog", "src\EasySave.EasyLog\EasySave.EasyLog.csproj", "{68CF0716-9871-4513-BCE8-6ACB689F3DB4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,6 +38,10 @@ Global
 		{53A2ED31-B595-4A5E-BDB1-CA61B032911F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{53A2ED31-B595-4A5E-BDB1-CA61B032911F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{53A2ED31-B595-4A5E-BDB1-CA61B032911F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{68CF0716-9871-4513-BCE8-6ACB689F3DB4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{68CF0716-9871-4513-BCE8-6ACB689F3DB4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{68CF0716-9871-4513-BCE8-6ACB689F3DB4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{68CF0716-9871-4513-BCE8-6ACB689F3DB4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 	EndGlobalSection
