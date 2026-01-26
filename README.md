@@ -11,7 +11,7 @@
       <img src="https://img.shields.io/badge/Language-C%23-purple.svg" alt="C# Documentation">
     </a>
     <a href="https://learn.microsoft.com/fr-fr/dotnet/core/whats-new/dotnet-8/overview" target="_blank">
-      <img src="https://img.shields.io/badge/Framework-.NET%208-darkblue.svg" alt=".NET 8 Documentation">
+      <img src="https://img.shields.io/badge/Framework-.NET%208-darkblue.svg" alt=".NET 10 Documentation">
     </a>
     <a href="https://www.sonarsource.com/" target="_blank">
       <img src="https://img.shields.io/badge/Code%20Quality-SonarQube-4E9BCD.svg" alt="SonarQube">
