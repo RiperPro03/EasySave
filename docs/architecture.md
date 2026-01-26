@@ -326,11 +326,6 @@ Préfixe `I` obligatoire : `IBackupService`, `ILogger`, `IJobRepository`
 
 ## Points d'attention
 
-⚠️ **EasyLog ne doit jamais** :
-* Dépendre d'EasySave.Core ou EasySave.App
-* Contenir de la logique métier
-* Accéder directement aux jobs ou à l'état système
-
 ⚠️ **Les ViewModels ne doivent jamais** :
 * Appeler directement `File.WriteAllText()` ou `Process.Start()`
 * Implémenter de la logique métier
@@ -340,16 +335,3 @@ Préfixe `I` obligatoire : `IBackupService`, `ILogger`, `IJobRepository`
 * Référencer System.IO, System.Diagnostics, ou UI
 * Contenir du code d'infrastructure
 * Dépendre d'un projet externe
-
----
-
-## Conclusion
-
-Cette architecture modulaire et évolutive permet :
-* Un développement incrémental maîtrisé
-* Une maintenance facilitée
-* Une testabilité maximale
-* Une évolution vers des fonctionnalités avancées (v3.0)
-* Une réutilisabilité des composants (EasyLog notamment)
-
-L'architecture est **pérenne** et **professionnelle**, conforme aux standards de l'industrie.
