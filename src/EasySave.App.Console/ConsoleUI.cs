@@ -1,0 +1,54 @@
+﻿using EasySave.Core.Resources;
+
+namespace EasySave.App.Console;
+
+public class ConsoleUI
+{
+    public void Clear()
+    {
+        System.Console.Clear();
+    }
+
+    public void ShowWelcome()
+    {
+        System.Console.WriteLine("=================================");
+        System.Console.WriteLine(" EasySave - Backup Software ");
+        System.Console.WriteLine("=================================");
+    }
+
+    public int ShowMainMenu()
+    {
+        System.Console.WriteLine();
+        System.Console.WriteLine(Strings.Menu_Title);
+        System.Console.WriteLine("1 - " + Strings.Menu_Create);
+        System.Console.WriteLine("2 - " + Strings.Menu_Run);
+        System.Console.WriteLine("3 - " + Strings.Menu_ChangeLanguage);
+        System.Console.WriteLine("0 - " + Strings.Menu_Exit);
+        System.Console.Write("> ");
+
+        return int.TryParse(System.Console.ReadLine(), out var choice)
+            ? choice
+            : -1;
+    }
+
+    public void ShowError(string message)
+    {
+        System.Console.ForegroundColor = ConsoleColor.Red;
+        System.Console.WriteLine(message);
+        System.Console.ResetColor();
+    }
+
+    public void ShowInfo(string message)
+    {
+        System.Console.ForegroundColor = ConsoleColor.Cyan;
+        System.Console.WriteLine(message);
+        System.Console.ResetColor();
+    }
+
+    public void WaitForKey()
+    {
+        System.Console.WriteLine();
+        System.Console.WriteLine(Strings.UI_PressKey);
+        System.Console.ReadKey(true);
+    }
+}
