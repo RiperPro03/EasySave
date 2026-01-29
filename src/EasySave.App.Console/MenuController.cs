@@ -29,7 +29,7 @@ public class MenuController
             _ui.Clear();
             _ui.ShowWelcome();
 
-            var choice = _ui.ShowMainMenu(); // à mettre à jour pour afficher l'option 3
+            var choice = _ui.ShowMainMenu();
 
             switch (choice)
             {
