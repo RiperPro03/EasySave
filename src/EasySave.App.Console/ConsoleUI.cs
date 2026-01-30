@@ -6,20 +6,7 @@ public class ConsoleUI
 {
     public void Clear()
     {
-        if (System.Console.IsOutputRedirected)
-            return;
-        try
-        {
-            System.Console.Clear();
-        }
-        catch (IOException)
-        {
-            // Ignore
-        }
-        catch (PlatformNotSupportedException)
-        {
-            // Ignore
-        }
+        System.Console.Clear();
     }
 
     public void ShowWelcome()
@@ -68,13 +55,8 @@ public class ConsoleUI
     
     public void WaitForKey()
     {
+        System.Console.WriteLine();
         System.Console.WriteLine(Strings.UI_PressKey);
-        
-        if (System.Console.IsInputRedirected)
-        {
-            System.Console.ReadLine(); // consomme une ligne (ex: "\n" dans tes tests)
-            return;
-        }
         System.Console.ReadKey(true);
     }
 
