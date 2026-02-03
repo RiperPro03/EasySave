@@ -6,6 +6,9 @@ namespace EasySave.App.Repositories;
 
 public sealed class JobRepository : IJobRepository
 {
+    // TODO(Gestion des chemins): remplacer cette implémentation in-memory
+    // par une version persistée (ex: FileJobRepository) lorsqu'on aura défini
+    // les chemins Logs/State/Config.
     private readonly List<BackupJob> _jobs = new();
     private const int MaxJobs = 5;
     

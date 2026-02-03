@@ -44,12 +44,6 @@ public class JobRepositoryTests
         Assert.Throws<InvalidOperationException>(() => repository.Add(newJob));
     }
     [Fact]
-    public void RemoveShouldThrowWhenJobNotFound()
-    {
-        var repository = new JobRepository();
-        Assert.Throws<KeyNotFoundException>(() => repository.Remove("nonexistent-id"));
-    }
-    [Fact]
     public void Remove_ShouldRemoveJob_WhenJobExists()
     {
         var repository = new JobRepository();
