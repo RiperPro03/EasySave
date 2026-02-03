@@ -1,0 +1,145 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:element name="root" msdata:IsDataSet="true">
+            
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    
+<!--    
+Nommage des ressources :
+
+    Menu_* → menus
+    Lang_* → langues
+    Error_* → erreurs
+    Info_* → messages d’info
+    UI_* → UI générique 
+-->
+
+    <data name="Menu_Title" xml:space="preserve">
+        <value>Main menu</value>
+    </data>
+    <data name="Menu_Create" xml:space="preserve">
+        <value>Manage backup job</value>
+    </data>
+    <data name="Menu_Run" xml:space="preserve">
+        <value>Run backup job</value>
+    </data>
+    <data name="Menu_Exit" xml:space="preserve">
+        <value>Exit</value>
+    </data>
+    <data name="Menu_ChangeLanguage" xml:space="preserve">
+        <value>Change language</value>
+    </data>
+
+    <data name="Lang_English" xml:space="preserve">
+        <value>English</value>
+    </data>
+    <data name="Lang_French" xml:space="preserve">
+        <value>French</value>
+    </data>
+
+    <data name="Error_InvalidChoice" xml:space="preserve">
+        <value>Invalid choice</value>
+    </data>
+    <data name="Error_InvalidNumber" xml:space="preserve">
+        <value>Invalid number</value>
+    </data>
+    <data name="Error_EmptyValue" xml:space="preserve">
+        <value>Value cannot be empty</value>
+    </data>
+
+    <data name="Info_LanguageChanged" xml:space="preserve">
+        <value>Language updated</value>
+    </data>
+
+    <data name="UI_PressKey" xml:space="preserve">
+        <value>Press any key to continue...</value>
+    </data>
+    <data name="UI_JobsTitle" xml:space="preserve">
+        <value>Jobs</value>
+    </data>
+    <data name="UI_BackupTitle" xml:space="preserve">
+        <value>Backup</value>
+    </data>
+    <data name="UI_ListJobs" xml:space="preserve">
+        <value>List jobs</value>
+    </data>
+    <data name="UI_CreateJob" xml:space="preserve">
+        <value>Create job</value>
+    </data>
+    <data name="UI_UpdateJob" xml:space="preserve">
+        <value>Update job</value>
+    </data>
+    <data name="UI_DeleteJob" xml:space="preserve">
+        <value>Delete job</value>
+    </data>
+    <data name="UI_Back" xml:space="preserve">
+        <value>Back</value>
+    </data>
+    <data name="UI_RunOneJob" xml:space="preserve">
+        <value>Run one job</value>
+    </data>
+    <data name="UI_RunAllJobs" xml:space="preserve">
+        <value>Run all jobs</value>
+    </data>
+    <data name="UI_JobNamePrompt" xml:space="preserve">
+        <value>Job name: </value>
+    </data>
+    <data name="UI_SourcePathPrompt" xml:space="preserve">
+        <value>Source path: </value>
+    </data>
+    <data name="UI_TargetPathPrompt" xml:space="preserve">
+        <value>Target path: </value>
+    </data>
+    <data name="UI_BackupTypePrompt" xml:space="preserve">
+        <value>Backup type</value>
+    </data>
+    <data name="UI_BackupTypeFull" xml:space="preserve">
+        <value>Full</value>
+    </data>
+    <data name="UI_BackupTypeDifferential" xml:space="preserve">
+        <value>Differential</value>
+    </data>
+    <data name="UI_JobIdPrompt" xml:space="preserve">
+        <value>Job id: </value>
+    </data>
+    <data name="UI_NoJobsConfigured" xml:space="preserve">
+        <value>No jobs configured.</value>
+    </data>
+    <data name="UI_RunStart" xml:space="preserve">
+        <value>Running job {0} - {1}</value>
+    </data>
+    <data name="UI_Result" xml:space="preserve">
+        <value>Result: {0} - {1}</value>
+    </data>
+    <data name="UI_ResultSuccess" xml:space="preserve">
+        <value>Success</value>
+    </data>
+    <data name="UI_ResultFailed" xml:space="preserve">
+        <value>Failed</value>
+    </data>
+    <data name="UI_BatchSummary" xml:space="preserve">
+        <value>Batch summary</value>
+    </data>
+    <data name="UI_BatchSuccess" xml:space="preserve">
+        <value>Success: {0} / {1}</value>
+    </data>
+    <data name="UI_NoJobsExecuted" xml:space="preserve">
+        <value>No jobs executed.</value>
+    </data>
+   
+</root>

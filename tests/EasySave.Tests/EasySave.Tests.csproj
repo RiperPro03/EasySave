@@ -20,7 +20,10 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\src\EasySave.App\EasySave.App.csproj" />
+      <ProjectReference Include="..\..\src\EasySave.App.Console\EasySave.App.Console.csproj" />
       <ProjectReference Include="..\..\src\EasySave.Core\EasySave.Core.csproj" />
+      <ProjectReference Include="..\..\src\EasySave.EasyLog\EasySave.EasyLog.csproj" />
     </ItemGroup>
 
 </Project>

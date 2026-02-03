@@ -1,0 +1,62 @@
+@startuml EasySave_v1_Sequence_RunJobs1_3
+
+title Séquence - CLI exécuter les jobs 1 à 3 (EasySave v1)
+skinparam shadowing false
+
+actor "Utilisateur\n(Ligne de commande)" as User
+
+box "EasySave.App.Console"
+  participant "Program.cs" as Program
+  participant "ConsoleCompositionRoot" as Root
+  participant "BackupController" as BackupController
+  participant "ArgsParser" as ArgsParser
+  participant "BackupView" as BackupView
+end box
+
+box "EasySave.App"
+  participant "RunJobCommand" as RunJobCommand
+  participant "BackupService" as BackupService
+end box
+
+box "EasySave.Core"
+  participant "JobRepository" as JobRepository
+  participant "BackupEngine" as BackupEngine
+end box
+
+box "EasySave.EasyLog"
+  participant "ILogWriter" as LogWriter
+  participant "IStateWriter" as StateWriter
+end box
+
+participant "Système de fichiers\n(Source/Cible)" as FileSystem
+
+User -> Program : Exécute "EasySave.exe 1-3"
+Program -> Root : Créer composition root
+Root --> Program : Contrôleurs initialisés
+
+Program -> BackupController : RunFromArgs(rawArgs)
+BackupController -> ArgsParser : Parse(rawArgs)
+ArgsParser --> BackupController : jobIds (1,2,3)
+
+loop Pour chaque jobId (1..3)
+  BackupController -> BackupView : ShowRunStart(job)
+  BackupController -> RunJobCommand : Execute(jobId)
+  RunJobCommand -> BackupService : RunJob(jobId)
+  BackupService -> JobRepository : GetById(jobId)
+  JobRepository --> BackupService : BackupJob
+
+  BackupService -> StateWriter : Write(state: Running)
+  BackupService -> BackupEngine : Run(job)
+  BackupEngine -> FileSystem : EnumerateFiles(source)
+  loop Pour chaque fichier éligible
+    BackupEngine -> FileSystem : CopyFile(source, target)
+  end
+  BackupEngine --> BackupService : BackupResultDto
+  BackupService -> LogWriter : Write(LogEntryDto...)
+  BackupService -> StateWriter : Write(state: Completed/Error)
+  BackupService --> RunJobCommand : BackupResultDto
+  RunJobCommand --> BackupController : BackupResultDto
+  BackupController -> BackupView : ShowRunEnd(result)
+end
+
+@enduml
