@@ -75,4 +75,29 @@ public sealed class JobView
         var id = _input.ReadInt(Strings.UI_JobIdPrompt);
         return id.ToString();
     }
+
+    public int AskJobFieldToEdit()
+    {
+        System.Console.WriteLine();
+        System.Console.WriteLine("Select field to edit:");
+        System.Console.WriteLine("1 - Name");
+        System.Console.WriteLine("2 - Source path");
+        System.Console.WriteLine("3 - Target path");
+        System.Console.WriteLine("4 - Type");
+        System.Console.WriteLine("5 - Active/Inactive");
+        System.Console.WriteLine("0 - Back");
+
+        return _input.ReadChoice("> ", new[] { 0, 1, 2, 3, 4, 5 });
+    }
+
+    public bool AskJobActiveState()
+    {
+        System.Console.WriteLine();
+        System.Console.WriteLine("Set job status:");
+        System.Console.WriteLine("1 - Active");
+        System.Console.WriteLine("2 - Inactive");
+
+        var choice = _input.ReadChoice("> ", new[] { 1, 2 });
+        return choice == 1;
+    }
 }

@@ -33,7 +33,7 @@ Nommage des ressources :
         <value>Main menu</value>
     </data>
     <data name="Menu_Create" xml:space="preserve">
-        <value>Create backup job</value>
+        <value>Manage backup job</value>
     </data>
     <data name="Menu_Run" xml:space="preserve">
         <value>Run backup job</value>

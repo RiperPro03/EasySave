@@ -123,7 +123,7 @@ namespace EasySave.Core.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Create backup job.
+        ///   Looks up a localized string similar to Manage backup job.
         /// </summary>
         public static string Menu_Create {
             get {
@@ -177,24 +177,6 @@ namespace EasySave.Core.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Batch summary.
-        /// </summary>
-        public static string UI_BatchSummary {
-            get {
-                return ResourceManager.GetString("UI_BatchSummary", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Success: {0} / {1}.
-        /// </summary>
-        public static string UI_BatchSuccess {
-            get {
-                return ResourceManager.GetString("UI_BatchSuccess", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Differential.
         /// </summary>
         public static string UI_BackupTypeDifferential {
@@ -218,6 +200,24 @@ namespace EasySave.Core.Resources {
         public static string UI_BackupTypePrompt {
             get {
                 return ResourceManager.GetString("UI_BackupTypePrompt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Success: {0} / {1}.
+        /// </summary>
+        public static string UI_BatchSuccess {
+            get {
+                return ResourceManager.GetString("UI_BatchSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Batch summary.
+        /// </summary>
+        public static string UI_BatchSummary {
+            get {
+                return ResourceManager.GetString("UI_BatchSummary", resourceCulture);
             }
         }
         
