@@ -1,38 +1,71 @@
-﻿using EasySave.Core.Interfaces;
+using EasySave.Core.Interfaces;
 using EasySave.Core.Models;
 
 namespace EasySave.App.Repositories;
+using System;
+using EasySave.Core.Models;
+namespace EasySave.App.Repositories {
 
 public sealed class JobRepository : IJobRepository
 {
-    private readonly List<BackupJob> _jobs = new();
-
-    public IReadOnlyList<BackupJob> GetAll()
-    {
-        return _jobs.AsReadOnly();
-    }
-
-    public BackupJob? GetById(string id)
-    {
-        return _jobs.FirstOrDefault(job => job.Id == id);
-    }
+    private List<BackupJob> jobs = new List<BackupJob>();
+    private const int maxjobs = 5;
+    public IReadOnlyList<BackupJob> GetAll() => jobs.AsReadOnly();
 
     public void Add(BackupJob job)
     {
-        _jobs.Add(job);
-    }
+        if (job == null) throw new ArgumentNullException(nameof(job));
+        if (jobs.Count >= maxjobs)
+        {
+            throw new InvalidOperationException("Maximum number of jobs reached.");
+        }
+        if (string.IsNullOrWhiteSpace(job.Id))
+        {
+            throw new ArgumentException("Job ID cannot be null or whitespace.", nameof(job));
+        }
+        if (string.IsNullOrWhiteSpace(job.Name))
+        {
+            throw new ArgumentException("Job Name cannot be null or whitespace.", nameof(job));
+        }
+        if (string.IsNullOrWhiteSpace(job.SourcePath))
+        {
+            throw new ArgumentException("Job SourcePath cannot be null or whitespace.", nameof(job));
+        }
+        if (string.IsNullOrWhiteSpace(job.TargetPath))
+        {
+            throw new ArgumentException("Job TargetPath cannot be null or whitespace.", nameof(job));
+        }
 
-    public void Update(BackupJob job)
-    {
-        var index = _jobs.FindIndex(existing => existing.Id == job.Id);
-        if (index >= 0)
-            _jobs[index] = job;
+        jobs.Add(job);
     }
-
     public void Remove(string id)
     {
-        var job = GetById(id);
-        if (job is not null)
-            _jobs.Remove(job);
+        for (int i = 0; i < jobs.Count; i++)
+        {
+            if (jobs[i].Id == id)
+            {
+                jobs.RemoveAt(i);
+                return;
+            }
+        }
+        throw new KeyNotFoundException($"Job with ID {id} not found.");
+    }
+
+    public void Update(BackupJob updatedjob)
+    {
+        if (updatedjob == null)
+        {
+            throw new ArgumentNullException(nameof(updatedjob));
+        }
+
+        for (int i = 0; i < jobs.Count; i++)
+        {
+            if (jobs[i].Id == updatedjob.Id)
+            {
+                jobs[i].UpdateDefinition(updatedjob.Name, updatedjob.SourcePath, updatedjob.TargetPath, updatedjob.Type);
+                return;
+            }
+        }
+        throw new KeyNotFoundException($"Job with ID {updatedjob.Id} not found.");
     }
 }
