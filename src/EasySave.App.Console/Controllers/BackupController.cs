@@ -9,20 +9,17 @@ namespace EasySave.App.Console.Controllers;
 public sealed class BackupController
 {
     private readonly IBackupEngine _backupEngine;
-    private readonly IJobRepository _jobRepository;
     private readonly BackupView _backupView;
     private readonly ConsoleView _consoleView;
     private readonly ArgsParser _argsParser;
 
     public BackupController(
         IBackupEngine backupEngine,
-        IJobRepository jobRepository,
         BackupView backupView,
         ConsoleView consoleView,
         ArgsParser argsParser)
     {
         _backupEngine = backupEngine;
-        _jobRepository = jobRepository;
         _backupView = backupView;
         _consoleView = consoleView;
         _argsParser = argsParser;

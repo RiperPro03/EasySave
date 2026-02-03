@@ -1,18 +1,18 @@
 ﻿using EasySave.App.Console.Views;
-using EasySave.Core.Interfaces;
+using EasySave.App.Services;
 using EasySave.Core.Resources;
 
 namespace EasySave.App.Console.Controllers;
 
 public sealed class JobController
 {
-    private readonly IJobRepository _jobRepository;
+    private readonly IJobService _jobService;
     private readonly JobView _jobView;
     private readonly ConsoleView _consoleView;
 
-    public JobController(IJobRepository jobRepository, JobView jobView, ConsoleView consoleView)
+    public JobController(IJobService jobService, JobView jobView, ConsoleView consoleView)
     {
-        _jobRepository = jobRepository;
+        _jobService = jobService;
         _jobView = jobView;
         _consoleView = consoleView;
     }
@@ -55,7 +55,7 @@ public sealed class JobController
 
     public void ListJobs()
     {
-        var jobs = _jobRepository.GetAll();
+        var jobs = _jobService.GetAll();
         _jobView.ShowJobs(jobs);
         _consoleView.WaitForKey();
     }
@@ -70,8 +70,7 @@ public sealed class JobController
             var targetPath = _jobView.AskTargetPath();
             var type = _jobView.AskBackupType();
 
-            var job = new EasySave.Core.Models.BackupJob(id, name, sourcePath, targetPath, type);
-            _jobRepository.Add(job);
+            _jobService.Create(id, name, sourcePath, targetPath, type);
             _consoleView.ShowSuccess("Job created.");
         }
         catch (Exception ex)
@@ -85,10 +84,10 @@ public sealed class JobController
     {
         try
         {
-            var jobs = _jobRepository.GetAll();
+            var jobs = _jobService.GetAll();
             _jobView.ShowJobs(jobs);
             var id = _jobView.AskJobId();
-            var existing = _jobRepository.GetById(id);
+            var existing = _jobService.GetById(id);
             if (existing == null)
             {
                 _consoleView.ShowError($"Job with ID {id} not found.");
@@ -129,17 +128,7 @@ public sealed class JobController
                     break;
             }
 
-            var updated = new EasySave.Core.Models.BackupJob(
-                id,
-                name,
-                sourcePath,
-                targetPath,
-                type,
-                isActive,
-                existing.CreatedAt,
-                existing.LastRun);
-
-            _jobRepository.Update(updated);
+            _jobService.Update(id, name, sourcePath, targetPath, type, isActive);
             _consoleView.ShowSuccess("Job updated.");
         }
         catch (Exception ex)
@@ -154,7 +143,7 @@ public sealed class JobController
         try
         {
             var id = _jobView.AskJobId();
-            _jobRepository.Remove(id);
+            _jobService.Delete(id);
             _consoleView.ShowSuccess("Job deleted.");
         }
         catch (Exception ex)

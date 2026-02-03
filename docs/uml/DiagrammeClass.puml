@@ -263,6 +263,25 @@ package "EasySave.App" {
       -void EnsureDirectoryExists(string directory)
     }
 
+    interface IJobService <<Service>> {
+      +IReadOnlyList GetAll()
+      +BackupJob GetById(string id)
+      +void Create(string id, string name, string sourcePath, string targetPath, BackupType type, bool isActive)
+      +void Update(string id, string name, string sourcePath, string targetPath, BackupType type, bool isActive)
+      +void Delete(string id)
+    }
+
+    class JobService <<Service>> {
+      -EasySave.Core.Interfaces.IJobRepository _jobRepository
+      __
+      +JobService(jobRepository: IJobRepository)
+      +IReadOnlyList GetAll()
+      +BackupJob GetById(string id)
+      +void Create(string id, string name, string sourcePath, string targetPath, BackupType type, bool isActive)
+      +void Update(string id, string name, string sourcePath, string targetPath, BackupType type, bool isActive)
+      +void Delete(string id)
+    }
+
     class BackupService <<Service>> {
       -EasySave.Core.Interfaces.IJobRepository _jobRepository
       -EasySave.Core.Interfaces.IBackupEngine _engine
@@ -337,11 +356,9 @@ package "EasySave.App" {
 
   package "Repositories" {
     class JobRepository <<Repository>> {
-      -string _filePath
-      -EasySave.Core.Interfaces.IFileSystem _fileSystem
-      -int _maxJobs
+      -List _jobs
+      -int MaxJobs
       __
-      +JobRepository(string filePath, IFileSystem fileSystem, int maxJobs)
       +IReadOnlyList GetAll()
       +BackupJob GetById(string id)
       +void Add(BackupJob job)
@@ -385,13 +402,6 @@ package "EasySave.App.Console" {
     {static} +void Main(string[] args) 
   }
 
-  class ConsoleCompositionRoot <<Console>> {
-    +MenuController MenuController
-    +BackupController BackupController
-    __
-    +ConsoleCompositionRoot(AppConfig config)
-  }
-
   package "Controllers" {
     class MenuController <<Console>> {
       +MenuController(ConsoleView view, ConsoleInput input, JobController jobController, BackupController backupController, SettingsController settingsController)
@@ -399,13 +409,11 @@ package "EasySave.App.Console" {
     }
 
     class JobController <<Console>> {
-      -EasySave.App.Commands.CreateJobCommand _createJob
-      -EasySave.App.Commands.UpdateJobCommand _updateJob
-      -EasySave.App.Commands.DeleteJobCommand _deleteJob
+      -EasySave.App.Services.IJobService _jobService
       -JobView _jobView
       -ConsoleView _consoleView
       __
-      +JobController(CreateJobCommand createJob, UpdateJobCommand updateJob, DeleteJobCommand deleteJob, JobView jobView, ConsoleView consoleView)
+      +JobController(IJobService jobService, JobView jobView, ConsoleView consoleView)
       +void RunMenu()
       +void ListJobs()
       +void CreateJob()
@@ -414,13 +422,12 @@ package "EasySave.App.Console" {
     }
 
     class BackupController <<Console>> {
-      -EasySave.App.Commands.RunJobCommand _runJob
-      -EasySave.App.Commands.RunAllJobsCommand _runAll
+      -EasySave.Core.Interfaces.IBackupEngine _backupEngine
       -BackupView _backupView
       -ConsoleView _consoleView
       -ArgsParser _argsParser
       __
-      +BackupController(RunJobCommand runJob, RunAllJobsCommand runAll, BackupView backupView, ConsoleView consoleView, ArgsParser argsParser)
+      +BackupController(IBackupEngine backupEngine, BackupView backupView, ConsoleView consoleView, ArgsParser argsParser)
       +void RunMenu()
       +void RunFromArgs(string rawArgs)
       +BackupResultDto RunJobById(int id, bool waitForKey)
@@ -465,6 +472,8 @@ package "EasySave.App.Console" {
       +BackupType AskBackupType()
       +void ShowJobs(IReadOnlyList jobs)
       +string AskJobId()
+      +int AskJobFieldToEdit()
+      +bool AskJobActiveState()
     }
 
     class BackupView <<Console>> {
@@ -514,8 +523,10 @@ EasySave.App.Services.BackupService --> EasySave.Core.Interfaces.IFileSystem : u
 EasySave.App.Services.BackupService --> EasySave.Core.Interfaces.ILogWriter : uses
 EasySave.App.Services.BackupService --> EasySave.Core.Interfaces.IStateWriter : uses
 
+EasySave.App.Services.JobService ..|> EasySave.App.Services.IJobService : implements
+EasySave.App.Services.JobService --> EasySave.Core.Interfaces.IJobRepository : uses
+
 EasySave.App.Repositories.JobRepository ..|> EasySave.Core.Interfaces.IJobRepository : implements
-EasySave.App.Repositories.JobRepository --> EasySave.Core.Interfaces.IFileSystem : uses
 
 EasySave.App.Repositories.StateWriterRepository ..|> EasySave.Core.Interfaces.IStateWriter : implements
 EasySave.App.Repositories.StateWriterRepository --> EasySave.Core.Interfaces.IFileSystem : uses
@@ -532,16 +543,18 @@ EasySave.App.Commands.RunAllJobsCommand --> EasySave.App.Services.BackupService 
 ' ============================================
 ' RELATIONS - Console (code actuel)
 ' ============================================
-EasySave.App.Console.ConsoleCompositionRoot --> EasySave.App.Repositories.JobRepository : uses
-EasySave.App.Console.ConsoleCompositionRoot --> EasySave.App.Services.BackupEngine : uses
-EasySave.App.Console.ConsoleCompositionRoot --> EasySave.App.Console.Input.ConsoleInput : uses
-EasySave.App.Console.ConsoleCompositionRoot --> EasySave.App.Console.Input.ArgsParser : uses
-EasySave.App.Console.ConsoleCompositionRoot --> EasySave.App.Console.Views.ConsoleView : uses
-EasySave.App.Console.ConsoleCompositionRoot --> EasySave.App.Console.Views.JobView : uses
-EasySave.App.Console.ConsoleCompositionRoot --> EasySave.App.Console.Views.BackupView : uses
-EasySave.App.Console.ConsoleCompositionRoot --> EasySave.App.Console.Controllers.SettingsController : uses
-EasySave.App.Console.ConsoleCompositionRoot --> EasySave.App.Console.Controllers.JobController : uses
-EasySave.App.Console.ConsoleCompositionRoot --> EasySave.App.Console.Controllers.BackupController : uses
+EasySave.App.Console.Program --> EasySave.App.Repositories.JobRepository : uses
+EasySave.App.Console.Program --> EasySave.App.Services.BackupEngine : uses
+EasySave.App.Console.Program --> EasySave.App.Services.JobService : uses
+EasySave.App.Console.Program --> EasySave.App.Console.Input.ConsoleInput : uses
+EasySave.App.Console.Program --> EasySave.App.Console.Input.ArgsParser : uses
+EasySave.App.Console.Program --> EasySave.App.Console.Views.ConsoleView : uses
+EasySave.App.Console.Program --> EasySave.App.Console.Views.JobView : uses
+EasySave.App.Console.Program --> EasySave.App.Console.Views.BackupView : uses
+EasySave.App.Console.Program --> EasySave.App.Console.Controllers.SettingsController : uses
+EasySave.App.Console.Program --> EasySave.App.Console.Controllers.JobController : uses
+EasySave.App.Console.Program --> EasySave.App.Console.Controllers.BackupController : uses
+EasySave.App.Console.Program --> EasySave.App.Console.Controllers.MenuController : uses
 
 EasySave.App.Console.Controllers.MenuController --> EasySave.App.Console.Controllers.JobController : uses
 EasySave.App.Console.Controllers.MenuController --> EasySave.App.Console.Controllers.BackupController : uses
@@ -549,14 +562,11 @@ EasySave.App.Console.Controllers.MenuController --> EasySave.App.Console.Control
 EasySave.App.Console.Controllers.MenuController --> EasySave.App.Console.Views.ConsoleView : uses
 EasySave.App.Console.Controllers.MenuController --> EasySave.App.Console.Input.ConsoleInput : uses
 
-EasySave.App.Console.Controllers.JobController --> EasySave.App.Commands.CreateJobCommand : uses
-EasySave.App.Console.Controllers.JobController --> EasySave.App.Commands.UpdateJobCommand : uses
-EasySave.App.Console.Controllers.JobController --> EasySave.App.Commands.DeleteJobCommand : uses
+EasySave.App.Console.Controllers.JobController --> EasySave.App.Services.IJobService : uses
 EasySave.App.Console.Controllers.JobController --> EasySave.App.Console.Views.JobView : uses
 EasySave.App.Console.Controllers.JobController --> EasySave.App.Console.Views.ConsoleView : uses
 
 EasySave.App.Console.Controllers.BackupController --> EasySave.Core.Interfaces.IBackupEngine : uses
-EasySave.App.Console.Controllers.BackupController --> EasySave.Core.Interfaces.IJobRepository : uses
 EasySave.App.Console.Controllers.BackupController --> EasySave.App.Console.Views.BackupView : uses
 EasySave.App.Console.Controllers.BackupController --> EasySave.App.Console.Views.ConsoleView : uses
 EasySave.App.Console.Controllers.BackupController --> EasySave.App.Console.Input.ArgsParser : uses
