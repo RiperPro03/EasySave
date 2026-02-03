@@ -60,6 +60,15 @@ namespace EasySave.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Value cannot be empty.
+        /// </summary>
+        public static string Error_EmptyValue {
+            get {
+                return ResourceManager.GetString("Error_EmptyValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid choice.
         /// </summary>
         public static string Error_InvalidChoice {
@@ -69,11 +78,38 @@ namespace EasySave.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid number.
+        /// </summary>
+        public static string Error_InvalidNumber {
+            get {
+                return ResourceManager.GetString("Error_InvalidNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Language updated.
         /// </summary>
         public static string Info_LanguageChanged {
             get {
                 return ResourceManager.GetString("Info_LanguageChanged", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to English.
+        /// </summary>
+        public static string Lang_English {
+            get {
+                return ResourceManager.GetString("Lang_English", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to French.
+        /// </summary>
+        public static string Lang_French {
+            get {
+                return ResourceManager.GetString("Lang_French", resourceCulture);
             }
         }
         
@@ -123,11 +159,227 @@ namespace EasySave.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Back.
+        /// </summary>
+        public static string UI_Back {
+            get {
+                return ResourceManager.GetString("UI_Back", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Backup.
+        /// </summary>
+        public static string UI_BackupTitle {
+            get {
+                return ResourceManager.GetString("UI_BackupTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Batch summary.
+        /// </summary>
+        public static string UI_BatchSummary {
+            get {
+                return ResourceManager.GetString("UI_BatchSummary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Success: {0} / {1}.
+        /// </summary>
+        public static string UI_BatchSuccess {
+            get {
+                return ResourceManager.GetString("UI_BatchSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Differential.
+        /// </summary>
+        public static string UI_BackupTypeDifferential {
+            get {
+                return ResourceManager.GetString("UI_BackupTypeDifferential", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Full.
+        /// </summary>
+        public static string UI_BackupTypeFull {
+            get {
+                return ResourceManager.GetString("UI_BackupTypeFull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Backup type.
+        /// </summary>
+        public static string UI_BackupTypePrompt {
+            get {
+                return ResourceManager.GetString("UI_BackupTypePrompt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Create job.
+        /// </summary>
+        public static string UI_CreateJob {
+            get {
+                return ResourceManager.GetString("UI_CreateJob", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete job.
+        /// </summary>
+        public static string UI_DeleteJob {
+            get {
+                return ResourceManager.GetString("UI_DeleteJob", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Job id: .
+        /// </summary>
+        public static string UI_JobIdPrompt {
+            get {
+                return ResourceManager.GetString("UI_JobIdPrompt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Job name: .
+        /// </summary>
+        public static string UI_JobNamePrompt {
+            get {
+                return ResourceManager.GetString("UI_JobNamePrompt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Jobs.
+        /// </summary>
+        public static string UI_JobsTitle {
+            get {
+                return ResourceManager.GetString("UI_JobsTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to List jobs.
+        /// </summary>
+        public static string UI_ListJobs {
+            get {
+                return ResourceManager.GetString("UI_ListJobs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No jobs configured..
+        /// </summary>
+        public static string UI_NoJobsConfigured {
+            get {
+                return ResourceManager.GetString("UI_NoJobsConfigured", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No jobs executed..
+        /// </summary>
+        public static string UI_NoJobsExecuted {
+            get {
+                return ResourceManager.GetString("UI_NoJobsExecuted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Press any key to continue....
         /// </summary>
         public static string UI_PressKey {
             get {
                 return ResourceManager.GetString("UI_PressKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Result: {0} - {1}.
+        /// </summary>
+        public static string UI_Result {
+            get {
+                return ResourceManager.GetString("UI_Result", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed.
+        /// </summary>
+        public static string UI_ResultFailed {
+            get {
+                return ResourceManager.GetString("UI_ResultFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Success.
+        /// </summary>
+        public static string UI_ResultSuccess {
+            get {
+                return ResourceManager.GetString("UI_ResultSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Run all jobs.
+        /// </summary>
+        public static string UI_RunAllJobs {
+            get {
+                return ResourceManager.GetString("UI_RunAllJobs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Run one job.
+        /// </summary>
+        public static string UI_RunOneJob {
+            get {
+                return ResourceManager.GetString("UI_RunOneJob", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Running job {0} - {1}.
+        /// </summary>
+        public static string UI_RunStart {
+            get {
+                return ResourceManager.GetString("UI_RunStart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Source path: .
+        /// </summary>
+        public static string UI_SourcePathPrompt {
+            get {
+                return ResourceManager.GetString("UI_SourcePathPrompt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Target path: .
+        /// </summary>
+        public static string UI_TargetPathPrompt {
+            get {
+                return ResourceManager.GetString("UI_TargetPathPrompt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Update job.
+        /// </summary>
+        public static string UI_UpdateJob {
+            get {
+                return ResourceManager.GetString("UI_UpdateJob", resourceCulture);
             }
         }
     }

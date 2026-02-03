@@ -1,47 +1,42 @@
-﻿using EasySave.Core.Resources;
+﻿using EasySave.App.Console.Models;
+using EasySave.Core.Resources;
 
-namespace EasySave.App.Console;
+namespace EasySave.App.Console.Views;
 
-public class ConsoleUI
+public sealed class ConsoleView
 {
     public void Clear()
     {
         System.Console.Clear();
     }
 
-    public void ShowWelcome()
+    public void ShowHeader()
     {
         System.Console.WriteLine("=================================");
         System.Console.WriteLine(" EasySave - Backup Software ");
         System.Console.WriteLine("=================================");
     }
 
-    public int ShowMainMenu()
+    public void ShowMenu(string title, IEnumerable<MenuOption> options)
     {
         System.Console.WriteLine();
-        System.Console.WriteLine(Strings.Menu_Title);
-        System.Console.WriteLine("1 - " + Strings.Menu_Create);
-        System.Console.WriteLine("2 - " + Strings.Menu_Run);
-        System.Console.WriteLine("3 - " + Strings.Menu_ChangeLanguage);
-        System.Console.WriteLine("0 - " + Strings.Menu_Exit);
-        System.Console.Write("> ");
-        
-        var line = System.Console.ReadLine();
-
-        if (line is null)
+        System.Console.WriteLine(title);
+        foreach (var option in options)
         {
-            return 0;
+            System.Console.WriteLine($"{option.Id} - {option.Label}");
         }
-
-        if (!int.TryParse(line, out var choice))
-            return -1;
-
-        return choice;
     }
 
     public void ShowError(string message)
     {
         System.Console.ForegroundColor = ConsoleColor.Red;
+        System.Console.WriteLine(message);
+        System.Console.ResetColor();
+    }
+
+    public void ShowSuccess(string message)
+    {
+        System.Console.ForegroundColor = ConsoleColor.Green;
         System.Console.WriteLine(message);
         System.Console.ResetColor();
     }
@@ -52,12 +47,11 @@ public class ConsoleUI
         System.Console.WriteLine(message);
         System.Console.ResetColor();
     }
-    
+
     public void WaitForKey()
     {
         System.Console.WriteLine();
         System.Console.WriteLine(Strings.UI_PressKey);
         System.Console.ReadKey(true);
     }
-
 }

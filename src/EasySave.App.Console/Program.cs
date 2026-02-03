@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using EasySave.App.Console.Composition;
 using EasySave.Core.Common;
 using EasySave.Core.Models;
 
@@ -14,7 +15,16 @@ internal static class Program
         CultureInfo.CurrentCulture = culture;
         CultureInfo.CurrentUICulture = culture;
 
-        var controller = new MenuController(config);
-        controller.Start(args);
+        var compositionRoot = new ConsoleCompositionRoot(config);
+
+        if (args.Length > 0)
+        {
+            var rawArgs = string.Join(" ", args);
+            compositionRoot.BackupController.RunFromArgs(rawArgs);
+            return;
+        }
+
+        compositionRoot.MenuController.Run();
     }
 }
+
