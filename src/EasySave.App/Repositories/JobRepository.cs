@@ -1,17 +1,32 @@
-﻿using System;
+using EasySave.Core.Interfaces;
 using EasySave.Core.Models;
-namespace EasySave.App.Repositories {
 
-public class JobRepository
+namespace EasySave.App.Repositories;
+using System;
+using EasySave.Core.Models;
+
+public sealed class JobRepository : IJobRepository
 {
-    private List<BackupJob> jobs = new List<BackupJob>();
-    private const int maxjobs = 5;
-    public IReadOnlyList<BackupJob> GetAll() => jobs.AsReadOnly();
+    private List<BackupJob> _jobs = new();
+    private const int MAX_JOBS = 5;
+    
+    public IReadOnlyList<BackupJob> GetAll() => _jobs.AsReadOnly();
+    public BackupJob? GetById(string id)
+    {
+        foreach (var job in _jobs)
+        {
+            if (job.Id == id)
+            {
+                return job;
+            }
+        }
+        return null;
+    }
 
     public void Add(BackupJob job)
     {
         if (job == null) throw new ArgumentNullException(nameof(job));
-        if (jobs.Count >= maxjobs)
+        if (_jobs.Count >= MAX_JOBS)
         {
             throw new InvalidOperationException("Maximum number of jobs reached.");
         }
@@ -32,15 +47,15 @@ public class JobRepository
             throw new ArgumentException("Job TargetPath cannot be null or whitespace.", nameof(job));
         }
 
-        jobs.Add(job);
+        _jobs.Add(job);
     }
     public void Remove(string id)
     {
-        for (int i = 0; i < jobs.Count; i++)
+        for (int i = 0; i < _jobs.Count; i++)
         {
-            if (jobs[i].Id == id)
+            if (_jobs[i].Id == id)
             {
-                jobs.RemoveAt(i);
+                _jobs.RemoveAt(i);
                 return;
             }
         }
@@ -54,15 +69,14 @@ public class JobRepository
             throw new ArgumentNullException(nameof(updatedjob));
         }
 
-        for (int i = 0; i < jobs.Count; i++)
+        for (int i = 0; i < _jobs.Count; i++)
         {
-            if (jobs[i].Id == updatedjob.Id)
+            if (_jobs[i].Id == updatedjob.Id)
             {
-                jobs[i].UpdateDefinition(updatedjob.Name, updatedjob.SourcePath, updatedjob.TargetPath, updatedjob.Type);
+                _jobs[i].UpdateDefinition(updatedjob.Name, updatedjob.SourcePath, updatedjob.TargetPath, updatedjob.Type);
                 return;
             }
         }
         throw new KeyNotFoundException($"Job with ID {updatedjob.Id} not found.");
     }
-}
 }
