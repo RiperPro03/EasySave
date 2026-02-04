@@ -156,6 +156,22 @@ public sealed class JobController
             var id = _jobView.AskJobId();
             _jobRepository.Remove(id);
             _consoleView.ShowSuccess("Job deleted.");
+            FullBackup
+        }
+        catch (Exception ex)
+        {
+            _consoleView.ShowError(ex.Message);
+        }
+        _consoleView.WaitForKey();
+    }
+    
+    public void ExecuteJob()
+    {
+        try
+        {
+            var id = _jobView.AskJobId();
+            _jobRepository.Remove(id);
+            _consoleView.ShowSuccess("Job deleted.");
         }
         catch (Exception ex)
         {
