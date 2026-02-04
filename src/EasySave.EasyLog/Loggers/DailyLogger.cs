@@ -7,11 +7,11 @@ using EasySave.EasyLog.Interfaces;
 
 namespace EasySave.EasyLog.Loggers
 {
-    public class JsonDailyLogger<T> : ILogger<T>
+    public class DailyLogger<T> : ILogger<T>
     {
         private readonly string logDirectory;
 
-        public JsonDailyLogger(string logDirectory)
+        public DailyLogger(string logDirectory)
         {
             this.logDirectory = logDirectory;
             if (!Directory.Exists(logDirectory))
@@ -22,7 +22,12 @@ namespace EasySave.EasyLog.Loggers
 
         public bool Write(T entry)
         {
-           
+            try
+            {
+
+                return true; 
+            }
+            catch { return false; }
         }
     }
 }
