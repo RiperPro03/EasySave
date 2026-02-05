@@ -19,7 +19,8 @@ internal static class Program
         CultureInfo.CurrentCulture = culture;
         CultureInfo.CurrentUICulture = culture;
 
-        var jobRepository = new JobRepository();
+        var pathProvider = new PathProvider();
+        var jobRepository = new JobRepository(pathProvider);
         var backupEngine = new BackupEngine();
         var jobService = new JobService(jobRepository);
 

@@ -56,7 +56,6 @@ Exemples d'interfaces :
 * `IBackupService`
 * `IJobRepository`
 * `IFileSystem`
-* `ILogWriter`
 * `ICryptoService`
 
 Contraintes :
@@ -107,32 +106,37 @@ Exemple :
 
 **Caractéristiques :**
 * Bibliothèque **indépendante et réutilisable**
-* Support multi-formats (JSON, XML)
-* Logging synchrone et asynchrone
-* Configuration flexible (chemin, format, rotation)
+* Support multi-formats (JSON NDJSON, XML)
+* Logging synchrone avec écriture journalière
+* Configuration via options (chemin, format, safe logger)
 
 **Fonctionnalités :**
 * Écriture de logs journaliers
-* Écriture de fichier d'état temps réel (`state.json`)
-* Support des logs centralisés (v3.0 - Docker)
-* Gestion des niveaux de log (Info, Warning, Error)
+* Sérialisation via stratégie JSON/XML
+* Décorateur SafeLogger pour éviter les crashs
 
 **Interfaces exposées :**
-* `ILogger` - Interface principale de logging
-* `ILogFormatter` - Formateurs JSON/XML
+* `ILogger<T>` - Interface principale de logging
+* `ILogSerializer` - Stratégies JSON/XML
 * `ILogWriter` - Écriture physique des logs
 
 **Exemples d'utilisation :**
 ```csharp
 // Dans EasySave.App
-var logger = new EasyLogger(
-    format: LogFormat.JSON,
-    outputPath: "C:/EasySave/Logs"
-);
+var options = new LogOptions
+{
+    LogDirectory = "C:/EasySave/Logs",
+    Format = LogFormat.Json,
+    UseSafeLogger = true
+};
 
-logger.LogBackupStart(jobName: "Documents", timestamp: DateTime.Now);
-logger.LogFileTransfer(source, destination, size, duration);
-logger.LogBackupComplete(jobName, totalSize, totalDuration);
+var logger = LoggerFactory.Create<LogEntry>(options);
+logger.Write(new LogEntry
+{
+    JobName = "Documents",
+    Message = "Backup started",
+    Timestamp = DateTime.Now
+});
 ```
 
 **Avantages :**
@@ -141,7 +145,6 @@ logger.LogBackupComplete(jobName, totalSize, totalDuration);
 * Réutilisabilité dans d'autres projets ProSoft
 * Évolution indépendante (ajout de nouveaux formats)
 
----
 
 ### 4. EasySave.App.Console
 **Rôle :** interface utilisateur en ligne de commande.
