@@ -15,8 +15,7 @@ public class BackupService : IBackupService
     {
         try
         {
-            System.Console.WriteLine($"{sourcePath}");
-            System.Console.WriteLine($"{targetPath}");
+
             // Vérification du dossier source
             if (!Directory.Exists(sourcePath))
             {
