@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using System;
 using EasySave.Core.Interfaces;
 using System.IO;
 
@@ -8,9 +6,9 @@ namespace EasySave.App.Services;
 
 public class PathProvider : IPathProvider
 {
-    // Racine : C:\ProgramData\ProSoft\EasySave
+    // Racine : %APPDATA%\ProSoft\EasySave
     private readonly string _basePath = Path.Combine(
-        Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
+        Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
         "ProSoft",
         "EasySave");
 
@@ -21,7 +19,7 @@ public class PathProvider : IPathProvider
 
     public void EnsureDirectoriesCreated()
     {
-        // Crée toute l'arborescence si elle n'existe pas
+        // Cree toute l'arborescence si elle n'existe pas
         Directory.CreateDirectory(LogsPath);
         Directory.CreateDirectory(StatePath);
         Directory.CreateDirectory(ConfigPath);
