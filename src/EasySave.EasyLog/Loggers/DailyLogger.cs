@@ -1,5 +1,3 @@
-using System;
-using System.IO;
 using EasySave.EasyLog.Interfaces;
 using EasySave.EasyLog.Utils;
 
@@ -28,10 +26,10 @@ namespace EasySave.EasyLog.Loggers
                 throw new ArgumentException("Log directory is required.", nameof(logDirectory));
             }
 
-            this._logSerializer = logSerializer ?? throw new ArgumentNullException(nameof(logSerializer));
-            this._logWriter = logWriter ?? throw new ArgumentNullException(nameof(logWriter));
-            this._dateTimeProvider = dateTimeProvider ?? throw new ArgumentNullException(nameof(dateTimeProvider));
-            this._logDirectory = logDirectory;
+            _logSerializer = logSerializer ?? throw new ArgumentNullException(nameof(logSerializer));
+            _logWriter = logWriter ?? throw new ArgumentNullException(nameof(logWriter));
+            _dateTimeProvider = dateTimeProvider ?? throw new ArgumentNullException(nameof(dateTimeProvider));
+            _logDirectory = logDirectory;
 
             if (!Directory.Exists(logDirectory))
             {
