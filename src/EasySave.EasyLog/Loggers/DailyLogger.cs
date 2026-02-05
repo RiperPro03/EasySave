@@ -29,9 +29,9 @@ namespace EasySave.EasyLog.Loggers
         {
             string filePath = Path.Combine(logDirectory, $"log_{DateTime.Now:yyyy-MM-dd}.{logSerializer.FileExtension}");
 
-            string json = logSerializer.Serialize(entry);
+            string text = logSerializer.Serialize(entry);
 
-            return logWriter.Write(filePath, json);
+            return logWriter.Write(filePath, text);
         }
     }
 }
