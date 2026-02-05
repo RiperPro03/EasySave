@@ -75,54 +75,37 @@ public sealed class BackupController
 
     public void RunAll()
     {
-        _consoleView.ShowInfo("//TODO: run all jobs will be handled by EasySave.App.");
+        var jobs = _jobRepository.GetAll();
+
+        if (jobs.Count == 0)
+        {
+            _consoleView.ShowError(Strings.UI_NoJobsConfigured);
+            _consoleView.WaitForKey();
+            return;
+        }
+
+        var results = new List<BackupResultDto>();
+
+        foreach (var job in jobs)
+        {
+            // Afficher début
+            _backupView.ShowRunStart(job);
+
+            // Exécuter
+            var result = _backupEngine.Run(job);
+            results.Add(result);
+
+            // Afficher fin
+            _backupView.ShowRunEnd(result);
+        }
+
+        // Résumé global
+        _backupView.ShowBatchResult(results);
+
         _consoleView.WaitForKey();
     }
 
-    /*private void RunOneInteractive()
-    {
-        _consoleView.ShowInfo("//TODO: run one job will be handled by EasySave.App.");
-        _consoleView.WaitForKey();
-    }*/
-    
-    /*private void RunOneInteractive()
-    {
-        // 1. Récupérer les jobs
-        var jobs = _jobRepository.GetAll().ToList();
 
-        if (!jobs.Any())
-        {
-            //_consoleView.ShowError(Strings.Error_NoJob); 
-            _consoleView.ShowError("Aucun job disponible."); // TODO : Mettre les langue dessus
-            _consoleView.WaitForKey();
-            return;
-        }
-
-        // 2. Afficher les jobs
-        _backupView.ShowJobs(jobs);
-
-        // 3. Lire l'id
-        //int jobId = _backupView.ReadJobId();
-        int jobId = 1; // TODO corrige ça
-
-        // 4. Récupérer le job
-        var job = _jobRepository.GetById(jobId.ToString());
-        if (job is null)
-        {
-            //_consoleView.ShowError(Strings.Error_JobNotFound);
-            _consoleView.ShowError("Job introuvable."); // TODO : Mettre les langue dessus
-            _consoleView.WaitForKey();
-            return;
-        }
-
-        // 5. Exécution VIA LE BACKUP ENGINE
-        var result = _backupEngine.Run(job);
-
-        // 6. Affichage du résultat
-        _backupView.ShowBackupResult(result);
-
-        _consoleView.WaitForKey();
-    }*/
     
     private void RunOneInteractive()
     {
@@ -145,7 +128,7 @@ public sealed class BackupController
         if (job is null)
         {
             //_consoleView.ShowError(Strings.Error_JobNotFound);
-            _consoleView.ShowError("Job introuvable."); // TODO : Mettre les langue dessus
+            _consoleView.ShowError("Job introuvable."); // TODO : Mettre les langues dessus
             _consoleView.WaitForKey();
             return;
         }
