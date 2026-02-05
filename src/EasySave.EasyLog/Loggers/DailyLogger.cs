@@ -1,23 +1,37 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System;
+using System.IO;
 using EasySave.EasyLog.Interfaces;
+using EasySave.EasyLog.Utils;
 
 namespace EasySave.EasyLog.Loggers
 {
-    public class DailyLogger<T> : ILogger<T>
+    internal sealed class DailyLogger<T> : ILogger<T>
     {
-        private readonly string logDirectory;
-        private readonly ILogSerializer logSerializer;
-        private readonly ILogWriter logWriter;
+        private readonly string _logDirectory;
+        private readonly ILogSerializer _logSerializer;
+        private readonly ILogWriter _logWriter;
+        private readonly Func<DateTime> _dateTimeProvider;
 
         public DailyLogger(string logDirectory, ILogSerializer logSerializer, ILogWriter logWriter)
+            : this(logDirectory, logSerializer, logWriter, () => DateTime.Now)
         {
-            this.logDirectory = logDirectory;
-            this.logSerializer = logSerializer;
-            this.logWriter = logWriter;
+        }
+
+        public DailyLogger(
+            string logDirectory,
+            ILogSerializer logSerializer,
+            ILogWriter logWriter,
+            Func<DateTime> dateTimeProvider)
+        {
+            if (string.IsNullOrWhiteSpace(logDirectory))
+            {
+                throw new ArgumentException("Log directory is required.", nameof(logDirectory));
+            }
+
+            this._logSerializer = logSerializer ?? throw new ArgumentNullException(nameof(logSerializer));
+            this._logWriter = logWriter ?? throw new ArgumentNullException(nameof(logWriter));
+            this._dateTimeProvider = dateTimeProvider ?? throw new ArgumentNullException(nameof(dateTimeProvider));
+            this._logDirectory = logDirectory;
 
             if (!Directory.Exists(logDirectory))
             {
@@ -27,11 +41,14 @@ namespace EasySave.EasyLog.Loggers
 
         public bool Write(T entry)
         {
-            string filePath = Path.Combine(logDirectory, $"log_{DateTime.Now:yyyy-MM-dd}.{logSerializer.FileExtension}");
+            string filePath = DailyFileHelper.GetLogFilePath(
+                _logDirectory,
+                _logSerializer.FileExtension,
+                _dateTimeProvider());
 
-            string text = logSerializer.Serialize(entry);
+            string text = _logSerializer.Serialize(entry!);
 
-            return logWriter.Write(filePath, text);
+            return _logWriter.Write(filePath, text);
         }
     }
 }
