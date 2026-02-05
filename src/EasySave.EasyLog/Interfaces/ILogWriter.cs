@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace EasySave.EasyLog.Interfaces
 {
-    internal interface ILogWriter
+    public interface ILogWriter
     {
+        bool Write(string filepath, string message);
     }
 }

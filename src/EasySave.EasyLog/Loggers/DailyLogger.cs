@@ -10,10 +10,15 @@ namespace EasySave.EasyLog.Loggers
     public class DailyLogger<T> : ILogger<T>
     {
         private readonly string logDirectory;
+        private readonly ILogSerializer logSerializer;
+        private readonly ILogWriter logWriter;
 
-        public DailyLogger(string logDirectory)
+        public DailyLogger(string logDirectory, ILogSerializer logSerializer, ILogWriter logWriter)
         {
             this.logDirectory = logDirectory;
+            this.logSerializer = logSerializer;
+            this.logWriter = logWriter;
+
             if (!Directory.Exists(logDirectory))
             {
                 Directory.CreateDirectory(logDirectory);
@@ -22,12 +27,11 @@ namespace EasySave.EasyLog.Loggers
 
         public bool Write(T entry)
         {
-            try
-            {
+            string filePath = Path.Combine(logDirectory, $"log_{DateTime.Now:yyyy-MM-dd}.{logSerializer.FileExtension}");
 
-                return true; 
-            }
-            catch { return false; }
+            string json = logSerializer.Serialize(entry);
+
+            return logWriter.Write(filePath, json);
         }
     }
 }

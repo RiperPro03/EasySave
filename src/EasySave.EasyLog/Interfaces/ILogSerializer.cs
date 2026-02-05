@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace EasySave.EasyLog.Interfaces
 {
-    internal interface ILogSerializer
+    public interface ILogSerializer
     {
+        string Serialize(object entry);
+        string FileExtension { get; }
+
     }
 }
