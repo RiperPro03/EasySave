@@ -1,22 +1,22 @@
-﻿using EasySave.Core.Interfaces;
+﻿using EasySave.App.Services;
 using System;
-using System.Collections.Generic;
-using System.Text;
+using System.IO;
 using Xunit;
-using EasySave.App.Services;
 
-namespace EasySave.Tests;
+namespace EasySave.Tests.App.Services;
 
 public class PathProviderTests
 {
-    [Fact] 
-    public void Paths_ShouldBeInProgramData()
+    [Fact]
+    public void Paths_ShouldBeInAppData()
     {
         var provider = new PathProvider();
+        var appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
 
-        // Vérifie que le chemin commence bien par le dossier système Windows
-        Assert.Contains("ProgramData", provider.LogsPath);
-        // Vérifie que la hiérarchie demandée est respectée
-        Assert.Contains("ProSoft\\EasySave", provider.LogsPath);
+        // Verifie que le chemin commence bien par %APPDATA%
+        Assert.StartsWith(appDataPath, provider.LogsPath, StringComparison.OrdinalIgnoreCase);
+        // Verifie que la hierarchie demandee est respectee
+        var expectedSuffix = Path.Combine("ProSoft", "EasySave");
+        Assert.Contains(expectedSuffix, provider.LogsPath);
     }
 }

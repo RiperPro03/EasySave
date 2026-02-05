@@ -1,15 +1,21 @@
-﻿using EasySave.Core.Models;
-using EasySave.Core.Enums;
+using System;
+using System.Collections.Generic;
+using System.IO;
 using EasySave.App.Repositories;
+using EasySave.Core.Enums;
+using EasySave.Core.Interfaces;
+using EasySave.Core.Models;
 
 namespace EasySave.Tests.App.Repositories;
 
-public class JobRepositoryTests
+public class JobRepositoryTests : IDisposable
 {
+    private readonly List<string> _pathsToClean = new();
+
     [Fact]
     public void Add_ShouldAddJob_WhenUnderLimit()
     {
-        var repository = new JobRepository();
+        var repository = CreateRepository();
         var job = new BackupJob("1", "Job1", @"C:\Src", @"D:\Dst", BackupType.Full);
 
         repository.Add(job);
@@ -22,7 +28,7 @@ public class JobRepositoryTests
     [Fact]
     public void Add_ShouldThrow_WhenMaxJobsReached()
     {
-        var repository = new JobRepository();
+        var repository = CreateRepository();
         for (int i = 0; i < 5; i++)
         {
             repository.Add(new BackupJob(
@@ -43,10 +49,11 @@ public class JobRepositoryTests
 
         Assert.Throws<InvalidOperationException>(() => repository.Add(newJob));
     }
+
     [Fact]
     public void Remove_ShouldRemoveJob_WhenJobExists()
     {
-        var repository = new JobRepository();
+        var repository = CreateRepository();
         var job = new BackupJob(
             "1",
             "Job1",
@@ -61,17 +68,18 @@ public class JobRepositoryTests
         var allJobs = repository.GetAll();
         Assert.Empty(allJobs);
     }
+
     [Fact]
     public void Remove_ShouldThrow_WhenJobNotFound()
     {
-        var repository = new JobRepository();
+        var repository = CreateRepository();
         Assert.Throws<KeyNotFoundException>(() => repository.Remove("nonexistent-id"));
     }
 
     [Fact]
     public void Update_ShouldUpdateJob_WhenJobExists()
     {
-        var repository = new JobRepository();
+        var repository = CreateRepository();
         var job = new BackupJob(
             "2",
             "Job2",
@@ -99,10 +107,11 @@ public class JobRepositoryTests
         Assert.Equal(BackupType.Differential, retrievedJob.Type);
         Assert.False(retrievedJob.IsActive);
     }
+
     [Fact]
     public void GetById_ShouldReturnCorrectJob()
     {
-        var repository = new JobRepository();
+        var repository = CreateRepository();
         var job = new BackupJob("3", "Job3", @"C:\Src", @"D:\Dst", BackupType.Full);
         repository.Add(job);
 
@@ -114,7 +123,7 @@ public class JobRepositoryTests
     [Fact]
     public void GetById_ShouldReturnNull_WhenMissing()
     {
-        var repository = new JobRepository();
+        var repository = CreateRepository();
 
         var retrievedJob = repository.GetById("missing-id");
 
@@ -124,7 +133,7 @@ public class JobRepositoryTests
     [Fact]
     public void GetAll_ShouldReturnAllJobs()
     {
-        var repository = new JobRepository();
+        var repository = CreateRepository();
         repository.Add(new BackupJob("1", "Job1", @"C:\Src", @"D:\Dst", BackupType.Full));
         repository.Add(new BackupJob("2", "Job2", @"C:\Src", @"D:\Dst", BackupType.Differential));
 
@@ -133,5 +142,42 @@ public class JobRepositoryTests
         Assert.Contains(allJobs, j => j.Name == "Job1");
         Assert.Contains(allJobs, j => j.Name == "Job2");
     }
-}
 
+    public void Dispose()
+    {
+        foreach (var path in _pathsToClean)
+        {
+            if (Directory.Exists(path))
+                Directory.Delete(path, true);
+        }
+    }
+
+    private JobRepository CreateRepository()
+    {
+        var basePath = Path.Combine(Path.GetTempPath(), "EasySave.Tests", Guid.NewGuid().ToString("N"));
+        _pathsToClean.Add(basePath);
+        var pathProvider = new TestPathProvider(basePath);
+        return new JobRepository(pathProvider);
+    }
+
+    private sealed class TestPathProvider : IPathProvider
+    {
+        private readonly string _basePath;
+
+        public TestPathProvider(string basePath)
+        {
+            _basePath = basePath;
+        }
+
+        public string LogsPath => Path.Combine(_basePath, "Logs");
+        public string StatePath => Path.Combine(_basePath, "State");
+        public string ConfigPath => Path.Combine(_basePath, "Config");
+
+        public void EnsureDirectoriesCreated()
+        {
+            Directory.CreateDirectory(LogsPath);
+            Directory.CreateDirectory(StatePath);
+            Directory.CreateDirectory(ConfigPath);
+        }
+    }
+}
