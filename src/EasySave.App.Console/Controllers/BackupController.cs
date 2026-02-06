@@ -127,8 +127,7 @@ public sealed class BackupController
         var job = _jobRepository.GetById(jobId.ToString());
         if (job is null)
         {
-            //_consoleView.ShowError(Strings.Error_JobNotFound);
-            _consoleView.ShowError("Job introuvable."); // TODO : Mettre les langues dessus
+            _consoleView.ShowError(Strings.Error_JobNotFound);
             _consoleView.WaitForKey();
             return;
         }

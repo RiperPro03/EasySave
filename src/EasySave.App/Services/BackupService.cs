@@ -6,6 +6,8 @@ using System.IO;
 // Bibliothèque dédiée à la gestion du système de fichiers, elle permet d'utiliser Directory, File et Path
 using EasySave.Core.Interfaces;
 // Là où nous avons notre l’interface IBackupService
+using EasySave.Core.Resources;
+// Pour avoir les erreurs write en anglais ou français
     
 namespace EasySave.App.Services;
 
@@ -19,7 +21,7 @@ public class BackupService : IBackupService
             // Vérification du dossier source
             if (!Directory.Exists(sourcePath))
             {
-                Console.WriteLine($"[ERREUR] Le dossier source n'existe pas : {sourcePath}");
+                Console.WriteLine(Strings.Error_SourceFolderMissing, sourcePath);
                 return;
             }
 
@@ -54,8 +56,8 @@ public class BackupService : IBackupService
                 
                 stopwatch.Stop();
 
-                Console.WriteLine(
-                    $"[OK] {fileName} copié en {stopwatch.ElapsedMilliseconds} ms");
+                Console.WriteLine(Strings.FileCopied, fileName, stopwatch.ElapsedMilliseconds);
+
             }
             // Si un fichier échoue, la sauvegarde continue et les autres fichiers sont copiés
             catch (Exception ex)
@@ -88,7 +90,7 @@ public class BackupService : IBackupService
     private void LogError(Exception ex)
     {
         // Log simple (console pour l’instant)
-        Console.WriteLine($"[ERREUR] {ex.Message}");
+        Console.WriteLine(Strings.Error_Generic, ex.Message);
     }
 }
 

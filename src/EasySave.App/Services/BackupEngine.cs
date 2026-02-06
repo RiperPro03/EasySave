@@ -1,25 +1,7 @@
-﻿/*using EasySave.Core.DTO;
+﻿using EasySave.Core.DTO;
 using EasySave.Core.Interfaces;
 using EasySave.Core.Models;
-
-namespace EasySave.App.Services;
-
-public sealed class BackupEngine : IBackupEngine
-{
-    public BackupResultDto Run(BackupJob job)
-    {
-        return new BackupResultDto
-        {
-            Success = false,
-            Message = "//TODO: backup engine not implemented.",
-            Duration = TimeSpan.Zero
-        };
-    }
-}*/
-
-using EasySave.Core.DTO;
-using EasySave.Core.Interfaces;
-using EasySave.Core.Models;
+using EasySave.Core.Resources;
 
 namespace EasySave.App.Services;
 
@@ -51,6 +33,12 @@ public sealed class BackupEngine : IBackupEngine
             {
                 Success = true,
                 Message = "Sauvegarde terminée avec succès.",
+                Duration = DateTime.Now - start
+            };
+            return new BackupResultDto
+            {
+                Success = true, 
+                Message = Strings.Backup_Success, 
                 Duration = DateTime.Now - start
             };
         }
