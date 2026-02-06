@@ -1,3 +1,4 @@
+using EasySave.App.Repositories;
 using EasySave.Core.Enums;
 using EasySave.Core.Interfaces;
 using EasySave.Core.Models;
@@ -8,7 +9,12 @@ public sealed class JobService : IJobService
 {
     private readonly IJobRepository _jobRepository;
 
-    public JobService(IJobRepository jobRepository)
+    public JobService(IPathProvider pathProvider)
+        : this(new JobRepository(pathProvider))
+    {
+    }
+
+    internal JobService(IJobRepository jobRepository)
     {
         _jobRepository = jobRepository;
     }
@@ -45,6 +51,25 @@ public sealed class JobService : IJobService
             isActive: isActive,
             createdAtUtc: existing.CreatedAt,
             lastRunUtc: existing.LastRun);
+
+        _jobRepository.Update(updated);
+    }
+
+    public void MarkExecuted(string id, DateTime? nowUtc = null)
+    {
+        var existing = _jobRepository.GetById(id);
+        if (existing is null)
+            throw new KeyNotFoundException($"Job with ID {id} not found.");
+
+        var updated = new BackupJob(
+            id: existing.Id,
+            name: existing.Name,
+            sourcePath: existing.SourcePath,
+            targetPath: existing.TargetPath,
+            type: existing.Type,
+            isActive: existing.IsActive,
+            createdAtUtc: existing.CreatedAt,
+            lastRunUtc: nowUtc ?? DateTime.UtcNow);
 
         _jobRepository.Update(updated);
     }

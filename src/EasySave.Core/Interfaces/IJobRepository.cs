@@ -13,4 +13,7 @@ public interface IJobRepository
     void Add(BackupJob job);
     void Update(BackupJob job);
     void Remove(string id);
+
 }
+
+

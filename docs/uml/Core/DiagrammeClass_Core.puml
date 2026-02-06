@@ -1,0 +1,227 @@
+@startuml EasySave_Core_Classes
+
+' ============================================
+' CONFIGURATION
+' ============================================
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam linetype polyline
+skinparam nodesep 200
+skinparam ranksep 200
+
+skinparam class {
+    BackgroundColor<<Model>> #C8E6C9
+    BorderColor<<Model>> #388E3C
+    BackgroundColor<<DTO>> #E1F5FE
+    BorderColor<<DTO>> #0277BD
+    BackgroundColor<<Interface>> #E8F5E9
+    BorderColor<<Interface>> #2E7D32
+}
+
+title Diagramme de classes - EasySave.Core (Domain + DTO + Interfaces)
+left to right direction
+skinparam packageStyle rectangle
+
+' ============================================
+' PACKAGE: EasySave.Core
+' ============================================
+package "EasySave.Core" {
+
+  package "Enums" {
+    enum BackupType <<Model>> {
+      Full
+      Differential
+    }
+
+    enum JobStatus <<Model>> {
+      Idle
+      Running
+      Paused
+      Completed
+      Error
+    }
+
+    enum Language <<Model>> {
+      English
+      French
+    }
+  }
+
+  package "Common" {
+    class Guard <<Model>> {
+      {static} +string NotNullOrWhiteSpace(string value, string paramName)
+    }
+
+    class Localization <<Model>> {
+      {static} +CultureInfo GetCulture(Language language)
+    }
+  }
+
+  package "Models" {
+    class BackupJob <<Model>> {
+      +string Id
+      +string Name
+      +string SourcePath
+      +string TargetPath
+      +BackupType Type
+      +bool IsActive
+      +DateTime CreatedAt
+      +DateTime LastRun
+      __
+      +BackupJob(id: string, name: string, sourcePath: string, targetPath: string, type: BackupType, isActive: bool, createdAtUtc: DateTime, lastRunUtc: DateTime)
+      +void Enable()
+      +void Disable()
+      +void MarkExecuted(nowUtc: DateTime)
+      +void UpdateDefinition(name: string, sourcePath: string, targetPath: string, type: BackupType)
+      +string ToString()
+    }
+
+    class AppConfig <<Model>> {
+      +Language Language
+      +string LogDirectory
+      __
+      -AppConfig(language: Language, logDirectory: string)
+      +{static} AppConfig LoadDefaults()
+      +void ChangeLanguage(Language language)
+      +void UpdateLogDirectory(string logDirectory)
+      -{static} string GetDefaultLogDirectory()
+    }
+  }
+
+  package "DTO" {
+    class BackupJobDto <<DTO>> {
+      +string Id
+      +string Name
+      +string SourcePath
+      +string TargetPath
+      +string Type
+      +bool IsActive
+      +DateTime CreatedAt
+      +DateTime LastRun
+      __
+      +BackupJobDto()
+      +bool IsValid()
+      +BackupJob ToModel()
+      +{static} BackupJobDto FromModel(job: BackupJob)
+    }
+
+    class BackupResultDto <<DTO>> {
+      +bool Success
+      +string Message
+      +int FilesProcessed
+      +long TotalBytesProcessed
+      +int CopiedCount
+      +int SkippedCount
+      +int ErrorCount
+      +TimeSpan Duration
+      +List Errors
+      __
+      +BackupResultDto()
+    }
+
+    class JobStateDto <<DTO>> {
+      +string JobId
+      +string JobName
+      +JobStatus Status
+      +string CurrentFile
+      +long TotalFilesToCopy
+      +long TotalFilesCopied
+      +long TotalSizeBytes
+      +long SizeCopiedBytes
+      +int ProgressPercentage
+      +DateTime StartTimeUtc
+      +DateTime EndTimeUtc
+      +string ErrorMessage
+      __
+      +JobStateDto()
+    }
+
+    class LogEntryDto <<DTO>> {
+      +DateTime TimestampUtc
+      +string JobName
+      +string SourcePath
+      +string TargetPath
+      +long FileSizeBytes
+      +double TransferTimeMs
+      +string Status
+      +string ErrorMessage
+      __
+      +LogEntryDto()
+    }
+
+    class ResultDto <<DTO>> {
+      +bool Success
+      +string Message
+      +string ErrorCode
+      __
+      +{static} ResultDto Ok(message: string)
+      +{static} ResultDto Fail(message: string, errorCode: string)
+    }
+  }
+
+  package "Interfaces" {
+    interface IBackupEngine <<Interface>> {
+      +BackupResultDto Run(BackupJob job)
+    }
+
+    interface IBackupCopyStrategy <<Interface>> {
+      +bool ShouldCopy(string sourcePath, string targetPath)
+    }
+
+    interface IBackupService <<Interface>> {
+      +BackupResultDto Run(BackupJob job)
+    }
+
+    interface IFileSystem <<Interface>> {
+      +bool DirectoryExists(string path)
+      +void CreateDirectory(string path)
+      +IEnumerable EnumerateFiles(string path, bool recursive)
+      +bool FileExists(string path)
+      +long GetFileSize(string path)
+      +DateTime GetLastWriteTimeUtc(string path)
+      +void CopyFile(string sourcePath, string targetPath, bool overwrite)
+    }
+
+    interface IJobRepository <<Interface>> {
+      +IReadOnlyList GetAll()
+      +BackupJob GetById(string id)
+      +void Add(BackupJob job)
+      +void Update(BackupJob job)
+      +void Remove(string id)
+    }
+
+    interface IJobService <<Interface>> {
+      +IReadOnlyList GetAll()
+      +BackupJob GetById(string id)
+      +void Create(string id, string name, string sourcePath, string targetPath, BackupType type, bool isActive)
+      +void Update(string id, string name, string sourcePath, string targetPath, BackupType type, bool isActive)
+      +void MarkExecuted(string id, DateTime nowUtc)
+      +void Delete(string id)
+    }
+
+    interface IPathProvider <<Interface>> {
+      +string LogsPath
+      +string StatePath
+      +string ConfigPath
+      +void EnsureDirectoriesCreated()
+    }
+
+    interface IStateWriter <<Interface>> {
+      +void Write(JobStateDto state)
+    }
+  }
+}
+
+' ============================================
+' RELATIONS - Core
+' ============================================
+EasySave.Core.Models.BackupJob --> EasySave.Core.Enums.BackupType : uses
+EasySave.Core.DTO.JobStateDto --> EasySave.Core.Enums.JobStatus : uses
+EasySave.Core.Models.AppConfig --> EasySave.Core.Enums.Language : uses
+EasySave.Core.DTO.BackupJobDto ..> EasySave.Core.Models.BackupJob : ToModel()/FromModel()
+EasySave.Core.DTO.BackupJobDto ..> EasySave.Core.Enums.BackupType : parse(Type)
+EasySave.Core.Models.BackupJob ..> EasySave.Core.Common.Guard : validates
+EasySave.Core.Models.AppConfig ..> EasySave.Core.Common.Guard : validates
+EasySave.Core.Common.Localization --> EasySave.Core.Enums.Language : uses
+
+@enduml

@@ -1,0 +1,111 @@
+@startuml EasySave_App_Classes
+
+' ============================================
+' CONFIGURATION
+' ============================================
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam linetype polyline
+skinparam nodesep 200
+skinparam ranksep 200
+
+skinparam class {
+    BackgroundColor<<Service>> #FFF3E0
+    BorderColor<<Service>> #F57C00
+    BackgroundColor<<Repository>> #F3E5F5
+    BorderColor<<Repository>> #7B1FA2
+    BackgroundColor<<Strategy>> #E3F2FD
+    BorderColor<<Strategy>> #1565C0
+}
+
+title Diagramme de classes - EasySave.App (Implémentations)
+left to right direction
+skinparam packageStyle rectangle
+
+' ============================================
+' PACKAGE: EasySave.App
+' ============================================
+package "EasySave.App" {
+
+  package "Services" {
+    class BackupEngine <<Service>> {
+      +BackupResultDto Run(BackupJob job)
+      -void ExecuteBackup(string sourceRoot, string targetRoot, IBackupCopyStrategy strategy, BackupResultDto result)
+      -void CopyFile(string sourcePath, string targetPath)
+      -void WriteSummaryLog(BackupJob job, BackupResultDto result)
+    }
+
+    class BackupService <<Service>> {
+      -IBackupEngine _backupEngine
+      -IJobService _jobService
+      __
+      +BackupService(IJobService jobService, string logDirectory)
+      +BackupResultDto Run(BackupJob job)
+    }
+
+    class JobService <<Service>> {
+      -IJobRepository _jobRepository
+      __
+      +JobService(IPathProvider pathProvider)
+      +IReadOnlyList GetAll()
+      +BackupJob GetById(string id)
+      +void Create(string id, string name, string sourcePath, string targetPath, BackupType type, bool isActive)
+      +void Update(string id, string name, string sourcePath, string targetPath, BackupType type, bool isActive)
+      +void MarkExecuted(string id, DateTime nowUtc)
+      +void Delete(string id)
+    }
+
+    class PathProvider <<Service>> {
+      +string LogsPath
+      +string StatePath
+      +string ConfigPath
+      +void EnsureDirectoriesCreated()
+    }
+  }
+
+  package "Strategies" {
+    class DifferentialCopyStrategy <<Strategy>> {
+      +bool ShouldCopy(string sourcePath, string targetPath)
+    }
+
+    class FullCopyStrategy <<Strategy>> {
+      +bool ShouldCopy(string sourcePath, string targetPath)
+    }
+  }
+
+  package "Repositories" {
+    class JobRepository <<Repository>> {
+      -IPathProvider _pathProvider
+      -List _jobs
+      -string _jobsFilePath
+      -int MaxJobs
+      __
+      +IReadOnlyList GetAll()
+      +BackupJob GetById(string id)
+      +void Add(BackupJob job)
+      +void Update(BackupJob job)
+      +void Remove(string id)
+    }
+  }
+}
+
+' ============================================
+' RELATIONS - App
+' ============================================
+EasySave.App.Services.BackupEngine ..> EasySave.App.Strategies.DifferentialCopyStrategy : uses
+EasySave.App.Services.BackupEngine ..> EasySave.App.Strategies.FullCopyStrategy : uses
+EasySave.App.Strategies.DifferentialCopyStrategy ..|> EasySave.Core.Interfaces.IBackupCopyStrategy : implements
+EasySave.App.Strategies.FullCopyStrategy ..|> EasySave.Core.Interfaces.IBackupCopyStrategy : implements
+
+EasySave.App.Services.BackupEngine ..|> EasySave.Core.Interfaces.IBackupEngine : implements
+EasySave.App.Services.BackupService ..|> EasySave.Core.Interfaces.IBackupService : implements
+EasySave.App.Services.JobService ..|> EasySave.Core.Interfaces.IJobService : implements
+EasySave.App.Services.PathProvider ..|> EasySave.Core.Interfaces.IPathProvider : implements
+EasySave.App.Repositories.JobRepository ..|> EasySave.Core.Interfaces.IJobRepository : implements
+
+EasySave.App.Services.BackupService --> EasySave.App.Services.BackupEngine : uses
+EasySave.App.Services.BackupService --> EasySave.App.Services.JobService : uses
+EasySave.App.Services.JobService --> EasySave.App.Repositories.JobRepository : uses
+EasySave.App.Repositories.JobRepository --> EasySave.App.Services.PathProvider : uses
+
+@enduml

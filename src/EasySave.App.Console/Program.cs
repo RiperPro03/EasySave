@@ -4,7 +4,6 @@ using EasySave.Core.Models;
 using EasySave.App.Console.Controllers;
 using EasySave.App.Console.Input;
 using EasySave.App.Console.Views;
-using EasySave.App.Repositories;
 using EasySave.App.Services;
 
 namespace EasySave.App.Console;
@@ -20,9 +19,8 @@ internal static class Program
         CultureInfo.CurrentUICulture = culture;
 
         var pathProvider = new PathProvider();
-        var jobRepository = new JobRepository(pathProvider);
-        var backupEngine = new BackupEngine();
-        var jobService = new JobService(jobRepository);
+        var jobService = new JobService(pathProvider);
+        var backupService = new BackupService(jobService, pathProvider.LogsPath);
 
         var input = new ConsoleInput();
         var argsParser = new ArgsParser();
@@ -33,7 +31,7 @@ internal static class Program
 
         var settingsController = new SettingsController(config, consoleView, input);
         var jobController = new JobController(jobService, jobView, consoleView);
-        var backupController = new BackupController(backupEngine, backupView, consoleView, argsParser);
+        var backupController = new BackupController(backupService, jobService, backupView, consoleView, argsParser);
         var menuController = new MenuController(consoleView, input, jobController, backupController, settingsController);
 
         if (args.Length > 0)

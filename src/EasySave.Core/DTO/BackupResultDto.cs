@@ -10,6 +10,9 @@ public class BackupResultDto
 
     public int FilesProcessed { get; set; }
     public long TotalBytesProcessed { get; set; }
+    public int CopiedCount { get; set; }
+    public int SkippedCount { get; set; }
+    public int ErrorCount { get; set; }
 
     /// <summary>Durée totale (en ticks .NET). Alternative : DurationMs (long) si tu préfères.</summary>
     public TimeSpan Duration { get; set; }

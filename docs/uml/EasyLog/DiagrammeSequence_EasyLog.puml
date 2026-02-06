@@ -1,0 +1,90 @@
+@startuml
+title <b>EasyLog</b>\n<i>Sequence de journalisation</i>
+
+' -------------------- THEME / STYLE --------------------
+skinparam shadowing false
+skinparam dpi 170
+skinparam backgroundColor #FFFFFF
+
+skinparam sequence {
+  MessageAlign center
+  ArrowColor #2F3A4A
+  ArrowThickness 1
+  LifeLineBorderColor #B7C0CE
+  LifeLineBackgroundColor #F7F9FC
+
+  ParticipantBorderColor #2F3A4A
+  ParticipantBackgroundColor #EEF3FF
+  ParticipantFontColor #1C2A3A
+  ParticipantFontStyle bold
+
+  ActorBorderColor #2F3A4A
+  ActorBackgroundColor #FFF4E5
+
+  BoxBorderColor #9FB1C9
+  BoxBackgroundColor #F7F9FC
+
+  GroupBorderColor #9FB1C9
+  GroupBackgroundColor #F7F9FC
+}
+
+' -------------------- ACTEURS / PARTICIPANTS --------------------
+actor Client #FFF4E5
+
+participant "<b>LoggerFactory</b>" as Factory #EEF3FF
+participant "<b>DailyLogger<T></b>" as DailyLogger #E9F7EF
+participant "<b>SafeLogger<T></b>" as SafeLogger #F3E8FF
+participant "<b>ILogSerializer</b>" as Serializer #E6F4FF
+participant "<b>ILogWriter</b>" as Writer #FFE9EC
+
+' -------------------- FLUX --------------------
+== Configuration ==
+Client -> Client : new LogOptions
+
+box "Creation du logger" #F7F9FC
+Client -> Factory : Create<T>(options)
+
+alt <b>Format = JSON</b>
+  Factory -> Serializer : new JsonSerializer
+else <b>Format = XML</b>
+  Factory -> Serializer : new XmlSerializer
+end
+
+Factory -> Writer : new FileLogWriter
+Factory -> DailyLogger : new DailyLogger(logDirectory,\nserializer, writer)
+
+opt <b>UseSafeLogger = true</b>
+  Factory -> SafeLogger : new SafeLogger(dailyLogger)
+  Factory --> Client : ILogger<T>
+end
+
+note right of SafeLogger
+  Protège l'appel (exceptions, retries, etc.)
+end note
+
+opt <b>UseSafeLogger = false</b>
+  Factory --> Client : ILogger<T>
+end
+end box
+
+== ecriture ==
+opt <b>UseSafeLogger = true</b>
+  Client -> SafeLogger : Write(entry)
+  SafeLogger -> DailyLogger : Write(entry)
+else <b>UseSafeLogger = false</b>
+  Client -> DailyLogger : Write(entry)
+end
+
+DailyLogger -> Serializer : Serialize(entry)
+Serializer --> DailyLogger : serialized line
+DailyLogger -> Writer : Write(path, line)
+Writer --> DailyLogger : bool
+
+opt <b>UseSafeLogger = true</b>
+  DailyLogger --> SafeLogger : bool
+  SafeLogger --> Client : bool
+else <b>UseSafeLogger = false</b>
+  DailyLogger --> Client : bool
+end
+
+@enduml
