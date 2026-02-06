@@ -31,12 +31,6 @@ public sealed class BackupEngine : IBackupEngine
 
             return new BackupResultDto
             {
-                Success = true,
-                Message = "Sauvegarde terminée avec succès.",
-                Duration = DateTime.Now - start
-            };
-            return new BackupResultDto
-            {
                 Success = true, 
                 Message = Strings.Backup_Success, 
                 Duration = DateTime.Now - start
