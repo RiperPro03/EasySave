@@ -53,7 +53,10 @@ EasySave/
 ```
 
 ## Equipe
-- Christopher ASIN 
+- Christopher ASIN
+- Shayna ROSIER
+- Mathis VOGEL
+- Maxime
 
 ## Prerequis
 - Windows
