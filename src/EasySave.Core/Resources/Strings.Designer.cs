@@ -161,6 +161,15 @@ namespace EasySave.Core.Resources {
                 return ResourceManager.GetString("Info_LanguageChanged", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Log format updated.
+        /// </summary>
+        public static string Info_LogFormatChanged {
+            get {
+                return ResourceManager.GetString("Info_LogFormatChanged", resourceCulture);
+            }
+        }
         
         /// <summary>
         ///   Recherche une chaîne localisée semblable à English.
@@ -181,11 +190,11 @@ namespace EasySave.Core.Resources {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à Change language.
+        ///   Recherche une chaîne localisée semblable à Settings.
         /// </summary>
-        public static string Menu_ChangeLanguage {
+        public static string Menu_Settings {
             get {
-                return ResourceManager.GetString("Menu_ChangeLanguage", resourceCulture);
+                return ResourceManager.GetString("Menu_Settings", resourceCulture);
             }
         }
         
@@ -231,6 +240,24 @@ namespace EasySave.Core.Resources {
         public static string UI_Back {
             get {
                 return ResourceManager.GetString("UI_Back", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Log format: JSON.
+        /// </summary>
+        public static string UI_LogFormatJson {
+            get {
+                return ResourceManager.GetString("UI_LogFormatJson", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Log format: XML.
+        /// </summary>
+        public static string UI_LogFormatXml {
+            get {
+                return ResourceManager.GetString("UI_LogFormatXml", resourceCulture);
             }
         }
         

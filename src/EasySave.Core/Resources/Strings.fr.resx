@@ -41,8 +41,8 @@ Nommage des ressources :
     <data name="Menu_Exit" xml:space="preserve">
         <value>Quitter</value>
     </data>
-    <data name="Menu_ChangeLanguage" xml:space="preserve">
-        <value>Changer la langue</value>
+    <data name="Menu_Settings" xml:space="preserve">
+        <value>Paramètres</value>
     </data>
 
     <data name="Lang_English" xml:space="preserve">
@@ -64,6 +64,9 @@ Nommage des ressources :
 
     <data name="Info_LanguageChanged" xml:space="preserve">
         <value>Langue mise à jour</value>
+    </data>
+    <data name="Info_LogFormatChanged" xml:space="preserve">
+        <value>Format de log mis à jour</value>
     </data>
 
     <data name="UI_PressKey" xml:space="preserve">
@@ -89,6 +92,12 @@ Nommage des ressources :
     </data>
     <data name="UI_Back" xml:space="preserve">
         <value>Retour</value>
+    </data>
+    <data name="UI_LogFormatJson" xml:space="preserve">
+        <value>Format de log : JSON</value>
+    </data>
+    <data name="UI_LogFormatXml" xml:space="preserve">
+        <value>Format de log : XML</value>
     </data>
     <data name="UI_RunOneJob" xml:space="preserve">
         <value>Exécuter un travail</value>

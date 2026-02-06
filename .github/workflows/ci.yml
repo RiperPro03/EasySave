@@ -7,6 +7,10 @@ on:
     branches: [ "main" ]
     tags: [ "v*.*.*" ]
 
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
 env:
   DOTNET_VERSION: "10.0.x"
   CONFIGURATION: "Release"
@@ -71,7 +75,7 @@ jobs:
         run: dotnet restore
 
       - name: "Test"
-        run: dotnet test -c ${{ env.CONFIGURATION }} --verbosity normal
+        run: dotnet test -c ${{ env.CONFIGURATION }} --no-restore --verbosity normal
 
   # -------------------------
   # STAGE 2 — Build (only if tests OK)
@@ -178,11 +182,13 @@ jobs:
         uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131
         with:
           name: EasySave-Console-${{ env.RUNTIME }}
+          path: .
 
       - name: "Download GUI artifact"
         uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131
         with:
           name: EasySave-GUI-${{ env.RUNTIME }}
+          path: .
 
       - name: "Create GitHub Release"
         uses: softprops/action-gh-release@a06a81a03ee405af7f2048a818ed3f03bbf83c7b

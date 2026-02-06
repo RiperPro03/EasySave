@@ -13,54 +13,58 @@ public class JobStateDtoTests
         Assert.Equal(string.Empty, dto.JobId);
         Assert.Equal(string.Empty, dto.JobName);
         Assert.Equal(JobStatus.Idle, dto.Status);
-        Assert.Null(dto.CurrentFile);
+        Assert.Null(dto.CurrentSourceFile);
+        Assert.Null(dto.CurrentTargetFile);
 
-        Assert.Equal(0, dto.TotalFilesToCopy);
-        Assert.Equal(0, dto.TotalFilesCopied);
+        Assert.Equal(0, dto.TotalFiles);
+        Assert.Equal(0, dto.FilesProcessed);
 
         Assert.Equal(0, dto.TotalSizeBytes);
-        Assert.Equal(0, dto.SizeCopiedBytes);
+        Assert.Equal(0, dto.SizeProcessedBytes);
 
         Assert.Equal(0, dto.ProgressPercentage);
-        Assert.Equal(default, dto.StartTimeUtc);
-
-        Assert.Null(dto.EndTimeUtc);
+        Assert.Equal(0, dto.RemainingFiles);
+        Assert.Equal(0, dto.RemainingSizeBytes);
+        Assert.Equal(default, dto.LastActionTimestampUtc);
         Assert.Null(dto.ErrorMessage);
     }
 
     [Fact]
     public void Properties_ShouldBeSettable()
     {
-        var start = DateTime.UtcNow;
-        var end = start.AddSeconds(3);
+        var lastAction = DateTime.UtcNow;
 
         var dto = new JobStateDto
         {
             JobId = "1",
             JobName = "Job1",
             Status = JobStatus.Running,
-            CurrentFile = "C:\\a.txt",
-            TotalFilesToCopy = 10,
-            TotalFilesCopied = 3,
+            CurrentSourceFile = "C:\\a.txt",
+            CurrentTargetFile = "D:\\a.txt",
+            TotalFiles = 10,
+            FilesProcessed = 3,
             TotalSizeBytes = 1000,
-            SizeCopiedBytes = 300,
+            SizeProcessedBytes = 300,
             ProgressPercentage = 30,
-            StartTimeUtc = start,
-            EndTimeUtc = end,
+            RemainingFiles = 7,
+            RemainingSizeBytes = 700,
+            LastActionTimestampUtc = lastAction,
             ErrorMessage = "none"
         };
 
         Assert.Equal("1", dto.JobId);
         Assert.Equal("Job1", dto.JobName);
         Assert.Equal(JobStatus.Running, dto.Status);
-        Assert.Equal("C:\\a.txt", dto.CurrentFile);
-        Assert.Equal(10, dto.TotalFilesToCopy);
-        Assert.Equal(3, dto.TotalFilesCopied);
+        Assert.Equal("C:\\a.txt", dto.CurrentSourceFile);
+        Assert.Equal("D:\\a.txt", dto.CurrentTargetFile);
+        Assert.Equal(10, dto.TotalFiles);
+        Assert.Equal(3, dto.FilesProcessed);
         Assert.Equal(1000, dto.TotalSizeBytes);
-        Assert.Equal(300, dto.SizeCopiedBytes);
+        Assert.Equal(300, dto.SizeProcessedBytes);
         Assert.Equal(30, dto.ProgressPercentage);
-        Assert.Equal(start, dto.StartTimeUtc);
-        Assert.Equal(end, dto.EndTimeUtc);
+        Assert.Equal(7, dto.RemainingFiles);
+        Assert.Equal(700, dto.RemainingSizeBytes);
+        Assert.Equal(lastAction, dto.LastActionTimestampUtc);
         Assert.Equal("none", dto.ErrorMessage);
     }
 }

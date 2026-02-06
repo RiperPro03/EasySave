@@ -39,7 +39,7 @@ public sealed class MenuController
             {
                 new(1, Strings.Menu_Create),
                 new(2, Strings.Menu_Run),
-                new(3, Strings.Menu_ChangeLanguage),
+                new(3, Strings.Menu_Settings),
                 new(0, Strings.Menu_Exit)
             };
 
