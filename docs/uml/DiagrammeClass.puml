@@ -5,9 +5,9 @@
 ' ============================================
 skinparam backgroundColor white
 skinparam shadowing false
-skinparam linetype ortho
-skinparam nodesep 70
-skinparam ranksep 70
+skinparam linetype polyline
+skinparam nodesep 200
+skinparam ranksep 200
 
 skinparam class {
     BackgroundColor<<Model>> #C8E6C9
@@ -38,7 +38,7 @@ skinparam packageStyle rectangle
 "EasySave.Core" -[hidden]-> "EasySave.App.Console"\n
 
 ' ============================================
-' PACKAGE: EasySave.Core (code actuel)
+' PACKAGE: EasySave.Core
 ' ============================================
 package "EasySave.Core" {
 
@@ -194,10 +194,6 @@ package "EasySave.Core" {
       +void Remove(string id)
     }
 
-    interface ILogWriter <<Interface>> {
-      +void Write(LogEntryDto entry)
-    }
-
     interface IStateWriter <<Interface>> {
       +void Write(JobStateDto state)
     }
@@ -205,47 +201,36 @@ package "EasySave.Core" {
 }
 
 ' ============================================
-' PACKAGE: EasySave.EasyLog (a implementer en v1)
+' PACKAGE: EasySave.EasyLog
 ' ============================================
 package "EasySave.EasyLog" {
 
-  class EasyLogger <<EasyLog>> {
-    -string _outputDirectory
-    -ILogFormatter _formatter
-    -ILogFileWriter _writer
-    __
-    +string OutputDirectory
-    __
-    +EasyLogger(string outputPath)
-    +void Log(EasySave.Core.DTO.LogEntryDto entry)
-    +Task LogAsync(EasySave.Core.DTO.LogEntryDto entry)
-    +void WriteState(EasySave.Core.DTO.JobStateDto state)
-    -string GetDailyLogFileName()
-    -string GetStateFileName()
+  interface ILoggerT <<EasyLog>> {
+    +bool Write(T entry)
   }
 
-  interface ILogFormatter <<EasyLog>> {
-    +string Format(object entry)
-    +object Parse(string content)
+  interface ILogSerializer <<EasyLog>> {
+    +string Serialize(object entry)
+    +string FileExtension
   }
 
-  class JsonLogFormatter <<EasyLog>> {
-    +string Format(object entry)
-    +object Parse(string content)
-    -string FormatWithIndentation(string json)
+  interface ILogWriter <<EasyLog>> {
+    +bool Write(string filepath, string message)
   }
 
-  interface ILogFileWriter <<EasyLog>> {
-    +void Write(string filePath, string content)
-    +Task WriteAsync(string filePath, string content)
-    +void Append(string filePath, string content)
+  class LogOptions <<EasyLog>> {
+    +string LogDirectory
+    +LogFormat Format
+    +bool UseSafeLogger
   }
 
-  class FileLogWriter <<EasyLog>> {
-    +void Write(string filePath, string content)
-    +Task WriteAsync(string filePath, string content)
-    +void Append(string filePath, string content)
-    -void EnsureDirectoryExists(string filePath)
+  enum LogFormat <<EasyLog>> {
+    Json
+    Xml
+  }
+
+  class LoggerFactory <<EasyLog>> {
+    {static} +ILoggerT Create(LogOptions options)
   }
 }
 
@@ -263,15 +248,34 @@ package "EasySave.App" {
       -void EnsureDirectoryExists(string directory)
     }
 
+    interface IJobService <<Service>> {
+      +IReadOnlyList GetAll()
+      +BackupJob GetById(string id)
+      +void Create(string id, string name, string sourcePath, string targetPath, BackupType type, bool isActive)
+      +void Update(string id, string name, string sourcePath, string targetPath, BackupType type, bool isActive)
+      +void Delete(string id)
+    }
+
+    class JobService <<Service>> {
+      -EasySave.Core.Interfaces.IJobRepository _jobRepository
+      __
+      +JobService(jobRepository: IJobRepository)
+      +IReadOnlyList GetAll()
+      +BackupJob GetById(string id)
+      +void Create(string id, string name, string sourcePath, string targetPath, BackupType type, bool isActive)
+      +void Update(string id, string name, string sourcePath, string targetPath, BackupType type, bool isActive)
+      +void Delete(string id)
+    }
+
     class BackupService <<Service>> {
       -EasySave.Core.Interfaces.IJobRepository _jobRepository
       -EasySave.Core.Interfaces.IBackupEngine _engine
       -EasySave.Core.Interfaces.IFileSystem _fileSystem
-      -EasySave.Core.Interfaces.ILogWriter _logWriter
+      -EasySave.EasyLog.ILoggerT _logger
       -EasySave.Core.Interfaces.IStateWriter _stateWriter
       -int _maxJobs
       __
-      +BackupService(jobRepo: IJobRepository, engine: IBackupEngine, fileSystem: IFileSystem, logWriter: ILogWriter, stateWriter: IStateWriter, maxJobs: int)
+      +BackupService(jobRepo: IJobRepository, engine: IBackupEngine, fileSystem: IFileSystem, logger: ILoggerT, stateWriter: IStateWriter, maxJobs: int)
       +ResultDto CreateJob(BackupJob job)
       +ResultDto UpdateJob(BackupJob job)
       +ResultDto DeleteJob(string jobId)
@@ -337,11 +341,9 @@ package "EasySave.App" {
 
   package "Repositories" {
     class JobRepository <<Repository>> {
-      -string _filePath
-      -EasySave.Core.Interfaces.IFileSystem _fileSystem
-      -int _maxJobs
+      -List _jobs
+      -int MaxJobs
       __
-      +JobRepository(string filePath, IFileSystem fileSystem, int maxJobs)
       +IReadOnlyList GetAll()
       +BackupJob GetById(string id)
       +void Add(BackupJob job)
@@ -366,14 +368,6 @@ package "EasySave.App" {
     }
   }
 
-  package "Adapters" {
-    class LogWriterAdapter <<Service>> {
-      -EasySave.EasyLog.EasyLogger _logger
-      __
-      +LogWriterAdapter(EasyLogger logger)
-      +void Write(LogEntryDto entry)
-    }
-  }
 }
 
 ' ============================================
@@ -385,13 +379,6 @@ package "EasySave.App.Console" {
     {static} +void Main(string[] args) 
   }
 
-  class ConsoleCompositionRoot <<Console>> {
-    +MenuController MenuController
-    +BackupController BackupController
-    __
-    +ConsoleCompositionRoot(AppConfig config)
-  }
-
   package "Controllers" {
     class MenuController <<Console>> {
       +MenuController(ConsoleView view, ConsoleInput input, JobController jobController, BackupController backupController, SettingsController settingsController)
@@ -399,13 +386,11 @@ package "EasySave.App.Console" {
     }
 
     class JobController <<Console>> {
-      -EasySave.App.Commands.CreateJobCommand _createJob
-      -EasySave.App.Commands.UpdateJobCommand _updateJob
-      -EasySave.App.Commands.DeleteJobCommand _deleteJob
+      -EasySave.App.Services.IJobService _jobService
       -JobView _jobView
       -ConsoleView _consoleView
       __
-      +JobController(CreateJobCommand createJob, UpdateJobCommand updateJob, DeleteJobCommand deleteJob, JobView jobView, ConsoleView consoleView)
+      +JobController(IJobService jobService, JobView jobView, ConsoleView consoleView)
       +void RunMenu()
       +void ListJobs()
       +void CreateJob()
@@ -414,13 +399,12 @@ package "EasySave.App.Console" {
     }
 
     class BackupController <<Console>> {
-      -EasySave.App.Commands.RunJobCommand _runJob
-      -EasySave.App.Commands.RunAllJobsCommand _runAll
+      -EasySave.Core.Interfaces.IBackupEngine _backupEngine
       -BackupView _backupView
       -ConsoleView _consoleView
       -ArgsParser _argsParser
       __
-      +BackupController(RunJobCommand runJob, RunAllJobsCommand runAll, BackupView backupView, ConsoleView consoleView, ArgsParser argsParser)
+      +BackupController(IBackupEngine backupEngine, BackupView backupView, ConsoleView consoleView, ArgsParser argsParser)
       +void RunMenu()
       +void RunFromArgs(string rawArgs)
       +BackupResultDto RunJobById(int id, bool waitForKey)
@@ -465,6 +449,8 @@ package "EasySave.App.Console" {
       +BackupType AskBackupType()
       +void ShowJobs(IReadOnlyList jobs)
       +string AskJobId()
+      +int AskJobFieldToEdit()
+      +bool AskJobActiveState()
     }
 
     class BackupView <<Console>> {
@@ -500,28 +486,26 @@ EasySave.Core.Common.Localization --> EasySave.Core.Enums.Language : uses
 ' ============================================
 ' RELATIONS - EasyLog
 ' ============================================
-EasySave.EasyLog.EasyLogger --> EasySave.EasyLog.ILogFormatter : uses
-EasySave.EasyLog.EasyLogger --> EasySave.EasyLog.ILogFileWriter : uses
-EasySave.EasyLog.JsonLogFormatter ..|> EasySave.EasyLog.ILogFormatter : implements
-EasySave.EasyLog.FileLogWriter ..|> EasySave.EasyLog.ILogFileWriter : implements
+EasySave.EasyLog.LoggerFactory ..> EasySave.EasyLog.ILoggerT : creates
+EasySave.EasyLog.LogOptions ..> EasySave.EasyLog.LogFormat : uses
 
 ' ============================================
-' RELATIONS - App (cible)
+' RELATIONS - App
 ' ============================================
 EasySave.App.Services.BackupService --> EasySave.Core.Interfaces.IJobRepository : uses
 EasySave.App.Services.BackupService --> EasySave.Core.Interfaces.IBackupEngine : uses
 EasySave.App.Services.BackupService --> EasySave.Core.Interfaces.IFileSystem : uses
-EasySave.App.Services.BackupService --> EasySave.Core.Interfaces.ILogWriter : uses
+EasySave.App.Services.BackupService --> EasySave.EasyLog.ILoggerT : uses
 EasySave.App.Services.BackupService --> EasySave.Core.Interfaces.IStateWriter : uses
 
+EasySave.App.Services.JobService ..|> EasySave.App.Services.IJobService : implements
+EasySave.App.Services.JobService --> EasySave.Core.Interfaces.IJobRepository : uses
+
 EasySave.App.Repositories.JobRepository ..|> EasySave.Core.Interfaces.IJobRepository : implements
-EasySave.App.Repositories.JobRepository --> EasySave.Core.Interfaces.IFileSystem : uses
 
 EasySave.App.Repositories.StateWriterRepository ..|> EasySave.Core.Interfaces.IStateWriter : implements
 EasySave.App.Repositories.StateWriterRepository --> EasySave.Core.Interfaces.IFileSystem : uses
 
-EasySave.App.Adapters.LogWriterAdapter ..|> EasySave.Core.Interfaces.ILogWriter : implements
-EasySave.App.Adapters.LogWriterAdapter --> EasySave.EasyLog.EasyLogger : uses
 
 EasySave.App.Commands.CreateJobCommand --> EasySave.App.Services.BackupService : uses
 EasySave.App.Commands.UpdateJobCommand --> EasySave.App.Services.BackupService : uses
@@ -532,16 +516,18 @@ EasySave.App.Commands.RunAllJobsCommand --> EasySave.App.Services.BackupService 
 ' ============================================
 ' RELATIONS - Console (code actuel)
 ' ============================================
-EasySave.App.Console.ConsoleCompositionRoot --> EasySave.App.Repositories.JobRepository : uses
-EasySave.App.Console.ConsoleCompositionRoot --> EasySave.App.Services.BackupEngine : uses
-EasySave.App.Console.ConsoleCompositionRoot --> EasySave.App.Console.Input.ConsoleInput : uses
-EasySave.App.Console.ConsoleCompositionRoot --> EasySave.App.Console.Input.ArgsParser : uses
-EasySave.App.Console.ConsoleCompositionRoot --> EasySave.App.Console.Views.ConsoleView : uses
-EasySave.App.Console.ConsoleCompositionRoot --> EasySave.App.Console.Views.JobView : uses
-EasySave.App.Console.ConsoleCompositionRoot --> EasySave.App.Console.Views.BackupView : uses
-EasySave.App.Console.ConsoleCompositionRoot --> EasySave.App.Console.Controllers.SettingsController : uses
-EasySave.App.Console.ConsoleCompositionRoot --> EasySave.App.Console.Controllers.JobController : uses
-EasySave.App.Console.ConsoleCompositionRoot --> EasySave.App.Console.Controllers.BackupController : uses
+EasySave.App.Console.Program --> EasySave.App.Repositories.JobRepository : uses
+EasySave.App.Console.Program --> EasySave.App.Services.BackupEngine : uses
+EasySave.App.Console.Program --> EasySave.App.Services.JobService : uses
+EasySave.App.Console.Program --> EasySave.App.Console.Input.ConsoleInput : uses
+EasySave.App.Console.Program --> EasySave.App.Console.Input.ArgsParser : uses
+EasySave.App.Console.Program --> EasySave.App.Console.Views.ConsoleView : uses
+EasySave.App.Console.Program --> EasySave.App.Console.Views.JobView : uses
+EasySave.App.Console.Program --> EasySave.App.Console.Views.BackupView : uses
+EasySave.App.Console.Program --> EasySave.App.Console.Controllers.SettingsController : uses
+EasySave.App.Console.Program --> EasySave.App.Console.Controllers.JobController : uses
+EasySave.App.Console.Program --> EasySave.App.Console.Controllers.BackupController : uses
+EasySave.App.Console.Program --> EasySave.App.Console.Controllers.MenuController : uses
 
 EasySave.App.Console.Controllers.MenuController --> EasySave.App.Console.Controllers.JobController : uses
 EasySave.App.Console.Controllers.MenuController --> EasySave.App.Console.Controllers.BackupController : uses
@@ -549,14 +535,11 @@ EasySave.App.Console.Controllers.MenuController --> EasySave.App.Console.Control
 EasySave.App.Console.Controllers.MenuController --> EasySave.App.Console.Views.ConsoleView : uses
 EasySave.App.Console.Controllers.MenuController --> EasySave.App.Console.Input.ConsoleInput : uses
 
-EasySave.App.Console.Controllers.JobController --> EasySave.App.Commands.CreateJobCommand : uses
-EasySave.App.Console.Controllers.JobController --> EasySave.App.Commands.UpdateJobCommand : uses
-EasySave.App.Console.Controllers.JobController --> EasySave.App.Commands.DeleteJobCommand : uses
+EasySave.App.Console.Controllers.JobController --> EasySave.App.Services.IJobService : uses
 EasySave.App.Console.Controllers.JobController --> EasySave.App.Console.Views.JobView : uses
 EasySave.App.Console.Controllers.JobController --> EasySave.App.Console.Views.ConsoleView : uses
 
 EasySave.App.Console.Controllers.BackupController --> EasySave.Core.Interfaces.IBackupEngine : uses
-EasySave.App.Console.Controllers.BackupController --> EasySave.Core.Interfaces.IJobRepository : uses
 EasySave.App.Console.Controllers.BackupController --> EasySave.App.Console.Views.BackupView : uses
 EasySave.App.Console.Controllers.BackupController --> EasySave.App.Console.Views.ConsoleView : uses
 EasySave.App.Console.Controllers.BackupController --> EasySave.App.Console.Input.ArgsParser : uses

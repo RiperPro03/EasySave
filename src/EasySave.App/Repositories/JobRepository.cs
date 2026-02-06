@@ -1,14 +1,26 @@
+using EasySave.Core.DTO;
 using EasySave.Core.Interfaces;
 using EasySave.Core.Models;
-using System.Linq;
+using System.Text.Json;
 
 namespace EasySave.App.Repositories;
 
 public sealed class JobRepository : IJobRepository
 {
-    private readonly List<BackupJob> _jobs = new();
+    private readonly IPathProvider _pathProvider;
+    private readonly List<BackupJob> _jobs;
+    private readonly string _jobsFilePath;
     private const int MaxJobs = 5;
-    
+
+    public JobRepository(IPathProvider pathProvider)
+    {
+        _pathProvider = pathProvider ?? throw new ArgumentNullException(nameof(pathProvider));
+        _pathProvider.EnsureDirectoriesCreated();
+
+        _jobsFilePath = Path.Combine(_pathProvider.ConfigPath, "jobs.json");
+        _jobs = LoadJobs();
+    }
+
     public IReadOnlyList<BackupJob> GetAll() => _jobs.AsReadOnly();
     public BackupJob? GetById(string id) => _jobs.FirstOrDefault(job => job.Id == id);
 
@@ -26,6 +38,7 @@ public sealed class JobRepository : IJobRepository
             throw new InvalidOperationException($"Job with ID {job.Id} already exists.");
 
         _jobs.Add(job);
+        SaveJobs();
     }
     public void Remove(string id)
     {
@@ -34,6 +47,7 @@ public sealed class JobRepository : IJobRepository
             throw new KeyNotFoundException($"Job with ID {id} not found.");
 
         _jobs.Remove(job);
+        SaveJobs();
     }
 
     public void Update(BackupJob updatedjob)
@@ -52,6 +66,55 @@ public sealed class JobRepository : IJobRepository
             existingJob.Enable();
         else
             existingJob.Disable();
+
+        SaveJobs();
+    }
+
+    private List<BackupJob> LoadJobs()
+    {
+        if (!File.Exists(_jobsFilePath))
+            return new List<BackupJob>();
+
+        var json = File.ReadAllText(_jobsFilePath);
+        if (string.IsNullOrWhiteSpace(json))
+            return new List<BackupJob>();
+
+        List<BackupJobDto> dtos;
+        try
+        {
+            dtos = JsonSerializer.Deserialize<List<BackupJobDto>>(json) ?? new List<BackupJobDto>();
+        }
+        catch (JsonException)
+        {
+            return new List<BackupJob>();
+        }
+        var jobs = new List<BackupJob>();
+
+        foreach (var dto in dtos)
+        {
+            if (dto is null || !dto.IsValid())
+                continue;
+
+            try
+            {
+                jobs.Add(dto.ToModel());
+            }
+            catch (ArgumentException)
+            {
+                // Ignore invalid persisted entries.
+            }
+        }
+
+        return jobs;
+    }
+
+    private void SaveJobs()
+    {
+        _pathProvider.EnsureDirectoriesCreated();
+
+        var dtos = _jobs.Select(BackupJobDto.FromModel).ToList();
+        var json = JsonSerializer.Serialize(dtos, new JsonSerializerOptions { WriteIndented = true });
+        File.WriteAllText(_jobsFilePath, json);
     }
     
 

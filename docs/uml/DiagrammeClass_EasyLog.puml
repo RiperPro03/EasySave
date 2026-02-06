@@ -1,0 +1,124 @@
+@startuml EasyLog_Classes
+
+' ============================================
+' CONFIGURATION
+' ============================================
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam linetype polyline
+skinparam nodesep 200
+skinparam ranksep 200
+
+skinparam class {
+    BackgroundColor<<Interface>> #E8F5E9
+    BorderColor<<Interface>> #2E7D32
+    BackgroundColor<<EasyLog>> #FFF9C4
+    BorderColor<<EasyLog>> #F9A825
+}
+
+title Diagramme de classes - EasyLog
+left to right direction
+
+package "EasyLog" {
+  package "Interfaces" {
+    interface ILoggerT <<Interface>> {
+      +bool Write(T entry)
+    }
+
+    interface ILogSerializer <<Interface>> {
+      +string Serialize(object entry)
+      +string FileExtension
+    }
+
+    interface ILogWriter <<Interface>> {
+      +bool Write(string filepath, string message)
+    }
+  }
+
+  package "Options" {
+    class LogOptions <<EasyLog>> {
+      +string LogDirectory
+      +LogFormat Format
+      +bool UseSafeLogger
+    }
+
+    enum LogFormat <<EasyLog>> {
+      Json
+      Xml
+    }
+  }
+
+  package "Factories" {
+    class LoggerFactory <<EasyLog>> {
+      {static} +ILoggerT Create(LogOptions options)
+    }
+  }
+
+  package "Loggers" {
+    class DailyLoggerT <<EasyLog>> {
+      -string logDirectory
+      -ILogSerializer logSerializer
+      -ILogWriter logWriter
+      +bool Write(T entry)
+    }
+
+    class SafeLoggerT <<EasyLog>> {
+      -ILoggerT innerLogger
+      +bool Write(T entry)
+    }
+  }
+
+  package "Serialization" {
+    class JsonSerializer <<EasyLog>> {
+      +string FileExtension
+      +string Serialize(object entry)
+    }
+
+    class XmlSerializer <<EasyLog>> {
+      +string FileExtension
+      +string Serialize(object entry)
+    }
+  }
+
+  package "Writers" {
+    class FileLogWriter <<EasyLog>> {
+      +bool Write(string filepath, string message)
+    }
+  }
+
+  package "Utils" {
+    class DailyFileHelper <<EasyLog>> {
+      {static} +string GetLogFilePath(string logDirectory, string fileExtension, DateTime date)
+    }
+  }
+}
+
+' ============================================
+' RELATIONS - EasyLog
+' ============================================
+DailyLoggerT ..|> ILoggerT
+SafeLoggerT ..|> ILoggerT
+JsonSerializer ..|> ILogSerializer
+XmlSerializer ..|> ILogSerializer
+FileLogWriter ..|> ILogWriter
+
+LoggerFactory ..> ILogSerializer : <<create>>
+LoggerFactory ..> ILogWriter : <<create>>
+LoggerFactory ..> DailyLoggerT : <<create>>
+LoggerFactory ..> SafeLoggerT : <<create>>
+
+DailyLoggerT ..> ILogSerializer : uses
+DailyLoggerT ..> ILogWriter : uses
+DailyLoggerT ..> DailyFileHelper : uses
+SafeLoggerT --> ILoggerT : wraps
+LogOptions ..> LogFormat : uses
+
+' Layout hints to reduce crossings
+Interfaces -[hidden]down-> Options
+Options -[hidden]down-> Factories
+Factories -[hidden]down-> Loggers
+Loggers -[hidden]down-> Serialization
+Serialization -[hidden]down-> Writers
+Writers -[hidden]down-> Utils
+
+@enduml
