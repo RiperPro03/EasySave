@@ -61,6 +61,16 @@ namespace EasySave.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Backup completed successfully. .
+        /// </summary>
+        public static string Backup_Success {
+            get {
+                return ResourceManager.GetString("Backup_Success", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Value cannot be empty.
         ///   Recherche une chaîne localisée semblable à Value cannot be empty.
         /// </summary>
         public static string Error_EmptyValue {
@@ -70,6 +80,16 @@ namespace EasySave.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to [ERROR] {0}.
+        /// </summary>
+        public static string Error_Generic {
+            get {
+                return ResourceManager.GetString("Error_Generic", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid choice.
         ///   Recherche une chaîne localisée semblable à Invalid choice.
         /// </summary>
         public static string Error_InvalidChoice {
@@ -88,6 +108,34 @@ namespace EasySave.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No jobs found..
+        /// </summary>
+        public static string Error_JobNotFound {
+            get {
+                return ResourceManager.GetString("Error_JobNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to [ERREUR] The source folder does not exist : {0}.
+        /// </summary>
+        public static string Error_SourceFolderMissing {
+            get {
+                return ResourceManager.GetString("Error_SourceFolderMissing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to [OK] {0} copied in {1} ms.
+        /// </summary>
+        public static string FileCopied {
+            get {
+                return ResourceManager.GetString("FileCopied", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Language updated.
         ///   Recherche une chaîne localisée semblable à Language updated.
         /// </summary>
         public static string Info_LanguageChanged {
