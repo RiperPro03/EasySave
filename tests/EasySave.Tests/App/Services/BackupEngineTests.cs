@@ -1,10 +1,10 @@
-﻿using System;
-using EasySave.App.Services;
+﻿using EasySave.App.Services;
 using EasySave.Core.Interfaces;
 using EasySave.Core.Models;
-using Xunit;
+using EasySave.Core.Enums;
 
-namespace EasySave.App.Tests.App.Services;
+
+namespace EasySave.Tests.App.Services;
 
 // Fake qui simule un backup qui fonctionne
 internal class FakeBackupService : IBackupService

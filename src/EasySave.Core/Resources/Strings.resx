@@ -105,6 +105,15 @@ Nommage des ressources :
     <data name="UI_TargetPathPrompt" xml:space="preserve">
         <value>Target path: </value>
     </data>
+    <data name="Error_SourceFolderMissing" xml:space="preserve">
+        <value>[ERREUR] The source folder does not exist : {0}</value>
+    </data>
+    <data name="FileCopied" xml:space="preserve">
+        <value>[OK] {0} copied in {1} ms</value>
+    </data>
+    <data name="Backup_Success" xml:space="preserve">
+        <value>Backup completed successfully. </value>
+    </data>
     <data name="UI_BackupTypePrompt" xml:space="preserve">
         <value>Backup type</value>
     </data>
@@ -119,6 +128,9 @@ Nommage des ressources :
     </data>
     <data name="UI_NoJobsConfigured" xml:space="preserve">
         <value>No jobs configured.</value>
+    </data>
+    <data name="Error_JobNotFound" xml:space="preserve">
+        <value>No jobs found.</value>
     </data>
     <data name="UI_RunStart" xml:space="preserve">
         <value>Running job {0} - {1}</value>
@@ -141,5 +153,7 @@ Nommage des ressources :
     <data name="UI_NoJobsExecuted" xml:space="preserve">
         <value>No jobs executed.</value>
     </data>
-   
+    <data name="Error_Generic" xml:space="preserve">
+        <value>[ERROR] {0}</value>
+    </data>
 </root>

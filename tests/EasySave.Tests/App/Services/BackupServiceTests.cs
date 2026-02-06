@@ -1,9 +1,7 @@
-﻿using System;
-using System.IO;
-using EasySave.App.Services;
-using Xunit;
+﻿using EasySave.App.Services;
 
-namespace EasySave.App.Tests.App.Services;
+
+namespace EasySave.Tests.App.Services;
 
 public class BackupServiceTests
 {

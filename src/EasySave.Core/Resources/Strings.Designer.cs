@@ -60,11 +60,29 @@ namespace EasySave.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Backup completed successfully. .
+        /// </summary>
+        public static string Backup_Success {
+            get {
+                return ResourceManager.GetString("Backup_Success", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Value cannot be empty.
         /// </summary>
         public static string Error_EmptyValue {
             get {
                 return ResourceManager.GetString("Error_EmptyValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to [ERROR] {0}.
+        /// </summary>
+        public static string Error_Generic {
+            get {
+                return ResourceManager.GetString("Error_Generic", resourceCulture);
             }
         }
         
@@ -83,6 +101,33 @@ namespace EasySave.Core.Resources {
         public static string Error_InvalidNumber {
             get {
                 return ResourceManager.GetString("Error_InvalidNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No jobs found..
+        /// </summary>
+        public static string Error_JobNotFound {
+            get {
+                return ResourceManager.GetString("Error_JobNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to [ERREUR] The source folder does not exist : {0}.
+        /// </summary>
+        public static string Error_SourceFolderMissing {
+            get {
+                return ResourceManager.GetString("Error_SourceFolderMissing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to [OK] {0} copied in {1} ms.
+        /// </summary>
+        public static string FileCopied {
+            get {
+                return ResourceManager.GetString("FileCopied", resourceCulture);
             }
         }
         
