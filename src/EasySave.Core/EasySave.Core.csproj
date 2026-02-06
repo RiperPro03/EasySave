@@ -25,4 +25,8 @@
         </Compile>
     </ItemGroup>
 
+    <ItemGroup>
+        <ProjectReference Include="..\EasySave.EasyLog\EasySave.EasyLog.csproj" />
+    </ItemGroup>
+
 </Project>

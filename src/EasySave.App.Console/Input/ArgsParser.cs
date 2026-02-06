@@ -45,13 +45,15 @@ public sealed class ArgsParser
             throw new FormatException("No ids found.");
 
         var ids = new List<int>();
+        var seen = new HashSet<int>();
         foreach (var token in tokens)
         {
             if (!int.TryParse(token, out var id))
                 throw new FormatException("Invalid job id.");
 
             ValidateId(id);
-            ids.Add(id);
+            if (seen.Add(id))
+                ids.Add(id);
         }
 
         return ids;

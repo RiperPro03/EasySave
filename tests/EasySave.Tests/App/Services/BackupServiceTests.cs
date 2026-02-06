@@ -1,4 +1,5 @@
-﻿using EasySave.App.Services;
+using EasySave.App.Services;
+using EasySave.Core.DTO;
 using EasySave.Core.Enums;
 using EasySave.Core.Interfaces;
 using EasySave.Core.Models;
@@ -16,7 +17,7 @@ public class BackupServiceTests
         File.WriteAllText(Path.Combine(source, "test.txt"), "hello");
 
         var jobService = new FakeJobService();
-        var service = new BackupService(jobService);
+        var service = new BackupService(jobService, stateWriter: new NoOpStateWriter());
         var job = new BackupJob("1", "Job", source, target, BackupType.Full);
 
         var result = service.Run(job);
@@ -40,5 +41,11 @@ public class BackupServiceTests
         public void MarkExecuted(string id, DateTime? nowUtc = null) => MarkExecutedCalled = true;
         public void Delete(string id) { }
     }
+
+    private sealed class NoOpStateWriter : IStateWriter
+    {
+        public void Write(AppStateDto state) { }
+    }
 }
+
 

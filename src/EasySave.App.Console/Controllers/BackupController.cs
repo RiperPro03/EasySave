@@ -61,8 +61,26 @@ public sealed class BackupController
 
     public void RunFromArgs(string rawArgs)
     {
-        _consoleView.ShowInfo("//TODO: batch execution will be handled by EasySave.App.");
-        _consoleView.WaitForKey();
+        IReadOnlyList<int> ids;
+        try
+        {
+            ids = _argsParser.Parse(rawArgs);
+        }
+        catch (Exception ex) when (ex is ArgumentException or FormatException or ArgumentOutOfRangeException)
+        {
+            _consoleView.ShowError(ex.Message);
+            return;
+        }
+
+        var results = new List<BackupResultDto>();
+        foreach (var id in ids)
+        {
+            var result = RunJobById(id, waitForKey: false);
+            if (result is not null)
+                results.Add(result);
+        }
+
+        _backupView.ShowBatchResult(results);
     }
 
     public BackupResultDto? RunJobById(int id, bool waitForKey = true)

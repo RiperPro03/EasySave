@@ -3,9 +3,9 @@
 namespace EasySave.Core.Interfaces;
 
 /// <summary>
-/// Service responsable de l'écriture de l'état temps réel d'un job.
+/// Service responsable de l'écriture du snapshot d'état global.
 /// </summary>
 public interface IStateWriter
 {
-    void Write(JobStateDto state);
+    void Write(AppStateDto state);
 }

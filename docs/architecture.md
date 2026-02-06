@@ -263,6 +263,34 @@ BackupService
 
 ---
 
+## Observabilité de l'état (state.json)
+
+La progression temps réel est publiée via un **event** `StateChanged` (dans `IBackupEngine` et relayé par `IBackupService`).  
+`StateWriter` s'abonne à cet event et sérialise un snapshot unique `state.json`.
+
+### Évolution vers un snapshot global
+Le fichier `state.json` contient désormais **l'état global de l'application** + **l'état courant de chaque job**.  
+Au démarrage, un snapshot est écrit avec tous les jobs en `Idle`. Ensuite, chaque événement met à jour le snapshot complet (écriture "overwrite" du fichier).
+
+Structure logique (résumé) :
+```
+AppStateDto
+ ├─ GeneratedAtUtc
+ ├─ TotalJobs
+ ├─ GlobalStatus (Idle / Running / Paused / Completed / Error)
+ ├─ ActiveJobIds
+ └─ Jobs[] (JobStateDto pour chaque job)
+```
+
+### Pourquoi un event plutôt que IObservable
+* **Simplicité** : pas de dépendance Rx ni d'infrastructure supplémentaire.
+* **Besoins actuels** : un seul producteur (moteur) et quelques abonnés (state.json, UI/console) → l'event suffit.
+* **Lisibilité/maintenance** : moins de concepts à introduire pour l'équipe et cohérence avec le reste du Core.
+
+`IObservable` serait pertinent si on avait besoin de composition avancée (filtrage, throttling, scheduling, backpressure).
+
+---
+
 ## Diagramme de dépendances
 ```
 ┌─────────────────────────────────────────────┐
