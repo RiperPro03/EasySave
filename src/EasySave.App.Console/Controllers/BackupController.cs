@@ -72,13 +72,74 @@ public sealed class BackupController
 
     public void RunAll()
     {
-        _consoleView.ShowInfo("//TODO: run all jobs will be handled by EasySave.App.");
+        var jobs = _jobRepository.GetAll();
+
+        if (jobs.Count == 0)
+        {
+            _consoleView.ShowError(Strings.UI_NoJobsConfigured);
+            _consoleView.WaitForKey();
+            return;
+        }
+
+        var results = new List<BackupResultDto>();
+
+        foreach (var job in jobs)
+        {
+            // Afficher début
+            _backupView.ShowRunStart(job);
+
+            // Exécuter
+            var result = _backupEngine.Run(job);
+            results.Add(result);
+
+            // Afficher fin
+            _backupView.ShowRunEnd(result);
+        }
+
+        // Résumé global
+        _backupView.ShowBatchResult(results);
+
         _consoleView.WaitForKey();
     }
 
+
+    
     private void RunOneInteractive()
     {
-        _consoleView.ShowInfo("//TODO: run one job will be handled by EasySave.App.");
+        var jobs = _jobRepository.GetAll();
+
+        if (jobs.Count == 0)
+        {
+            _consoleView.ShowError(Strings.UI_NoJobsConfigured);
+            _consoleView.WaitForKey();
+            return;
+        }
+
+        // 1. Afficher les jobs
+        _backupView.ShowJobs(jobs);
+
+        // 2. Demander l'ID
+        var jobId = _backupView.AskJobId();
+
+        var job = _jobRepository.GetById(jobId.ToString());
+        if (job is null)
+        {
+            _consoleView.ShowError(Strings.Error_JobNotFound);
+            _consoleView.WaitForKey();
+            return;
+        }
+
+        // 3. Afficher le début
+        _backupView.ShowRunStart(job);
+
+        // 4. Exécuter VIA BackupEngine
+        var result = _backupEngine.Run(job);
+
+        // 5. Afficher la fin
+        _backupView.ShowRunEnd(result);
+
         _consoleView.WaitForKey();
     }
+
+
 }
