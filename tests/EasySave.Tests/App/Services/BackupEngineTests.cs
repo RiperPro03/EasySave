@@ -1,77 +1,61 @@
 ﻿using EasySave.App.Services;
-using EasySave.Core.Interfaces;
-using EasySave.Core.Models;
 using EasySave.Core.Enums;
-
+using EasySave.Core.Models;
+using EasySave.Core.Resources;
 
 namespace EasySave.Tests.App.Services;
 
-// Fake qui simule un backup qui fonctionne
-internal class FakeBackupService : IBackupService
+public class BackupEngineTests : IDisposable
 {
-    public bool WasCalled { get; private set; }
+    private readonly string _basePath;
 
-    public void FullBackup(string sourcePath, string targetPath)
+    public BackupEngineTests()
     {
-        WasCalled = true;
+        _basePath = Path.Combine(Path.GetTempPath(), "EasySave.Tests", Guid.NewGuid().ToString("N"));
     }
-}
 
-// Fake qui simule une erreur
-internal class FailingBackupService : IBackupService
-{
-    public void FullBackup(string sourcePath, string targetPath)
-    {
-        throw new Exception("Erreur test");
-    }
-}
-
-public class BackupEngineTests
-{
     [Fact]
-    public void Run_ShouldReturnSuccess_WhenBackupSucceeds()
+    public void Run_ShouldReturnFailure_WhenSourceMissing()
     {
-        // Arrange
-        var fakeService = new FakeBackupService();
-        var engine = new BackupEngine(fakeService);
-
+        var engine = new BackupEngine();
         var job = new BackupJob(
             "1",
-            "Test job",
-            "C:\\Source",
-            "C:\\Target",
+            "Missing source",
+            Path.Combine(_basePath, "Missing"),
+            Path.Combine(_basePath, "Target"),
             BackupType.Full
         );
 
-        // Act
         var result = engine.Run(job);
 
-        // Assert
-        Assert.True(result.Success);
-        Assert.True(fakeService.WasCalled);
-        Assert.NotEqual(TimeSpan.Zero, result.Duration);
+        Assert.False(result.Success);
+        Assert.Contains(string.Format(Strings.Error_SourceFolderMissing, job.SourcePath), result.Message);
     }
 
     [Fact]
-    public void Run_ShouldReturnFailure_WhenBackupThrows()
+    public void Run_ShouldCopyFile_WhenDifferentialAndTargetMissing()
     {
-        // Arrange
-        var failingService = new FailingBackupService();
-        var engine = new BackupEngine(failingService);
+        var source = Path.Combine(_basePath, "Source");
+        var target = Path.Combine(_basePath, "Target");
+        Directory.CreateDirectory(source);
 
-        var job = new BackupJob(
-            "2",
-            "Fail job",
-            "src",
-            "dst",
-            BackupType.Full
-        );
+        var sourceFile = Path.Combine(source, "file.txt");
+        File.WriteAllText(sourceFile, "content");
 
-        // Act
+        var engine = new BackupEngine();
+        var job = new BackupJob("2", "Diff job", source, target, BackupType.Differential);
+
         var result = engine.Run(job);
 
-        // Assert
-        Assert.False(result.Success);
-        Assert.Contains("Erreur test", result.Message);
+        Assert.True(result.Success);
+        Assert.Equal(1, result.CopiedCount);
+        Assert.True(File.Exists(Path.Combine(target, "file.txt")));
+    }
+
+    public void Dispose()
+    {
+        if (Directory.Exists(_basePath))
+            Directory.Delete(_basePath, true);
     }
 }
+

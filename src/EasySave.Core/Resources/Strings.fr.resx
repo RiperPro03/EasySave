@@ -108,11 +108,17 @@ Nommage des ressources :
     <data name="Error_SourceFolderMissing" xml:space="preserve">
         <value>[ERREUR] Le dossier source n'existe pas : {0}</value>
     </data>    
+    <data name="Error_BackupTypeNotSupported" xml:space="preserve">
+        <value>Type de sauvegarde non pris en charge : {0}</value>
+    </data>
     <data name="FileCopied" xml:space="preserve">
         <value>[OK] {0} copié en {1} ms</value>
     </data>
     <data name="Backup_Success" xml:space="preserve">
         <value>Backup executé avec succès. </value>
+    </data>
+    <data name="Info_BackupCompletedWithErrors" xml:space="preserve">
+        <value>Backup terminé avec des erreurs.</value>
     </data>
     <data name="UI_BackupTypePrompt" xml:space="preserve">
         <value>Type de sauvegarde</value>

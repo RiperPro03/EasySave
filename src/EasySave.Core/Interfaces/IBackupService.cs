@@ -1,9 +1,9 @@
-﻿namespace EasySave.Core.Interfaces;
+using EasySave.Core.DTO;
+using EasySave.Core.Models;
 
-
+namespace EasySave.Core.Interfaces;
 
 public interface IBackupService
 {
-    void FullBackup(string sourcePath, string targetPath);
+    BackupResultDto Run(BackupJob job);
 }
-

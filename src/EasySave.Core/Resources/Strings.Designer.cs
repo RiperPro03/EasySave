@@ -78,6 +78,15 @@ namespace EasySave.Core.Resources {
                 return ResourceManager.GetString("Error_EmptyValue", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Backup type not supported: {0}.
+        /// </summary>
+        public static string Error_BackupTypeNotSupported {
+            get {
+                return ResourceManager.GetString("Error_BackupTypeNotSupported", resourceCulture);
+            }
+        }
         
         /// <summary>
         ///   Looks up a localized string similar to [ERROR] {0}.
@@ -131,6 +140,15 @@ namespace EasySave.Core.Resources {
         public static string FileCopied {
             get {
                 return ResourceManager.GetString("FileCopied", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Backup completed with errors..
+        /// </summary>
+        public static string Info_BackupCompletedWithErrors {
+            get {
+                return ResourceManager.GetString("Info_BackupCompletedWithErrors", resourceCulture);
             }
         }
         

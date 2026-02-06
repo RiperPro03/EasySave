@@ -5,7 +5,7 @@ using System.Text.Json;
 
 namespace EasySave.App.Repositories;
 
-public sealed class JobRepository : IJobRepository
+internal sealed class JobRepository : IJobRepository
 {
     private readonly IPathProvider _pathProvider;
     private readonly List<BackupJob> _jobs;
@@ -66,6 +66,11 @@ public sealed class JobRepository : IJobRepository
             existingJob.Enable();
         else
             existingJob.Disable();
+
+        if (updatedjob.LastRun is not null)
+        {
+            existingJob.MarkExecuted(updatedjob.LastRun);
+        }
 
         SaveJobs();
     }
