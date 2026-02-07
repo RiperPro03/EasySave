@@ -23,8 +23,8 @@ EasySave utilise la bibliothèque EasyLog.dll pour générer des logs.
 - JSON lisible (indentation + retours à la ligne)
 - Possibilité NDJSON (1 objet JSON par ligne)
 - Aucun modèle métier imposé : EasyLog accepte n'importe quel objet T 
-
-**Emplacement** : 
+	
+**Emplacement** : %APPDATA%\Roaming\ProSoft\EasySave\src\EasySave.EasyLog
 
 ### 2.2 - Fichier état (state.json)
 
@@ -35,7 +35,7 @@ EasySave maintient un fichier unique représentant l’état global de tous les 
 - Snapshot global mis à jour pendant l’exécution
 - Contient l’état de chaque job ainsi que l’état global de l’application
 
-**Emplacement** : ...
+**Emplacement** : \%APPDATA%\Roaming\ProSoft\EasySave\State
 
 **Contenu** : 
 
@@ -45,6 +45,18 @@ EasySave maintient un fichier unique représentant l’état global de tous les 
 - Pourcentage d'avancement 
 - Timestamp dernière action 
 - Message d'erreur si nécessaire
+
+### 2.3 - Fichiers de configuration (Settings)
+
+EasySave utilise un fichier de configuration pour stocker les paramètres de l'application.
+
+**Emplacement** : %APPDATA%\Roaming\ProSoft\EasySave\Config
+
+Contient les paramètres persistants tels que :
+- Langue de l’interface (English / French)
+- Format de journalisation (JSON / XML)
+
+Les modifications sont sauvegardées automatiquement lors du changement via le menu Settings.
 
 ## 3. Configuration de l'application
 
