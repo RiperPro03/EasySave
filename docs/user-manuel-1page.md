@@ -5,8 +5,8 @@
 EasySave est un logiciel de sauvegarde de données en ligne de commande développé en C# / .NET.
 Il permet de créer et d'exécuter des travaux de sauvegarde selon deux types de sauvegarde : 
 	
-	- Sauvegarde complète : copie l'ensemble des fichiers
-	- Sauvegarde différentielle : copie uniquement les fichiers modifiés depuis la dernière sauvegarde complète
+- Sauvegarde complète : copie l'ensemble des fichiers
+- Sauvegarde différentielle : copie uniquement les fichiers modifiés depuis la dernière sauvegarde complète
 
 L'application est multilingue (français et anglais) et offre une interface utilisateur simple et intuitive.
 
@@ -26,15 +26,17 @@ Depuis la racine du projet : **dotnet run --project src/EasySave.App.Console**
 ## 4. Menu principal
 
 Au lancement, l'écran suivant apparaît : 
-
-EasySave - Backup Software
+```
+=================================
+ EasySave - Backup Software
+=================================
 
 Main menu
-- **1** - Manage backup job
-- **2** - Run backup job
-- **3** - Settings
-- **0** - Exit
-
+1 - Manage backup job
+2 - Run backup job
+3 - Settings
+0 - Exit
+```
 ### Description 
 
 - **Manage backup job** : créer, modifier, lister et supprimer des travaux de sauvegarde 
