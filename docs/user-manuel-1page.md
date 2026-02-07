@@ -27,15 +27,13 @@ Depuis la racine du projet : **dotnet run --project src/EasySave.App.Console**
 
 Au lancement, l'écran suivant apparaît : 
 
-=================================
- EasySave - Backup Software
-=================================
+EasySave - Backup Software
 
 Main menu
-1 - Manage backup job
-2 - Run backup job
-3 - Settings
-0 - Exit
+- **1** - Manage backup job
+- **2** - Run backup job
+- **3** - Settings
+- **0** - Exit
 
 ### Description 
 
@@ -47,11 +45,11 @@ Main menu
 ## 5. Gestion des travaux de sauvegarde
 
 Menu : 
-	1 - List jobs
-	2 - Create job
-	3 - Update job
-	4 - Delete job
-	0 - Back
+- **1** - List jobs
+- **2** - Create job
+- **3** - Update job
+- **4** - Delete job
+- **0** - Back
 
 ### Description
 
