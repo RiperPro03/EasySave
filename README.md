@@ -56,7 +56,7 @@ EasySave/
 - Christopher ASIN
 - Shayna ROSIER
 - Mathis VOGEL
-- Maxime
+- Maxime LANDEAU
 
 ## Prerequis
 - Windows
