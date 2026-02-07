@@ -1,4 +1,5 @@
 using EasySave.App.Console.Views;
+using EasySave.App.Services;
 using EasySave.Core.Interfaces;
 using EasySave.Core.Resources;
 
@@ -142,6 +143,11 @@ public sealed class JobController
     {
         try
         {
+            //Affichage des jobs déja crée
+            var jobs = _jobService.GetAll();
+            _consoleView.ShowInfo("Existing jobs:");
+            _jobView.ShowJobs(jobs);
+
             var id = _jobView.AskJobId();
             _jobService.Delete(id);
             _consoleView.ShowSuccess("Job deleted.");
