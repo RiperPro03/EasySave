@@ -17,23 +17,25 @@ EasySave utilise la bibliothèque EasyLog.dll pour générer des logs.
 
 **Caractéristiques** : 
 
-- Un fichier de log par jour
+- Un fichier de log par jour (yyyy-MM-dd.json ou .xml)
 - Format JSON ou XML selon configuration
-- Écriture au fil de l’exécution (append)
+- Écriture en temps réel (append) au fil de l’exécution
 - JSON lisible (indentation + retours à la ligne)
 - Possibilité NDJSON (1 objet JSON par ligne)
 - Aucun modèle métier imposé : EasyLog accepte n'importe quel objet T 
 
+**Emplacement** : 
 
 ### 2.2 - Fichier état (state.json)
 
-EasySave maintient un fichier unique state.json représentant l’état global de l’application en temps réel.
+EasySave maintient un fichier unique représentant l’état global de tous les jobs en temps réel.
 
 **Caractéristiques**:
 
-- Snapshot global en temps réel de tous les jobs
-- Mis à jour pendant l’exécution
-- Emplacement : ...
+- Snapshot global mis à jour pendant l’exécution
+- Contient l’état de chaque job ainsi que l’état global de l’application
+
+**Emplacement** : ...
 
 **Contenu** : 
 
@@ -62,19 +64,28 @@ Les modifications sont sauvegardées automatiquement.
 
 ## 4. Support
 
-- Vérifier que le SDK .NET 10 est installé 
-- Vérifier la commande : **dotnet run --project src/EasySave.App.Console**
-- 
+Pour le support technique, vérifier :
 
+- Que le SDK .NET 10 est installé
+- Que la commande suivante fonctionne : **dotnet run --project src/EasySave.App.Console**
+
+En cas de problème, vérifier les emplacements des fichiers logs et state.json.
 
 ## 5. Arborescence simplifié
 ```
 src/
-├── EasySave.App.Console      (interface console)
+├── EasySave.App.Console      (interface console v1)
 ├── EasySave.App              (moteur, infrastructure)
 ├── EasySave.Core             (coeur métier)
 ├── EasySave.EasyLog          (DLL dédiée au logging)
-├── EasySave.App.Gui          (interface graphique)
+├── EasySave.App.Gui          (interface graphique v2)
 └── tests/
     └── EasySave.Tests		  (Tests Unitaires)
 ```
+
+## 6. Limitations de la version 1.0
+
+- Application console uniquement
+- Maximum 5 jobs
+- Exécution séquentielle uniquement
+- Interface graphique prévue pour la version 2.0
