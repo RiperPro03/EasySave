@@ -68,9 +68,13 @@ Les modifications sont sauvegardées automatiquement.
 
 
 ## 5. Arborescence simplifié
-
-EasySave.Core        ← cœur métier
-EasySave.App         ← moteur / infrastructure
-EasySave.EasyLog     ← DLL dédiée au logging
-EasySave.App.Console ← interface console
-EasySave.App.Gui     ← interface graphique (Avalonia)
+```
+src/
+├── EasySave.App.Console      (interface console)
+├── EasySave.App              (moteur, infrastructure)
+├── EasySave.Core             (coeur métier)
+├── EasySave.EasyLog          (DLL dédiée au logging)
+├── EasySave.App.Gui          (interface graphique)
+└── tests/
+    └── EasySave.Tests		  (Tests Unitaires)
+```
