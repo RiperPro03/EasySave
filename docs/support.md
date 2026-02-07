@@ -3,7 +3,7 @@
 ## 1. Prérequis
 
 - Windows
-- . NET SDK 10.0
+- .NET SDK 10.0
 - Visual Studio 2022+ ou Rider
 - Git
 
@@ -37,12 +37,12 @@ EasySave maintient un fichier unique state.json représentant l’état global d
 
 **Contenu** : 
 
-	- Statut du job (Idle, Running, Paused, Completed, Error)
-	- Nombre total de fichiers et taille totale 
-	- Fichiers / taille déjà copiés
-	- Pourcentage d'avancement 
-	- Timestamp dernière action 
-	- Message d'erreur si nécessaire
+- Statut du job (Idle, Running, Paused, Completed, Error)
+- Nombre total de fichiers et taille totale 
+- Fichiers / taille déjà copiés
+- Pourcentage d'avancement 
+- Timestamp dernière action 
+- Message d'erreur si nécessaire
 
 ## 3. Configuration de l'application
 
@@ -52,11 +52,11 @@ Options disponibles :
 
 - Choix de la langue :
 
-		- English
-		- French
+	- English
+	- French
 
 - Format de journalisation :
-		- JSON					- XML
+	- JSON				- XML
 
 Les modifications sont sauvegardées automatiquement.
 
@@ -69,11 +69,8 @@ Les modifications sont sauvegardées automatiquement.
 
 ## 5. Arborescence simplifié
 
-src/
-├── EasySave.App.Console      (interface console)
-├── EasySave.App              (moteur, infrastructure)
-├── EasySave.Core             (coeur métier)
-├── EasySave.EasyLog          (DLL dédiée au logging)
-├── EasySave.App.Gui          (interface graphique)
-└── tests/
-    └── EasySave.Tests		  (Tests Unitaires)
+EasySave.Core        ← cœur métier
+EasySave.App         ← moteur / infrastructure
+EasySave.EasyLog     ← DLL dédiée au logging
+EasySave.App.Console ← interface console
+EasySave.App.Gui     ← interface graphique (Avalonia)
