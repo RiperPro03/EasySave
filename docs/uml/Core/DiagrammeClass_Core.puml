@@ -16,9 +16,11 @@ skinparam class {
     BorderColor<<DTO>> #0277BD
     BackgroundColor<<Interface>> #E8F5E9
     BorderColor<<Interface>> #2E7D32
+    BackgroundColor<<Event>> #FFF3E0
+    BorderColor<<Event>> #EF6C00
 }
 
-title Diagramme de classes - EasySave.Core (Domain + DTO + Interfaces)
+title Diagramme de classes - EasySave.Core (Domain + DTO + Interfaces + Events)
 left to right direction
 skinparam packageStyle rectangle
 
@@ -49,7 +51,7 @@ package "EasySave.Core" {
 
   package "Common" {
     class Guard <<Model>> {
-      {static} +string NotNullOrWhiteSpace(string value, string paramName)
+      {static} +string NotNullOrWhiteSpace(string? value, string paramName)
     }
 
     class Localization <<Model>> {
@@ -66,12 +68,12 @@ package "EasySave.Core" {
       +BackupType Type
       +bool IsActive
       +DateTime CreatedAt
-      +DateTime LastRun
+      +DateTime? LastRun
       __
-      +BackupJob(id: string, name: string, sourcePath: string, targetPath: string, type: BackupType, isActive: bool, createdAtUtc: DateTime, lastRunUtc: DateTime)
+      +BackupJob(id: string, name: string, sourcePath: string, targetPath: string, type: BackupType, isActive: bool = true, createdAtUtc: DateTime? = null, lastRunUtc: DateTime? = null)
       +void Enable()
       +void Disable()
-      +void MarkExecuted(nowUtc: DateTime)
+      +void MarkExecuted(nowUtc: DateTime? = null)
       +void UpdateDefinition(name: string, sourcePath: string, targetPath: string, type: BackupType)
       +string ToString()
     }
@@ -79,25 +81,37 @@ package "EasySave.Core" {
     class AppConfig <<Model>> {
       +Language Language
       +string LogDirectory
+      +LogFormat LogFormat
       __
-      -AppConfig(language: Language, logDirectory: string)
+      -AppConfig(language: Language, logDirectory: string, logFormat: LogFormat)
       +{static} AppConfig LoadDefaults()
       +void ChangeLanguage(Language language)
       +void UpdateLogDirectory(string logDirectory)
+      +void ChangeLogFormat(LogFormat logFormat)
       -{static} string GetDefaultLogDirectory()
     }
   }
 
   package "DTO" {
+    class AppStateDto <<DTO>> {
+      +DateTime GeneratedAtUtc
+      +int TotalJobs
+      +JobStatus GlobalStatus
+      +List<string> ActiveJobIds
+      +List<JobStateDto> Jobs
+      __
+      +AppStateDto()
+    }
+
     class BackupJobDto <<DTO>> {
-      +string Id
-      +string Name
-      +string SourcePath
-      +string TargetPath
-      +string Type
+      +string? Id
+      +string? Name
+      +string? SourcePath
+      +string? TargetPath
+      +string? Type
       +bool IsActive
       +DateTime CreatedAt
-      +DateTime LastRun
+      +DateTime? LastRun
       __
       +BackupJobDto()
       +bool IsValid()
@@ -114,7 +128,7 @@ package "EasySave.Core" {
       +int SkippedCount
       +int ErrorCount
       +TimeSpan Duration
-      +List Errors
+      +List<string> Errors
       __
       +BackupResultDto()
     }
@@ -123,15 +137,17 @@ package "EasySave.Core" {
       +string JobId
       +string JobName
       +JobStatus Status
-      +string CurrentFile
-      +long TotalFilesToCopy
-      +long TotalFilesCopied
+      +string? CurrentSourceFile
+      +string? CurrentTargetFile
+      +long TotalFiles
+      +long FilesProcessed
       +long TotalSizeBytes
-      +long SizeCopiedBytes
+      +long SizeProcessedBytes
       +int ProgressPercentage
-      +DateTime StartTimeUtc
-      +DateTime EndTimeUtc
-      +string ErrorMessage
+      +long RemainingFiles
+      +long RemainingSizeBytes
+      +DateTime LastActionTimestampUtc
+      +string? ErrorMessage
       __
       +JobStateDto()
     }
@@ -144,7 +160,7 @@ package "EasySave.Core" {
       +long FileSizeBytes
       +double TransferTimeMs
       +string Status
-      +string ErrorMessage
+      +string? ErrorMessage
       __
       +LogEntryDto()
     }
@@ -152,15 +168,24 @@ package "EasySave.Core" {
     class ResultDto <<DTO>> {
       +bool Success
       +string Message
-      +string ErrorCode
+      +string? ErrorCode
       __
       +{static} ResultDto Ok(message: string)
-      +{static} ResultDto Fail(message: string, errorCode: string)
+      +{static} ResultDto Fail(message: string, errorCode: string? = null)
+    }
+  }
+
+  package "Events" {
+    class JobStateChangedEventArgs <<Event>> {
+      +JobStateDto State
+      __
+      +JobStateChangedEventArgs(state: JobStateDto)
     }
   }
 
   package "Interfaces" {
     interface IBackupEngine <<Interface>> {
+      +event EventHandler<JobStateChangedEventArgs>? StateChanged
       +BackupResultDto Run(BackupJob job)
     }
 
@@ -169,13 +194,14 @@ package "EasySave.Core" {
     }
 
     interface IBackupService <<Interface>> {
+      +event EventHandler<JobStateChangedEventArgs>? StateChanged
       +BackupResultDto Run(BackupJob job)
     }
 
     interface IFileSystem <<Interface>> {
       +bool DirectoryExists(string path)
       +void CreateDirectory(string path)
-      +IEnumerable EnumerateFiles(string path, bool recursive)
+      +IEnumerable<string> EnumerateFiles(string path, bool recursive)
       +bool FileExists(string path)
       +long GetFileSize(string path)
       +DateTime GetLastWriteTimeUtc(string path)
@@ -183,19 +209,19 @@ package "EasySave.Core" {
     }
 
     interface IJobRepository <<Interface>> {
-      +IReadOnlyList GetAll()
-      +BackupJob GetById(string id)
+      +IReadOnlyList<BackupJob> GetAll()
+      +BackupJob? GetById(string id)
       +void Add(BackupJob job)
       +void Update(BackupJob job)
       +void Remove(string id)
     }
 
     interface IJobService <<Interface>> {
-      +IReadOnlyList GetAll()
-      +BackupJob GetById(string id)
-      +void Create(string id, string name, string sourcePath, string targetPath, BackupType type, bool isActive)
+      +IReadOnlyList<BackupJob> GetAll()
+      +BackupJob? GetById(string id)
+      +void Create(string id, string name, string sourcePath, string targetPath, BackupType type, bool isActive = true)
       +void Update(string id, string name, string sourcePath, string targetPath, BackupType type, bool isActive)
-      +void MarkExecuted(string id, DateTime nowUtc)
+      +void MarkExecuted(string id, DateTime? nowUtc = null)
       +void Delete(string id)
     }
 
@@ -207,7 +233,7 @@ package "EasySave.Core" {
     }
 
     interface IStateWriter <<Interface>> {
-      +void Write(JobStateDto state)
+      +void Write(AppStateDto state)
     }
   }
 }
@@ -216,12 +242,19 @@ package "EasySave.Core" {
 ' RELATIONS - Core
 ' ============================================
 EasySave.Core.Models.BackupJob --> EasySave.Core.Enums.BackupType : uses
-EasySave.Core.DTO.JobStateDto --> EasySave.Core.Enums.JobStatus : uses
 EasySave.Core.Models.AppConfig --> EasySave.Core.Enums.Language : uses
+EasySave.Core.Models.AppConfig --> EasySave.EasyLog.Options.LogFormat : uses
 EasySave.Core.DTO.BackupJobDto ..> EasySave.Core.Models.BackupJob : ToModel()/FromModel()
 EasySave.Core.DTO.BackupJobDto ..> EasySave.Core.Enums.BackupType : parse(Type)
+EasySave.Core.DTO.AppStateDto --> EasySave.Core.Enums.JobStatus : uses
+EasySave.Core.DTO.AppStateDto --> EasySave.Core.DTO.JobStateDto : contains
 EasySave.Core.Models.BackupJob ..> EasySave.Core.Common.Guard : validates
 EasySave.Core.Models.AppConfig ..> EasySave.Core.Common.Guard : validates
 EasySave.Core.Common.Localization --> EasySave.Core.Enums.Language : uses
+EasySave.Core.DTO.JobStateDto --> EasySave.Core.Enums.JobStatus : uses
+EasySave.Core.Events.JobStateChangedEventArgs --> EasySave.Core.DTO.JobStateDto : carries
+EasySave.Core.Interfaces.IBackupEngine ..> EasySave.Core.Events.JobStateChangedEventArgs : event
+EasySave.Core.Interfaces.IBackupService ..> EasySave.Core.Events.JobStateChangedEventArgs : event
+EasySave.Core.Interfaces.IStateWriter ..> EasySave.Core.DTO.AppStateDto : writes
 
 @enduml

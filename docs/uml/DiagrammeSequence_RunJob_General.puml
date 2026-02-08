@@ -1,0 +1,95 @@
+@startuml EasySave_RunJob_General
+
+' ============================================
+' CONFIGURATION
+' ============================================
+skinparam shadowing false
+skinparam dpi 170
+skinparam backgroundColor #FFFFFF
+
+skinparam sequence {
+  MessageAlign center
+  ArrowColor #2F3A4A
+  ArrowThickness 1
+  LifeLineBorderColor #B7C0CE
+  LifeLineBackgroundColor #F7F9FC
+
+  ParticipantBorderColor #2F3A4A
+  ParticipantBackgroundColor #EEF3FF
+  ParticipantFontColor #1C2A3A
+  ParticipantFontStyle bold
+
+  ActorBorderColor #2F3A4A
+  ActorBackgroundColor #FFF4E5
+
+  BoxBorderColor #9FB1C9
+  BoxBackgroundColor #F7F9FC
+
+  GroupBorderColor #9FB1C9
+  GroupBackgroundColor #F7F9FC
+}
+
+title <b>EasySave</b>\n<i>Sequence de lancement d un job (general)</i>
+
+' -------------------- ACTEURS / PARTICIPANTS --------------------
+actor Utilisateur #FFF4E5
+
+participant "<b>Interface</b>\n(Console ou GUI)" as UI #EEF3FF
+participant "<b>JobService</b>" as JobService #E9F7EF
+participant "<b>JobRepository</b>" as JobRepository #F3E8FF
+participant "<b>BackupService</b>" as BackupService #E6F4FF
+participant "<b>BackupEngine</b>" as BackupEngine #FFE9EC
+participant "<b>IBackupCopyStrategy</b>" as Strategy #F7F9FC
+participant "<b>StateWriter</b>" as StateWriter #FFFDE7
+participant "<b>Logger</b>" as Logger #FCE4EC
+participant "<b>Systeme de fichiers</b>" as FS #E0F2F1
+
+' -------------------- FLUX --------------------
+== Selection du job ==
+Utilisateur -> UI : Choisit un job a executer
+UI -> JobService : Demande le job par identifiant
+JobService -> JobRepository : Charge le job depuis la persistance
+JobRepository --> JobService : Retourne le job
+JobService --> UI : Retourne le job
+
+== Demarrage ==
+UI -> BackupService : Demande l execution du job
+BackupService -> BackupEngine : Lance l execution
+BackupEngine -> BackupEngine : Cree l etat initial du job
+BackupEngine -> FS : Verifie le dossier source
+
+alt <b>Dossier source manquant</b>
+  BackupEngine -> BackupEngine : Marque le job en erreur
+  BackupEngine -> Logger : Ecrit un resume d erreur
+  BackupEngine --> BackupService : Retourne le resultat d erreur
+  BackupService -> JobService : Marque le job comme execute
+  BackupService --> UI : Retourne le resultat
+else <b>Dossier source present</b>
+  BackupEngine -> BackupEngine : Selectionne la strategie (Full/Differential)
+  BackupEngine -> FS : Enumere les fichiers et calcule les totaux
+  BackupEngine -> BackupService : Notifie l etat initial
+  BackupService -> StateWriter : Ecrit le snapshot global
+
+  loop <b>Pour chaque fichier</b>
+    BackupEngine -> BackupEngine : Met a jour l etat courant
+    BackupEngine -> Strategy : Decide s il faut copier
+    alt <b>Doit copier</b>
+      BackupEngine -> FS : Copie le fichier
+      BackupEngine -> BackupEngine : Met a jour les compteurs
+    else <b>Ne doit pas copier</b>
+      BackupEngine -> BackupEngine : Compte comme saute
+    end
+    BackupEngine -> BackupService : Notifie l etat mis a jour
+    BackupService -> StateWriter : Met a jour le snapshot
+  end
+
+  BackupEngine -> BackupEngine : Finalise le statut (OK ou ERREUR)
+  BackupEngine -> Logger : Ecrit le resume final
+  BackupEngine --> BackupService : Retourne le resultat
+  BackupService -> JobService : Marque le job comme execute
+  BackupService --> UI : Retourne le resultat
+end
+
+UI -> Utilisateur : Affiche le resultat
+
+@enduml

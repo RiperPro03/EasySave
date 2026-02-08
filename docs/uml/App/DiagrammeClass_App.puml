@@ -6,8 +6,8 @@
 skinparam backgroundColor white
 skinparam shadowing false
 skinparam linetype polyline
-skinparam nodesep 200
-skinparam ranksep 200
+skinparam nodesep 50
+skinparam ranksep 2200
 
 skinparam class {
     BackgroundColor<<Service>> #FFF3E0
@@ -18,7 +18,7 @@ skinparam class {
     BorderColor<<Strategy>> #1565C0
 }
 
-title Diagramme de classes - EasySave.App (Implémentations)
+title Diagramme de classes - EasySave.App (Implementations)
 left to right direction
 skinparam packageStyle rectangle
 
@@ -29,43 +29,79 @@ package "EasySave.App" {
 
   package "Services" {
     class BackupEngine <<Service>> {
+      -ILogger<LogEntryDto>? _logger
+      __
+      +BackupEngine(logDirectory: string? = null, logFormat: LogFormat = LogFormat.Json)
+      +event EventHandler<JobStateChangedEventArgs>? StateChanged
       +BackupResultDto Run(BackupJob job)
-      -void ExecuteBackup(string sourceRoot, string targetRoot, IBackupCopyStrategy strategy, BackupResultDto result)
-      -void CopyFile(string sourcePath, string targetPath)
+      -void ExecuteBackup(IReadOnlyList<string> files, string sourceRoot, string targetRoot, IBackupCopyStrategy strategy, BackupResultDto result, JobStateDto state)
+      -{static} void CopyFile(string sourcePath, string targetPath)
       -void WriteSummaryLog(BackupJob job, BackupResultDto result)
+      -JobStateDto CreateInitialState(BackupJob job)
+      -void InitializeTotals(JobStateDto state, int totalFiles, long totalSizeBytes)
+      -void UpdateProgressState(JobStateDto state, string sourcePath, string targetPath, long fileSize, bool incrementProcessed)
+      -void UpdateTerminalState(JobStateDto state, JobStatus status, string? errorMessage)
+      -void PublishState(JobStateDto state)
+      -{static} int CalculateProgress(JobStateDto state)
     }
 
     class BackupService <<Service>> {
       -IBackupEngine _backupEngine
       -IJobService _jobService
+      -IStateWriter _stateWriter
+      -Dictionary<string, JobStateDto> _jobStates
+      -object _stateLock
+      -string? _logDirectory
+      -Func<LogFormat> _logFormatProvider
+      -LogFormat _currentLogFormat
       __
-      +BackupService(IJobService jobService, string logDirectory)
+      +event EventHandler<JobStateChangedEventArgs>? StateChanged
+      +BackupService(jobService: IJobService, logDirectory: string? = null, stateWriter: IStateWriter? = null, pathProvider: IPathProvider? = null, logFormat: LogFormat? = null, logFormatProvider: Func<LogFormat>? = null)
       +BackupResultDto Run(BackupJob job)
+      -void OnEngineStateChanged(object? sender, JobStateChangedEventArgs e)
+      -void InitializeSnapshot()
+      -void SyncJobs()
+      -void WriteSnapshot()
+      -{static} JobStatus ComputeGlobalStatus(IReadOnlyList<JobStateDto> states)
+      -{static} JobStateDto CreateIdleState(BackupJob job)
+      -{static} JobStateDto CopyState(JobStateDto state)
+      -void EnsureEngine()
+      -IBackupEngine CreateEngine(LogFormat format)
     }
 
     class JobService <<Service>> {
       -IJobRepository _jobRepository
       __
-      +JobService(IPathProvider pathProvider)
-      +IReadOnlyList GetAll()
-      +BackupJob GetById(string id)
-      +void Create(string id, string name, string sourcePath, string targetPath, BackupType type, bool isActive)
+      +JobService(pathProvider: IPathProvider)
+      +IReadOnlyList<BackupJob> GetAll()
+      +BackupJob? GetById(string id)
+      +void Create(string id, string name, string sourcePath, string targetPath, BackupType type, bool isActive = true)
       +void Update(string id, string name, string sourcePath, string targetPath, BackupType type, bool isActive)
-      +void MarkExecuted(string id, DateTime nowUtc)
+      +void MarkExecuted(string id, DateTime? nowUtc = null)
       +void Delete(string id)
     }
 
     class PathProvider <<Service>> {
+      -string _basePath
+      __
       +string LogsPath
       +string StatePath
       +string ConfigPath
       +void EnsureDirectoriesCreated()
     }
-  }
 
-  package "Strategies" {
+    class StateWriter <<Service>> {
+      -IPathProvider _pathProvider
+      -JsonSerializerOptions _options
+      __
+      +StateWriter(pathProvider: IPathProvider)
+      +void Write(AppStateDto state)
+    }
+
     class DifferentialCopyStrategy <<Strategy>> {
       +bool ShouldCopy(string sourcePath, string targetPath)
+      __
+      -{static} byte[] ComputeHash(string path)
     }
 
     class FullCopyStrategy <<Strategy>> {
@@ -76,15 +112,29 @@ package "EasySave.App" {
   package "Repositories" {
     class JobRepository <<Repository>> {
       -IPathProvider _pathProvider
-      -List _jobs
+      -List<BackupJob> _jobs
       -string _jobsFilePath
-      -int MaxJobs
+      -{static} int MaxJobs = 5
       __
-      +IReadOnlyList GetAll()
-      +BackupJob GetById(string id)
+      +JobRepository(pathProvider: IPathProvider)
+      +IReadOnlyList<BackupJob> GetAll()
+      +BackupJob? GetById(string id)
       +void Add(BackupJob job)
-      +void Update(BackupJob job)
       +void Remove(string id)
+      +void Update(BackupJob updatedJob)
+      -List<BackupJob> LoadJobs()
+      -void SaveJobs()
+    }
+
+    class AppConfigRepository <<Repository>> {
+      -{static} string ConfigFileName = "setting.json"
+      -IPathProvider _pathProvider
+      -string _configFilePath
+      -JsonSerializerOptions _options
+      __
+      +AppConfigRepository(pathProvider: IPathProvider)
+      +AppConfig Load()
+      +void Save(AppConfig config)
     }
   }
 }
@@ -92,20 +142,43 @@ package "EasySave.App" {
 ' ============================================
 ' RELATIONS - App
 ' ============================================
-EasySave.App.Services.BackupEngine ..> EasySave.App.Strategies.DifferentialCopyStrategy : uses
-EasySave.App.Services.BackupEngine ..> EasySave.App.Strategies.FullCopyStrategy : uses
-EasySave.App.Strategies.DifferentialCopyStrategy ..|> EasySave.Core.Interfaces.IBackupCopyStrategy : implements
-EasySave.App.Strategies.FullCopyStrategy ..|> EasySave.Core.Interfaces.IBackupCopyStrategy : implements
+EasySave.App.Services.BackupEngine ..> EasySave.App.Services.DifferentialCopyStrategy : uses
+EasySave.App.Services.BackupEngine ..> EasySave.App.Services.FullCopyStrategy : uses
+EasySave.App.Services.DifferentialCopyStrategy ..|> EasySave.Core.Interfaces.IBackupCopyStrategy : implements
+EasySave.App.Services.FullCopyStrategy ..|> EasySave.Core.Interfaces.IBackupCopyStrategy : implements
 
 EasySave.App.Services.BackupEngine ..|> EasySave.Core.Interfaces.IBackupEngine : implements
 EasySave.App.Services.BackupService ..|> EasySave.Core.Interfaces.IBackupService : implements
 EasySave.App.Services.JobService ..|> EasySave.Core.Interfaces.IJobService : implements
 EasySave.App.Services.PathProvider ..|> EasySave.Core.Interfaces.IPathProvider : implements
+EasySave.App.Services.StateWriter ..|> EasySave.Core.Interfaces.IStateWriter : implements
 EasySave.App.Repositories.JobRepository ..|> EasySave.Core.Interfaces.IJobRepository : implements
 
-EasySave.App.Services.BackupService --> EasySave.App.Services.BackupEngine : uses
-EasySave.App.Services.BackupService --> EasySave.App.Services.JobService : uses
-EasySave.App.Services.JobService --> EasySave.App.Repositories.JobRepository : uses
-EasySave.App.Repositories.JobRepository --> EasySave.App.Services.PathProvider : uses
+EasySave.App.Services.BackupService ..> EasySave.Core.Interfaces.IBackupEngine : uses
+EasySave.App.Services.BackupService ..> EasySave.Core.Interfaces.IJobService : uses
+EasySave.App.Services.BackupService ..> EasySave.Core.Interfaces.IStateWriter : uses
+EasySave.App.Services.BackupService ..> EasySave.Core.Interfaces.IPathProvider : uses
+EasySave.App.Services.BackupService --> EasySave.App.Services.BackupEngine : creates default
+EasySave.App.Services.BackupService --> EasySave.App.Services.StateWriter : creates default
+EasySave.App.Services.BackupService --> EasySave.App.Services.PathProvider : creates default
+
+EasySave.App.Services.JobService ..> EasySave.Core.Interfaces.IJobRepository : uses
+EasySave.App.Services.JobService --> EasySave.App.Repositories.JobRepository : creates default
+
+EasySave.App.Repositories.JobRepository ..> EasySave.Core.Interfaces.IPathProvider : uses
+EasySave.App.Repositories.AppConfigRepository ..> EasySave.Core.Interfaces.IPathProvider : uses
+EasySave.App.Services.StateWriter ..> EasySave.Core.Interfaces.IPathProvider : uses
+
+EasySave.App.Services.BackupEngine ..> EasySave.EasyLog.Factories.LoggerFactory : creates
+EasySave.App.Services.BackupEngine ..> EasySave.EasyLog.Options.LogOptions : uses
+EasySave.App.Services.BackupEngine ..> EasySave.EasyLog.Options.LogFormat : uses
+EasySave.App.Services.BackupService ..> EasySave.EasyLog.Options.LogFormat : uses
+EasySave.App.Repositories.AppConfigRepository ..> EasySave.EasyLog.Options.LogFormat : uses
+
+EasySave.App.Services.BackupEngine ..> EasySave.Core.Events.JobStateChangedEventArgs : raises
+EasySave.App.Services.BackupService ..> EasySave.Core.Events.JobStateChangedEventArgs : raises
+EasySave.App.Services.StateWriter ..> EasySave.Core.DTO.AppStateDto : writes
+EasySave.App.Repositories.JobRepository ..> EasySave.Core.DTO.BackupJobDto : persists
+EasySave.App.Repositories.AppConfigRepository ..> EasySave.Core.Models.AppConfig : loads/saves
 
 @enduml
