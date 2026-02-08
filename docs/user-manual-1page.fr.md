@@ -91,7 +91,6 @@ Menu :
 ## 7. Settings
 
 Menu :
-
 	1 - English
 	2 - French
 	3 - Log format: JSON
@@ -111,4 +110,4 @@ Menu :
 	- Application console uniquement 
 	- Maximum 5 jobs 
 	- Exécution séquentielle 
-	- Interface graphique prévue en v2 
+	- Interface graphique prévue en v2
