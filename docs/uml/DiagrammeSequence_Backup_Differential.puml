@@ -1,0 +1,88 @@
+@startuml EasySave_Backup_Differential
+
+' ============================================
+' CONFIGURATION
+' ============================================
+skinparam shadowing false
+skinparam dpi 170
+skinparam backgroundColor #FFFFFF
+
+skinparam sequence {
+  MessageAlign center
+  ArrowColor #2F3A4A
+  ArrowThickness 1
+  LifeLineBorderColor #B7C0CE
+  LifeLineBackgroundColor #F7F9FC
+
+  ParticipantBorderColor #2F3A4A
+  ParticipantBackgroundColor #EEF3FF
+  ParticipantFontColor #1C2A3A
+  ParticipantFontStyle bold
+
+  ActorBorderColor #2F3A4A
+  ActorBackgroundColor #FFF4E5
+
+  BoxBorderColor #9FB1C9
+  BoxBackgroundColor #F7F9FC
+
+  GroupBorderColor #9FB1C9
+  GroupBackgroundColor #F7F9FC
+}
+
+title <b>EasySave</b>\n<i>Sequence sauvegarde differentielle</i>
+
+' -------------------- ACTEURS / PARTICIPANTS --------------------
+actor Utilisateur #FFF4E5
+
+participant "<b>Interface</b>\n(Console ou GUI)" as UI #EEF3FF
+participant "<b>BackupService</b>" as BackupService #E9F7EF
+participant "<b>BackupEngine</b>" as BackupEngine #F3E8FF
+participant "<b>DifferentialCopyStrategy</b>" as Strategy #E6F4FF
+participant "<b>Systeme de fichiers</b>" as FS #FFE9EC
+participant "<b>Logger</b>" as Logger #F7F9FC
+
+' -------------------- FLUX --------------------
+== Demarrage ==
+Utilisateur -> UI : Selectionne un job en mode differentiel
+UI -> BackupService : Demande l execution du job
+BackupService -> BackupEngine : Lance l execution
+BackupEngine -> BackupEngine : Selectionne la strategie differentielle
+BackupEngine -> FS : Enumere les fichiers source et calcule les totaux
+
+== Evaluation des fichiers ==
+loop <b>Pour chaque fichier</b>
+  BackupEngine -> Strategy : Demande si le fichier doit etre copie
+
+  Strategy -> FS : Verifie si le fichier cible existe
+  alt <b>Fichier cible absent</b>
+    Strategy --> BackupEngine : Oui, copier
+  else <b>Fichier cible present</b>
+    Strategy -> FS : Compare la taille
+    alt <b>Taille differente</b>
+      Strategy --> BackupEngine : Oui, copier
+    else <b>Taille identique</b>
+      Strategy -> FS : Compare la date de modification
+      alt <b>Date identique</b>
+        Strategy --> BackupEngine : Non, ne pas copier
+      else <b>Date differente</b>
+        Strategy -> FS : Calcule les hash source et cible
+        Strategy --> BackupEngine : Copier si hash different
+      end
+    end
+  end
+
+  alt <b>Doit copier</b>
+    BackupEngine -> FS : Copie le fichier vers la cible
+    BackupEngine -> BackupEngine : Met a jour les compteurs
+  else <b>Ne doit pas copier</b>
+    BackupEngine -> BackupEngine : Marque comme saute
+  end
+end
+
+== Finalisation ==
+BackupEngine -> Logger : Ecrit le resume final
+BackupEngine --> BackupService : Retourne le resultat
+BackupService --> UI : Retourne le resultat
+UI -> Utilisateur : Affiche le resume
+
+@enduml

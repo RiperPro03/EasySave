@@ -1,0 +1,78 @@
+@startuml EasySave_RunBatch_Args
+
+' ============================================
+' CONFIGURATION
+' ============================================
+skinparam shadowing false
+skinparam dpi 170
+skinparam backgroundColor #FFFFFF
+
+skinparam sequence {
+  MessageAlign center
+  ArrowColor #2F3A4A
+  ArrowThickness 1
+  LifeLineBorderColor #B7C0CE
+  LifeLineBackgroundColor #F7F9FC
+
+  ParticipantBorderColor #2F3A4A
+  ParticipantBackgroundColor #EEF3FF
+  ParticipantFontColor #1C2A3A
+  ParticipantFontStyle bold
+
+  ActorBorderColor #2F3A4A
+  ActorBackgroundColor #FFF4E5
+
+  BoxBorderColor #9FB1C9
+  BoxBackgroundColor #F7F9FC
+
+  GroupBorderColor #9FB1C9
+  GroupBackgroundColor #F7F9FC
+}
+
+title <b>EasySave</b>\n<i>Sequence lancement batch via arguments</i>
+
+' -------------------- ACTEURS / PARTICIPANTS --------------------
+actor Utilisateur #FFF4E5
+
+participant "<b>Program</b>" as Program #EEF3FF
+participant "<b>BackupController</b>" as BackupController #E9F7EF
+participant "<b>ArgsParser</b>" as ArgsParser #F3E8FF
+participant "<b>JobService</b>" as JobService #E6F4FF
+participant "<b>BackupService</b>" as BackupService #FFE9EC
+participant "<b>BackupView</b>" as BackupView #E6F4FF
+participant "<b>ConsoleView</b>" as ConsoleView #F7F9FC
+
+' -------------------- FLUX --------------------
+== Demarrage ==
+Utilisateur -> Program : Lance l application avec des arguments
+Program -> BackupController : RunFromArgs(rawArgs)
+
+== Analyse des arguments ==
+BackupController -> ArgsParser : Analyse les arguments
+
+alt <b>Arguments invalides</b>
+  ArgsParser --> BackupController : Exception (format, range, etc.)
+  BackupController -> ConsoleView : Affiche l erreur
+  BackupController --> Program : Termine le flux
+else <b>Arguments valides</b>
+  ArgsParser --> BackupController : Liste d identifiants
+
+  loop <b>Pour chaque id</b>
+    BackupController -> JobService : GetById(id)
+    alt <b>Job introuvable</b>
+      JobService --> BackupController : null
+      BackupController -> ConsoleView : Affiche "Job introuvable"
+    else <b>Job trouve</b>
+      JobService --> BackupController : job
+      BackupController -> BackupView : Affiche debut du job
+      BackupController -> BackupService : Run(job)
+      BackupService --> BackupController : Resultat
+      BackupController -> BackupView : Affiche fin du job
+      BackupController -> BackupController : Ajoute le resultat a la liste
+    end
+  end
+
+  BackupController -> BackupView : Affiche le resume batch
+end
+
+@enduml
