@@ -202,7 +202,6 @@ dotnet test
 
 - **Langues supportées :** Français • Anglais
 - **Architecture :** Textes centralisés, aucune chaîne en dur dans le code
-- **Changement :** Configuration au démarrage de l'application
 
 ---
 
