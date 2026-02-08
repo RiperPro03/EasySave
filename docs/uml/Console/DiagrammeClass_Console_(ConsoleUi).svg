@@ -1,0 +1,3491 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?plantuml 1.2026.2beta3?><svg
+   contentStyleType="text/css"
+   data-diagram-type="CLASS"
+   height="1551px"
+   preserveAspectRatio="none"
+   style="width:4037px;height:1551px;background:#FFFFFF;"
+   version="1.1"
+   viewBox="0 0 4037 1551"
+   width="4037px"
+   zoomAndPan="magnify"
+   id="svg138"
+   sodipodi:docname="easysave_app_console_(console_ui).svg"
+   inkscape:version="1.4 (86a8ad7, 2024-10-11)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <sodipodi:namedview
+     id="namedview138"
+     pagecolor="#505050"
+     bordercolor="#eeeeee"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#505050"
+     inkscape:zoom="0.63546777"
+     inkscape:cx="1369.857"
+     inkscape:cy="1062.9965"
+     inkscape:window-width="1920"
+     inkscape:window-height="1094"
+     inkscape:window-x="-11"
+     inkscape:window-y="-11"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="g138" />
+  <title
+     id="title1">Diagramme de classes - EasySave.App.Console (Architecture en Couches)</title>
+  <defs
+     id="defs1" />
+  <g
+     id="g138">
+    <g
+       class="title"
+       data-source-line="24"
+       id="g1">
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         font-weight="bold"
+         lengthAdjust="spacing"
+         textLength="582.1963"
+         x="1720.7359"
+         y="22.9951"
+         id="text1">Diagramme de classes - EasySave.App.Console (Architecture en Couches)</text>
+    </g>
+    <!--cluster EasySave-->
+    <g
+       class="cluster"
+       data-qualified-name="EasySave"
+       data-source-line="33"
+       id="ent0005">
+      <rect
+         fill="none"
+         height="1501.12"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#000000;stroke-width:1.5;"
+         width="3886"
+         x="7"
+         y="44.2969"
+         id="rect1" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         font-weight="bold"
+         lengthAdjust="spacing"
+         textLength="74.6211"
+         x="1912.6895"
+         y="59.292"
+         id="text2">EasySave</text>
+    </g>
+    <!--cluster App-->
+    <g
+       class="cluster"
+       data-qualified-name="EasySave.App"
+       data-source-line="33"
+       id="ent0006">
+      <rect
+         fill="none"
+         height="1434.12"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#000000;stroke-width:1.5;"
+         width="3125"
+         x="31"
+         y="87.2969"
+         id="rect2" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         font-weight="bold"
+         lengthAdjust="spacing"
+         textLength="30.8779"
+         x="1578.061"
+         y="102.292"
+         id="text3">App</text>
+    </g>
+    <!--cluster Console-->
+    <g
+       class="cluster"
+       data-qualified-name="EasySave.App.Console"
+       data-source-line="30"
+       id="ent0002">
+      <rect
+         fill="none"
+         height="1367.12"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#000000;stroke-width:1.5;"
+         width="2817"
+         x="55"
+         y="130.2969"
+         id="rect3" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         font-weight="bold"
+         lengthAdjust="spacing"
+         textLength="62.1045"
+         x="1432.4478"
+         y="145.292"
+         id="text4">Console</text>
+    </g>
+    <!--cluster Bootstrap-->
+    <g
+       class="cluster"
+       data-qualified-name="EasySave.App.Console.Bootstrap"
+       data-source-line="32"
+       id="ent0003">
+      <rect
+         fill="none"
+         height="139.56"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#000000;stroke-width:1.5;"
+         width="343"
+         x="1986"
+         y="181.2969"
+         id="rect4" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         font-weight="bold"
+         lengthAdjust="spacing"
+         textLength="77.998"
+         x="2118.501"
+         y="196.292"
+         id="text5">Bootstrap</text>
+    </g>
+    <!--cluster Controllers (Logic Hub)-->
+    <g
+       class="cluster"
+       data-qualified-name="EasySave.App.Console.Controllers .Logic Hub."
+       data-source-line="38"
+       id="ent0007">
+      <rect
+         fill="none"
+         height="572.87"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#000000;stroke-width:1.5;"
+         width="1313"
+         x="1496"
+         y="360.8569"
+         id="rect5" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14px"
+         font-weight="bold"
+         lengthAdjust="spacing"
+         textLength="183.3125"
+         x="2060.8438"
+         y="375.85199"
+         id="text6"
+         transform="translate(-50)">Controllers (Logic Hub)</text>
+    </g>
+    <!--cluster Views & Input (UI)-->
+    <g
+       class="cluster"
+       data-qualified-name="EasySave.App.Console.Views . Input .UI."
+       data-source-line="91"
+       id="ent0012">
+      <rect
+         fill="none"
+         height="318.83"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#000000;stroke-width:1.5;"
+         width="2753"
+         x="87"
+         y="973.7269"
+         id="rect6" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         font-weight="bold"
+         lengthAdjust="spacing"
+         textLength="144.457"
+         x="1391.2715"
+         y="988.722"
+         id="text7">Views &amp; Input (UI)</text>
+    </g>
+    <!--cluster Models-->
+    <g
+       class="cluster"
+       data-qualified-name="EasySave.App.Console.Models"
+       data-source-line="146"
+       id="ent0018">
+      <rect
+         fill="none"
+         height="139.86"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#000000;stroke-width:1.5;"
+         width="150"
+         x="1910"
+         y="1333.5569"
+         id="rect7" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         font-weight="bold"
+         lengthAdjust="spacing"
+         textLength="56.1982"
+         x="1956.9009"
+         y="1348.552"
+         id="text8">Models</text>
+    </g>
+    <!--cluster Repositories-->
+    <g
+       class="cluster"
+       data-qualified-name="EasySave.App.Repositories"
+       data-source-line="189"
+       id="ent0044">
+      <rect
+         fill="none"
+         height="99"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#000000;stroke-width:1.5;"
+         width="212"
+         x="2920"
+         y="1083.6469"
+         id="rect8" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         font-weight="bold"
+         lengthAdjust="spacing"
+         textLength="98.8887"
+         x="2976.5557"
+         y="1098.642"
+         id="text9">Repositories</text>
+    </g>
+    <!--cluster Core-->
+    <g
+       class="cluster"
+       data-qualified-name="EasySave.Core"
+       data-source-line="186"
+       id="ent0037">
+      <rect
+         fill="none"
+         height="166"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#000000;stroke-width:1.5;"
+         width="674"
+         x="3195"
+         y="1040.6469"
+         id="rect9" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14px"
+         font-weight="bold"
+         lengthAdjust="spacing"
+         textLength="36.292"
+         x="3513.854"
+         y="1055.642"
+         id="text10"
+         transform="translate(-30.043826,-0.83455072)">Core</text>
+    </g>
+    <!--cluster Interfaces-->
+    <g
+       class="cluster"
+       data-qualified-name="EasySave.Core.Interfaces"
+       data-source-line="186"
+       id="ent0038">
+      <rect
+         fill="none"
+         height="99"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#000000;stroke-width:1.5;"
+         width="402"
+         x="3219"
+         y="1083.6469"
+         id="rect10" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         font-weight="bold"
+         lengthAdjust="spacing"
+         textLength="79.9326"
+         x="3380.0337"
+         y="1098.642"
+         id="text11">Interfaces</text>
+    </g>
+    <!--cluster Models-->
+    <g
+       class="cluster"
+       data-qualified-name="EasySave.Core.Models"
+       data-source-line="190"
+       id="ent0047">
+      <rect
+         fill="none"
+         height="99"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#000000;stroke-width:1.5;"
+         width="136"
+         x="3709"
+         y="1083.6469"
+         id="rect11" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         font-weight="bold"
+         lengthAdjust="spacing"
+         textLength="56.1982"
+         x="3748.9009"
+         y="1098.642"
+         id="text12">Models</text>
+    </g>
+    <!--class Program-->
+    <g
+       class="entity"
+       data-qualified-name="EasySave.App.Console.Bootstrap.Program"
+       data-source-line="33"
+       id="ent0004">
+      <rect
+         fill="#FFFDE7"
+         height="72.5625"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#F9A825;stroke-width:0.5;"
+         width="190.5"
+         x="2114.75"
+         y="224.2969"
+         id="rect12" />
+      <ellipse
+         cx="2171.167"
+         cy="244.4297"
+         fill="#ADD1B2"
+         style="stroke:#181818;stroke-width:1;"
+         id="ellipse12"
+         ry="11"
+         rx="11" />
+      <path
+         d="M2174.1357,250.0703 Q2173.5576,250.3672 2172.917,250.5078 Q2172.2764,250.6641 2171.5732,250.6641 Q2169.0732,250.6641 2167.7451,249.0234 Q2166.4326,247.3672 2166.4326,244.2422 Q2166.4326,241.1172 2167.7451,239.4609 Q2169.0732,237.8047 2171.5732,237.8047 Q2172.2764,237.8047 2172.917,237.9609 Q2173.5732,238.1172 2174.1357,238.4141 L2174.1357,241.1328 Q2173.5107,240.5547 2172.917,240.2891 Q2172.3232,240.0078 2171.6982,240.0078 Q2170.3545,240.0078 2169.667,241.0859 Q2168.9795,242.1484 2168.9795,244.2422 Q2168.9795,246.3359 2169.667,247.4141 Q2170.3545,248.4766 2171.6982,248.4766 Q2172.3232,248.4766 2172.917,248.2109 Q2173.5107,247.9297 2174.1357,247.3516 L2174.1357,250.0703 Z "
+         fill="#000000"
+         id="path12" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="12"
+         font-style="italic"
+         lengthAdjust="spacing"
+         textLength="73.166"
+         x="2189.667"
+         y="240.4355"
+         id="text13">«Bootstrap»</text>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="59.623"
+         x="2196.4385"
+         y="256.2607"
+         id="text14">Program</text>
+      <line
+         style="stroke:#F9A825;stroke-width:0.5;"
+         x1="2115.75"
+         x2="2304.25"
+         y1="264.5625"
+         y2="264.5625"
+         id="line14" />
+      <line
+         style="stroke:#F9A825;stroke-width:0.5;"
+         x1="2115.75"
+         x2="2304.25"
+         y1="272.5625"
+         y2="272.5625"
+         id="line15" />
+      <g
+         data-visibility-modifier="PRIVATE_METHOD"
+         id="g15">
+        <rect
+           fill="#F24D5C"
+           height="6"
+           style="stroke:#C82930;stroke-width:1;"
+           width="6"
+           x="2122.75"
+           y="283.2109"
+           id="rect15" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         text-decoration="underline"
+         textLength="164.5"
+         x="2134.75"
+         y="289.5576"
+         id="text15">void Main(string[] args)</text>
+    </g>
+    <!--class MenuController-->
+    <g
+       class="entity"
+       data-qualified-name="EasySave.App.Console.Controllers .Logic Hub..MenuController"
+       data-source-line="39"
+       id="ent0008">
+      <rect
+         fill="#FFF3E0"
+         height="170.3438"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#F57C00;stroke-width:0.5;"
+         width="289.0469"
+         x="2065.48"
+         y="403.8569"
+         id="rect16" />
+      <ellipse
+         cx="2151.9478"
+         cy="423.9897"
+         fill="#ADD1B2"
+         style="stroke:#181818;stroke-width:1;"
+         id="ellipse16"
+         ry="11"
+         rx="11" />
+      <path
+         d="M2154.9165,429.6303 Q2154.3384,429.9272 2153.6978,430.0678 Q2153.0571,430.2241 2152.354,430.2241 Q2149.854,430.2241 2148.5259,428.5834 Q2147.2134,426.9272 2147.2134,423.8022 Q2147.2134,420.6772 2148.5259,419.0209 Q2149.854,417.3647 2152.354,417.3647 Q2153.0571,417.3647 2153.6978,417.5209 Q2154.354,417.6772 2154.9165,417.9741 L2154.9165,420.6928 Q2154.2915,420.1147 2153.6978,419.8491 Q2153.104,419.5678 2152.479,419.5678 Q2151.1353,419.5678 2150.4478,420.6459 Q2149.7603,421.7084 2149.7603,423.8022 Q2149.7603,425.8959 2150.4478,426.9741 Q2151.1353,428.0366 2152.479,428.0366 Q2153.104,428.0366 2153.6978,427.7709 Q2154.2915,427.4897 2154.9165,426.9116 L2154.9165,429.6303 Z "
+         fill="#000000"
+         id="path16" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="12"
+         font-style="italic"
+         lengthAdjust="spacing"
+         textLength="73.9746"
+         x="2189.2661"
+         y="419.9955"
+         id="text16">«Controller»</text>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="107.6113"
+         x="2172.4478"
+         y="435.8207"
+         id="text17">MenuController</text>
+      <line
+         style="stroke:#F57C00;stroke-width:0.5;"
+         x1="2066.48"
+         x2="2353.5269"
+         y1="444.1225"
+         y2="444.1225"
+         id="line17" />
+      <g
+         data-visibility-modifier="PRIVATE_FIELD"
+         id="g17">
+        <rect
+           fill="none"
+           height="6"
+           style="stroke:#C82930;stroke-width:1;"
+           width="6"
+           x="2073.48"
+           y="454.7709"
+           id="rect17" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="132.7949"
+         x="2085.48"
+         y="461.1176"
+         id="text18">ConsoleView _view</text>
+      <g
+         data-visibility-modifier="PRIVATE_FIELD"
+         id="g18">
+        <rect
+           fill="none"
+           height="6"
+           style="stroke:#C82930;stroke-width:1;"
+           width="6"
+           x="2073.48"
+           y="471.0678"
+           id="rect18" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="139.2891"
+         x="2085.48"
+         y="477.4145"
+         id="text19">ConsoleInput _input</text>
+      <g
+         data-visibility-modifier="PRIVATE_FIELD"
+         id="g19">
+        <rect
+           fill="none"
+           height="6"
+           style="stroke:#C82930;stroke-width:1;"
+           width="6"
+           x="2073.48"
+           y="487.3647"
+           id="rect19" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="192.7188"
+         x="2085.48"
+         y="493.7114"
+         id="text20">JobController _jobController</text>
+      <g
+         data-visibility-modifier="PRIVATE_FIELD"
+         id="g20">
+        <rect
+           fill="none"
+           height="6"
+           style="stroke:#C82930;stroke-width:1;"
+           width="6"
+           x="2073.48"
+           y="503.6616"
+           id="rect20" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="252.5742"
+         x="2085.48"
+         y="510.0082"
+         id="text21">BackupController _backupController</text>
+      <g
+         data-visibility-modifier="PRIVATE_FIELD"
+         id="g21">
+        <rect
+           fill="none"
+           height="6"
+           style="stroke:#C82930;stroke-width:1;"
+           width="6"
+           x="2073.48"
+           y="519.9584"
+           id="rect21" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="263.0469"
+         x="2085.48"
+         y="526.3051"
+         id="text22">SettingsController _settingsController</text>
+      <line
+         style="stroke:#F57C00;stroke-width:0.5;"
+         x1="2066.48"
+         x2="2353.5269"
+         y1="533.6069"
+         y2="533.6069"
+         id="line22" />
+      <g
+         data-visibility-modifier="PUBLIC_METHOD"
+         id="g22">
+        <ellipse
+           cx="2076.48"
+           cy="547.2553"
+           fill="#84BE84"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse22"
+           ry="3"
+           rx="3" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="131.8857"
+         x="2085.48"
+         y="550.602"
+         id="text23">MenuController(...)</text>
+      <g
+         data-visibility-modifier="PUBLIC_METHOD"
+         id="g23">
+        <ellipse
+           cx="2076.48"
+           cy="563.5522"
+           fill="#84BE84"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse23"
+           ry="3"
+           rx="3" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="72.4746"
+         x="2085.48"
+         y="566.8989"
+         id="text24">void Run()</text>
+    </g>
+    <!--class BackupController-->
+    <g
+       class="entity"
+       data-qualified-name="EasySave.App.Console.Controllers .Logic Hub..BackupController"
+       data-source-line="50"
+       id="ent0009"
+       transform="translate(0,4)">
+      <rect
+         fill="#fff3e0"
+         height="235.5313"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#f57c00;stroke-width:0.5"
+         width="455.19431"
+         x="1528.4"
+         y="674.1969"
+         id="rect24" />
+      <circle
+         cx="1691.2867"
+         cy="694.32971"
+         fill="#add1b2"
+         style="stroke:#181818;stroke-width:1"
+         id="ellipse24"
+         r="11" />
+      <path
+         d="m 1694.2555,699.9703 q -0.5782,0.2969 -1.2188,0.4375 -0.6406,0.1563 -1.3437,0.1563 -2.5,0 -3.8282,-1.6407 -1.3125,-1.6562 -1.3125,-4.7812 0,-3.125 1.3125,-4.7813 1.3282,-1.6562 3.8282,-1.6562 0.7031,0 1.3437,0.1562 0.6563,0.1563 1.2188,0.4532 v 2.7187 q -0.625,-0.5781 -1.2188,-0.8437 -0.5937,-0.2813 -1.2187,-0.2813 -1.3438,0 -2.0313,1.0781 -0.6875,1.0625 -0.6875,3.1563 0,2.0937 0.6875,3.1719 0.6875,1.0625 2.0313,1.0625 0.625,0 1.2187,-0.2657 0.5938,-0.2812 1.2188,-0.8593 z"
+         fill="#000000"
+         id="path24" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="12px"
+         font-style="italic"
+         lengthAdjust="spacing"
+         textLength="73.974602"
+         x="1735.2599"
+         y="690.33551"
+         id="text25">«Controller»</text>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14px"
+         lengthAdjust="spacing"
+         textLength="120.9209"
+         x="1711.7867"
+         y="706.16071"
+         id="text26">BackupController</text>
+      <line
+         style="stroke:#f57c00;stroke-width:0.5"
+         x1="1529.4"
+         x2="1982.5944"
+         y1="714.46252"
+         y2="714.46252"
+         id="line26" />
+      <g
+         data-visibility-modifier="PRIVATE_FIELD"
+         id="g26">
+        <rect
+           fill="none"
+           height="6"
+           style="stroke:#c82930;stroke-width:1"
+           width="6"
+           x="1536.4"
+           y="725.1109"
+           id="rect26" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14px"
+         lengthAdjust="spacing"
+         textLength="221.8398"
+         x="1548.4"
+         y="731.45758"
+         id="text27">IBackupService _backupService</text>
+      <g
+         data-visibility-modifier="PRIVATE_FIELD"
+         id="g27">
+        <rect
+           fill="none"
+           height="6"
+           style="stroke:#c82930;stroke-width:1"
+           width="6"
+           x="1536.4"
+           y="741.40778"
+           id="rect27" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14px"
+         lengthAdjust="spacing"
+         textLength="161.98441"
+         x="1548.4"
+         y="747.75452"
+         id="text28">IJobService _jobService</text>
+      <g
+         data-visibility-modifier="PRIVATE_FIELD"
+         id="g28">
+        <rect
+           fill="none"
+           height="6"
+           style="stroke:#c82930;stroke-width:1"
+           width="6"
+           x="1536.4"
+           y="757.70471"
+           id="rect28" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14px"
+         lengthAdjust="spacing"
+         textLength="181.28909"
+         x="1548.4"
+         y="764.05139"
+         id="text29">BackupView _backupView</text>
+      <g
+         data-visibility-modifier="PRIVATE_FIELD"
+         id="g29">
+        <rect
+           fill="none"
+           height="6"
+           style="stroke:#c82930;stroke-width:1"
+           width="6"
+           x="1536.4"
+           y="774.00159"
+           id="rect29" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14px"
+         lengthAdjust="spacing"
+         textLength="187.58501"
+         x="1548.4"
+         y="780.34821"
+         id="text30">ConsoleView _consoleView</text>
+      <g
+         data-visibility-modifier="PRIVATE_FIELD"
+         id="g30">
+        <rect
+           fill="none"
+           height="6"
+           style="stroke:#c82930;stroke-width:1"
+           width="6"
+           x="1536.4"
+           y="790.2984"
+           id="rect30" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14px"
+         lengthAdjust="spacing"
+         textLength="162.3604"
+         x="1548.4"
+         y="796.64508"
+         id="text31">ArgsParser _argsParser</text>
+      <line
+         style="stroke:#f57c00;stroke-width:0.5"
+         x1="1529.4"
+         x2="1982.5944"
+         y1="803.9469"
+         y2="803.9469"
+         id="line31" />
+      <g
+         data-visibility-modifier="PUBLIC_METHOD"
+         id="g31">
+        <circle
+           cx="1539.4"
+           cy="817.59528"
+           fill="#84be84"
+           style="stroke:#038048;stroke-width:1"
+           id="ellipse31"
+           r="3" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14px"
+         lengthAdjust="spacing"
+         textLength="145.1953"
+         x="1548.4"
+         y="820.94202"
+         id="text32">BackupController(...)</text>
+      <g
+         data-visibility-modifier="PUBLIC_METHOD"
+         id="g32">
+        <circle
+           cx="1539.4"
+           cy="833.89221"
+           fill="#84be84"
+           style="stroke:#038048;stroke-width:1"
+           id="ellipse32"
+           r="3" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14px"
+         lengthAdjust="spacing"
+         textLength="110.9131"
+         x="1548.4"
+         y="837.23889"
+         id="text33">void RunMenu()</text>
+      <g
+         data-visibility-modifier="PUBLIC_METHOD"
+         id="g33">
+        <circle
+           cx="1539.4"
+           cy="850.18909"
+           fill="#84be84"
+           style="stroke:#038048;stroke-width:1"
+           id="ellipse33"
+           r="3" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14px"
+         lengthAdjust="spacing"
+         textLength="241.9375"
+         x="1548.4"
+         y="853.53571"
+         id="text34">void RunFromArgs(string rawArgs)</text>
+      <g
+         data-visibility-modifier="PUBLIC_METHOD"
+         id="g34">
+        <circle
+           cx="1539.4"
+           cy="866.4859"
+           fill="#84be84"
+           style="stroke:#038048;stroke-width:1"
+           id="ellipse34"
+           r="3" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14px"
+         lengthAdjust="spacing"
+         textLength="429.19431"
+         x="1548.4"
+         y="869.83258"
+         id="text35">BackupResultDto? RunJobById(int id, bool waitForKey = true)</text>
+      <g
+         data-visibility-modifier="PUBLIC_METHOD"
+         id="g35">
+        <circle
+           cx="1539.4"
+           cy="882.78278"
+           fill="#84be84"
+           style="stroke:#038048;stroke-width:1"
+           id="ellipse35"
+           r="3" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14px"
+         lengthAdjust="spacing"
+         textLength="89.8311"
+         x="1548.4"
+         y="886.12952"
+         id="text36">void RunAll()</text>
+      <g
+         data-visibility-modifier="PRIVATE_METHOD"
+         id="g36">
+        <rect
+           fill="#f24d5c"
+           height="6"
+           style="stroke:#c82930;stroke-width:1"
+           width="6"
+           x="1536.4"
+           y="896.07971"
+           id="rect36" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14px"
+         lengthAdjust="spacing"
+         textLength="176.3945"
+         x="1548.4"
+         y="902.42639"
+         id="text37">void RunOneInteractive()</text>
+    </g>
+    <!--class JobController-->
+    <g
+       class="entity"
+       data-qualified-name="EasySave.App.Console.Controllers .Logic Hub..JobController"
+       data-source-line="65"
+       id="ent0010">
+      <rect
+         fill="#FFF3E0"
+         height="202.9375"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#F57C00;stroke-width:0.5;"
+         width="213.585"
+         x="2103.21"
+         y="690.4969"
+         id="rect37" />
+      <ellipse
+         cx="2160.3755"
+         cy="710.6297"
+         fill="#ADD1B2"
+         style="stroke:#181818;stroke-width:1;"
+         id="ellipse37"
+         ry="11"
+         rx="11" />
+      <path
+         d="M2163.3443,716.2703 Q2162.7662,716.5672 2162.1255,716.7078 Q2161.4849,716.8641 2160.7818,716.8641 Q2158.2818,716.8641 2156.9537,715.2234 Q2155.6412,713.5672 2155.6412,710.4422 Q2155.6412,707.3172 2156.9537,705.6609 Q2158.2818,704.0047 2160.7818,704.0047 Q2161.4849,704.0047 2162.1255,704.1609 Q2162.7818,704.3172 2163.3443,704.6141 L2163.3443,707.3328 Q2162.7193,706.7547 2162.1255,706.4891 Q2161.5318,706.2078 2160.9068,706.2078 Q2159.563,706.2078 2158.8755,707.2859 Q2158.188,708.3484 2158.188,710.4422 Q2158.188,712.5359 2158.8755,713.6141 Q2159.563,714.6766 2160.9068,714.6766 Q2161.5318,714.6766 2162.1255,714.4109 Q2162.7193,714.1297 2163.3443,713.5516 L2163.3443,716.2703 Z "
+         fill="#000000"
+         id="path37" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="12"
+         font-style="italic"
+         lengthAdjust="spacing"
+         textLength="73.9746"
+         x="2189.2652"
+         y="706.6355"
+         id="text38">«Controller»</text>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="90.7539"
+         x="2180.8755"
+         y="722.4607"
+         id="text39">JobController</text>
+      <line
+         style="stroke:#F57C00;stroke-width:0.5;"
+         x1="2104.21"
+         x2="2315.795"
+         y1="730.7625"
+         y2="730.7625"
+         id="line39" />
+      <g
+         data-visibility-modifier="PRIVATE_FIELD"
+         id="g39">
+        <rect
+           fill="none"
+           height="6"
+           style="stroke:#C82930;stroke-width:1;"
+           width="6"
+           x="2111.21"
+           y="741.4109"
+           id="rect39" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="161.9844"
+         x="2123.21"
+         y="747.7576"
+         id="text40">IJobService _jobService</text>
+      <g
+         data-visibility-modifier="PRIVATE_FIELD"
+         id="g40">
+        <rect
+           fill="none"
+           height="6"
+           style="stroke:#C82930;stroke-width:1;"
+           width="6"
+           x="2111.21"
+           y="757.7078"
+           id="rect40" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="121.4336"
+         x="2123.21"
+         y="764.0545"
+         id="text41">JobView _jobView</text>
+      <g
+         data-visibility-modifier="PRIVATE_FIELD"
+         id="g41">
+        <rect
+           fill="none"
+           height="6"
+           style="stroke:#C82930;stroke-width:1;"
+           width="6"
+           x="2111.21"
+           y="774.0047"
+           id="rect41" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="187.585"
+         x="2123.21"
+         y="780.3514"
+         id="text42">ConsoleView _consoleView</text>
+      <line
+         style="stroke:#F57C00;stroke-width:0.5;"
+         x1="2104.21"
+         x2="2315.795"
+         y1="787.6531"
+         y2="787.6531"
+         id="line42" />
+      <g
+         data-visibility-modifier="PUBLIC_METHOD"
+         id="g42">
+        <ellipse
+           cx="2114.21"
+           cy="801.3016"
+           fill="#84BE84"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse42"
+           ry="3"
+           rx="3" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="115.0283"
+         x="2123.21"
+         y="804.6482"
+         id="text43">JobController(...)</text>
+      <g
+         data-visibility-modifier="PUBLIC_METHOD"
+         id="g43">
+        <ellipse
+           cx="2114.21"
+           cy="817.5984"
+           fill="#84BE84"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse43"
+           ry="3"
+           rx="3" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="110.9131"
+         x="2123.21"
+         y="820.9451"
+         id="text44">void RunMenu()</text>
+      <g
+         data-visibility-modifier="PUBLIC_METHOD"
+         id="g44">
+        <ellipse
+           cx="2114.21"
+           cy="833.8953"
+           fill="#84BE84"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse44"
+           ry="3"
+           rx="3" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="98.3486"
+         x="2123.21"
+         y="837.242"
+         id="text45">void ListJobs()</text>
+      <g
+         data-visibility-modifier="PUBLIC_METHOD"
+         id="g45">
+        <ellipse
+           cx="2114.21"
+           cy="850.1922"
+           fill="#84BE84"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse45"
+           ry="3"
+           rx="3" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="113.4082"
+         x="2123.21"
+         y="853.5389"
+         id="text46">void CreateJob()</text>
+      <g
+         data-visibility-modifier="PUBLIC_METHOD"
+         id="g46">
+        <ellipse
+           cx="2114.21"
+           cy="866.4891"
+           fill="#84BE84"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse46"
+           ry="3"
+           rx="3" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="117.2842"
+         x="2123.21"
+         y="869.8357"
+         id="text47">void UpdateJob()</text>
+      <g
+         data-visibility-modifier="PUBLIC_METHOD"
+         id="g47">
+        <ellipse
+           cx="2114.21"
+           cy="882.7859"
+           fill="#84BE84"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse47"
+           ry="3"
+           rx="3" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="112.5811"
+         x="2123.21"
+         y="886.1326"
+         id="text48">void DeleteJob()</text>
+    </g>
+    <!--class SettingsController-->
+    <g
+       class="entity"
+       data-qualified-name="EasySave.App.Console.Controllers .Logic Hub..SettingsController"
+       data-source-line="78"
+       id="ent0011">
+      <rect
+         fill="#FFF3E0"
+         height="186.6406"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#F57C00;stroke-width:0.5;"
+         width="348.2393"
+         x="2436.88"
+         y="698.6469"
+         id="rect48" />
+      <ellipse
+         cx="2543.4523"
+         cy="718.7797"
+         fill="#ADD1B2"
+         style="stroke:#181818;stroke-width:1;"
+         id="ellipse48"
+         ry="11"
+         rx="11" />
+      <path
+         d="M2546.421,724.4203 Q2545.8429,724.7172 2545.2023,724.8578 Q2544.5616,725.0141 2543.8585,725.0141 Q2541.3585,725.0141 2540.0304,723.3734 Q2538.7179,721.7172 2538.7179,718.5922 Q2538.7179,715.4672 2540.0304,713.8109 Q2541.3585,712.1547 2543.8585,712.1547 Q2544.5616,712.1547 2545.2023,712.3109 Q2545.8585,712.4672 2546.421,712.7641 L2546.421,715.4828 Q2545.796,714.9047 2545.2023,714.6391 Q2544.6085,714.3578 2543.9835,714.3578 Q2542.6398,714.3578 2541.9523,715.4359 Q2541.2648,716.4984 2541.2648,718.5922 Q2541.2648,720.6859 2541.9523,721.7641 Q2542.6398,722.8266 2543.9835,722.8266 Q2544.6085,722.8266 2545.2023,722.5609 Q2545.796,722.2797 2546.421,721.7016 L2546.421,724.4203 Z "
+         fill="#000000"
+         id="path48" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="12"
+         font-style="italic"
+         lengthAdjust="spacing"
+         textLength="73.9746"
+         x="2590.2623"
+         y="714.7855"
+         id="text49">«Controller»</text>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="126.5947"
+         x="2563.9523"
+         y="730.6107"
+         id="text50">SettingsController</text>
+      <line
+         style="stroke:#F57C00;stroke-width:0.5;"
+         x1="2437.88"
+         x2="2784.1193"
+         y1="738.9125"
+         y2="738.9125"
+         id="line50" />
+      <g
+         data-visibility-modifier="PRIVATE_FIELD"
+         id="g50">
+        <rect
+           fill="none"
+           height="6"
+           style="stroke:#C82930;stroke-width:1;"
+           width="6"
+           x="2444.88"
+           y="749.5609"
+           id="rect50" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="126.5605"
+         x="2456.88"
+         y="755.9076"
+         id="text51">AppConfig _config</text>
+      <g
+         data-visibility-modifier="PRIVATE_FIELD"
+         id="g51">
+        <rect
+           fill="none"
+           height="6"
+           style="stroke:#C82930;stroke-width:1;"
+           width="6"
+           x="2444.88"
+           y="765.8578"
+           id="rect51" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="276.7051"
+         x="2456.88"
+         y="772.2045"
+         id="text52">AppConfigRepository _configRepository</text>
+      <g
+         data-visibility-modifier="PRIVATE_FIELD"
+         id="g52">
+        <rect
+           fill="none"
+           height="6"
+           style="stroke:#C82930;stroke-width:1;"
+           width="6"
+           x="2444.88"
+           y="782.1547"
+           id="rect52" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="187.585"
+         x="2456.88"
+         y="788.5014"
+         id="text53">ConsoleView _consoleView</text>
+      <g
+         data-visibility-modifier="PRIVATE_FIELD"
+         id="g53">
+        <rect
+           fill="none"
+           height="6"
+           style="stroke:#C82930;stroke-width:1;"
+           width="6"
+           x="2444.88"
+           y="798.4516"
+           id="rect53" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="139.2891"
+         x="2456.88"
+         y="804.7982"
+         id="text54">ConsoleInput _input</text>
+      <line
+         style="stroke:#F57C00;stroke-width:0.5;"
+         x1="2437.88"
+         x2="2784.1193"
+         y1="812.1"
+         y2="812.1"
+         id="line54" />
+      <g
+         data-visibility-modifier="PUBLIC_METHOD"
+         id="g54">
+        <ellipse
+           cx="2447.88"
+           cy="825.7484"
+           fill="#84BE84"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse54"
+           ry="3"
+           rx="3" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="150.8691"
+         x="2456.88"
+         y="829.0951"
+         id="text55">SettingsController(...)</text>
+      <g
+         data-visibility-modifier="PUBLIC_METHOD"
+         id="g55">
+        <ellipse
+           cx="2447.88"
+           cy="842.0453"
+           fill="#84BE84"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse55"
+           ry="3"
+           rx="3" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="72.4746"
+         x="2456.88"
+         y="845.392"
+         id="text56">void Run()</text>
+      <g
+         data-visibility-modifier="PRIVATE_METHOD"
+         id="g56">
+        <rect
+           fill="#F24D5C"
+           height="6"
+           style="stroke:#C82930;stroke-width:1;"
+           width="6"
+           x="2444.88"
+           y="855.3422"
+           id="rect56" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="303.5156"
+         x="2456.88"
+         y="861.6889"
+         id="text57">void UpdateLanguage(Language language)</text>
+      <g
+         data-visibility-modifier="PRIVATE_METHOD"
+         id="g57">
+        <rect
+           fill="#F24D5C"
+           height="6"
+           style="stroke:#C82930;stroke-width:1;"
+           width="6"
+           x="2444.88"
+           y="871.6391"
+           id="rect57" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="322.2393"
+         x="2456.88"
+         y="877.9857"
+         id="text58">void UpdateLogFormat(LogFormat logFormat)</text>
+    </g>
+    <!--class ConsoleView-->
+    <g
+       class="entity"
+       data-qualified-name="EasySave.App.Console.Views . Input .UI..ConsoleView"
+       data-source-line="92"
+       id="ent0013">
+      <rect
+         fill="#E1F5FE"
+         height="170.3438"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#0277BD;stroke-width:0.5;"
+         width="481.458"
+         x="1744.27"
+         y="1057.4669"
+         id="rect58" />
+      <ellipse
+         cx="1936.1958"
+         cy="1077.5997"
+         fill="#ADD1B2"
+         style="stroke:#181818;stroke-width:1;"
+         id="ellipse58"
+         ry="11"
+         rx="11" />
+      <path
+         d="M1939.1645,1083.2403 Q1938.5864,1083.5372 1937.9458,1083.6778 Q1937.3052,1083.8341 1936.602,1083.8341 Q1934.102,1083.8341 1932.7739,1082.1934 Q1931.4614,1080.5372 1931.4614,1077.4122 Q1931.4614,1074.2872 1932.7739,1072.6309 Q1934.102,1070.9747 1936.602,1070.9747 Q1937.3052,1070.9747 1937.9458,1071.1309 Q1938.602,1071.2872 1939.1645,1071.5841 L1939.1645,1074.3028 Q1938.5395,1073.7247 1937.9458,1073.4591 Q1937.352,1073.1778 1936.727,1073.1778 Q1935.3833,1073.1778 1934.6958,1074.2559 Q1934.0083,1075.3184 1934.0083,1077.4122 Q1934.0083,1079.5059 1934.6958,1080.5841 Q1935.3833,1081.6466 1936.727,1081.6466 Q1937.352,1081.6466 1937.9458,1081.3809 Q1938.5395,1081.0997 1939.1645,1080.5216 L1939.1645,1083.2403 Z "
+         fill="#000000"
+         id="path58" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="12"
+         font-style="italic"
+         lengthAdjust="spacing"
+         textLength="43.4238"
+         x="1979.5371"
+         y="1073.6055"
+         id="text59">«View»</text>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="89.1064"
+         x="1956.6958"
+         y="1089.4307"
+         id="text60">ConsoleView</text>
+      <line
+         style="stroke:#0277BD;stroke-width:0.5;"
+         x1="1745.27"
+         x2="2224.728"
+         y1="1097.7325"
+         y2="1097.7325"
+         id="line60" />
+      <line
+         style="stroke:#0277BD;stroke-width:0.5;"
+         x1="1745.27"
+         x2="2224.728"
+         y1="1105.7325"
+         y2="1105.7325"
+         id="line61" />
+      <g
+         data-visibility-modifier="PUBLIC_METHOD"
+         id="g61">
+        <ellipse
+           cx="1755.27"
+           cy="1119.3809"
+           fill="#84BE84"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse61"
+           ry="3"
+           rx="3" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="81.6143"
+         x="1764.27"
+         y="1122.7276"
+         id="text61">void Clear()</text>
+      <g
+         data-visibility-modifier="PUBLIC_METHOD"
+         id="g62">
+        <ellipse
+           cx="1755.27"
+           cy="1135.6778"
+           fill="#84BE84"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse62"
+           ry="3"
+           rx="3" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="133.752"
+         x="1764.27"
+         y="1139.0245"
+         id="text62">void ShowHeader()</text>
+      <g
+         data-visibility-modifier="PUBLIC_METHOD"
+         id="g63">
+        <ellipse
+           cx="1755.27"
+           cy="1151.9747"
+           fill="#84BE84"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse63"
+           ry="3"
+           rx="3" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="455.458"
+         x="1764.27"
+         y="1155.3214"
+         id="text63">void ShowMenu(string title, IEnumerable&lt;MenuOption&gt; options)</text>
+      <g
+         data-visibility-modifier="PUBLIC_METHOD"
+         id="g64">
+        <ellipse
+           cx="1755.27"
+           cy="1168.2716"
+           fill="#84BE84"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse64"
+           ry="3"
+           rx="3" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="225.0117"
+         x="1764.27"
+         y="1171.6182"
+         id="text64">void ShowError(string message)</text>
+      <g
+         data-visibility-modifier="PUBLIC_METHOD"
+         id="g65">
+        <ellipse
+           cx="1755.27"
+           cy="1184.5684"
+           fill="#84BE84"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse65"
+           ry="3"
+           rx="3" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="246.6885"
+         x="1764.27"
+         y="1187.9151"
+         id="text65">void ShowSuccess(string message)</text>
+      <g
+         data-visibility-modifier="PUBLIC_METHOD"
+         id="g66">
+        <ellipse
+           cx="1755.27"
+           cy="1200.8653"
+           fill="#84BE84"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse66"
+           ry="3"
+           rx="3" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="216.8291"
+         x="1764.27"
+         y="1204.212"
+         id="text66">void ShowInfo(string message)</text>
+      <g
+         data-visibility-modifier="PUBLIC_METHOD"
+         id="g67">
+        <ellipse
+           cx="1755.27"
+           cy="1217.1622"
+           fill="#84BE84"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse67"
+           ry="3"
+           rx="3" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="125.2549"
+         x="1764.27"
+         y="1220.5089"
+         id="text67">void WaitForKey()</text>
+    </g>
+    <!--class BackupView-->
+    <g
+       class="entity"
+       data-qualified-name="EasySave.App.Console.Views . Input .UI..BackupView"
+       data-source-line="102"
+       id="ent0014">
+      <rect
+         fill="#E1F5FE"
+         height="202.9375"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#0277BD;stroke-width:0.5;"
+         width="484.9717"
+         x="655.51"
+         y="1041.1769"
+         id="rect67" />
+      <ellipse
+         cx="851.1067"
+         cy="1061.3097"
+         fill="#ADD1B2"
+         style="stroke:#181818;stroke-width:1;"
+         id="ellipse68"
+         ry="11"
+         rx="11" />
+      <path
+         d="M854.0754,1066.9503 Q853.4973,1067.2472 852.8567,1067.3878 Q852.2161,1067.5441 851.5129,1067.5441 Q849.0129,1067.5441 847.6848,1065.9034 Q846.3723,1064.2472 846.3723,1061.1222 Q846.3723,1057.9972 847.6848,1056.3409 Q849.0129,1054.6847 851.5129,1054.6847 Q852.2161,1054.6847 852.8567,1054.8409 Q853.5129,1054.9972 854.0754,1055.2941 L854.0754,1058.0128 Q853.4504,1057.4347 852.8567,1057.1691 Q852.2629,1056.8878 851.6379,1056.8878 Q850.2942,1056.8878 849.6067,1057.9659 Q848.9192,1059.0284 848.9192,1061.1222 Q848.9192,1063.2159 849.6067,1064.2941 Q850.2942,1065.3566 851.6379,1065.3566 Q852.2629,1065.3566 852.8567,1065.0909 Q853.4504,1064.8097 854.0754,1064.2316 L854.0754,1066.9503 Z "
+         fill="#000000"
+         id="path68" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="12"
+         font-style="italic"
+         lengthAdjust="spacing"
+         textLength="43.4238"
+         x="892.5339"
+         y="1057.3155"
+         id="text68">«View»</text>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="85.2783"
+         x="871.6067"
+         y="1073.1407"
+         id="text69">BackupView</text>
+      <line
+         style="stroke:#0277BD;stroke-width:0.5;"
+         x1="656.51"
+         x2="1139.4817"
+         y1="1081.4425"
+         y2="1081.4425"
+         id="line69" />
+      <g
+         data-visibility-modifier="PRIVATE_FIELD"
+         id="g69">
+        <rect
+           fill="none"
+           height="6"
+           style="stroke:#C82930;stroke-width:1;"
+           width="6"
+           x="663.51"
+           y="1092.0909"
+           id="rect69" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="139.2891"
+         x="675.51"
+         y="1098.4376"
+         id="text70">ConsoleInput _input</text>
+      <line
+         style="stroke:#0277BD;stroke-width:0.5;"
+         x1="656.51"
+         x2="1139.4817"
+         y1="1105.7394"
+         y2="1105.7394"
+         id="line70" />
+      <g
+         data-visibility-modifier="PUBLIC_METHOD"
+         id="g70">
+        <ellipse
+           cx="666.51"
+           cy="1119.3878"
+           fill="#84BE84"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse70"
+           ry="3"
+           rx="3" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="233.208"
+         x="675.51"
+         y="1122.7345"
+         id="text71">BackupView(input: ConsoleInput)</text>
+      <g
+         data-visibility-modifier="PUBLIC_METHOD"
+         id="g71">
+        <ellipse
+           cx="666.51"
+           cy="1135.6847"
+           fill="#84BE84"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse71"
+           ry="3"
+           rx="3" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="172.9629"
+         x="675.51"
+         y="1139.0314"
+         id="text72">void ShowBackupMenu()</text>
+      <g
+         data-visibility-modifier="PUBLIC_METHOD"
+         id="g72">
+        <ellipse
+           cx="666.51"
+           cy="1151.9816"
+           fill="#84BE84"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse72"
+           ry="3"
+           rx="3" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="155.2852"
+         x="675.51"
+         y="1155.3282"
+         id="text73">int ReadMenuChoice()</text>
+      <g
+         data-visibility-modifier="PUBLIC_METHOD"
+         id="g73">
+        <ellipse
+           cx="666.51"
+           cy="1168.2784"
+           fill="#84BE84"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse73"
+           ry="3"
+           rx="3" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="338.0029"
+         x="675.51"
+         y="1171.6251"
+         id="text74">void ShowJobs(IReadOnlyList&lt;BackupJob&gt; jobs)</text>
+      <g
+         data-visibility-modifier="PUBLIC_METHOD"
+         id="g74">
+        <ellipse
+           cx="666.51"
+           cy="1184.5753"
+           fill="#84BE84"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse74"
+           ry="3"
+           rx="3" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="93.2012"
+         x="675.51"
+         y="1187.922"
+         id="text75">int AskJobId()</text>
+      <g
+         data-visibility-modifier="PUBLIC_METHOD"
+         id="g75">
+        <ellipse
+           cx="666.51"
+           cy="1200.8722"
+           fill="#84BE84"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse75"
+           ry="3"
+           rx="3" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="243.5713"
+         x="675.51"
+         y="1204.2189"
+         id="text76">void ShowRunStart(BackupJob job)</text>
+      <g
+         data-visibility-modifier="PUBLIC_METHOD"
+         id="g76">
+        <ellipse
+           cx="666.51"
+           cy="1217.1691"
+           fill="#84BE84"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse76"
+           ry="3"
+           rx="3" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="301.6904"
+         x="675.51"
+         y="1220.5157"
+         id="text77">void ShowRunEnd(BackupResultDto result)</text>
+      <g
+         data-visibility-modifier="PUBLIC_METHOD"
+         id="g77">
+        <ellipse
+           cx="666.51"
+           cy="1233.4659"
+           fill="#84BE84"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse77"
+           ry="3"
+           rx="3" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="458.9717"
+         x="675.51"
+         y="1236.8126"
+         id="text78">void ShowBatchResult(IReadOnlyList&lt;BackupResultDto&gt; results)</text>
+    </g>
+    <!--class JobView-->
+    <g
+       class="entity"
+       data-qualified-name="EasySave.App.Console.Views . Input .UI..JobView"
+       data-source-line="115"
+       id="ent0015">
+      <rect
+         fill="#E1F5FE"
+         height="251.8281"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#0277BD;stroke-width:0.5;"
+         width="364.0029"
+         x="1260"
+         y="1016.7269"
+         id="rect78" />
+      <ellipse
+         cx="1410.1958"
+         cy="1036.8597"
+         fill="#ADD1B2"
+         style="stroke:#181818;stroke-width:1;"
+         id="ellipse78"
+         ry="11"
+         rx="11" />
+      <path
+         d="M1413.1646,1042.5003 Q1412.5864,1042.7972 1411.9458,1042.9378 Q1411.3052,1043.0941 1410.6021,1043.0941 Q1408.1021,1043.0941 1406.7739,1041.4534 Q1405.4614,1039.7972 1405.4614,1036.6722 Q1405.4614,1033.5472 1406.7739,1031.8909 Q1408.1021,1030.2347 1410.6021,1030.2347 Q1411.3052,1030.2347 1411.9458,1030.3909 Q1412.6021,1030.5472 1413.1646,1030.8441 L1413.1646,1033.5628 Q1412.5396,1032.9847 1411.9458,1032.7191 Q1411.3521,1032.4378 1410.7271,1032.4378 Q1409.3833,1032.4378 1408.6958,1033.5159 Q1408.0083,1034.5784 1408.0083,1036.6722 Q1408.0083,1038.7659 1408.6958,1039.8441 Q1409.3833,1040.9066 1410.7271,1040.9066 Q1411.3521,1040.9066 1411.9458,1040.6409 Q1412.5396,1040.3597 1413.1646,1039.7816 L1413.1646,1042.5003 Z "
+         fill="#000000"
+         id="path78" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="12"
+         font-style="italic"
+         lengthAdjust="spacing"
+         textLength="43.4238"
+         x="1436.5396"
+         y="1032.8655"
+         id="text79">«View»</text>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="55.1113"
+         x="1430.6958"
+         y="1048.6907"
+         id="text80">JobView</text>
+      <line
+         style="stroke:#0277BD;stroke-width:0.5;"
+         x1="1261"
+         x2="1623.0029"
+         y1="1056.9925"
+         y2="1056.9925"
+         id="line80" />
+      <g
+         data-visibility-modifier="PRIVATE_FIELD"
+         id="g80">
+        <rect
+           fill="none"
+           height="6"
+           style="stroke:#C82930;stroke-width:1;"
+           width="6"
+           x="1268"
+           y="1067.6409"
+           id="rect80" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="139.2891"
+         x="1280"
+         y="1073.9876"
+         id="text81">ConsoleInput _input</text>
+      <line
+         style="stroke:#0277BD;stroke-width:0.5;"
+         x1="1261"
+         x2="1623.0029"
+         y1="1081.2894"
+         y2="1081.2894"
+         id="line81" />
+      <g
+         data-visibility-modifier="PUBLIC_METHOD"
+         id="g81">
+        <ellipse
+           cx="1271"
+           cy="1094.9378"
+           fill="#84BE84"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse81"
+           ry="3"
+           rx="3" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="203.041"
+         x="1280"
+         y="1098.2845"
+         id="text82">JobView(input: ConsoleInput)</text>
+      <g
+         data-visibility-modifier="PUBLIC_METHOD"
+         id="g82">
+        <ellipse
+           cx="1271"
+           cy="1111.2347"
+           fill="#84BE84"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse82"
+           ry="3"
+           rx="3" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="142.7959"
+         x="1280"
+         y="1114.5814"
+         id="text83">void ShowJobMenu()</text>
+      <g
+         data-visibility-modifier="PUBLIC_METHOD"
+         id="g83">
+        <ellipse
+           cx="1271"
+           cy="1127.5316"
+           fill="#84BE84"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse83"
+           ry="3"
+           rx="3" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="155.2852"
+         x="1280"
+         y="1130.8782"
+         id="text84">int ReadMenuChoice()</text>
+      <g
+         data-visibility-modifier="PUBLIC_METHOD"
+         id="g84">
+        <ellipse
+           cx="1271"
+           cy="1143.8284"
+           fill="#84BE84"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse84"
+           ry="3"
+           rx="3" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="143.4248"
+         x="1280"
+         y="1147.1751"
+         id="text85">string AskJobName()</text>
+      <g
+         data-visibility-modifier="PUBLIC_METHOD"
+         id="g85">
+        <ellipse
+           cx="1271"
+           cy="1160.1253"
+           fill="#84BE84"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse85"
+           ry="3"
+           rx="3" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="160.3164"
+         x="1280"
+         y="1163.472"
+         id="text86">string AskSourcePath()</text>
+      <g
+         data-visibility-modifier="PUBLIC_METHOD"
+         id="g86">
+        <ellipse
+           cx="1271"
+           cy="1176.4222"
+           fill="#84BE84"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse86"
+           ry="3"
+           rx="3" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="157.8008"
+         x="1280"
+         y="1179.7689"
+         id="text87">string AskTargetPath()</text>
+      <g
+         data-visibility-modifier="PUBLIC_METHOD"
+         id="g87">
+        <ellipse
+           cx="1271"
+           cy="1192.7191"
+           fill="#84BE84"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse87"
+           ry="3"
+           rx="3" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="212.5225"
+         x="1280"
+         y="1196.0657"
+         id="text88">BackupType AskBackupType()</text>
+      <g
+         data-visibility-modifier="PUBLIC_METHOD"
+         id="g88">
+        <ellipse
+           cx="1271"
+           cy="1209.0159"
+           fill="#84BE84"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse88"
+           ry="3"
+           rx="3" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="338.0029"
+         x="1280"
+         y="1212.3626"
+         id="text89">void ShowJobs(IReadOnlyList&lt;BackupJob&gt; jobs)</text>
+      <g
+         data-visibility-modifier="PUBLIC_METHOD"
+         id="g89">
+        <ellipse
+           cx="1271"
+           cy="1225.3128"
+           fill="#84BE84"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse89"
+           ry="3"
+           rx="3" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="115.1377"
+         x="1280"
+         y="1228.6595"
+         id="text90">string AskJobId()</text>
+      <g
+         data-visibility-modifier="PUBLIC_METHOD"
+         id="g90">
+        <ellipse
+           cx="1271"
+           cy="1241.6097"
+           fill="#84BE84"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse90"
+           ry="3"
+           rx="3" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="157.7461"
+         x="1280"
+         y="1244.9564"
+         id="text91">int AskJobFieldToEdit()</text>
+      <g
+         data-visibility-modifier="PUBLIC_METHOD"
+         id="g91">
+        <ellipse
+           cx="1271"
+           cy="1257.9066"
+           fill="#84BE84"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse91"
+           ry="3"
+           rx="3" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="172.4502"
+         x="1280"
+         y="1261.2532"
+         id="text92">bool AskJobActiveState()</text>
+    </g>
+    <!--class ConsoleInput-->
+    <g
+       class="entity"
+       data-qualified-name="EasySave.App.Console.Views . Input .UI..ConsoleInput"
+       data-source-line="131"
+       id="ent0016">
+      <rect
+         fill="#E8F5E9"
+         height="105.1563"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#2E7D32;stroke-width:0.5;"
+         width="470.7051"
+         x="2345.65"
+         y="1090.0669"
+         id="rect92" />
+      <ellipse
+         cx="2530.839"
+         cy="1110.1997"
+         fill="#ADD1B2"
+         style="stroke:#181818;stroke-width:1;"
+         id="ellipse92"
+         ry="11"
+         rx="11" />
+      <path
+         d="M2533.8077,1115.8403 Q2533.2296,1116.1372 2532.589,1116.2778 Q2531.9483,1116.4341 2531.2452,1116.4341 Q2528.7452,1116.4341 2527.4171,1114.7934 Q2526.1046,1113.1372 2526.1046,1110.0122 Q2526.1046,1106.8872 2527.4171,1105.2309 Q2528.7452,1103.5747 2531.2452,1103.5747 Q2531.9483,1103.5747 2532.589,1103.7309 Q2533.2452,1103.8872 2533.8077,1104.1841 L2533.8077,1106.9028 Q2533.1827,1106.3247 2532.589,1106.0591 Q2531.9952,1105.7778 2531.3702,1105.7778 Q2530.0265,1105.7778 2529.339,1106.8559 Q2528.6515,1107.9184 2528.6515,1110.0122 Q2528.6515,1112.1059 2529.339,1113.1841 Q2530.0265,1114.2466 2531.3702,1114.2466 Q2531.9952,1114.2466 2532.589,1113.9809 Q2533.1827,1113.6997 2533.8077,1113.1216 L2533.8077,1115.8403 Z "
+         fill="#000000"
+         id="path92" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="12"
+         font-style="italic"
+         lengthAdjust="spacing"
+         textLength="45.7559"
+         x="2574.3746"
+         y="1106.2055"
+         id="text93">«Input»</text>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="91.8271"
+         x="2551.339"
+         y="1122.0307"
+         id="text94">ConsoleInput</text>
+      <line
+         style="stroke:#2E7D32;stroke-width:0.5;"
+         x1="2346.65"
+         x2="2815.3551"
+         y1="1130.3325"
+         y2="1130.3325"
+         id="line94" />
+      <line
+         style="stroke:#2E7D32;stroke-width:0.5;"
+         x1="2346.65"
+         x2="2815.3551"
+         y1="1138.3325"
+         y2="1138.3325"
+         id="line95" />
+      <g
+         data-visibility-modifier="PUBLIC_METHOD"
+         id="g95">
+        <ellipse
+           cx="2356.65"
+           cy="1151.9809"
+           fill="#84BE84"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse95"
+           ry="3"
+           rx="3" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="183.7842"
+         x="2365.65"
+         y="1155.3276"
+         id="text95">int ReadInt(string prompt)</text>
+      <g
+         data-visibility-modifier="PUBLIC_METHOD"
+         id="g96">
+        <ellipse
+           cx="2356.65"
+           cy="1168.2778"
+           fill="#84BE84"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse96"
+           ry="3"
+           rx="3" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="302.0664"
+         x="2365.65"
+         y="1171.6245"
+         id="text96">string ReadNonEmptyString(string prompt)</text>
+      <g
+         data-visibility-modifier="PUBLIC_METHOD"
+         id="g97">
+        <ellipse
+           cx="2356.65"
+           cy="1184.5747"
+           fill="#84BE84"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse97"
+           ry="3"
+           rx="3" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="444.7051"
+         x="2365.65"
+         y="1187.9214"
+         id="text97">int ReadChoice(string prompt, IEnumerable&lt;int&gt; validChoices)</text>
+    </g>
+    <!--class ArgsParser-->
+    <g
+       class="entity"
+       data-qualified-name="EasySave.App.Console.Views . Input .UI..ArgsParser"
+       data-source-line="137"
+       id="ent0017">
+      <rect
+         fill="#E8F5E9"
+         height="121.4531"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#2E7D32;stroke-width:0.5;"
+         width="320.1846"
+         x="214.91"
+         y="1081.9169"
+         id="rect97" />
+      <ellipse
+         cx="332.7752"
+         cy="1102.0497"
+         fill="#ADD1B2"
+         style="stroke:#181818;stroke-width:1;"
+         id="ellipse98"
+         ry="11"
+         rx="11" />
+      <path
+         d="M335.744,1107.6903 Q335.1659,1107.9872 334.5252,1108.1278 Q333.8846,1108.2841 333.1815,1108.2841 Q330.6815,1108.2841 329.3534,1106.6434 Q328.0409,1104.9872 328.0409,1101.8622 Q328.0409,1098.7372 329.3534,1097.0809 Q330.6815,1095.4247 333.1815,1095.4247 Q333.8846,1095.4247 334.5252,1095.5809 Q335.1815,1095.7372 335.744,1096.0341 L335.744,1098.7528 Q335.119,1098.1747 334.5252,1097.9091 Q333.9315,1097.6278 333.3065,1097.6278 Q331.9627,1097.6278 331.2752,1098.7059 Q330.5877,1099.7684 330.5877,1101.8622 Q330.5877,1103.9559 331.2752,1105.0341 Q331.9627,1106.0966 333.3065,1106.0966 Q333.9315,1106.0966 334.5252,1105.8309 Q335.119,1105.5497 335.744,1104.9716 L335.744,1107.6903 Z "
+         fill="#000000"
+         id="path98" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="12"
+         font-style="italic"
+         lengthAdjust="spacing"
+         textLength="45.7559"
+         x="368.3744"
+         y="1098.0555"
+         id="text98">«Input»</text>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="75.9541"
+         x="353.2752"
+         y="1113.8807"
+         id="text99">ArgsParser</text>
+      <line
+         style="stroke:#2E7D32;stroke-width:0.5;"
+         x1="215.91"
+         x2="534.0946"
+         y1="1122.1825"
+         y2="1122.1825"
+         id="line99" />
+      <g
+         data-visibility-modifier="PRIVATE_FIELD"
+         id="g99">
+        <rect
+           fill="none"
+           height="6"
+           style="stroke:#C82930;stroke-width:1;"
+           width="6"
+           x="222.91"
+           y="1132.8309"
+           id="rect99" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         text-decoration="underline"
+         textLength="90.0977"
+         x="234.91"
+         y="1139.1776"
+         id="text100">int MinId = 1</text>
+      <g
+         data-visibility-modifier="PRIVATE_FIELD"
+         id="g100">
+        <rect
+           fill="none"
+           height="6"
+           style="stroke:#C82930;stroke-width:1;"
+           width="6"
+           x="222.91"
+           y="1149.1278"
+           id="rect100" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         text-decoration="underline"
+         textLength="94.1992"
+         x="234.91"
+         y="1155.4745"
+         id="text101">int MaxId = 5</text>
+      <line
+         style="stroke:#2E7D32;stroke-width:0.5;"
+         x1="215.91"
+         x2="534.0946"
+         y1="1162.7763"
+         y2="1162.7763"
+         id="line101" />
+      <g
+         data-visibility-modifier="PUBLIC_METHOD"
+         id="g101">
+        <ellipse
+           cx="225.91"
+           cy="1176.4247"
+           fill="#84BE84"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse101"
+           ry="3"
+           rx="3" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="294.1846"
+         x="234.91"
+         y="1179.7714"
+         id="text102">IReadOnlyList&lt;int&gt; Parse(string rawArgs)</text>
+      <g
+         data-visibility-modifier="PRIVATE_METHOD"
+         id="g102">
+        <rect
+           fill="#F24D5C"
+           height="6"
+           style="stroke:#C82930;stroke-width:1;"
+           width="6"
+           x="222.91"
+           y="1189.7216"
+           id="rect102" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         text-decoration="underline"
+         textLength="150.999"
+         x="234.91"
+         y="1196.0682"
+         id="text103">void ValidateId(int id)</text>
+    </g>
+    <!--class MenuOption-->
+    <g
+       class="entity"
+       data-qualified-name="EasySave.App.Console.Models.MenuOption"
+       data-source-line="147"
+       id="ent0019">
+      <rect
+         fill="#F3E5F5"
+         height="88.8594"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#7B1FA2;stroke-width:0.5;"
+         width="117.1621"
+         x="1926.42"
+         y="1368.5569"
+         id="rect103" />
+      <ellipse
+         cx="1941.42"
+         cy="1388.6897"
+         fill="#ADD1B2"
+         style="stroke:#181818;stroke-width:1;"
+         id="ellipse103"
+         ry="11"
+         rx="11" />
+      <path
+         d="M1944.3888,1394.3303 Q1943.8106,1394.6272 1943.17,1394.7678 Q1942.5294,1394.9241 1941.8263,1394.9241 Q1939.3263,1394.9241 1937.9981,1393.2834 Q1936.6856,1391.6272 1936.6856,1388.5022 Q1936.6856,1385.3772 1937.9981,1383.7209 Q1939.3263,1382.0647 1941.8263,1382.0647 Q1942.5294,1382.0647 1943.17,1382.2209 Q1943.8263,1382.3772 1944.3888,1382.6741 L1944.3888,1385.3928 Q1943.7638,1384.8147 1943.17,1384.5491 Q1942.5763,1384.2678 1941.9513,1384.2678 Q1940.6075,1384.2678 1939.92,1385.3459 Q1939.2325,1386.4084 1939.2325,1388.5022 Q1939.2325,1390.5959 1939.92,1391.6741 Q1940.6075,1392.7366 1941.9513,1392.7366 Q1942.5763,1392.7366 1943.17,1392.4709 Q1943.7638,1392.1897 1944.3888,1391.6116 L1944.3888,1394.3303 Z "
+         fill="#000000"
+         id="path103" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="12"
+         font-style="italic"
+         lengthAdjust="spacing"
+         textLength="50.7129"
+         x="1972.6446"
+         y="1384.6955"
+         id="text104">«Model»</text>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="85.1621"
+         x="1955.42"
+         y="1400.5207"
+         id="text105">MenuOption</text>
+      <line
+         style="stroke:#7B1FA2;stroke-width:0.5;"
+         x1="1927.42"
+         x2="2042.5821"
+         y1="1408.8225"
+         y2="1408.8225"
+         id="line105" />
+      <g
+         data-visibility-modifier="PUBLIC_FIELD"
+         id="g105">
+        <ellipse
+           cx="1937.42"
+           cy="1422.4709"
+           fill="none"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse105"
+           ry="3"
+           rx="3" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="35.7178"
+         x="1946.42"
+         y="1425.8176"
+         id="text106">int Id</text>
+      <g
+         data-visibility-modifier="PUBLIC_FIELD"
+         id="g106">
+        <ellipse
+           cx="1937.42"
+           cy="1438.7678"
+           fill="none"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse106"
+           ry="3"
+           rx="3" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="82.4072"
+         x="1946.42"
+         y="1442.1145"
+         id="text107">string Label</text>
+      <line
+         style="stroke:#7B1FA2;stroke-width:0.5;"
+         x1="1927.42"
+         x2="2042.5821"
+         y1="1449.4162"
+         y2="1449.4162"
+         id="line107" />
+    </g>
+    <!--class AppConfigRepository-->
+    <g
+       class="entity"
+       data-qualified-name="EasySave.App.Repositories.AppConfigRepository"
+       data-source-line="189"
+       id="ent0043">
+      <rect
+         fill="#F1F1F1"
+         height="48"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#181818;stroke-width:0.5;"
+         width="179.3418"
+         x="2936.33"
+         y="1118.6469"
+         id="rect107" />
+      <ellipse
+         cx="2951.33"
+         cy="1134.6469"
+         fill="#ADD1B2"
+         style="stroke:#181818;stroke-width:1;"
+         id="ellipse107"
+         ry="11"
+         rx="11" />
+      <path
+         d="M2954.2988,1140.2875 Q2953.7206,1140.5844 2953.08,1140.725 Q2952.4394,1140.8813 2951.7363,1140.8813 Q2949.2363,1140.8813 2947.9081,1139.2406 Q2946.5956,1137.5844 2946.5956,1134.4594 Q2946.5956,1131.3344 2947.9081,1129.6781 Q2949.2363,1128.0219 2951.7363,1128.0219 Q2952.4394,1128.0219 2953.08,1128.1781 Q2953.7363,1128.3344 2954.2988,1128.6313 L2954.2988,1131.35 Q2953.6738,1130.7719 2953.08,1130.5063 Q2952.4863,1130.225 2951.8613,1130.225 Q2950.5175,1130.225 2949.83,1131.3031 Q2949.1425,1132.3656 2949.1425,1134.4594 Q2949.1425,1136.5531 2949.83,1137.6313 Q2950.5175,1138.6938 2951.8613,1138.6938 Q2952.4863,1138.6938 2953.08,1138.4281 Q2953.6738,1138.1469 2954.2988,1137.5688 L2954.2988,1140.2875 Z "
+         fill="#000000"
+         id="path107" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="147.3418"
+         x="2965.33"
+         y="1139.4936"
+         id="text108">AppConfigRepository</text>
+      <line
+         style="stroke:#181818;stroke-width:0.5;"
+         x1="2937.33"
+         x2="3114.6718"
+         y1="1150.6469"
+         y2="1150.6469"
+         id="line108" />
+      <line
+         style="stroke:#181818;stroke-width:0.5;"
+         x1="2937.33"
+         x2="3114.6718"
+         y1="1158.6469"
+         y2="1158.6469"
+         id="line109" />
+    </g>
+    <!--class IBackupService-->
+    <g
+       class="entity"
+       data-qualified-name="EasySave.Core.Interfaces.IBackupService"
+       data-source-line="186"
+       id="ent0036">
+      <rect
+         fill="#F1F1F1"
+         height="48"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#181818;stroke-width:0.5;"
+         width="139.6182"
+         x="3235.19"
+         y="1118.6469"
+         id="rect109" />
+      <ellipse
+         cx="3250.19"
+         cy="1134.6469"
+         fill="#ADD1B2"
+         style="stroke:#181818;stroke-width:1;"
+         id="ellipse109"
+         ry="11"
+         rx="11" />
+      <path
+         d="M3253.1588,1140.2875 Q3252.5806,1140.5844 3251.94,1140.725 Q3251.2994,1140.8813 3250.5963,1140.8813 Q3248.0963,1140.8813 3246.7681,1139.2406 Q3245.4556,1137.5844 3245.4556,1134.4594 Q3245.4556,1131.3344 3246.7681,1129.6781 Q3248.0963,1128.0219 3250.5963,1128.0219 Q3251.2994,1128.0219 3251.94,1128.1781 Q3252.5963,1128.3344 3253.1588,1128.6313 L3253.1588,1131.35 Q3252.5338,1130.7719 3251.94,1130.5063 Q3251.3463,1130.225 3250.7213,1130.225 Q3249.3775,1130.225 3248.69,1131.3031 Q3248.0025,1132.3656 3248.0025,1134.4594 Q3248.0025,1136.5531 3248.69,1137.6313 Q3249.3775,1138.6938 3250.7213,1138.6938 Q3251.3463,1138.6938 3251.94,1138.4281 Q3252.5338,1138.1469 3253.1588,1137.5688 L3253.1588,1140.2875 Z "
+         fill="#000000"
+         id="path109" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="107.6182"
+         x="3264.19"
+         y="1139.4936"
+         id="text109">IBackupService</text>
+      <line
+         style="stroke:#181818;stroke-width:0.5;"
+         x1="3236.19"
+         x2="3373.8082"
+         y1="1150.6469"
+         y2="1150.6469"
+         id="line110" />
+      <line
+         style="stroke:#181818;stroke-width:0.5;"
+         x1="3236.19"
+         x2="3373.8082"
+         y1="1158.6469"
+         y2="1158.6469"
+         id="line111" />
+    </g>
+    <!--class IJobService-->
+    <g
+       class="entity"
+       data-qualified-name="EasySave.Core.Interfaces.IJobService"
+       data-source-line="187"
+       id="ent0040">
+      <rect
+         fill="#F1F1F1"
+         height="48"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#181818;stroke-width:0.5;"
+         width="109.4512"
+         x="3495.27"
+         y="1118.6469"
+         id="rect111" />
+      <ellipse
+         cx="3510.27"
+         cy="1134.6469"
+         fill="#ADD1B2"
+         style="stroke:#181818;stroke-width:1;"
+         id="ellipse111"
+         ry="11"
+         rx="11" />
+      <path
+         d="M3513.2388,1140.2875 Q3512.6606,1140.5844 3512.02,1140.725 Q3511.3794,1140.8813 3510.6763,1140.8813 Q3508.1763,1140.8813 3506.8481,1139.2406 Q3505.5356,1137.5844 3505.5356,1134.4594 Q3505.5356,1131.3344 3506.8481,1129.6781 Q3508.1763,1128.0219 3510.6763,1128.0219 Q3511.3794,1128.0219 3512.02,1128.1781 Q3512.6763,1128.3344 3513.2388,1128.6313 L3513.2388,1131.35 Q3512.6138,1130.7719 3512.02,1130.5063 Q3511.4263,1130.225 3510.8013,1130.225 Q3509.4575,1130.225 3508.77,1131.3031 Q3508.0825,1132.3656 3508.0825,1134.4594 Q3508.0825,1136.5531 3508.77,1137.6313 Q3509.4575,1138.6938 3510.8013,1138.6938 Q3511.4263,1138.6938 3512.02,1138.4281 Q3512.6138,1138.1469 3513.2388,1137.5688 L3513.2388,1140.2875 Z "
+         fill="#000000"
+         id="path111" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="77.4512"
+         x="3524.27"
+         y="1139.4936"
+         id="text111">IJobService</text>
+      <line
+         style="stroke:#181818;stroke-width:0.5;"
+         x1="3496.27"
+         x2="3603.7212"
+         y1="1150.6469"
+         y2="1150.6469"
+         id="line112" />
+      <line
+         style="stroke:#181818;stroke-width:0.5;"
+         x1="3496.27"
+         x2="3603.7212"
+         y1="1158.6469"
+         y2="1158.6469"
+         id="line113" />
+    </g>
+    <!--class AppConfig-->
+    <g
+       class="entity"
+       data-qualified-name="EasySave.Core.Models.AppConfig"
+       data-source-line="190"
+       id="ent0046">
+      <rect
+         fill="#F1F1F1"
+         height="48"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#181818;stroke-width:0.5;"
+         width="104.2695"
+         x="3724.87"
+         y="1118.6469"
+         id="rect113" />
+      <ellipse
+         cx="3739.87"
+         cy="1134.6469"
+         fill="#ADD1B2"
+         style="stroke:#181818;stroke-width:1;"
+         id="ellipse113"
+         ry="11"
+         rx="11" />
+      <path
+         d="M3742.8388,1140.2875 Q3742.2606,1140.5844 3741.62,1140.725 Q3740.9794,1140.8813 3740.2763,1140.8813 Q3737.7763,1140.8813 3736.4481,1139.2406 Q3735.1356,1137.5844 3735.1356,1134.4594 Q3735.1356,1131.3344 3736.4481,1129.6781 Q3737.7763,1128.0219 3740.2763,1128.0219 Q3740.9794,1128.0219 3741.62,1128.1781 Q3742.2763,1128.3344 3742.8388,1128.6313 L3742.8388,1131.35 Q3742.2138,1130.7719 3741.62,1130.5063 Q3741.0263,1130.225 3740.4013,1130.225 Q3739.0575,1130.225 3738.37,1131.3031 Q3737.6825,1132.3656 3737.6825,1134.4594 Q3737.6825,1136.5531 3738.37,1137.6313 Q3739.0575,1138.6938 3740.4013,1138.6938 Q3741.0263,1138.6938 3741.62,1138.4281 Q3742.2138,1138.1469 3742.8388,1137.5688 L3742.8388,1140.2875 Z "
+         fill="#000000"
+         id="path113" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="72.2695"
+         x="3753.87"
+         y="1139.4936"
+         id="text113">AppConfig</text>
+      <line
+         style="stroke:#181818;stroke-width:0.5;"
+         x1="3725.87"
+         x2="3828.1395"
+         y1="1150.6469"
+         y2="1150.6469"
+         id="line114" />
+      <line
+         style="stroke:#181818;stroke-width:0.5;"
+         x1="3725.87"
+         x2="3828.1395"
+         y1="1158.6469"
+         y2="1158.6469"
+         id="line115" />
+    </g>
+    <!--class Controllers-->
+    <g
+       class="entity"
+       data-qualified-name="Controllers"
+       data-source-line="161"
+       id="ent0021">
+      <rect
+         fill="#F1F1F1"
+         height="48"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#181818;stroke-width:0.5;"
+         width="108.4668"
+         x="3908.77"
+         y="465.0269"
+         id="rect115" />
+      <ellipse
+         cx="3923.77"
+         cy="481.0269"
+         fill="#ADD1B2"
+         style="stroke:#181818;stroke-width:1;"
+         id="ellipse115"
+         ry="11"
+         rx="11" />
+      <path
+         d="M3926.7388,486.6675 Q3926.1606,486.9644 3925.52,487.105 Q3924.8794,487.2612 3924.1763,487.2612 Q3921.6763,487.2612 3920.3481,485.6206 Q3919.0356,483.9644 3919.0356,480.8394 Q3919.0356,477.7144 3920.3481,476.0581 Q3921.6763,474.4019 3924.1763,474.4019 Q3924.8794,474.4019 3925.52,474.5581 Q3926.1763,474.7144 3926.7388,475.0112 L3926.7388,477.73 Q3926.1138,477.1519 3925.52,476.8862 Q3924.9263,476.605 3924.3013,476.605 Q3922.9575,476.605 3922.27,477.6831 Q3921.5825,478.7456 3921.5825,480.8394 Q3921.5825,482.9331 3922.27,484.0112 Q3922.9575,485.0737 3924.3013,485.0737 Q3924.9263,485.0737 3925.52,484.8081 Q3926.1138,484.5269 3926.7388,483.9487 L3926.7388,486.6675 Z "
+         fill="#000000"
+         id="path115" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="76.4668"
+         x="3937.77"
+         y="485.8736"
+         id="text115">Controllers</text>
+      <line
+         style="stroke:#181818;stroke-width:0.5;"
+         x1="3909.77"
+         x2="4016.2368"
+         y1="497.0269"
+         y2="497.0269"
+         id="line116" />
+      <line
+         style="stroke:#181818;stroke-width:0.5;"
+         x1="3909.77"
+         x2="4016.2368"
+         y1="505.0269"
+         y2="505.0269"
+         id="line117" />
+    </g>
+    <!--class Models-->
+    <g
+       class="entity"
+       data-qualified-name="Models"
+       data-source-line="195"
+       id="ent0051">
+      <rect
+         fill="#F1F1F1"
+         height="48"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#181818;stroke-width:0.5;"
+         width="81.3281"
+         x="3949.34"
+         y="1118.6469"
+         id="rect117" />
+      <ellipse
+         cx="3964.34"
+         cy="1134.6469"
+         fill="#ADD1B2"
+         style="stroke:#181818;stroke-width:1;"
+         id="ellipse117"
+         ry="11"
+         rx="11" />
+      <path
+         d="M3967.3088,1140.2875 Q3966.7306,1140.5844 3966.09,1140.725 Q3965.4494,1140.8813 3964.7463,1140.8813 Q3962.2463,1140.8813 3960.9181,1139.2406 Q3959.6056,1137.5844 3959.6056,1134.4594 Q3959.6056,1131.3344 3960.9181,1129.6781 Q3962.2463,1128.0219 3964.7463,1128.0219 Q3965.4494,1128.0219 3966.09,1128.1781 Q3966.7463,1128.3344 3967.3088,1128.6313 L3967.3088,1131.35 Q3966.6838,1130.7719 3966.09,1130.5063 Q3965.4963,1130.225 3964.8713,1130.225 Q3963.5275,1130.225 3962.84,1131.3031 Q3962.1525,1132.3656 3962.1525,1134.4594 Q3962.1525,1136.5531 3962.84,1137.6313 Q3963.5275,1138.6938 3964.8713,1138.6938 Q3965.4963,1138.6938 3966.09,1138.4281 Q3966.6838,1138.1469 3967.3088,1137.5688 L3967.3088,1140.2875 Z "
+         fill="#000000"
+         id="path117" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="49.3281"
+         x="3978.34"
+         y="1139.4936"
+         id="text117">Models</text>
+      <line
+         style="stroke:#181818;stroke-width:0.5;"
+         x1="3950.34"
+         x2="4029.6681"
+         y1="1150.6469"
+         y2="1150.6469"
+         id="line118" />
+      <line
+         style="stroke:#181818;stroke-width:0.5;"
+         x1="3950.34"
+         x2="4029.6681"
+         y1="1158.6469"
+         y2="1158.6469"
+         id="line119" />
+    </g>
+    <!--link Program to MenuController-->
+    <g
+       class="link"
+       data-entity-1="ent0004"
+       data-entity-2="ent0008"
+       data-link-type="dependency"
+       data-source-line="159"
+       id="lnk20">
+      <path
+         codeLine="159"
+         d="M2210,297.2769 C2210,325.9069 2210,360.8469 2210,397.5469"
+         fill="none"
+         id="Program-to-MenuController"
+         style="stroke:#181818;stroke-width:1;" />
+      <polygon
+         fill="#181818"
+         points="2210,403.5469,2214,394.5469,2210,398.5469,2206,394.5469,2210,403.5469"
+         style="stroke:#181818;stroke-width:1;"
+         id="polygon119" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="13"
+         lengthAdjust="spacing"
+         textLength="103.7778"
+         x="2106"
+         y="346.4738"
+         id="text119">creates &amp; starts</text>
+    </g>
+    <!--link Program to Controllers-->
+    <g
+       class="link"
+       data-entity-1="ent0004"
+       data-entity-2="ent0021"
+       data-link-type="dependency"
+       data-source-line="161"
+       id="lnk22">
+      <path
+         codeLine="161"
+         d="M2305.49,261.4169 C2671.31,261.4169 3963,261.4169 3963,261.4169 C3963,261.4169 3963,399.9469 3963,458.6669"
+         fill="none"
+         id="Program-to-Controllers"
+         style="stroke:#808080;stroke-width:1;stroke-dasharray:7,7;" />
+      <polygon
+         fill="#808080"
+         points="3963,464.6669,3967,455.6669,3963,459.6669,3959,455.6669,3963,464.6669"
+         style="stroke:#808080;stroke-width:1;"
+         id="polygon120" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="13"
+         lengthAdjust="spacing"
+         textLength="95.7925"
+         x="3139.87"
+         y="257.4838"
+         id="text120">instantiates all</text>
+    </g>
+    <!--link MenuController to JobController-->
+    <g
+       class="link"
+       data-entity-1="ent0008"
+       data-entity-2="ent0010"
+       data-link-type="dependency"
+       data-source-line="164"
+       id="lnk23">
+      <path
+         codeLine="164"
+         d="M2210,574.6169 C2210,610.5769 2210,646.6869 2210,684.2069"
+         fill="none"
+         id="MenuController-to-JobController"
+         style="stroke:#181818;stroke-width:1;" />
+      <polygon
+         fill="#181818"
+         points="2210,690.2069,2214,681.2069,2210,685.2069,2206,681.2069,2210,690.2069"
+         style="stroke:#181818;stroke-width:1;"
+         id="polygon121" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="13"
+         lengthAdjust="spacing"
+         textLength="41.4058"
+         x="2168"
+         y="628.4838"
+         id="text121">routes</text>
+    </g>
+    <!--link MenuController to BackupController-->
+    <g
+       class="link"
+       data-entity-1="ent0008"
+       data-entity-2="ent0009"
+       data-link-type="dependency"
+       data-source-line="165"
+       id="lnk24">
+      <path
+         codeLine="165"
+         d="M2084.34,574.6969 C2084.34,626.4269 2084.34,682.4169 2084.34,682.4169 C2084.34,682.4169 2046.07,682.4169 1990.04,682.4169"
+         fill="none"
+         id="MenuController-to-BackupController"
+         style="stroke:#181818;stroke-width:1;" />
+      <polygon
+         fill="#181818"
+         points="1984.04,682.4169,1993.04,686.4169,1989.04,682.4169,1993.04,678.4169,1984.04,682.4169"
+         style="stroke:#181818;stroke-width:1;"
+         id="polygon122" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="13"
+         lengthAdjust="spacing"
+         textLength="41.4058"
+         x="2042.34"
+         y="674.7738"
+         id="text122">routes</text>
+    </g>
+    <!--link MenuController to SettingsController-->
+    <g
+       class="link"
+       data-entity-1="ent0008"
+       data-entity-2="ent0011"
+       data-link-type="dependency"
+       data-source-line="166"
+       id="lnk25">
+      <path
+         codeLine="166"
+         d="M2352.3,574.3469 C2352.3,664.0769 2352.3,792.4169 2352.3,792.4169 C2352.3,792.4169 2384.02,792.4169 2430.65,792.4169"
+         fill="none"
+         id="MenuController-to-SettingsController"
+         style="stroke:#181818;stroke-width:1;" />
+      <polygon
+         fill="#181818"
+         points="2436.65,792.4169,2427.65,788.4169,2431.65,792.4169,2427.65,796.4169,2436.65,792.4169"
+         style="stroke:#181818;stroke-width:1;"
+         id="polygon123" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="13"
+         lengthAdjust="spacing"
+         textLength="41.4058"
+         x="2353.3"
+         y="721.6238"
+         id="text123">routes</text>
+    </g>
+    <!--link JobController to JobView-->
+    <g
+       class="link"
+       data-entity-1="ent0010"
+       data-entity-2="ent0015"
+       data-link-type="dependency"
+       data-source-line="169"
+       id="lnk26">
+      <path
+         codeLine="169"
+         d="M2144.05,893.7769 C2144.05,958.5869 2144.05,1030.4169 2144.05,1030.4169 C2144.05,1030.4169 1838.18,1030.4169 1630.16,1030.4169"
+         fill="none"
+         id="JobController-to-JobView"
+         style="stroke:#181818;stroke-width:1;" />
+      <polygon
+         fill="#181818"
+         points="1624.16,1030.4169,1633.16,1034.4169,1629.16,1030.4169,1633.16,1026.4169,1624.16,1030.4169"
+         style="stroke:#181818;stroke-width:1;"
+         id="polygon124" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="13"
+         lengthAdjust="spacing"
+         textLength="29.7832"
+         x="1922.42"
+         y="1026.4838"
+         id="text124">uses</text>
+    </g>
+    <!--link JobController to ConsoleView-->
+    <g
+       class="link"
+       data-entity-1="ent0010"
+       data-entity-2="ent0013"
+       data-link-type="dependency"
+       data-source-line="170"
+       id="lnk27">
+      <path
+         codeLine="170"
+         d="M2184.89,893.8669 C2184.89,945.6369 2184.89,1001.8269 2184.89,1051.0769"
+         fill="none"
+         id="JobController-to-ConsoleView"
+         style="stroke:#181818;stroke-width:1;" />
+      <polygon
+         fill="#181818"
+         points="2184.89,1057.0769,2188.89,1048.0769,2184.89,1052.0769,2180.89,1048.0769,2184.89,1057.0769"
+         style="stroke:#181818;stroke-width:1;"
+         id="polygon125" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="13px"
+         lengthAdjust="spacing"
+         textLength="29.783199"
+         x="2154.8899"
+         y="971.54382"
+         id="text125"
+         transform="translate(31.079468,-23.604659)">uses</text>
+    </g>
+    <!--link BackupController to BackupView-->
+    <g
+       class="link"
+       data-entity-1="ent0009"
+       data-entity-2="ent0014"
+       data-link-type="dependency"
+       data-source-line="172"
+       id="lnk28">
+      <path
+         codeLine="172"
+         d="M1528.14,831.4169 C1250.26,831.4169 817.17,831.4169 817.17,831.4169 C817.17,831.4169 817.17,943.9669 817.17,1034.7369"
+         fill="none"
+         id="BackupController-to-BackupView"
+         style="stroke:#181818;stroke-width:1;" />
+      <polygon
+         fill="#181818"
+         points="817.17,1040.7369,821.17,1031.7369,817.17,1035.7369,813.17,1031.7369,817.17,1040.7369"
+         style="stroke:#181818;stroke-width:1;"
+         id="polygon126" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="13"
+         lengthAdjust="spacing"
+         textLength="29.7832"
+         x="1037.99"
+         y="827.4838"
+         id="text126">uses</text>
+    </g>
+    <!--link BackupController to ConsoleView-->
+    <g
+       class="link"
+       data-entity-1="ent0009"
+       data-entity-2="ent0013"
+       data-link-type="dependency"
+       data-source-line="173"
+       id="lnk29"
+       transform="matrix(1.0002381,0,0,0.97869048,-0.44081987,22.547165)">
+      <path
+         codeLine="173"
+         d="m 1863.93,910.1969 c 0,48.12 0,96.68 0,140.84"
+         fill="none"
+         id="BackupController-to-ConsoleView"
+         style="stroke:#181818;stroke-width:1" />
+      <polygon
+         fill="#181818"
+         points="1867.93,1048.0369 1863.93,1052.0369 1859.93,1048.0369 1863.93,1057.0369 "
+         style="stroke:#181818;stroke-width:1"
+         id="polygon127" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="13px"
+         lengthAdjust="spacing"
+         textLength="29.783199"
+         x="1833.9301"
+         y="979.68378"
+         id="text127"
+         transform="translate(-0.78682196,20.457371)">uses</text>
+    </g>
+    <!--link BackupController to ArgsParser-->
+    <g
+       class="link"
+       data-entity-1="ent0009"
+       data-entity-2="ent0017"
+       data-link-type="dependency"
+       data-source-line="174"
+       id="lnk30">
+      <path
+         codeLine="174"
+         d="M1527.96,753.4169 C1135.71,753.4169 375,753.4169 375,753.4169 C375,753.4169 375,966.3569 375,1075.8269"
+         fill="none"
+         id="BackupController-to-ArgsParser"
+         style="stroke:#181818;stroke-width:1;" />
+      <polygon
+         fill="#181818"
+         points="375,1081.8269,379,1072.8269,375,1076.8269,371,1072.8269,375,1081.8269"
+         style="stroke:#181818;stroke-width:1;"
+         id="polygon128" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="13"
+         lengthAdjust="spacing"
+         textLength="29.7832"
+         x="757.27"
+         y="749.4838"
+         id="text128">uses</text>
+    </g>
+    <!--link SettingsController to ConsoleView-->
+    <g
+       class="link"
+       data-entity-1="ent0011"
+       data-entity-2="ent0013"
+       data-link-type="dependency"
+       data-source-line="176"
+       id="lnk31">
+      <path
+         codeLine="176"
+         d="M2552.96,885.6269 C2552.96,967.8469 2552.96,1074.4169 2552.96,1074.4169 C2552.96,1074.4169 2386.66,1074.4169 2231.87,1074.4169"
+         fill="none"
+         id="SettingsController-to-ConsoleView"
+         style="stroke:#181818;stroke-width:1;" />
+      <polygon
+         fill="#181818"
+         points="2225.87,1074.4169,2234.87,1078.4169,2230.87,1074.4169,2234.87,1070.4169,2225.87,1074.4169"
+         style="stroke:#181818;stroke-width:1;"
+         id="polygon129" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="13"
+         lengthAdjust="spacing"
+         textLength="29.7832"
+         x="2453.81"
+         y="1070.4838"
+         id="text129">uses</text>
+    </g>
+    <!--link SettingsController to ConsoleInput-->
+    <g
+       class="link"
+       data-entity-1="ent0011"
+       data-entity-2="ent0016"
+       data-link-type="dependency"
+       data-source-line="177"
+       id="lnk32">
+      <path
+         codeLine="177"
+         d="M2669.04,885.4769 C2669.04,950.8169 2669.04,1029.6869 2669.04,1083.6769"
+         fill="none"
+         id="SettingsController-to-ConsoleInput"
+         style="stroke:#181818;stroke-width:1;" />
+      <polygon
+         fill="#181818"
+         points="2669.04,1089.6769,2673.04,1080.6769,2669.04,1084.6769,2665.04,1080.6769,2669.04,1089.6769"
+         style="stroke:#181818;stroke-width:1;"
+         id="polygon130" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="13"
+         lengthAdjust="spacing"
+         textLength="29.7832"
+         x="2639.04"
+         y="983.6438"
+         id="text130">uses</text>
+    </g>
+    <!--link BackupView to ConsoleInput-->
+    <g
+       class="link"
+       data-entity-1="ent0014"
+       data-entity-2="ent0016"
+       data-link-type="dependency"
+       data-source-line="180"
+       id="lnk33"
+       transform="matrix(0.89533346,0,0,1.0004143,264.42614,-0.42273133)">
+      <path
+         codeLine="180"
+         d="m 978.83,1040.7269 c 0,-40.35 0,-77.31 0,-77.31 0,0 1371.26,0 1371.26,0 0,0 0,67.55 0,120.42"
+         fill="none"
+         id="BackupView-to-ConsoleInput"
+         style="stroke:#181818;stroke-width:1" />
+      <polygon
+         fill="#181818"
+         points="2350.09,1089.8369 2354.09,1080.8369 2350.09,1084.8369 2346.09,1080.8369 "
+         style="stroke:#181818;stroke-width:1"
+         id="polygon131" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="13px"
+         lengthAdjust="spacing"
+         textLength="36.334"
+         x="1652.01"
+         y="959.48383"
+         id="text131">reads</text>
+    </g>
+    <!--link JobView to ConsoleInput-->
+    <g
+       class="link"
+       data-entity-1="ent0015"
+       data-entity-2="ent0016"
+       data-link-type="dependency"
+       data-source-line="181"
+       id="lnk34">
+      <path
+         codeLine="181"
+         d="M1624.5,1044.4169 C1889.07,1044.4169 2347.87,1044.4169 2347.87,1044.4169 C2347.87,1044.4169 2347.87,1060.5469 2347.87,1083.7969"
+         fill="none"
+         id="JobView-to-ConsoleInput"
+         style="stroke:#181818;stroke-width:1;" />
+      <polygon
+         fill="#181818"
+         points="2347.87,1089.7969,2351.87,1080.7969,2347.87,1084.7969,2343.87,1080.7969,2347.87,1089.7969"
+         style="stroke:#181818;stroke-width:1;"
+         id="polygon132" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="13"
+         lengthAdjust="spacing"
+         textLength="36.334"
+         x="1971.87"
+         y="1040.4838"
+         id="text132">reads</text>
+    </g>
+    <!--link ConsoleView to MenuOption-->
+    <g
+       class="link"
+       data-entity-1="ent0013"
+       data-entity-2="ent0019"
+       data-link-type="dependency"
+       data-source-line="182"
+       id="lnk35">
+      <path
+         codeLine="182"
+         d="M1985,1228.1869 C1985,1274.7469 1985,1324.4269 1985,1362.4169"
+         fill="none"
+         id="ConsoleView-to-MenuOption"
+         style="stroke:#181818;stroke-width:1;stroke-dasharray:7,7;" />
+      <polygon
+         fill="#181818"
+         points="1985,1368.4169,1989,1359.4169,1985,1363.4169,1981,1359.4169,1985,1368.4169"
+         style="stroke:#181818;stroke-width:1;"
+         id="polygon133" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="13px"
+         lengthAdjust="spacing"
+         textLength="52.933102"
+         x="1932"
+         y="1294.3638"
+         id="text133"
+         transform="translate(-3.9341098,-25.178303)">displays</text>
+    </g>
+    <!--link BackupController to IBackupService-->
+    <g
+       class="link"
+       data-entity-1="ent0009"
+       data-entity-2="ent0036"
+       data-link-type="dependency"
+       data-source-line="186"
+       id="lnk39"
+       transform="translate(0,10)">
+      <path
+         codeLine="186"
+         d="m 1983.7223,904.39412 c 430.565,0 1321.2854,0 1321.2854,0 0,0 0,138.59588 0,195.49618"
+         fill="none"
+         id="BackupController-to-IBackupService"
+         style="stroke:#181818;stroke-width:0.969319;stroke-dasharray:6.78524, 6.78524" />
+      <polygon
+         fill="#181818"
+         points="3305,1113.4869 3301,1109.4869 3305,1118.4869 3309,1109.4869 "
+         style="stroke:#181818;stroke-width:1"
+         id="polygon134"
+         transform="translate(0,-11.127343)" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="13px"
+         lengthAdjust="spacing"
+         textLength="29.783199"
+         x="2721.3999"
+         y="900.48383"
+         id="text134"
+         transform="translate(6.8154975,13.352811)">uses</text>
+    </g>
+    <!--link BackupController to IJobService-->
+    <g
+       class="link"
+       data-entity-1="ent0009"
+       data-entity-2="ent0040"
+       data-link-type="dependency"
+       data-source-line="187"
+       id="lnk41"
+       transform="matrix(1.0000084,0,0,0.96562205,-0.02313102,38.485501)">
+      <path
+         codeLine="187"
+         d="m 1984.06,899.4169 c 479.39,0 1547.7,0 1547.7,0 0,0 0,151.49 0,213.02"
+         fill="none"
+         id="BackupController-to-IJobService"
+         style="stroke:#181818;stroke-width:1;stroke-dasharray:7, 7" />
+      <polygon
+         fill="#181818"
+         points="3535.76,1109.4369 3531.76,1113.4369 3527.76,1109.4369 3531.76,1118.4369 "
+         style="stroke:#181818;stroke-width:1"
+         id="polygon135" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="13px"
+         lengthAdjust="spacing"
+         textLength="29.783199"
+         x="2837.4199"
+         y="895.48383"
+         id="text135"
+         transform="translate(-12.240077,2.2254686)">uses</text>
+    </g>
+    <!--link JobController to IJobService-->
+    <g
+       class="link"
+       data-entity-1="ent0010"
+       data-entity-2="ent0040"
+       data-link-type="dependency"
+       data-source-line="188"
+       id="lnk42">
+      <path
+         codeLine="188"
+         d="M2317.15,889.4169 C2637.87,889.4169 3568.24,889.4169 3568.24,889.4169 C3568.24,889.4169 3568.24,1048.9869 3568.24,1112.3669"
+         fill="none"
+         id="JobController-to-IJobService"
+         style="stroke:#181818;stroke-width:1;stroke-dasharray:7,7;" />
+      <polygon
+         fill="#181818"
+         points="3568.24,1118.3669,3572.24,1109.3669,3568.24,1113.3669,3564.24,1109.3669,3568.24,1118.3669"
+         style="stroke:#181818;stroke-width:1;"
+         id="polygon136" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="13px"
+         lengthAdjust="spacing"
+         textLength="29.783199"
+         x="3027.1699"
+         y="885.48383"
+         id="text136"
+         transform="translate(-95.416962,0.27818354)">uses</text>
+    </g>
+    <!--link SettingsController to AppConfigRepository-->
+    <g
+       class="link"
+       data-entity-1="ent0011"
+       data-entity-2="ent0043"
+       data-link-type="dependency"
+       data-source-line="189"
+       id="lnk45">
+      <path
+         codeLine="189"
+         d="M2785.49,823.4169 C2898.99,823.4169 3026,823.4169 3026,823.4169 C3026,823.4169 3026,1037.8869 3026,1112.3869"
+         fill="none"
+         id="SettingsController-to-AppConfigRepository"
+         style="stroke:#181818;stroke-width:1;stroke-dasharray:7,7;" />
+      <polygon
+         fill="#181818"
+         points="3026,1118.3869,3030,1109.3869,3026,1113.3869,3022,1109.3869,3026,1118.3869"
+         style="stroke:#181818;stroke-width:1;"
+         id="polygon137" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="13px"
+         lengthAdjust="spacing"
+         textLength="50.622601"
+         x="2975"
+         y="846.71381"
+         id="text137"
+         transform="translate(-20.850782,-28.719002)">persists</text>
+    </g>
+    <!--link SettingsController to AppConfig-->
+    <g
+       class="link"
+       data-entity-1="ent0011"
+       data-entity-2="ent0046"
+       data-link-type="dependency"
+       data-source-line="190"
+       id="lnk48">
+      <path
+         codeLine="190"
+         d="M2785.56,761.4169 C3110.84,761.4169 3777,761.4169 3777,761.4169 C3777,761.4169 3777,1028.0769 3777,1112.2169"
+         fill="none"
+         id="SettingsController-to-AppConfig"
+         style="stroke:#181818;stroke-width:1;stroke-dasharray:7,7;" />
+      <polygon
+         fill="#181818"
+         points="3777,1118.2169,3781,1109.2169,3777,1113.2169,3773,1109.2169,3777,1118.2169"
+         style="stroke:#181818;stroke-width:1;"
+         id="polygon138" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="13"
+         lengthAdjust="spacing"
+         textLength="52.5776"
+         x="3406.68"
+         y="757.4838"
+         id="text138">updates</text>
+    </g>
+    <!--link Bootstrap to Controllers (Logic Hub)-->
+    <!--link Controllers (Logic Hub) to Views & Input (UI)-->
+    <!--link Views & Input (UI) to Models-->
+<?plantuml-src hLZRRjiu47ttLmnIOADWQoD94QGDKYySMswzpGrsqdqeYe2M69kjJ0eavTG8ya7TtyYFxP2IPScwE0vM3pQbEHpEZSCPxiB7BPx6BdIlBlk3JxV3pitWwXBVjvgkVZ8U4abcC2RUpuaK4VUx8X0I7gPCqmnTJOal7XYVm3q9L9OIC4xr8gGWf9wA384BdoeQmi7XVkQh9Fod_RgV_HhYycH2HteHK93KquHF0jh88Bo0A0MF3S3dB2_iwMbNS2r5453PRiERVh__pjsFaKBwL9QZZewx-_lb_Buo-c0mxa7_gEyMEItf-uV7nsUzSXu37aRQCddVFt8_59caW4FtkFVki9pB1HeniEA-Su_wHqKkAU3uxA3VgU1o9eHMMf8mCK_FFIvooeC-TDuV7ZMU6WtDDFganyW4tJ2ZuDFO5rH14roY5YCofwrE6BRGlaeWrkb8puIFfoD9WNBeYiYRKhNNs3O-Ts5qCxpjtjmENUYv8xZkTBzqFhcZRVaqalY2dJA1Tp2ih3bIL6gAdIJYp1D7uBKKnX2GjzSAPPv7fObctXCqvuBvS44OTn29k-VRTo1oWfPOGfyQyMz-_LMaAd3EnOHvy3aQxnMbkQ0yMe5XBSRpKZKJTKtmmjqSVql9DYpXZfc_FE1lCSwiTVSZ-vf7cW2CmYnulFObZnzHhT4wAZj35RxbvjpTvLx_p5l2QRLQUtc0TSKmuaxM-6lcBCXTRz11Z1zHEMSUNIgPlAv1qNWfxaSwBZDRx9znEgvnehTwoQCw66JNH2fZI9AEQmsuhdkD2OsjdGfQNugPMJq9UCpt3vrSn6SM6r8L1RgdnLzc9bheR37m7SOrCFyjZ8K8u84mtHVo2rt0Hz0oeXNBTe9WJQBcadJ5CQOrbSJJR4xht9yFy0s-Vub34HCxwaSyU8KhrzsKa_4rFZfdIYCJLKhiIaeqHN8fzJRqQwWz6j1rQi749JkztiwOfv5ypoRMHFXVGHxIK2YcXLmiWQilhzb1cxBXkb-AYhqi1wr2DRRkELO-4Hu2pd80GJAecICck4TcH3lf28BbQDDPOrHNy0V4cZgtWv9Z9ckojFfvB8kVW19P6XsZgNZuJ0cM6vLa6x99sh1LnriOk3oQuTOT1_JKaAz2pGHlWx3_gegJAwMGIrOpgbJ1V2liAF8yHBmGFU3tuWNGVzAqjVcugRFgrc6uOkbOy0baELHf5SygInac6G_HRVPudGhCS9NkiqbbOC1NF5YOD7CQyqL26p03gXBU7VKJoPZrgxZYRXbf8hMJyZAiQj0kzvsrumKx2ZEgrbvxqnXSAd_AfvqmKlLdoF_gq8JVDjx4AQzpPHBNiKykoQm6C1AHzEWrqTDgp0rM7bINOMAxtfYk4N6hj_yljdAg5CDh5NfzHWF_HhW-q-iWMu34g8wj7J0GTMq1aNFkgiDxB7S4LYNBL19YrHJgSXqCz59m5m6BaVrKEsl9FN5n3ffFg8Ximvm4BC7MXNMceApIgvcsFKQ42yO7FjPi1tKOyijYZcftGDxjLcWhIMs5kLh8nj1NeoKwBoqlDvsAjgrMvGrNV0Z1glSkyU_0B_NbEHdJeB3qqoiQuw5xRgzyHk0OUMPCFVys7josCzw5PhC9_I3wXQqjunuBIG1Esjj2imsPRdJFe1lB7hZfYmUEWBKkz0HsF5j7ch92cUIjTd2TAmwHPW5JvWv1GS0eLs2kASBdtmf2J2Zm_7lEi58tTmmXyefm652OCnMXrPQhjbhVtamaNNpFIMPMPHnNuvhPfKaGx2pLkvBc_W7riOvpZBn6iL4qBkYsfijInNnhS08eDYvIXIxqaPicb9J5wPH4XwokEEDsOCNDovMHrXv29n0fv50EoXPr2R1H43olKHPR2ItXMudDf9Mb22McgE6y6HqduoNts9PeFDiISXFhSG6C4-93rPeresvJiibK5_bXXFlMj2z0PGLljThPB782FbDXG1QfSEwlHB8U3IdtAUv936UdAoJ5_OGDJopYBboRzWPvSBFppJtRc2WG4QZ8R1k53RJqaut5SKCXSVByBwUow0uZKtepPXPgMVFS4pmKMckt75KkhUUHwPPBWtBRsIL-px4mrtjf0uZsQvKrYYSGucx2KsKpFojIV2YiM1bXR0EM-guJi0cdCygrmXCE4nSR6qzO7mG4aw6CubjH6sIh9Fjjodpqz7SRkjNtVutgcy5r5YLjNQEqrqidnX4CiPB_0G00?>  </g>
+  <metadata
+     id="metadata138">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:title>Diagramme de classes - EasySave.App.Console (Architecture en Couches)</dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+</svg>
