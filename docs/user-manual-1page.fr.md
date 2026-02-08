@@ -1,31 +1,48 @@
 # EasySave - Manuel Utilisateur (v1.0)
 
-## 1. Présentation 
+## 1. Prï¿½sentation 
 
-EasySave est un logiciel de sauvegarde de données en ligne de commande développé en C# / .NET.
-Il permet de créer et d'exécuter des travaux de sauvegarde selon deux types de sauvegarde : 
+EasySave est un logiciel de sauvegarde de donnï¿½es en ligne de commande dï¿½veloppï¿½ en C# / .NET.
+Il permet de crï¿½er et d'exï¿½cuter des travaux de sauvegarde selon deux types de sauvegarde : 
 	
-- **Sauvegarde complète** : copie l'ensemble des fichiers
-- **Sauvegarde différentielle** : copie uniquement les fichiers modifiés depuis la dernière sauvegarde complète
+- **Sauvegarde complï¿½te** : copie l'ensemble des fichiers
+- **Sauvegarde diffï¿½rentielle** : copie uniquement les fichiers modifiï¿½s depuis la derniï¿½re sauvegarde complï¿½te
 
-L'application est multilingue (français et anglais) et offre une interface utilisateur simple et intuitive.
+L'application est multilingue (franï¿½ais et anglais) et offre une interface utilisateur simple et intuitive.
 
-## 2. Prérequis 
+## 2. Prï¿½requis 
 
 	- Windows 
 	- .NET SDK 10.0
 	- Visual Studio 2022+ ou Rider
 	- Git 
 
-Vérifier l'installation : **dotnet --version**
+Vï¿½rifier l'installation : **dotnet --version**
 
 ## 3. Lancement de l'application 
 
 Depuis la racine du projet : **dotnet run --project src/EasySave.App.Console**
 
+Alternatives :
+
+ - Double-clic sur EasySave.App.Console.exe
+ - Ligne de commande avec arguments (ID des travaux de sauvegarde) :
+
+```bash
+ .\EasySave.App.Console.exe 1
+```
+
+```bash
+ .\EasySave.App.Console.exe '1;3'
+```
+
+```bash
+ .\EasySave.App.Console.exe 1-2
+```
+
 ## 4. Menu principal
 
-Au lancement, l'écran suivant apparaît : 
+Au lancement, l'ï¿½cran suivant apparaï¿½t : 
 ```
 =================================
  EasySave - Backup Software
@@ -39,9 +56,9 @@ Main menu
 ```
 ### Description 
 
-- **Manage backup job** : créer, modifier, lister et supprimer des travaux de sauvegarde 
-- **Run backup job** : exécuter des sauvegardes 
-- **Settings** : accéder aux paramètres de l'application (langue, format de journalisation)
+- **Manage backup job** : crï¿½er, modifier, lister et supprimer des travaux de sauvegarde 
+- **Run backup job** : exï¿½cuter des sauvegardes 
+- **Settings** : accï¿½der aux paramï¿½tres de l'application (langue, format de journalisation)
 - **Exit** : quitter l'application
 
 ## 5. Gestion des travaux de sauvegarde
@@ -56,12 +73,12 @@ Menu :
 ### Description
 
 - **List jobs** : afficher tous les jobs existants
-- **Create job** : créer un nouveau travail de sauvegarde
+- **Create job** : crï¿½er un nouveau travail de sauvegarde
 - **Update job** : modifier un travail de sauvegarde existant
 - **Delete job** : supprimer un travail de sauvegarde
 - **Back** : revenir au menu principal
 
-Informations demandées lors de la création :  
+Informations demandï¿½es lors de la crï¿½ation :  
 ID, Nom, Chemin source, Chemin cible, Type de sauvegarde.
 
 **Modification d'un job**
@@ -75,7 +92,7 @@ Champs modifiables :
 	5 - Active / Inactive
 	0 - Back
 
-## 6. Exécution des sauvegardes
+## 6. Exï¿½cution des sauvegardes
 
 Menu :
 
@@ -85,8 +102,8 @@ Menu :
 
 ### Description
 
-- **Run one job** : exécute un travail sélectionné par son ID  
-- **Run all jobs** : exécute tous les travaux existants
+- **Run one job** : exï¿½cute un travail sï¿½lectionnï¿½ par son ID  
+- **Run all jobs** : exï¿½cute tous les travaux existants
 
 ## 7. Settings
 
@@ -100,7 +117,7 @@ Menu :
 ### Description
 
 - **English** : basculer l'interface en anglais  
-- **French** : basculer l'interface en français  
+- **French** : basculer l'interface en franï¿½ais  
 - **Log format: JSON** : configurer le format de journalisation en JSON  
 - **Log format: XML** : configurer le format de journalisation en XML  
 - **Back** : revenir au menu principal
@@ -109,5 +126,5 @@ Menu :
 
 	- Application console uniquement 
 	- Maximum 5 jobs 
-	- Exécution séquentielle 
-	- Interface graphique prévue en v2
+	- Exï¿½cution sï¿½quentielle 
+	- Interface graphique prï¿½vue en v2

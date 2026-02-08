@@ -23,6 +23,23 @@ Check installation: **dotnet --version**
 
 From project root: **dotnet run --project src/EasySave.App.Console**
 
+Alternatives :
+
+ - Double-click on EasySave.App.Console.exe
+ - Command line with arguments (backup job IDs):
+
+```bash
+ .\EasySave.App.Console.exe 1
+```
+
+```bash
+ .\EasySave.App.Console.exe '1;3'
+```
+
+```bash
+ .\EasySave.App.Console.exe 1-2
+```
+
 ## 4. Main menu
 
 On launch, the following screen appears:
