@@ -28,14 +28,15 @@ Le projet est conçu pour évoluer par versions successives (v1 → v3) en respe
 
 ### Manuels Utilisateur
 
+
 <table>
   <tr>
     <td align="center" width="50%">
-      <strong>🇫🇷 Français</strong><br>
+      <img src="https://img.shields.io/badge/Langue-Français-blue" alt="Français"><br>
       <a href="docs/user-manual-1page.fr.md">Manuel Utilisateur</a>
     </td>
     <td align="center" width="50%">
-      <strong>🇬🇧 English</strong><br>
+      <img src="https://img.shields.io/badge/Language-English-red" alt="English"><br>
       <a href="docs/user-manual-1page.en.md">User Manual</a>
     </td>
   </tr>
@@ -46,11 +47,11 @@ Le projet est conçu pour évoluer par versions successives (v1 → v3) en respe
 <table>
   <tr>
     <td align="center" width="50%">
-      <strong>🇫🇷 Français</strong><br>
+      <img src="https://img.shields.io/badge/Langue-Français-blue" alt="Français"><br>
       <a href="docs/support.fr.md">Guide de Support</a>
     </td>
     <td align="center" width="50%">
-      <strong>🇬🇧 English</strong><br>
+      <img src="https://img.shields.io/badge/Language-English-red" alt="English"><br>
       <a href="docs/support.en.md">Support Guide</a>
     </td>
   </tr>
@@ -61,11 +62,11 @@ Le projet est conçu pour évoluer par versions successives (v1 → v3) en respe
 <table>
   <tr>
     <td align="center" width="50%">
-      <strong>🇫🇷 Français</strong><br>
+      <img src="https://img.shields.io/badge/Langue-Français-blue" alt="Français"><br>
       <a href="docs/architecture.fr.md">Architecture</a>
     </td>
     <td align="center" width="50%">
-      <strong>🇬🇧 English</strong><br>
+      <img src="https://img.shields.io/badge/Language-English-red" alt="English"><br>
       <a href="docs/architecture.en.md">Architecture</a>
     </td>
   </tr>
