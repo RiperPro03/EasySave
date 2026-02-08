@@ -101,3 +101,15 @@ src/
 - Maximum 5 jobs
 - Exécution séquentielle uniquement
 - Interface graphique prévue pour la version 2.0
+
+## Tests
+
+Pour la partie tests, l'outil open source utilisé est **xUnit**.  
+Les tests unitaires permettent de garantir la fiabilité du code et de limiter les régressions lors des évolutions futures.
+
+Les tests couvrent :
+	- Validation des chemins source et cible
+	- Sélection des fichiers à copier 
+	- Logique de la sauvegarde complète 
+	- Logique de la sauvegarde différentielle
+	- Génération des fichiers JSON 
