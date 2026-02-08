@@ -1,0 +1,88 @@
+﻿@startuml
+title <b>EasyLog</b>\n<i>Sequence de journalisation (langage naturel)</i>
+
+' -------------------- THEME / STYLE --------------------
+skinparam shadowing false
+skinparam dpi 170
+skinparam backgroundColor #FFFFFF
+
+skinparam sequence {
+  MessageAlign center
+  ArrowColor #2F3A4A
+  ArrowThickness 1
+  LifeLineBorderColor #B7C0CE
+  LifeLineBackgroundColor #F7F9FC
+
+  ParticipantBorderColor #2F3A4A
+  ParticipantBackgroundColor #EEF3FF
+  ParticipantFontColor #1C2A3A
+  ParticipantFontStyle bold
+
+  ActorBorderColor #2F3A4A
+  ActorBackgroundColor #FFF4E5
+
+  BoxBorderColor #9FB1C9
+  BoxBackgroundColor #F7F9FC
+
+  GroupBorderColor #9FB1C9
+  GroupBackgroundColor #F7F9FC
+}
+
+' -------------------- ACTEURS / PARTICIPANTS --------------------
+actor Client #FFF4E5
+
+participant "<b>LoggerFactory</b>" as Factory #EEF3FF
+participant "<b>DailyLogger<T></b>" as DailyLogger #E9F7EF
+participant "<b>SafeLogger<T></b>" as SafeLogger #F3E8FF
+participant "<b>ILogSerializer</b>" as Serializer #E6F4FF
+participant "<b>ILogWriter</b>" as Writer #FFE9EC
+
+' -------------------- FLUX --------------------
+== Configuration ==
+Client -> Client : Prepare les options de journalisation
+
+box "Creation du logger" #F7F9FC
+Client -> Factory : Demande la creation d'un logger avec les options
+
+alt <b>Format = JSON</b>
+  Factory -> Serializer : Selectionne un serialiseur JSON
+else <b>Format = XML</b>
+  Factory -> Serializer : Selectionne un serialiseur XML
+end
+
+Factory -> Writer : Cree un writer fichier
+Factory -> DailyLogger : Instancie un DailyLogger configure
+
+opt <b>UseSafeLogger = true</b>
+  Factory -> SafeLogger : Enveloppe le logger pour la securite
+  Factory --> Client : Retourne un ILogger<T> securise
+else <b>UseSafeLogger = false</b>
+  Factory --> Client : Retourne un ILogger<T> direct
+end
+end box
+
+note right of SafeLogger
+  Protege l'appel (exceptions, retries, etc.)
+end note
+
+== Ecriture ==
+opt <b>UseSafeLogger = true</b>
+  Client -> SafeLogger : Envoie une entree de log
+  SafeLogger -> DailyLogger : Transmet l'entree
+else <b>UseSafeLogger = false</b>
+  Client -> DailyLogger : Envoie une entree de log
+end
+
+DailyLogger -> Serializer : Serialize l'entree
+Serializer --> DailyLogger : Retourne la ligne formatee
+DailyLogger -> Writer : Ecrit la ligne dans le fichier du jour
+Writer --> DailyLogger : Retourne succes ou echec
+
+opt <b>UseSafeLogger = true</b>
+  DailyLogger --> SafeLogger : Retourne le resultat
+  SafeLogger --> Client : Retourne le resultat
+else <b>UseSafeLogger = false</b>
+  DailyLogger --> Client : Retourne le resultat
+end
+
+@enduml

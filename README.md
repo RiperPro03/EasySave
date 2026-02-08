@@ -43,7 +43,7 @@ maintenabilite et architecture propre.
 EasySave/
 ├── src/
 │  ├── EasySave.Core          (coeur metier, objets d’echange de donnees, interfaces)
-│  ├── EasySave.App           (services, orchestration, persistance)
+│  ├── EasySave.App           (services, infrastructure, persistance)
 │  ├── EasySave.EasyLog       (DLL de logging)
 │  ├── EasySave.App.Console   (interface console)
 │  └── EasySave.App.Gui       (interface graphique - v2)
