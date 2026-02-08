@@ -24,7 +24,7 @@ EasySave utilise la bibliothèque EasyLog.dll pour générer des logs.
 - Possibilité NDJSON (1 objet JSON par ligne)
 - Aucun modèle métier imposé : EasyLog accepte n'importe quel objet T 
 	
-**Emplacement** : %APPDATA%\Roaming\ProSoft\EasySave\src\EasySave.EasyLog
+**Emplacement** : %APPDATA%\Roaming\ProSoft\EasySave\Logs
 
 ### 2.2 - Fichier état (state.json)
 

@@ -1,0 +1,115 @@
+﻿# EasySave v1.0 support 
+
+## 1. Prerequisites
+
+- Windows
+- .NET SDK 10.0
+- Visual Studio 2022+ or Rider
+- Git
+
+Check installation: **dotnet --version**
+
+## 2. File location 
+
+### 2.1 - Log files 
+
+EasySave uses the EasyLog.dll library to generate logs.
+
+**Features** : 
+
+- One log file per day (yyyy-MM-dd.json or .xml)
+- JSON or XML format depending on configuration
+- Real-time writing (append) at runtime
+- Readable JSON (indentation + line breaks)
+- NDJSON capability (1 JSON object per line)
+- No imposed business model: EasyLog accepts any T 
+	
+**Emplacement** : %APPDATA%\Roaming\ProSoft\EasySave\Logs
+
+### 2.2 - State file (state.json)
+
+EasySave maintains a single file representing the global state of all jobs in real time.
+
+**Features**:
+
+- Global snapshot updated at runtime
+- Contains the state of each job as well as the global state of the application.
+
+**Emplacement** : \%APPDATA%\Roaming\ProSoft\EasySave\State
+
+**Content** : 
+
+- Job status (Idle, Running, Paused, Completed, Error)
+- Total number of files and total size 
+- Files / size already copied
+- Percentage of completion 
+- Timestamp last action 
+- Error message if necessary
+
+### 2.3 - Settings files
+
+EasySave uses a settings file to store application parameters.
+
+**Emplacement** : %APPDATA%\Roaming\ProSoft\EasySave\Config
+
+Contains persistent parameters such as :
+- Interface language (English / French)
+- Logging format (JSON / XML)
+
+Modifications are saved automatically when changed via the Settings menu.
+
+## 3. Application configuration
+
+Settings can be accessed via the menu : **Settings
+
+Options available:
+
+- Choice of language :
+
+	- English
+	- French
+
+- Logging format :
+	- JSON 
+	- XML
+
+Changes are saved automatically.
+
+## 4. Support
+
+For technical support, please check :
+
+- .NET 10 SDK is installed
+- the following command is running: **dotnet run --project src/EasySave.App.Console**
+
+In the event of a problem, check the locations of the logs and state.json files.
+
+## 5. Simplified tree
+```
+src/
+├── EasySave.App.Console      (console interface v1)
+├── EasySave.App              (engine, infrastructure)
+├── EasySave.Core             (core business)
+├── EasySave.EasyLog          (DLL dedicated to logging)
+├── EasySave.App.Gui          (graphical user interface v2)
+└── tests/
+    └── EasySave.Tests		  (Unit Tests)
+```
+## 6. Version 1.0 limitations
+
+- Console application only
+- Maximum 5 jobs
+- Sequential execution only
+- Graphical interface planned for version 2.0
+
+## Tests
+
+The open source tool used for testing is **xUnit**.  
+Unit tests guarantee the reliability of the code and limit regressions during future evolutions.
+
+The tests cover :
+	- Validation of source and target paths
+	- Selection of files to be copied 
+	- Complete backup logic 
+	- Differential backup logic
+	- JSON file generation 
