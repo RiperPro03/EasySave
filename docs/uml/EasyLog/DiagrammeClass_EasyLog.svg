@@ -1,0 +1,1831 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?plantuml 1.2026.2beta3?><svg
+   contentStyleType="text/css"
+   data-diagram-type="CLASS"
+   height="898px"
+   preserveAspectRatio="none"
+   style="width:2112px;height:898px;background:#FFFFFF;"
+   version="1.1"
+   viewBox="0 0 2112 898"
+   width="2112px"
+   zoomAndPan="magnify"
+   id="svg70"
+   sodipodi:docname="Diagramme de class easy log.svg"
+   inkscape:version="1.4 (86a8ad7, 2024-10-11)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <sodipodi:namedview
+     id="namedview70"
+     pagecolor="#505050"
+     bordercolor="#eeeeee"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#505050"
+     inkscape:zoom="0.85890152"
+     inkscape:cx="887.76185"
+     inkscape:cy="-77.424476"
+     inkscape:window-width="1920"
+     inkscape:window-height="1094"
+     inkscape:window-x="-11"
+     inkscape:window-y="-11"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="g1" />
+  <title
+     id="title1">Diagramme de classes - EasyLog (Optimisé)</title>
+  <defs
+     id="defs1" />
+  <g
+     id="g70">
+    <g
+       class="title"
+       data-source-line="17"
+       id="g1">
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14px"
+         font-weight="bold"
+         lengthAdjust="spacing"
+         textLength="346.10349"
+         x="875.94818"
+         y="22.9951"
+         id="text1">Diagramme de classes - EasyLog </text>
+    </g>
+    <!--cluster EasyLog-->
+    <g
+       class="cluster"
+       data-qualified-name="EasyLog"
+       data-source-line="19"
+       id="ent0002">
+      <path
+         d="M8.5,43.2969 L74.5303,43.2969 A3.75,3.75 0 0 1 77.0303,45.7969 L84.0303,65.5938 L2102.5,65.5938 A2.5,2.5 0 0 1 2105,68.0938 L2105,889.1269 A2.5,2.5 0 0 1 2102.5,891.6269 L8.5,891.6269 A2.5,2.5 0 0 1 6,889.1269 L6,45.7969 A2.5,2.5 0 0 1 8.5,43.2969"
+         fill="none"
+         style="stroke:#000000;stroke-width:1.5;"
+         id="path1" />
+      <line
+         style="stroke:#000000;stroke-width:1.5;"
+         x1="6"
+         x2="84.0303"
+         y1="65.5938"
+         y2="65.5938"
+         id="line1" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         font-weight="bold"
+         lengthAdjust="spacing"
+         textLength="65.0303"
+         x="10"
+         y="58.292"
+         id="text2">EasyLog</text>
+    </g>
+    <!--cluster Interfaces-->
+    <g
+       class="cluster"
+       data-qualified-name="EasyLog.Interfaces"
+       data-source-line="21"
+       id="ent0003">
+      <path
+         d="M778.5,330.8969 L859.4326,330.8969 A3.75,3.75 0 0 1 861.9326,333.3969 L868.9326,353.1938 L1752.5,353.1938 A2.5,2.5 0 0 1 1755,355.6938 L1755,484.2569 A2.5,2.5 0 0 1 1752.5,486.7569 L778.5,486.7569 A2.5,2.5 0 0 1 776,484.2569 L776,333.3969 A2.5,2.5 0 0 1 778.5,330.8969"
+         fill="none"
+         style="stroke:#000000;stroke-width:1.5;"
+         id="path2" />
+      <line
+         style="stroke:#000000;stroke-width:1.5;"
+         x1="776"
+         x2="868.9326"
+         y1="353.1938"
+         y2="353.1938"
+         id="line2" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         font-weight="bold"
+         lengthAdjust="spacing"
+         textLength="79.9326"
+         x="780"
+         y="345.892"
+         id="text3">Interfaces</text>
+    </g>
+    <!--cluster Loggers-->
+    <g
+       class="cluster"
+       data-qualified-name="EasyLog.Loggers"
+       data-source-line="36"
+       id="ent0007">
+      <path
+         d="M790.5,94.2969 L854.8145,94.2969 A3.75,3.75 0 0 1 857.3145,96.7969 L864.3145,116.5938 L1365.5,116.5938 A2.5,2.5 0 0 1 1368,119.0938 L1368,280.2569 A2.5,2.5 0 0 1 1365.5,282.7569 L790.5,282.7569 A2.5,2.5 0 0 1 788,280.2569 L788,96.7969 A2.5,2.5 0 0 1 790.5,94.2969"
+         fill="none"
+         style="stroke:#000000;stroke-width:1.5;"
+         id="path3" />
+      <line
+         style="stroke:#000000;stroke-width:1.5;"
+         x1="788"
+         x2="864.3145"
+         y1="116.5938"
+         y2="116.5938"
+         id="line3" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         font-weight="bold"
+         lengthAdjust="spacing"
+         textLength="63.3145"
+         x="792"
+         y="109.292"
+         id="text4">Loggers</text>
+    </g>
+    <!--cluster Serialization-->
+    <g
+       class="cluster"
+       data-qualified-name="EasyLog.Serialization"
+       data-source-line="50"
+       id="ent0010">
+      <path
+         d="M593.5,703.7669 L693.498,703.7669 A3.75,3.75 0 0 1 695.998,706.2669 L702.998,726.0638 L1232.5,726.0638 A2.5,2.5 0 0 1 1235,728.5638 L1235,857.1269 A2.5,2.5 0 0 1 1232.5,859.6269 L593.5,859.6269 A2.5,2.5 0 0 1 591,857.1269 L591,706.2669 A2.5,2.5 0 0 1 593.5,703.7669"
+         fill="none"
+         style="stroke:#000000;stroke-width:1.5;"
+         id="path4" />
+      <line
+         style="stroke:#000000;stroke-width:1.5;"
+         x1="591"
+         x2="702.998"
+         y1="726.0638"
+         y2="726.0638"
+         id="line4" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         font-weight="bold"
+         lengthAdjust="spacing"
+         textLength="98.998"
+         x="595"
+         y="718.762"
+         id="text5">Serialization</text>
+    </g>
+    <!--cluster Writers-->
+    <g
+       class="cluster"
+       data-qualified-name="EasyLog.Writers"
+       data-source-line="61"
+       id="ent0013">
+      <path
+         d="M1285.5,711.9169 L1345.0703,711.9169 A3.75,3.75 0 0 1 1347.5703,714.4169 L1354.5703,734.2138 L1716.5,734.2138 A2.5,2.5 0 0 1 1719,736.7138 L1719,848.9769 A2.5,2.5 0 0 1 1716.5,851.4769 L1285.5,851.4769 A2.5,2.5 0 0 1 1283,848.9769 L1283,714.4169 A2.5,2.5 0 0 1 1285.5,711.9169"
+         fill="none"
+         style="stroke:#000000;stroke-width:1.5;"
+         id="path5" />
+      <line
+         style="stroke:#000000;stroke-width:1.5;"
+         x1="1283"
+         x2="1354.5703"
+         y1="734.2138"
+         y2="734.2138"
+         id="line5" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         font-weight="bold"
+         lengthAdjust="spacing"
+         textLength="58.5703"
+         x="1287"
+         y="726.912"
+         id="text6">Writers</text>
+    </g>
+    <!--cluster Factories-->
+    <g
+       class="cluster"
+       data-qualified-name="EasyLog.Factories"
+       data-source-line="67"
+       id="ent0015">
+      <path
+         d="M1423.5,118.7469 L1497.6514,118.7469 A3.75,3.75 0 0 1 1500.1514,121.2469 L1507.1514,141.0438 L1815.5,141.0438 A2.5,2.5 0 0 1 1818,143.5438 L1818,255.8069 A2.5,2.5 0 0 1 1815.5,258.3069 L1423.5,258.3069 A2.5,2.5 0 0 1 1421,255.8069 L1421,121.2469 A2.5,2.5 0 0 1 1423.5,118.7469"
+         fill="none"
+         style="stroke:#000000;stroke-width:1.5;"
+         id="path6" />
+      <line
+         style="stroke:#000000;stroke-width:1.5;"
+         x1="1421"
+         x2="1507.1514"
+         y1="141.0438"
+         y2="141.0438"
+         id="line6" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         font-weight="bold"
+         lengthAdjust="spacing"
+         textLength="73.1514"
+         x="1425"
+         y="133.742"
+         id="text7">Factories</text>
+    </g>
+    <!--cluster Options-->
+    <g
+       class="cluster"
+       data-qualified-name="EasyLog.Options"
+       data-source-line="73"
+       id="ent0017">
+      <path
+         d="M1797.5,322.7569 L1859.832,322.7569 A3.75,3.75 0 0 1 1862.332,325.2569 L1869.332,345.0538 L2070.5,345.0538 A2.5,2.5 0 0 1 2073,347.5538 L2073,661.2669 A2.5,2.5 0 0 1 2070.5,663.7669 L1797.5,663.7669 A2.5,2.5 0 0 1 1795,661.2669 L1795,325.2569 A2.5,2.5 0 0 1 1797.5,322.7569"
+         fill="none"
+         style="stroke:#000000;stroke-width:1.5;"
+         id="path7" />
+      <line
+         style="stroke:#000000;stroke-width:1.5;"
+         x1="1795"
+         x2="1869.332"
+         y1="345.0538"
+         y2="345.0538"
+         id="line7" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         font-weight="bold"
+         lengthAdjust="spacing"
+         textLength="61.332"
+         x="1799"
+         y="337.752"
+         id="text8">Options</text>
+    </g>
+    <!--cluster Utils-->
+    <g
+       class="cluster"
+       data-qualified-name="EasyLog.Utils"
+       data-source-line="85"
+       id="ent0020">
+      <path
+         d="M32.5,347.0469 L69.4912,347.0469 A3.75,3.75 0 0 1 71.9912,349.5469 L78.9912,369.3438 L635.5,369.3438 A2.5,2.5 0 0 1 638,371.8438 L638,468.1069 A2.5,2.5 0 0 1 635.5,470.6069 L32.5,470.6069 A2.5,2.5 0 0 1 30,468.1069 L30,349.5469 A2.5,2.5 0 0 1 32.5,347.0469"
+         fill="none"
+         style="stroke:#000000;stroke-width:1.5;"
+         id="path8" />
+      <line
+         style="stroke:#000000;stroke-width:1.5;"
+         x1="30"
+         x2="78.9912"
+         y1="369.3438"
+         y2="369.3438"
+         id="line8" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         font-weight="bold"
+         lengthAdjust="spacing"
+         textLength="35.9912"
+         x="34"
+         y="362.042"
+         id="text9">Utils</text>
+    </g>
+    <!--class ILoggerT-->
+    <g
+       class="entity"
+       data-qualified-name="EasyLog.Interfaces.ILoggerT"
+       data-source-line="22"
+       id="ent0004">
+      <rect
+         fill="#E8F5E9"
+         height="72.5625"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#2E7D32;stroke-width:0.5;"
+         width="158.8906"
+         x="1572.55"
+         y="382.0469"
+         id="rect9" />
+      <ellipse
+         cx="1615.6671"
+         cy="402.1797"
+         fill="#B4A7E5"
+         rx="11"
+         ry="11"
+         style="stroke:#181818;stroke-width:1;"
+         id="ellipse9" />
+      <path
+         d="M1611.589,397.9453 L1611.589,395.7891 L1618.9796,395.7891 L1618.9796,397.9453 L1616.5108,397.9453 L1616.5108,406.0234 L1618.9796,406.0234 L1618.9796,408.1797 L1611.589,408.1797 L1611.589,406.0234 L1614.0577,406.0234 L1614.0577,397.9453 L1611.589,397.9453 Z "
+         fill="#000000"
+         id="path9" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="12"
+         font-style="italic"
+         lengthAdjust="spacing"
+         textLength="68.4082"
+         x="1633.9153"
+         y="398.1855"
+         id="text10">«Interface»</text>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         font-style="italic"
+         lengthAdjust="spacing"
+         textLength="61.1885"
+         x="1637.5252"
+         y="414.0107"
+         id="text11">ILoggerT</text>
+      <line
+         style="stroke:#2E7D32;stroke-width:0.5;"
+         x1="1573.55"
+         x2="1730.4406"
+         y1="422.3125"
+         y2="422.3125"
+         id="line11" />
+      <line
+         style="stroke:#2E7D32;stroke-width:0.5;"
+         x1="1573.55"
+         x2="1730.4406"
+         y1="430.3125"
+         y2="430.3125"
+         id="line12" />
+      <g
+         data-visibility-modifier="PUBLIC_METHOD"
+         id="g12">
+        <ellipse
+           cx="1583.55"
+           cy="443.9609"
+           fill="#84BE84"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse12" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="132.8906"
+         x="1592.55"
+         y="447.3076"
+         id="text12">bool Write(T entry)</text>
+    </g>
+    <!--class ILogSerializer-->
+    <g
+       class="entity"
+       data-qualified-name="EasyLog.Interfaces.ILogSerializer"
+       data-source-line="26"
+       id="ent0005">
+      <rect
+         fill="#E8F5E9"
+         height="88.8594"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#2E7D32;stroke-width:0.5;"
+         width="225.6367"
+         x="864.18"
+         y="373.8969"
+         id="rect12" />
+      <ellipse
+         cx="925.4471"
+         cy="394.0297"
+         fill="#B4A7E5"
+         rx="11"
+         ry="11"
+         style="stroke:#181818;stroke-width:1;"
+         id="ellipse13" />
+      <path
+         d="M921.369,389.7953 L921.369,387.6391 L928.7596,387.6391 L928.7596,389.7953 L926.2908,389.7953 L926.2908,397.8734 L928.7596,397.8734 L928.7596,400.0297 L921.369,400.0297 L921.369,397.8734 L923.8377,397.8734 L923.8377,389.7953 L921.369,389.7953 Z "
+         fill="#000000"
+         id="path13" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="12"
+         font-style="italic"
+         lengthAdjust="spacing"
+         textLength="68.4082"
+         x="959.0443"
+         y="390.0355"
+         id="text13">«Interface»</text>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         font-style="italic"
+         lengthAdjust="spacing"
+         textLength="94.6025"
+         x="945.9471"
+         y="405.8607"
+         id="text14">ILogSerializer</text>
+      <line
+         style="stroke:#2E7D32;stroke-width:0.5;"
+         x1="865.18"
+         x2="1088.8167"
+         y1="414.1625"
+         y2="414.1625"
+         id="line14" />
+      <g
+         data-visibility-modifier="PUBLIC_FIELD"
+         id="g14">
+        <ellipse
+           cx="875.18"
+           cy="427.8109"
+           fill="none"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse14" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="137.8125"
+         x="884.18"
+         y="431.1576"
+         id="text15">string FileExtension</text>
+      <line
+         style="stroke:#2E7D32;stroke-width:0.5;"
+         x1="865.18"
+         x2="1088.8167"
+         y1="438.4594"
+         y2="438.4594"
+         id="line15" />
+      <g
+         data-visibility-modifier="PUBLIC_METHOD"
+         id="g15">
+        <ellipse
+           cx="875.18"
+           cy="452.1078"
+           fill="#84BE84"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse15" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="199.6367"
+         x="884.18"
+         y="455.4545"
+         id="text16">string Serialize(object entry)</text>
+    </g>
+    <!--class ILogWriter-->
+    <g
+       class="entity"
+       data-qualified-name="EasyLog.Interfaces.ILogWriter"
+       data-source-line="31"
+       id="ent0006">
+      <rect
+         fill="#E8F5E9"
+         height="72.5625"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#2E7D32;stroke-width:0.5;"
+         width="323.1172"
+         x="1169.44"
+         y="382.0469"
+         id="rect16" />
+      <ellipse
+         cx="1290.3848"
+         cy="402.1797"
+         fill="#B4A7E5"
+         rx="11"
+         ry="11"
+         style="stroke:#181818;stroke-width:1;"
+         id="ellipse16" />
+      <path
+         d="M1286.3067,397.9453 L1286.3067,395.7891 L1293.6973,395.7891 L1293.6973,397.9453 L1291.2286,397.9453 L1291.2286,406.0234 L1293.6973,406.0234 L1293.6973,408.1797 L1286.3067,408.1797 L1286.3067,406.0234 L1288.7754,406.0234 L1288.7754,397.9453 L1286.3067,397.9453 Z "
+         fill="#000000"
+         id="path16" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="12"
+         font-style="italic"
+         lengthAdjust="spacing"
+         textLength="68.4082"
+         x="1313.0445"
+         y="398.1855"
+         id="text17">«Interface»</text>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         font-style="italic"
+         lengthAdjust="spacing"
+         textLength="72.7275"
+         x="1310.8848"
+         y="414.0107"
+         id="text18">ILogWriter</text>
+      <line
+         style="stroke:#2E7D32;stroke-width:0.5;"
+         x1="1170.44"
+         x2="1491.5572"
+         y1="422.3125"
+         y2="422.3125"
+         id="line18" />
+      <line
+         style="stroke:#2E7D32;stroke-width:0.5;"
+         x1="1170.44"
+         x2="1491.5572"
+         y1="430.3125"
+         y2="430.3125"
+         id="line19" />
+      <g
+         data-visibility-modifier="PUBLIC_METHOD"
+         id="g19">
+        <ellipse
+           cx="1180.44"
+           cy="443.9609"
+           fill="#84BE84"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse19" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="297.1172"
+         x="1189.44"
+         y="447.3076"
+         id="text19">bool Write(string filepath, string message)</text>
+    </g>
+    <!--class DailyLoggerT-->
+    <g
+       class="entity"
+       data-qualified-name="EasyLog.Loggers.DailyLoggerT"
+       data-source-line="37"
+       id="ent0008"
+       transform="translate(0,9.0559563)">
+      <rect
+         fill="#fff9c4"
+         height="121.4531"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#f9a825;stroke-width:0.5"
+         width="211.6162"
+         x="876.19"
+         y="137.29691"
+         id="rect19" />
+      <circle
+         cx="931.50641"
+         cy="157.4297"
+         fill="#add1b2"
+         style="stroke:#181818;stroke-width:1"
+         id="ellipse20"
+         r="11" />
+      <path
+         d="m 934.4752,163.0703 q -0.5782,0.2969 -1.2188,0.4375 -0.6406,0.1563 -1.3437,0.1563 -2.5,0 -3.8282,-1.6407 -1.3125,-1.6562 -1.3125,-4.7812 0,-3.125 1.3125,-4.7813 1.3282,-1.6562 3.8282,-1.6562 0.7031,0 1.3437,0.1562 0.6563,0.1563 1.2188,0.4532 v 2.7187 q -0.625,-0.5781 -1.2188,-0.8437 -0.5937,-0.2813 -1.2187,-0.2813 -1.3438,0 -2.0313,1.0781 -0.6875,1.0625 -0.6875,3.1563 0,2.0937 0.6875,3.1719 0.6875,1.0625 2.0313,1.0625 0.625,0 1.2187,-0.2657 0.5938,-0.2812 1.2188,-0.8593 z"
+         fill="#000000"
+         id="path20" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="12px"
+         font-style="italic"
+         lengthAdjust="spacing"
+         textLength="64.617203"
+         x="965.93951"
+         y="153.4355"
+         id="text20">«EasyLog»</text>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14px"
+         lengthAdjust="spacing"
+         textLength="92.483398"
+         x="952.00641"
+         y="169.2607"
+         id="text21">DailyLoggerT</text>
+      <line
+         style="stroke:#f9a825;stroke-width:0.5"
+         x1="877.19"
+         x2="1086.8062"
+         y1="177.5625"
+         y2="177.5625"
+         id="line21" />
+      <g
+         data-visibility-modifier="PRIVATE_FIELD"
+         id="g21">
+        <rect
+           fill="none"
+           height="6"
+           style="stroke:#c82930;stroke-width:1"
+           width="6"
+           x="884.19"
+           y="188.21091"
+           id="rect21" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14px"
+         lengthAdjust="spacing"
+         textLength="130.8125"
+         x="896.19"
+         y="194.5576"
+         id="text22">string logDirectory</text>
+      <g
+         data-visibility-modifier="PRIVATE_FIELD"
+         id="g22">
+        <rect
+           fill="none"
+           height="6"
+           style="stroke:#c82930;stroke-width:1"
+           width="6"
+           x="884.19"
+           y="204.5078"
+           id="rect22" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14px"
+         lengthAdjust="spacing"
+         textLength="185.6162"
+         x="896.19"
+         y="210.85451"
+         id="text23">ILogSerializer logSerializer</text>
+      <g
+         data-visibility-modifier="PRIVATE_FIELD"
+         id="g23">
+        <rect
+           fill="none"
+           height="6"
+           style="stroke:#c82930;stroke-width:1"
+           width="6"
+           x="884.19"
+           y="220.8047"
+           id="rect23" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14px"
+         lengthAdjust="spacing"
+         textLength="141.8662"
+         x="896.19"
+         y="227.1514"
+         id="text24">ILogWriter logWriter</text>
+      <line
+         style="stroke:#f9a825;stroke-width:0.5"
+         x1="877.19"
+         x2="1086.8062"
+         y1="234.45309"
+         y2="234.45309"
+         id="line24" />
+      <g
+         data-visibility-modifier="PUBLIC_METHOD"
+         id="g24">
+        <circle
+           cx="887.19"
+           cy="248.10159"
+           fill="#84be84"
+           style="stroke:#038048;stroke-width:1"
+           id="ellipse24"
+           r="3" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14px"
+         lengthAdjust="spacing"
+         textLength="132.89059"
+         x="896.19"
+         y="251.4482"
+         id="text25">bool Write(T entry)</text>
+    </g>
+    <!--class SafeLoggerT-->
+    <g
+       class="entity"
+       data-qualified-name="EasyLog.Loggers.SafeLoggerT"
+       data-source-line="44"
+       id="ent0009">
+      <rect
+         fill="#FFF9C4"
+         height="88.8594"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#F9A825;stroke-width:0.5;"
+         width="176.1514"
+         x="1167.92"
+         y="153.5969"
+         id="rect25" />
+      <ellipse
+         cx="1208.1578"
+         cy="173.7297"
+         fill="#ADD1B2"
+         rx="11"
+         ry="11"
+         style="stroke:#181818;stroke-width:1;"
+         id="ellipse25" />
+      <path
+         d="M1211.1265,179.3703 Q1210.5484,179.6672 1209.9078,179.8078 Q1209.2672,179.9641 1208.564,179.9641 Q1206.064,179.9641 1204.7359,178.3234 Q1203.4234,176.6672 1203.4234,173.5422 Q1203.4234,170.4172 1204.7359,168.7609 Q1206.064,167.1047 1208.564,167.1047 Q1209.2672,167.1047 1209.9078,167.2609 Q1210.564,167.4172 1211.1265,167.7141 L1211.1265,170.4328 Q1210.5015,169.8547 1209.9078,169.5891 Q1209.314,169.3078 1208.689,169.3078 Q1207.3453,169.3078 1206.6578,170.3859 Q1205.9703,171.4484 1205.9703,173.5422 Q1205.9703,175.6359 1206.6578,176.7141 Q1207.3453,177.7766 1208.689,177.7766 Q1209.314,177.7766 1209.9078,177.5109 Q1210.5015,177.2297 1211.1265,176.6516 L1211.1265,179.3703 Z "
+         fill="#000000"
+         id="path25" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="12"
+         font-style="italic"
+         lengthAdjust="spacing"
+         textLength="64.6172"
+         x="1239.4913"
+         y="169.7355"
+         id="text26">«EasyLog»</text>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="88.0674"
+         x="1227.7662"
+         y="185.5607"
+         id="text27">SafeLoggerT</text>
+      <line
+         style="stroke:#F9A825;stroke-width:0.5;"
+         x1="1168.92"
+         x2="1343.0714"
+         y1="193.8625"
+         y2="193.8625"
+         id="line27" />
+      <g
+         data-visibility-modifier="PRIVATE_FIELD"
+         id="g27">
+        <rect
+           fill="none"
+           height="6"
+           style="stroke:#C82930;stroke-width:1;"
+           width="6"
+           x="1175.92"
+           y="204.5109"
+           id="rect27" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="150.1514"
+         x="1187.92"
+         y="210.8576"
+         id="text28">ILoggerT innerLogger</text>
+      <line
+         style="stroke:#F9A825;stroke-width:0.5;"
+         x1="1168.92"
+         x2="1343.0714"
+         y1="218.1594"
+         y2="218.1594"
+         id="line28" />
+      <g
+         data-visibility-modifier="PUBLIC_METHOD"
+         id="g28">
+        <ellipse
+           cx="1178.92"
+           cy="231.8078"
+           fill="#84BE84"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse28" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="132.8906"
+         x="1187.92"
+         y="235.1545"
+         id="text29">bool Write(T entry)</text>
+    </g>
+    <!--class JsonSerializer-->
+    <g
+       class="entity"
+       data-qualified-name="EasyLog.Serialization.JsonSerializer"
+       data-source-line="51"
+       id="ent0011">
+      <rect
+         fill="#FFF9C4"
+         height="88.8594"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#F9A825;stroke-width:0.5;"
+         width="225.6367"
+         x="679.18"
+         y="746.7669"
+         id="rect29" />
+      <ellipse
+         cx="740.7069"
+         cy="766.8997"
+         fill="#ADD1B2"
+         rx="11"
+         ry="11"
+         style="stroke:#181818;stroke-width:1;"
+         id="ellipse29" />
+      <path
+         d="M743.6756,772.5403 Q743.0975,772.8372 742.4569,772.9778 Q741.8162,773.1341 741.1131,773.1341 Q738.6131,773.1341 737.285,771.4934 Q735.9725,769.8372 735.9725,766.7122 Q735.9725,763.5872 737.285,761.9309 Q738.6131,760.2747 741.1131,760.2747 Q741.8162,760.2747 742.4569,760.4309 Q743.1131,760.5872 743.6756,760.8841 L743.6756,763.6028 Q743.0506,763.0247 742.4569,762.7591 Q741.8631,762.4778 741.2381,762.4778 Q739.8944,762.4778 739.2069,763.5559 Q738.5194,764.6184 738.5194,766.7122 Q738.5194,768.8059 739.2069,769.8841 Q739.8944,770.9466 741.2381,770.9466 Q741.8631,770.9466 742.4569,770.6809 Q743.0506,770.3997 743.6756,769.8216 L743.6756,772.5403 Z "
+         fill="#000000"
+         id="path29" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="12"
+         font-style="italic"
+         lengthAdjust="spacing"
+         textLength="64.6172"
+         x="775.9398"
+         y="762.9055"
+         id="text30">«EasyLog»</text>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="94.083"
+         x="761.2069"
+         y="778.7307"
+         id="text31">JsonSerializer</text>
+      <line
+         style="stroke:#F9A825;stroke-width:0.5;"
+         x1="680.18"
+         x2="903.8167"
+         y1="787.0325"
+         y2="787.0325"
+         id="line31" />
+      <g
+         data-visibility-modifier="PUBLIC_FIELD"
+         id="g31">
+        <ellipse
+           cx="690.18"
+           cy="800.6809"
+           fill="none"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse31" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="137.8125"
+         x="699.18"
+         y="804.0276"
+         id="text32">string FileExtension</text>
+      <line
+         style="stroke:#F9A825;stroke-width:0.5;"
+         x1="680.18"
+         x2="903.8167"
+         y1="811.3294"
+         y2="811.3294"
+         id="line32" />
+      <g
+         data-visibility-modifier="PUBLIC_METHOD"
+         id="g32">
+        <ellipse
+           cx="690.18"
+           cy="824.9778"
+           fill="#84BE84"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse32" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="199.6367"
+         x="699.18"
+         y="828.3245"
+         id="text33">string Serialize(object entry)</text>
+    </g>
+    <!--class XmlSerializer-->
+    <g
+       class="entity"
+       data-qualified-name="EasyLog.Serialization.XmlSerializer"
+       data-source-line="55"
+       id="ent0012">
+      <rect
+         fill="#FFF9C4"
+         height="88.8594"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#F9A825;stroke-width:0.5;"
+         width="225.6367"
+         x="985.18"
+         y="746.7669"
+         id="rect33" />
+      <ellipse
+         cx="1047.5784"
+         cy="766.8997"
+         fill="#ADD1B2"
+         rx="11"
+         ry="11"
+         style="stroke:#181818;stroke-width:1;"
+         id="ellipse33" />
+      <path
+         d="M1050.5472,772.5403 Q1049.9691,772.8372 1049.3284,772.9778 Q1048.6878,773.1341 1047.9847,773.1341 Q1045.4847,773.1341 1044.1566,771.4934 Q1042.8441,769.8372 1042.8441,766.7122 Q1042.8441,763.5872 1044.1566,761.9309 Q1045.4847,760.2747 1047.9847,760.2747 Q1048.6878,760.2747 1049.3284,760.4309 Q1049.9847,760.5872 1050.5472,760.8841 L1050.5472,763.6028 Q1049.9222,763.0247 1049.3284,762.7591 Q1048.7347,762.4778 1048.1097,762.4778 Q1046.7659,762.4778 1046.0784,763.5559 Q1045.3909,764.6184 1045.3909,766.7122 Q1045.3909,768.8059 1046.0784,769.8841 Q1046.7659,770.9466 1048.1097,770.9466 Q1048.7347,770.9466 1049.3284,770.6809 Q1049.9222,770.3997 1050.5472,769.8216 L1050.5472,772.5403 Z "
+         fill="#000000"
+         id="path33" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="12"
+         font-style="italic"
+         lengthAdjust="spacing"
+         textLength="64.6172"
+         x="1081.9398"
+         y="762.9055"
+         id="text34">«EasyLog»</text>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="92.3398"
+         x="1068.0784"
+         y="778.7307"
+         id="text35">XmlSerializer</text>
+      <line
+         style="stroke:#F9A825;stroke-width:0.5;"
+         x1="986.18"
+         x2="1209.8167"
+         y1="787.0325"
+         y2="787.0325"
+         id="line35" />
+      <g
+         data-visibility-modifier="PUBLIC_FIELD"
+         id="g35">
+        <ellipse
+           cx="996.18"
+           cy="800.6809"
+           fill="none"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse35" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="137.8125"
+         x="1005.18"
+         y="804.0276"
+         id="text36">string FileExtension</text>
+      <line
+         style="stroke:#F9A825;stroke-width:0.5;"
+         x1="986.18"
+         x2="1209.8167"
+         y1="811.3294"
+         y2="811.3294"
+         id="line36" />
+      <g
+         data-visibility-modifier="PUBLIC_METHOD"
+         id="g36">
+        <ellipse
+           cx="996.18"
+           cy="824.9778"
+           fill="#84BE84"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse36" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="199.6367"
+         x="1005.18"
+         y="828.3245"
+         id="text37">string Serialize(object entry)</text>
+    </g>
+    <!--class FileLogWriter-->
+    <g
+       class="entity"
+       data-qualified-name="EasyLog.Writers.FileLogWriter"
+       data-source-line="62"
+       id="ent0014">
+      <rect
+         fill="#FFF9C4"
+         height="72.5625"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#F9A825;stroke-width:0.5;"
+         width="323.1172"
+         x="1371.44"
+         y="754.9169"
+         id="rect37" />
+      <ellipse
+         cx="1482.2266"
+         cy="775.0497"
+         fill="#ADD1B2"
+         rx="11"
+         ry="11"
+         style="stroke:#181818;stroke-width:1;"
+         id="ellipse37" />
+      <path
+         d="M1485.1954,780.6903 Q1484.6172,780.9872 1483.9766,781.1278 Q1483.336,781.2841 1482.6329,781.2841 Q1480.1329,781.2841 1478.8047,779.6434 Q1477.4922,777.9872 1477.4922,774.8622 Q1477.4922,771.7372 1478.8047,770.0809 Q1480.1329,768.4247 1482.6329,768.4247 Q1483.336,768.4247 1483.9766,768.5809 Q1484.6329,768.7372 1485.1954,769.0341 L1485.1954,771.7528 Q1484.5704,771.1747 1483.9766,770.9091 Q1483.3829,770.6278 1482.7579,770.6278 Q1481.4141,770.6278 1480.7266,771.7059 Q1480.0391,772.7684 1480.0391,774.8622 Q1480.0391,776.9559 1480.7266,778.0341 Q1481.4141,779.0966 1482.7579,779.0966 Q1483.3829,779.0966 1483.9766,778.8309 Q1484.5704,778.5497 1485.1954,777.9716 L1485.1954,780.6903 Z "
+         fill="#000000"
+         id="path37" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="12"
+         font-style="italic"
+         lengthAdjust="spacing"
+         textLength="64.6172"
+         x="1516.94"
+         y="771.0555"
+         id="text38">«EasyLog»</text>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="93.0439"
+         x="1502.7266"
+         y="786.8807"
+         id="text39">FileLogWriter</text>
+      <line
+         style="stroke:#F9A825;stroke-width:0.5;"
+         x1="1372.44"
+         x2="1693.5572"
+         y1="795.1825"
+         y2="795.1825"
+         id="line39" />
+      <line
+         style="stroke:#F9A825;stroke-width:0.5;"
+         x1="1372.44"
+         x2="1693.5572"
+         y1="803.1825"
+         y2="803.1825"
+         id="line40" />
+      <g
+         data-visibility-modifier="PUBLIC_METHOD"
+         id="g40">
+        <ellipse
+           cx="1382.44"
+           cy="816.8309"
+           fill="#84BE84"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse40" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="297.1172"
+         x="1391.44"
+         y="820.1776"
+         id="text40">bool Write(string filepath, string message)</text>
+    </g>
+    <!--class LoggerFactory-->
+    <g
+       class="entity"
+       data-qualified-name="EasyLog.Factories.LoggerFactory"
+       data-source-line="68"
+       id="ent0016"
+       transform="translate(18.111913,-15.642106)">
+      <rect
+         fill="#fff9c4"
+         height="72.5625"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#f9a825;stroke-width:0.5"
+         width="284.67191"
+         x="1509.66"
+         y="161.7469"
+         id="rect40" />
+      <circle
+         cx="1597.2795"
+         cy="181.8797"
+         fill="#add1b2"
+         style="stroke:#181818;stroke-width:1"
+         id="ellipse41"
+         r="11" />
+      <path
+         d="m 1600.2484,187.5203 q -0.5781,0.2969 -1.2188,0.4375 -0.6406,0.1563 -1.3437,0.1563 -2.5,0 -3.8281,-1.6407 -1.3125,-1.6562 -1.3125,-4.7812 0,-3.125 1.3125,-4.7813 1.3281,-1.6562 3.8281,-1.6562 0.7031,0 1.3437,0.1562 0.6563,0.1563 1.2188,0.4532 v 2.7187 q -0.625,-0.5781 -1.2188,-0.8437 -0.5937,-0.2813 -1.2187,-0.2813 -1.3438,0 -2.0313,1.0781 -0.6875,1.0625 -0.6875,3.1563 0,2.0937 0.6875,3.1719 0.6875,1.0625 2.0313,1.0625 0.625,0 1.2187,-0.2657 0.5938,-0.2812 1.2188,-0.8593 z"
+         fill="#000000"
+         id="path41" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="12px"
+         font-style="italic"
+         lengthAdjust="spacing"
+         textLength="64.617203"
+         x="1635.9373"
+         y="177.8855"
+         id="text41">«EasyLog»</text>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14px"
+         lengthAdjust="spacing"
+         textLength="100.9326"
+         x="1617.7795"
+         y="193.71069"
+         id="text42">LoggerFactory</text>
+      <line
+         style="stroke:#f9a825;stroke-width:0.5"
+         x1="1510.66"
+         x2="1793.3319"
+         y1="202.0125"
+         y2="202.0125"
+         id="line42" />
+      <line
+         style="stroke:#f9a825;stroke-width:0.5"
+         x1="1510.66"
+         x2="1793.3319"
+         y1="210.0125"
+         y2="210.0125"
+         id="line43" />
+      <g
+         data-visibility-modifier="PUBLIC_METHOD"
+         id="g43">
+        <circle
+           cx="1520.66"
+           cy="223.6609"
+           fill="#84be84"
+           style="stroke:#038048;stroke-width:1"
+           id="ellipse43"
+           r="3" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14px"
+         lengthAdjust="spacing"
+         text-decoration="underline"
+         textLength="258.67191"
+         x="1529.66"
+         y="227.0076"
+         id="text43"
+         style="text-decoration:underline;text-decoration-line:underline">ILoggerT Create(LogOptions options)</text>
+    </g>
+    <!--class LogOptions-->
+    <g
+       class="entity"
+       data-qualified-name="EasyLog.Options.LogOptions"
+       data-source-line="74"
+       id="ent0018">
+      <rect
+         fill="#FFF9C4"
+         height="105.1563"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#F9A825;stroke-width:0.5;"
+         width="166.0273"
+         x="1818.99"
+         y="365.7569"
+         id="rect43" />
+      <ellipse
+         cx="1858.631"
+         cy="385.8897"
+         fill="#ADD1B2"
+         rx="11"
+         ry="11"
+         style="stroke:#181818;stroke-width:1;"
+         id="ellipse44" />
+      <path
+         d="M1861.5998,391.5303 Q1861.0216,391.8272 1860.381,391.9678 Q1859.7404,392.1241 1859.0373,392.1241 Q1856.5373,392.1241 1855.2091,390.4834 Q1853.8966,388.8272 1853.8966,385.7022 Q1853.8966,382.5772 1855.2091,380.9209 Q1856.5373,379.2647 1859.0373,379.2647 Q1859.7404,379.2647 1860.381,379.4209 Q1861.0373,379.5772 1861.5998,379.8741 L1861.5998,382.5928 Q1860.9748,382.0147 1860.381,381.7491 Q1859.7873,381.4678 1859.1623,381.4678 Q1857.8185,381.4678 1857.131,382.5459 Q1856.4435,383.6084 1856.4435,385.7022 Q1856.4435,387.7959 1857.131,388.8741 Q1857.8185,389.9366 1859.1623,389.9366 Q1859.7873,389.9366 1860.381,389.6709 Q1860.9748,389.3897 1861.5998,388.8116 L1861.5998,391.5303 Z "
+         fill="#000000"
+         id="path44" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="12"
+         font-style="italic"
+         lengthAdjust="spacing"
+         textLength="64.6172"
+         x="1885.433"
+         y="381.8955"
+         id="text44">«EasyLog»</text>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="79.2695"
+         x="1878.1068"
+         y="397.7207"
+         id="text45">LogOptions</text>
+      <line
+         style="stroke:#F9A825;stroke-width:0.5;"
+         x1="1819.99"
+         x2="1984.0173"
+         y1="406.0225"
+         y2="406.0225"
+         id="line45" />
+      <g
+         data-visibility-modifier="PUBLIC_FIELD"
+         id="g45">
+        <ellipse
+           cx="1829.99"
+           cy="419.6709"
+           fill="none"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse45" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="134.7227"
+         x="1838.99"
+         y="423.0176"
+         id="text46">string LogDirectory</text>
+      <g
+         data-visibility-modifier="PUBLIC_FIELD"
+         id="g46">
+        <ellipse
+           cx="1829.99"
+           cy="435.9678"
+           fill="none"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse46" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="129.8623"
+         x="1838.99"
+         y="439.3145"
+         id="text47">LogFormat Format</text>
+      <g
+         data-visibility-modifier="PUBLIC_FIELD"
+         id="g47">
+        <ellipse
+           cx="1829.99"
+           cy="452.2647"
+           fill="none"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse47" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="140.0273"
+         x="1838.99"
+         y="455.6114"
+         id="text48">bool UseSafeLogger</text>
+      <line
+         style="stroke:#F9A825;stroke-width:0.5;"
+         x1="1819.99"
+         x2="1984.0173"
+         y1="462.9131"
+         y2="462.9131"
+         id="line48" />
+    </g>
+    <!--class LogFormat-->
+    <g
+       class="entity"
+       data-qualified-name="EasyLog.Options.LogFormat"
+       data-source-line="79"
+       id="ent0019">
+      <rect
+         fill="#FFF9C4"
+         height="88.8594"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#F9A825;stroke-width:0.5;"
+         width="107.332"
+         x="1848.33"
+         y="550.9069"
+         id="rect48" />
+      <ellipse
+         cx="1863.33"
+         cy="571.0397"
+         fill="#EB937F"
+         rx="11"
+         ry="11"
+         style="stroke:#181818;stroke-width:1;"
+         id="ellipse48" />
+      <path
+         d="M1867.4394,577.0397 L1859.7206,577.0397 L1859.7206,564.6491 L1867.4394,564.6491 L1867.4394,566.8053 L1862.1738,566.8053 L1862.1738,569.4772 L1866.9394,569.4772 L1866.9394,571.6334 L1862.1738,571.6334 L1862.1738,574.8834 L1867.4394,574.8834 L1867.4394,577.0397 Z "
+         fill="#000000"
+         id="path48" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="12"
+         font-style="italic"
+         lengthAdjust="spacing"
+         textLength="64.6172"
+         x="1882.6874"
+         y="567.0455"
+         id="text49">«EasyLog»</text>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="75.332"
+         x="1877.33"
+         y="582.8707"
+         id="text50">LogFormat</text>
+      <line
+         style="stroke:#F9A825;stroke-width:0.5;"
+         x1="1849.33"
+         x2="1954.662"
+         y1="591.1725"
+         y2="591.1725"
+         id="line50" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="28.8613"
+         x="1854.33"
+         y="608.1676"
+         id="text51">Json</text>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="27.1182"
+         x="1854.33"
+         y="624.4645"
+         id="text52">Xml</text>
+      <line
+         style="stroke:#F9A825;stroke-width:0.5;"
+         x1="1849.33"
+         x2="1954.662"
+         y1="631.7663"
+         y2="631.7663"
+         id="line52" />
+    </g>
+    <!--class DailyFileHelper-->
+    <g
+       class="entity"
+       data-qualified-name="EasyLog.Utils.DailyFileHelper"
+       data-source-line="86"
+       id="ent0021">
+      <rect
+         fill="#FFF9C4"
+         height="72.5625"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#F9A825;stroke-width:0.5;"
+         width="575.0693"
+         x="46.47"
+         y="382.0469"
+         id="rect52" />
+      <ellipse
+         cx="276.677"
+         cy="402.1797"
+         fill="#ADD1B2"
+         rx="11"
+         ry="11"
+         style="stroke:#181818;stroke-width:1;"
+         id="ellipse52" />
+      <path
+         d="M279.6458,407.8203 Q279.0677,408.1172 278.427,408.2578 Q277.7864,408.4141 277.0833,408.4141 Q274.5833,408.4141 273.2552,406.7734 Q271.9427,405.1172 271.9427,401.9922 Q271.9427,398.8672 273.2552,397.2109 Q274.5833,395.5547 277.0833,395.5547 Q277.7864,395.5547 278.427,395.7109 Q279.0833,395.8672 279.6458,396.1641 L279.6458,398.8828 Q279.0208,398.3047 278.427,398.0391 Q277.8333,397.7578 277.2083,397.7578 Q275.8645,397.7578 275.177,398.8359 Q274.4895,399.8984 274.4895,401.9922 Q274.4895,404.0859 275.177,405.1641 Q275.8645,406.2266 277.2083,406.2266 Q277.8333,406.2266 278.427,405.9609 Q279.0208,405.6797 279.6458,405.1016 L279.6458,407.8203 Z "
+         fill="#000000"
+         id="path52" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="12"
+         font-style="italic"
+         lengthAdjust="spacing"
+         textLength="64.6172"
+         x="317.9461"
+         y="398.1855"
+         id="text53">«EasyLog»</text>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="106.1553"
+         x="297.177"
+         y="414.0107"
+         id="text54">DailyFileHelper</text>
+      <line
+         style="stroke:#F9A825;stroke-width:0.5;"
+         x1="47.47"
+         x2="620.5393"
+         y1="422.3125"
+         y2="422.3125"
+         id="line54" />
+      <line
+         style="stroke:#F9A825;stroke-width:0.5;"
+         x1="47.47"
+         x2="620.5393"
+         y1="430.3125"
+         y2="430.3125"
+         id="line55" />
+      <g
+         data-visibility-modifier="PUBLIC_METHOD"
+         id="g55">
+        <ellipse
+           cx="57.47"
+           cy="443.9609"
+           fill="#84BE84"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse55" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         text-decoration="underline"
+         textLength="549.0693"
+         x="66.47"
+         y="447.3076"
+         id="text55">string GetLogFilePath(string logDirectory, string fileExtension, DateTime date)</text>
+    </g>
+    <!--reverse link ILoggerT to DailyLoggerT-->
+    <g
+       class="link"
+       data-entity-1="ent0004"
+       data-entity-2="ent0008"
+       data-link-type="extension"
+       data-source-line="97"
+       id="lnk22"
+       transform="matrix(0.9582261,0,0,0.91221697,43.478591,32.133358)">
+      <path
+         codeLine="97"
+         d="m 1604.33,363.9269 c 0,-49.87 0,-115.3 0,-115.3 0,0 -338.31,0 -516.05,0"
+         fill="none"
+         id="ILoggerT-backto-DailyLoggerT"
+         style="stroke:#0000ff;stroke-width:2" />
+      <polygon
+         fill="none"
+         points="1598.33,363.9269 1604.33,381.9269 1610.33,363.9269 "
+         style="stroke:#0000ff;stroke-width:2"
+         id="polygon55" />
+    </g>
+    <!--reverse link ILoggerT to SafeLoggerT-->
+    <g
+       class="link"
+       data-entity-1="ent0004"
+       data-entity-2="ent0009"
+       data-link-type="extension"
+       data-source-line="98"
+       id="lnk23"
+       transform="matrix(0.99971984,0,0,1.0783673,0.42299029,-30.117719)">
+      <path
+         codeLine="98"
+         d="m 1667.89,363.7669 c 0,-52.81 0,-126.14 0,-126.14 0,0 -202.5,0 -323.53,0"
+         fill="none"
+         id="ILoggerT-backto-SafeLoggerT"
+         style="stroke:#0000ff;stroke-width:2" />
+      <polygon
+         fill="none"
+         points="1673.89,363.7669 1661.89,363.7669 1667.89,381.7669 "
+         style="stroke:#0000ff;stroke-width:2"
+         id="polygon56" />
+    </g>
+    <!--link SafeLoggerT to ILoggerT-->
+    <g
+       class="link"
+       data-entity-1="ent0009"
+       data-entity-2="ent0004"
+       data-link-type="aggregation"
+       data-source-line="107"
+       id="lnk30">
+      <path
+         codeLine="107"
+         d="M1356.16,240.6269 C1468.45,240.6269 1636.11,240.6269 1636.11,240.6269 C1636.11,240.6269 1636.11,323.9469 1636.11,375.9369"
+         fill="none"
+         id="SafeLoggerT-ILoggerT"
+         style="stroke:#181818;stroke-width:1;" />
+      <polygon
+         fill="none"
+         points="1344.16,240.6269,1350.16,244.6269,1356.16,240.6269,1350.16,236.6269,1344.16,240.6269"
+         style="stroke:#181818;stroke-width:1;"
+         id="polygon57" />
+      <polygon
+         fill="#181818"
+         points="1636.11,381.9369,1640.11,372.9369,1636.11,376.9369,1632.11,372.9369,1636.11,381.9369"
+         style="stroke:#181818;stroke-width:1;"
+         id="polygon58" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="13"
+         lengthAdjust="spacing"
+         textLength="116.3018"
+         x="1443.79"
+         y="253.6938"
+         id="text58">wraps (decorator)</text>
+    </g>
+    <!--reverse link ILogSerializer to JsonSerializer-->
+    <g
+       class="link"
+       data-entity-1="ent0005"
+       data-entity-2="ent0011"
+       data-link-type="extension"
+       data-source-line="99"
+       id="lnk24">
+      <path
+         codeLine="99"
+         d="M884.5,480.9369 C884.5,552.6469 884.5,674.7969 884.5,746.5369"
+         fill="none"
+         id="ILogSerializer-backto-JsonSerializer"
+         style="stroke:#0000FF;stroke-width:2;" />
+      <polygon
+         fill="none"
+         points="884.5,462.9369,878.5,480.9369,890.5,480.9369,884.5,462.9369"
+         style="stroke:#0000FF;stroke-width:2;"
+         id="polygon59" />
+    </g>
+    <!--reverse link ILogSerializer to XmlSerializer-->
+    <g
+       class="link"
+       data-entity-1="ent0005"
+       data-entity-2="ent0012"
+       data-link-type="extension"
+       data-source-line="100"
+       id="lnk25">
+      <path
+         codeLine="100"
+         d="M1037.5,480.9369 C1037.5,552.6469 1037.5,674.7969 1037.5,746.5369"
+         fill="none"
+         id="ILogSerializer-backto-XmlSerializer"
+         style="stroke:#0000FF;stroke-width:2;" />
+      <polygon
+         fill="none"
+         points="1037.5,462.9369,1031.5,480.9369,1043.5,480.9369,1037.5,462.9369"
+         style="stroke:#0000FF;stroke-width:2;"
+         id="polygon60" />
+    </g>
+    <!--reverse link ILogWriter to FileLogWriter-->
+    <g
+       class="link"
+       data-entity-1="ent0006"
+       data-entity-2="ent0014"
+       data-link-type="extension"
+       data-source-line="101"
+       id="lnk26">
+      <path
+         codeLine="101"
+         d="M1432,473.1069 C1432,544.4769 1432,683.0469 1432,754.4269"
+         fill="none"
+         id="ILogWriter-backto-FileLogWriter"
+         style="stroke:#0000FF;stroke-width:2;" />
+      <polygon
+         fill="none"
+         points="1432,455.1069,1426,473.1069,1438,473.1069,1432,455.1069"
+         style="stroke:#0000FF;stroke-width:2;"
+         id="polygon61" />
+    </g>
+    <!--link DailyLoggerT to ILogSerializer-->
+    <g
+       class="link"
+       data-entity-1="ent0008"
+       data-entity-2="ent0005"
+       data-link-type="aggregation"
+       data-source-line="104"
+       id="lnk27"
+       transform="matrix(1.0017541,0,0,0.90069288,-1.7012172,37.194255)">
+      <path
+         codeLine="104"
+         d="m 982,271.0969 c 0,36.29 0,63.52 0,96.49"
+         fill="none"
+         id="DailyLoggerT-ILogSerializer"
+         style="stroke:#181818;stroke-width:1" />
+      <polygon
+         fill="none"
+         points="978,265.0969 982,271.0969 986,265.0969 982,259.0969 "
+         style="stroke:#181818;stroke-width:1"
+         id="polygon62" />
+      <polygon
+         fill="#181818"
+         points="986,364.5869 982,368.5869 978,364.5869 982,373.5869 "
+         style="stroke:#181818;stroke-width:1"
+         id="polygon63" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="13px"
+         lengthAdjust="spacing"
+         textLength="29.783199"
+         x="952"
+         y="312.41379"
+         id="text63">uses</text>
+    </g>
+    <!--link DailyLoggerT to ILogWriter-->
+    <g
+       class="link"
+       data-entity-1="ent0008"
+       data-entity-2="ent0006"
+       data-link-type="aggregation"
+       data-source-line="105"
+       id="lnk28"
+       transform="matrix(1.0004033,0,0,0.9134752,-0.47353213,33.106188)">
+      <path
+         codeLine="105"
+         d="m 1100.23,253.6269 c 77.32,0 156.53,0 156.53,0 0,0 0,73.63 0,122.15"
+         fill="none"
+         id="DailyLoggerT-ILogWriter"
+         style="stroke:#181818;stroke-width:1" />
+      <polygon
+         fill="none"
+         points="1094.23,257.6269 1100.23,253.6269 1094.23,249.6269 1088.23,253.6269 "
+         style="stroke:#181818;stroke-width:1"
+         id="polygon64" />
+      <polygon
+         fill="#181818"
+         points="1260.76,372.7769 1256.76,376.7769 1252.76,372.7769 1256.76,381.7769 "
+         style="stroke:#181818;stroke-width:1"
+         id="polygon65" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="13px"
+         lengthAdjust="spacing"
+         textLength="29.783199"
+         x="1206.5699"
+         y="266.69379"
+         id="text65">uses</text>
+    </g>
+    <!--link DailyLoggerT to DailyFileHelper-->
+    <g
+       class="link"
+       data-entity-1="ent0008"
+       data-entity-2="ent0021"
+       data-link-type="dependency"
+       data-source-line="106"
+       id="lnk29">
+      <path
+         codeLine="106"
+         d="M875.72,229.6269 C691.89,229.6269 334,229.6269 334,229.6269 C334,229.6269 334,321.1069 334,375.9469"
+         fill="none"
+         id="DailyLoggerT-to-DailyFileHelper"
+         style="stroke:#181818;stroke-width:1;stroke-dasharray:7,7;" />
+      <polygon
+         fill="#181818"
+         points="334,381.9469,338,372.9469,334,376.9469,330,372.9469,334,381.9469"
+         style="stroke:#181818;stroke-width:1;"
+         id="polygon66" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="13"
+         lengthAdjust="spacing"
+         textLength="29.7832"
+         x="498.7"
+         y="225.6938"
+         id="text66">uses</text>
+    </g>
+    <!--link LogOptions to LogFormat-->
+    <g
+       class="link"
+       data-entity-1="ent0018"
+       data-entity-2="ent0019"
+       data-link-type="composition"
+       data-source-line="108"
+       id="lnk31">
+      <path
+         codeLine="108"
+         d="M1902,482.9569 C1902,508.3369 1902,520.4469 1902,544.6869"
+         fill="none"
+         id="LogOptions-LogFormat"
+         style="stroke:#181818;stroke-width:1;" />
+      <polygon
+         fill="#181818"
+         points="1902,470.9569,1898,476.9569,1902,482.9569,1906,476.9569,1902,470.9569"
+         style="stroke:#181818;stroke-width:1;"
+         id="polygon67" />
+      <polygon
+         fill="#181818"
+         points="1902,550.6869,1906,541.6869,1902,545.6869,1898,541.6869,1902,550.6869"
+         style="stroke:#181818;stroke-width:1;"
+         id="polygon68" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="13"
+         lengthAdjust="spacing"
+         textLength="29.7832"
+         x="1872"
+         y="506.8838"
+         id="text68">uses</text>
+    </g>
+    <!--link LoggerFactory to ILoggerT-->
+    <g
+       class="link"
+       data-entity-1="ent0016"
+       data-entity-2="ent0004"
+       data-link-type="dependency"
+       data-source-line="111"
+       id="lnk32"
+       transform="matrix(0.99926473,0,0,1.105452,26.34328,-39.969551)">
+      <path
+         codeLine="111"
+         d="m 1699.67,234.4069 c 0,40.82 0,100.65 0,141.49"
+         fill="none"
+         id="LoggerFactory-to-ILoggerT"
+         style="stroke:#181818;stroke-width:1;stroke-dasharray:7, 7" />
+      <polygon
+         fill="#181818"
+         points="1699.67,376.8969 1695.67,372.8969 1699.67,381.8969 1703.67,372.8969 "
+         style="stroke:#181818;stroke-width:1"
+         id="polygon69" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="13px"
+         lengthAdjust="spacing"
+         textLength="48.324699"
+         x="1650.67"
+         y="304.21381"
+         id="text69">creates</text>
+    </g>
+    <!--link LoggerFactory to LogOptions-->
+    <g
+       class="link"
+       data-entity-1="ent0016"
+       data-entity-2="ent0018"
+       data-link-type="dependency"
+       data-source-line="112"
+       id="lnk33"
+       transform="matrix(0.99952335,0,0,1.1116733,0.84698833,-41.865244)">
+      <path
+         codeLine="112"
+         d="m 1762.89,234.6269 c 0,50.67 0,136 0,136 0,0 20.15,0 49.78,0"
+         fill="none"
+         id="LoggerFactory-to-LogOptions"
+         style="stroke:#181818;stroke-width:1;stroke-dasharray:7, 7" />
+      <polygon
+         fill="#181818"
+         points="1809.67,366.6269 1813.67,370.6269 1809.67,374.6269 1818.67,370.6269 "
+         style="stroke:#181818;stroke-width:1"
+         id="polygon70" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="13px"
+         lengthAdjust="spacing"
+         textLength="29.783199"
+         x="1732.89"
+         y="326.5838"
+         id="text70">uses</text>
+    </g>
+    <!--link Interfaces to Loggers-->
+    <!--link Loggers to Serialization-->
+    <!--link Options to Interfaces-->
+    <!--link Serialization to Writers-->
+    <!--link Loggers to Factories-->
+<?plantuml-src nLRRRjiu47tNLmpQXpXDPEocBPeKtG1PNveKQLCq2Rf0qGAqD9QveKY1f9gwHJuetv4Vwz2I9SgMxNfHOFLWI-JXp9dXcI5tuAyjdc07UXVlXcUlhp-SN9rTlAFlhPQR6oupfbaA8nRT95hbCkufeJJSJhX5RzvCMAnkkKnWp8JnPmINQASPWj9sehm9gM8qcC7X7zwWPlAc7FH68y6CWHy1qFDtaychLsVIeXwp28-FuV7WSFXyS5G0bOvHju4E1Y_wJm_QhGsOcPwhnC66m-5HxzcoBHzoT79uy3ou2mBBhK3eSvOGuHGXne8r6WYXN06TYypob9k7-zqWoCWrIn0UbREFoW1dFzLaHTpCvzt3vwDmHYiJr5VGZB66kcTlf9I0Zvhsh7C5AAsUxbO08jzkzX8rPu9_HxtUkB7QRNm5xwZHlnZPHJy-TiW53hvPb8OhkPd9ZBd-vH1B9sDoaZ4xsOTo84LZAAb-w9xRAkL5HXlvBWJOPrnCwtpNEcXI2KjtGYLzhYaJIa-RW8Ni2lzh6Lb6B-Pl_sbhYmWksHX_8O1AL5nArCN7DbxRiZgFa5dQykNSlZ5ADWItYjnw2MqZoBi52l-audzXi9YfOfTRzESS-jMmak3lguKXS_BbsCAca4K1cAvXyyDOslFe3lOgMVKqCk96dwuXAcb05V-Rw9JmLZ9pKvitxdnLOUxHp53fb5ae_bhIUcsmhg8MBQ7CKwZjh6RZ5DyO8Frj2F_QSh6gBpbndAB8rYgZteio5Q_HEgwqzZsfezFIkIh5Z7svxvDJYrVSdNJqihnlH7rdsxlAXy7vx9foIKVcXKwOv6RMBIW16iOY_qQdgebGnapQRQqJ_iykd3xSKrMuN7PEMMuXFAOR0AckKkQNCFpqU2Hot1yf4NyE6pr_3SnhhC52Tr_2DblTHdYZBGNUWR24RFG75_515tegpPJXHMcWXTnLlO7EMouuvhj1uqnJ8ILaWSzBMe9c1QvaqeRfTe-NX5dY_5EeCZNxUWctccL4ByP8QKRwsmsyqdxYm7LjbUOeqATTc3UYJl_XFfjfXEvCOEb2QRvIDsK2pSoMrxCSHSzrDEjAfWNaKQXzFkl2YU29n9IwEfsKNxdX8xe3PYhNhcRooERQdTiCwCg7r1X8nma6zOqEmayJ7iSeFzFTMOPbHvqJM9fkdA31d505qZoPs11gyq5vaDGGWMExQAVgy8kmaiLF?>    <path
+       style="fill:#000000;stroke-width:2.417"
+       d="M 1187.9768,277.44157 H 1076.8355"
+       id="path70" />
+    <path
+       style="fill:#000000;stroke-width:2.417"
+       d="m 1127.0549,320.25155 55.159,-39.5169"
+       id="path71" />
+  </g>
+  <metadata
+     id="metadata71">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:title>Diagramme de classes - EasyLog (Optimisé)</dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+</svg>
