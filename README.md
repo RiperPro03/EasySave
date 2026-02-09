@@ -160,7 +160,7 @@ EasySave/
 |-----------|---------|--------------|
 | **Windows** | 10+ | Obligatoire |
 | **.NET SDK** | 10.0+ | `dotnet --version` |
-| **IDE** | Visual Studio 2022+ ou Rider | Recommandé |
+| **IDE** | Visual Studio 2026+ ou Rider | Recommandé |
 | **Git** | Dernière version | `git --version` |
 
 ---

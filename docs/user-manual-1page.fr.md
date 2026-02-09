@@ -23,6 +23,23 @@ Vérifier l'installation : **dotnet --version**
 
 Depuis la racine du projet : **dotnet run --project src/EasySave.App.Console**
 
+Alternatives :
+
+ - Double-clic sur EasySave.App.Console.exe
+ - Ligne de commande avec arguments (ID des travaux de sauvegarde) :
+
+```bash
+ .\EasySave.App.Console.exe 1
+```
+
+```bash
+ .\EasySave.App.Console.exe '1;3'
+```
+
+```bash
+ .\EasySave.App.Console.exe 1-2
+```
+
 ## 4. Menu principal
 
 Au lancement, l'écran suivant apparaît : 
