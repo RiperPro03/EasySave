@@ -1,23 +1,23 @@
 # EasySave - Manuel Utilisateur (v1.0)
 
-## 1. Pr�sentation 
+## 1. Présentation 
 
-EasySave est un logiciel de sauvegarde de donn�es en ligne de commande d�velopp� en C# / .NET.
-Il permet de cr�er et d'ex�cuter des travaux de sauvegarde selon deux types de sauvegarde : 
+EasySave est un logiciel de sauvegarde de données en ligne de commande développé en C# / .NET.
+Il permet de créer et d'exécuter des travaux de sauvegarde selon deux types de sauvegarde : 
 	
-- **Sauvegarde compl�te** : copie l'ensemble des fichiers
-- **Sauvegarde diff�rentielle** : copie uniquement les fichiers modifi�s depuis la derni�re sauvegarde compl�te
+- **Sauvegarde complète** : copie l'ensemble des fichiers
+- **Sauvegarde différentielle** : copie uniquement les fichiers modifiés depuis la dernière sauvegarde complète
 
-L'application est multilingue (fran�ais et anglais) et offre une interface utilisateur simple et intuitive.
+L'application est multilingue (français et anglais) et offre une interface utilisateur simple et intuitive.
 
-## 2. Pr�requis 
+## 2. Prérequis 
 
 	- Windows 
 	- .NET SDK 10.0
 	- Visual Studio 2022+ ou Rider
 	- Git 
 
-V�rifier l'installation : **dotnet --version**
+Vérifier l'installation : **dotnet --version**
 
 ## 3. Lancement de l'application 
 
@@ -42,7 +42,7 @@ Alternatives :
 
 ## 4. Menu principal
 
-Au lancement, l'�cran suivant appara�t : 
+Au lancement, l'écran suivant apparaît : 
 ```
 =================================
  EasySave - Backup Software
@@ -56,9 +56,9 @@ Main menu
 ```
 ### Description 
 
-- **Manage backup job** : cr�er, modifier, lister et supprimer des travaux de sauvegarde 
-- **Run backup job** : ex�cuter des sauvegardes 
-- **Settings** : acc�der aux param�tres de l'application (langue, format de journalisation)
+- **Manage backup job** : créer, modifier, lister et supprimer des travaux de sauvegarde 
+- **Run backup job** : exécuter des sauvegardes 
+- **Settings** : accéder aux paramètres de l'application (langue, format de journalisation)
 - **Exit** : quitter l'application
 
 ## 5. Gestion des travaux de sauvegarde
@@ -73,12 +73,12 @@ Menu :
 ### Description
 
 - **List jobs** : afficher tous les jobs existants
-- **Create job** : cr�er un nouveau travail de sauvegarde
+- **Create job** : créer un nouveau travail de sauvegarde
 - **Update job** : modifier un travail de sauvegarde existant
 - **Delete job** : supprimer un travail de sauvegarde
 - **Back** : revenir au menu principal
 
-Informations demand�es lors de la cr�ation :  
+Informations demandées lors de la création :  
 ID, Nom, Chemin source, Chemin cible, Type de sauvegarde.
 
 **Modification d'un job**
@@ -92,7 +92,7 @@ Champs modifiables :
 	5 - Active / Inactive
 	0 - Back
 
-## 6. Ex�cution des sauvegardes
+## 6. Exécution des sauvegardes
 
 Menu :
 
@@ -102,12 +102,13 @@ Menu :
 
 ### Description
 
-- **Run one job** : ex�cute un travail s�lectionn� par son ID  
-- **Run all jobs** : ex�cute tous les travaux existants
+- **Run one job** : exécute un travail sélectionné par son ID  
+- **Run all jobs** : exécute tous les travaux existants
 
 ## 7. Settings
 
 Menu :
+
 	1 - English
 	2 - French
 	3 - Log format: JSON
@@ -117,7 +118,7 @@ Menu :
 ### Description
 
 - **English** : basculer l'interface en anglais  
-- **French** : basculer l'interface en fran�ais  
+- **French** : basculer l'interface en français  
 - **Log format: JSON** : configurer le format de journalisation en JSON  
 - **Log format: XML** : configurer le format de journalisation en XML  
 - **Back** : revenir au menu principal
@@ -126,5 +127,5 @@ Menu :
 
 	- Application console uniquement 
 	- Maximum 5 jobs 
-	- Ex�cution s�quentielle 
-	- Interface graphique pr�vue en v2
+	- Exécution séquentielle 
+	- Interface graphique prévue en v2
