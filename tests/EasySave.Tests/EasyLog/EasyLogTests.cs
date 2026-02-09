@@ -124,7 +124,11 @@ public class EasyLogTests
 
         string expectedPath = Path.Combine(root, "2026-02-05.json");
         Assert.Equal(expectedPath, writer.LastFilePath);
-        Assert.Equal("line\n", writer.LastMessage);
+        
+        string expectedContent = "<logs>\nline\n\n</logs>"; 
+        Assert.Equal(expectedContent, writer.LastMessage);
+        
+        if (Directory.Exists(root)) Directory.Delete(root, true);
     }
 
     public sealed class SampleEntry
@@ -152,6 +156,7 @@ public class EasyLogTests
         {
             LastFilePath = filepath;
             LastMessage = message;
+            
             return true;
         }
     }
