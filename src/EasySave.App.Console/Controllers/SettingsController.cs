@@ -10,6 +10,7 @@ using EasySave.EasyLog.Options;
 
 namespace EasySave.App.Console.Controllers;
 
+// Cette classe permet à l'utilisateur de modifier la langue de l'application et le format des logs
 public sealed class SettingsController
 {
     private readonly AppConfig _config;
@@ -60,10 +61,12 @@ public sealed class SettingsController
                 return;
         }
 
+        // Cette classe permet à l'utilisateur de modifier la langue de l'application et le format des logs
         _configRepository.Save(_config);
         _consoleView.WaitForKey();
     }
 
+    // Change la culture du programme pour traduire les textes instantanément
     private void UpdateLanguage(Language language)
     {
         _config.ChangeLanguage(language);
@@ -75,6 +78,7 @@ public sealed class SettingsController
         _consoleView.ShowSuccess(Strings.Info_LanguageChanged);
     }
 
+    // Modifie le type de fichier utilisé pour l'enregistrement des logs
     private void UpdateLogFormat(LogFormat logFormat)
     {
         _config.ChangeLogFormat(logFormat);

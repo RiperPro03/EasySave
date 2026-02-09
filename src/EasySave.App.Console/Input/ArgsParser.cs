@@ -1,5 +1,6 @@
 ﻿namespace EasySave.App.Console.Input;
 
+// Cette classe sert à lire et valider les numéros de travaux tapés par l'utilisateur
 public sealed class ArgsParser
 {
     private const int MinId = 1;
@@ -7,14 +8,17 @@ public sealed class ArgsParser
 
     public IReadOnlyList<int> Parse(string rawArgs)
     {
+        // Vérifie que l'utilisateur a bien tapé quelque chose
         if (string.IsNullOrWhiteSpace(rawArgs))
             throw new ArgumentException("No job ids were provided.", nameof(rawArgs));
 
+        // Nettoie les espaces inutiles pour éviter les erreurs de lecture
         var sanitized = rawArgs.Replace(" ", string.Empty);
 
         var hasRange = sanitized.Contains('-');
         var hasList = sanitized.Contains(';');
 
+        // Empêche de mélanger les tirets et les points-virgules  pour rester simple
         if (hasRange && hasList)
             throw new FormatException("Mixed range and list syntax is not supported.");
 
