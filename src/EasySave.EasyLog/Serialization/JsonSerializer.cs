@@ -3,15 +3,19 @@ using EasySave.EasyLog.Interfaces;
 
 namespace EasySave.EasyLog.Serialization
 {
+    // Cette classe est responsable de la transformation des objets en format JSON
     internal sealed class JsonSerializer : ILogSerializer
     {
+        //On désactive l'indentation pour que chaque entrée de log tienne sur une seule ligne
         private static readonly JsonSerializerOptions Options = new JsonSerializerOptions
         {
             WriteIndented = false
         };
 
+        // Définit l'extension de fichier associée à ce format
         public string FileExtension => "json";
 
+        // Convertit l'objet de log en une chaîne de caractères JSON
         public string Serialize(object entry)
         {
             ArgumentNullException.ThrowIfNull(entry);

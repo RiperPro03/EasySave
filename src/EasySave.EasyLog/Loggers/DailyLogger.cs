@@ -3,6 +3,7 @@ using EasySave.EasyLog.Utils;
 
 namespace EasySave.EasyLog.Loggers
 {
+    // Cette classe gère la création de logs quotidiens de manière organisée
     internal sealed class DailyLogger<T> : ILogger<T>
     {
         private readonly string _logDirectory;
@@ -10,11 +11,13 @@ namespace EasySave.EasyLog.Loggers
         private readonly ILogWriter _logWriter;
         private readonly Func<DateTime> _dateTimeProvider;
 
+        // Constructeur standard qui utilise l'heure actuelle du système par défaut
         public DailyLogger(string logDirectory, ILogSerializer logSerializer, ILogWriter logWriter)
             : this(logDirectory, logSerializer, logWriter, () => DateTime.Now)
         {
         }
 
+        // Constructeur complet permettant d'injecter toutes les dépendances, utile pour les tests
         public DailyLogger(
             string logDirectory,
             ILogSerializer logSerializer,
@@ -37,6 +40,7 @@ namespace EasySave.EasyLog.Loggers
             }
         }
 
+        // Méthode qui exécute l'écriture d'une entrée de log
         public bool Write(T entry)
         {
             string filePath = DailyFileHelper.GetLogFilePath(

@@ -1,7 +1,9 @@
 namespace EasySave.EasyLog.Utils
 {
+    // Classe utilitaire statique pour centraliser la gestion des noms de fichiers de logs journaliers
     internal static class DailyFileHelper
     {
+        // Génère le chemin complet vers le fichier de log
         public static string GetLogFilePath(string logDirectory, string fileExtension, DateTime date)
         {
             if (string.IsNullOrWhiteSpace(logDirectory))

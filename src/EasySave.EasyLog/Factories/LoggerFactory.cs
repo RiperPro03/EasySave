@@ -6,6 +6,7 @@ using EasySave.EasyLog.Writers;
 
 namespace EasySave.EasyLog.Factories
 {
+    // Cette classe statique implémente le pattern "Factory" pour créer des loggers configurés
     public static class LoggerFactory
     {
         public static ILogger<T> Create<T>(LogOptions options)
