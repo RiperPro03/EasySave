@@ -54,32 +54,36 @@ namespace EasySave.EasyLog.Loggers
                     string initialContent = $"<logs>\n{serializedEntry}\n</logs>";
                     return _logWriter.Write(filePath, initialContent);
                 }
-                else
+                
+                // Le fichier existe : on insere l'entree avant la balise </logs>
+                // On utilise un FileStream pour manipuler la fin du fichier sans tout charger en memoire
+                using (var fs = new FileStream(filePath, FileMode.Open, FileAccess.ReadWrite))
                 {
-                    // Le fichier existe : on insère l'entrée avant la balise </logs>
-                    // On utilise un FileStream pour manipuler la fin du fichier sans tout charger en mémoire
-                    using (var fs = new FileStream(filePath, FileMode.Open, FileAccess.ReadWrite))
+                    // On se place juste avant </logs> (7 caracteres : </logs>)
+                    if (fs.Length > 7)
                     {
-                        // On se place juste avant </logs> (7 caractères : </logs>)
-                        if (fs.Length > 7)
-                        {
-                            fs.SetLength(fs.Length - 7);
-                            fs.Position = fs.Length;
-                        }
-
-                        using (var sw = new StreamWriter(fs))
-                        {
-                            sw.WriteLine(serializedEntry);
-                            sw.Write("</logs>");
-                        }
+                        fs.SetLength(fs.Length - 7);
+                        fs.Position = fs.Length;
                     }
-                    return true;
+
+                    using (var sw = new StreamWriter(fs))
+                    {
+                        sw.WriteLine(serializedEntry);
+                        sw.Write("</logs>");
+                    }
                 }
+
+                return true;
             }
-            catch
+            catch (IOException)
+            {
+                return false;
+            }
+            catch (UnauthorizedAccessException)
             {
                 return false;
             }
         }
     }
 }
+
