@@ -14,7 +14,7 @@ L'application est multilingue (français et anglais) et offre une interface util
 
 	- Windows 
 	- .NET SDK 10.0
-	- Visual Studio 2022+ ou Rider
+	- Visual Studio 2026+ ou Rider
 	- Git 
 
 Vérifier l'installation : **dotnet --version**
