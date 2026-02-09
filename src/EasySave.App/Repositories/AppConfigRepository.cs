@@ -7,6 +7,7 @@ using EasySave.EasyLog.Options;
 
 namespace EasySave.App.Repositories;
 
+//Cette classe sert à lire et écrire le fichier "setting.json" qui contient les options de l'appli
 public sealed class AppConfigRepository
 {
     private const string ConfigFileName = "setting.json";
@@ -17,13 +18,14 @@ public sealed class AppConfigRepository
         WriteIndented = true,
         Converters = { new JsonStringEnumConverter() }
     };
-
+    
     public AppConfigRepository(IPathProvider pathProvider)
     {
         _pathProvider = pathProvider ?? throw new ArgumentNullException(nameof(pathProvider));
         _configFilePath = Path.Combine(_pathProvider.ConfigPath, ConfigFileName);
     }
 
+    // Charge les réglages depuis le fichier, ou crée des réglages par défaut si le fichier n'existe pas
     public AppConfig Load()
     {
         _pathProvider.EnsureDirectoriesCreated();
@@ -46,10 +48,12 @@ public sealed class AppConfigRepository
         SettingsDto? dto;
         try
         {
+            // On transforme le texte JSON en objet C#
             dto = JsonSerializer.Deserialize<SettingsDto>(json, _options);
         }
         catch (JsonException)
         {
+            // Si le fichier est corrompu, on remet tout par défaut pour éviter le plantage
             var defaults = AppConfig.LoadDefaults();
             Save(defaults);
             return defaults;
@@ -68,6 +72,7 @@ public sealed class AppConfigRepository
         return config;
     }
 
+    // Enregistre les réglages actuels dans le fichier JSON
     public void Save(AppConfig config)
     {
         if (config is null)
