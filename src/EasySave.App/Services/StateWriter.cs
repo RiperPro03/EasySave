@@ -5,6 +5,9 @@ using EasySave.Core.Interfaces;
 
 namespace EasySave.App.Services;
 
+/// <summary>
+/// Writes application state snapshots to disk.
+/// </summary>
 public sealed class StateWriter : IStateWriter
 {
     private readonly IPathProvider _pathProvider;
@@ -14,11 +17,21 @@ public sealed class StateWriter : IStateWriter
         Converters = { new JsonStringEnumConverter() }
     };
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="StateWriter"/> class.
+    /// </summary>
+    /// <param name="pathProvider">Provides state file paths.</param>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="pathProvider"/> is null.</exception>
     public StateWriter(IPathProvider pathProvider)
     {
         _pathProvider = pathProvider ?? throw new ArgumentNullException(nameof(pathProvider));
     }
 
+    /// <summary>
+    /// Writes the provided application state to disk.
+    /// </summary>
+    /// <param name="state">The state snapshot to persist.</param>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="state"/> is null.</exception>
     public void Write(AppStateDto state)
     {
         if (state is null)

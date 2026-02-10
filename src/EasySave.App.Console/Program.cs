@@ -9,14 +9,23 @@ using EasySave.App.Services;
 
 namespace EasySave.App.Console;
 
+/// <summary>
+/// Application entry point for the console UI.
+/// </summary>
 internal static class Program
 {
+    /// <summary>
+    /// Configures services and starts the console workflow.
+    /// </summary>
+    /// <param name="args">Command-line arguments.</param>
     private static void Main(string[] args)
     {
         var pathProvider = new PathProvider();
         var configRepository = new AppConfigRepository(pathProvider);
+        // Charge la configuration utilisateur.
         var config = configRepository.Load();
 
+        // Applique la culture selon la langue config.
         var culture = Localization.GetCulture(config.Language);
         CultureInfo.CurrentCulture = culture;
         CultureInfo.CurrentUICulture = culture;
@@ -41,11 +50,13 @@ internal static class Program
 
         if (args.Length > 0)
         {
+            // Mode batch: execute les jobs passes en argument.
             var rawArgs = string.Join(" ", args);
             backupController.RunFromArgs(rawArgs);
             return;
         }
 
+        // Mode interactif: affiche le menu principal.
         menuController.Run();
     }
 }

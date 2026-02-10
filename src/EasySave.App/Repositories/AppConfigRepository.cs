@@ -7,6 +7,9 @@ using EasySave.EasyLog.Options;
 
 namespace EasySave.App.Repositories;
 
+/// <summary>
+/// Handles persistence of application configuration settings.
+/// </summary>
 public sealed class AppConfigRepository
 {
     private const string ConfigFileName = "setting.json";
@@ -18,12 +21,21 @@ public sealed class AppConfigRepository
         Converters = { new JsonStringEnumConverter() }
     };
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AppConfigRepository"/> class.
+    /// </summary>
+    /// <param name="pathProvider">Provides configuration paths.</param>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="pathProvider"/> is null.</exception>
     public AppConfigRepository(IPathProvider pathProvider)
     {
         _pathProvider = pathProvider ?? throw new ArgumentNullException(nameof(pathProvider));
         _configFilePath = Path.Combine(_pathProvider.ConfigPath, ConfigFileName);
     }
 
+    /// <summary>
+    /// Loads configuration from disk or creates defaults when missing or invalid.
+    /// </summary>
+    /// <returns>The loaded configuration.</returns>
     public AppConfig Load()
     {
         _pathProvider.EnsureDirectoriesCreated();
@@ -68,6 +80,11 @@ public sealed class AppConfigRepository
         return config;
     }
 
+    /// <summary>
+    /// Saves configuration to disk.
+    /// </summary>
+    /// <param name="config">The configuration to persist.</param>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="config"/> is null.</exception>
     public void Save(AppConfig config)
     {
         if (config is null)
@@ -85,6 +102,9 @@ public sealed class AppConfigRepository
         File.WriteAllText(_configFilePath, json);
     }
 
+    /// <summary>
+    /// DTO used for JSON serialization of settings.
+    /// </summary>
     private sealed class SettingsDto
     {
         public Language Language { get; set; } = Language.English;

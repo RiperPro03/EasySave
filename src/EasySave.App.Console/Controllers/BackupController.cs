@@ -7,6 +7,9 @@ using EasySave.Core.Resources;
 
 namespace EasySave.App.Console.Controllers;
 
+/// <summary>
+/// Handles backup-related console actions.
+/// </summary>
 public sealed class BackupController
 {
     private readonly IBackupService _backupService;
@@ -15,6 +18,14 @@ public sealed class BackupController
     private readonly ConsoleView _consoleView;
     private readonly ArgsParser _argsParser;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="BackupController"/> class.
+    /// </summary>
+    /// <param name="backupService">Service used to run backups.</param>
+    /// <param name="jobService">Service used to query jobs.</param>
+    /// <param name="backupView">View used to display backup UI.</param>
+    /// <param name="consoleView">View used for global console output.</param>
+    /// <param name="argsParser">Parser for CLI arguments.</param>
     public BackupController(
         IBackupService backupService,
         IJobService jobService,
@@ -29,6 +40,9 @@ public sealed class BackupController
         _argsParser = argsParser;
     }
 
+    /// <summary>
+    /// Shows the backup menu and handles user choices.
+    /// </summary>
     public void RunMenu()
     {
         var exit = false;
@@ -43,9 +57,11 @@ public sealed class BackupController
             switch (choice)
             {
                 case 1:
+                    // Execution d'un job specifique.
                     RunOneInteractive();
                     break;
                 case 2:
+                    // Execution de tous les jobs.
                     RunAll();
                     break;
                 case 0:
@@ -59,6 +75,10 @@ public sealed class BackupController
         }
     }
 
+    /// <summary>
+    /// Executes jobs from a raw argument string.
+    /// </summary>
+    /// <param name="rawArgs">Raw command-line arguments.</param>
     public void RunFromArgs(string rawArgs)
     {
         IReadOnlyList<int> ids;
@@ -75,6 +95,7 @@ public sealed class BackupController
         var results = new List<BackupResultDto>();
         foreach (var id in ids)
         {
+            // Ne pas bloquer en mode batch.
             var result = RunJobById(id, waitForKey: false);
             if (result is not null)
                 results.Add(result);
@@ -83,6 +104,12 @@ public sealed class BackupController
         _backupView.ShowBatchResult(results);
     }
 
+    /// <summary>
+    /// Runs a single job by its numeric identifier.
+    /// </summary>
+    /// <param name="id">The job identifier.</param>
+    /// <param name="waitForKey">Whether to wait for a key press after execution.</param>
+    /// <returns>The execution result, or <c>null</c> when the job does not exist.</returns>
     public BackupResultDto? RunJobById(int id, bool waitForKey = true)
     {
         var job = _jobService.GetById(id.ToString());
@@ -103,6 +130,9 @@ public sealed class BackupController
         return result;
     }
 
+    /// <summary>
+    /// Runs all configured jobs.
+    /// </summary>
     public void RunAll()
     {
         var jobs = _jobService.GetAll();
@@ -116,6 +146,7 @@ public sealed class BackupController
         var results = new List<BackupResultDto>();
         foreach (var job in jobs)
         {
+            // Executer en serie pour conserver l'ordre.
             _backupView.ShowRunStart(job);
             var result = _backupService.Run(job);
             _backupView.ShowRunEnd(result);
@@ -126,6 +157,9 @@ public sealed class BackupController
         _consoleView.WaitForKey();
     }
 
+    /// <summary>
+    /// Runs one job interactively by asking the user for the ID.
+    /// </summary>
     private void RunOneInteractive()
     {
         var jobs = _jobService.GetAll();
@@ -138,6 +172,7 @@ public sealed class BackupController
         }
 
         var id = _backupView.AskJobId();
+        // Ici on ne re-affiche pas un "press key" dans RunJobById.
         RunJobById(id, waitForKey: false);
         _consoleView.WaitForKey();
     }
