@@ -1,0 +1,237 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:EasySave.App.Gui.ViewModels"
+             xmlns:models="using:EasySave.App.Gui.Models"
+             mc:Ignorable="d"
+             d:DesignWidth="800"
+             d:DesignHeight="600"
+             x:Class="EasySave.App.Gui.Views.DashboardView"
+             x:DataType="vm:DashboardViewModel">
+
+    <StackPanel Spacing="24">
+
+        <!-- Status Cards Grid -->
+        <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="16">
+
+            <!-- Total Jobs Card -->
+            <Border Grid.Column="0"
+                    Background="#18FFFFFF"
+                    BorderBrush="#28FFFFFF"
+                    BorderThickness="1"
+                    CornerRadius="12"
+                    Padding="20">
+                <StackPanel Spacing="8">
+                    <TextBlock Text="📁"
+                               FontSize="28"/>
+                    <TextBlock Text="TOTAL JOBS"
+                               FontSize="10"
+                               FontWeight="Bold"
+                               Foreground="#70FFFFFF"
+                               LetterSpacing="1"/>
+                    <TextBlock Text="{Binding TotalJobs}"
+                               FontSize="32"
+                               FontWeight="Bold"
+                               Foreground="#FFFFFF"/>
+                    <TextBlock Text="Configured backups"
+                               FontSize="11"
+                               Foreground="#80FFFFFF"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Active Jobs Card -->
+            <Border Grid.Column="1"
+                    Background="#18FFFFFF"
+                    BorderBrush="#28FFFFFF"
+                    BorderThickness="1"
+                    CornerRadius="12"
+                    Padding="20">
+                <StackPanel Spacing="8">
+                    <TextBlock Text="✅"
+                               FontSize="28"/>
+                    <TextBlock Text="ACTIVE"
+                               FontSize="10"
+                               FontWeight="Bold"
+                               Foreground="#70FFFFFF"
+                               LetterSpacing="1"/>
+                    <TextBlock Text="{Binding ActiveJobs}"
+                               FontSize="32"
+                               FontWeight="Bold"
+                               Foreground="#30D158"/>
+                    <TextBlock Text="Ready to run"
+                               FontSize="11"
+                               Foreground="#80FFFFFF"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Inactive Jobs Card -->
+            <Border Grid.Column="2"
+                    Background="#18FFFFFF"
+                    BorderBrush="#28FFFFFF"
+                    BorderThickness="1"
+                    CornerRadius="12"
+                    Padding="20">
+                <StackPanel Spacing="8">
+                    <TextBlock Text="⏸"
+                               FontSize="28"/>
+                    <TextBlock Text="INACTIVE"
+                               FontSize="10"
+                               FontWeight="Bold"
+                               Foreground="#70FFFFFF"
+                               LetterSpacing="1"/>
+                    <TextBlock Text="{Binding InactiveJobs}"
+                               FontSize="32"
+                               FontWeight="Bold"
+                               Foreground="#FF9F0A"/>
+                    <TextBlock Text="Paused jobs"
+                               FontSize="11"
+                               Foreground="#80FFFFFF"/>
+                </StackPanel>
+            </Border>
+
+            <!-- System Status Card -->
+            <Border Grid.Column="3"
+                    Background="#18FFFFFF"
+                    BorderBrush="#28FFFFFF"
+                    BorderThickness="1"
+                    CornerRadius="12"
+                    Padding="20">
+                <StackPanel Spacing="8">
+                    <TextBlock Text="⚡"
+                               FontSize="28"/>
+                    <TextBlock Text="STATUS"
+                               FontSize="10"
+                               FontWeight="Bold"
+                               Foreground="#70FFFFFF"
+                               LetterSpacing="1"/>
+                    <TextBlock Text="{Binding SystemStatus}"
+                               FontSize="32"
+                               FontWeight="Bold"
+                               Foreground="#0A84FF"/>
+                    <TextBlock Text="System ready"
+                               FontSize="11"
+                               Foreground="#80FFFFFF"/>
+                </StackPanel>
+            </Border>
+
+        </Grid>
+
+        <!-- Recent Activity Section -->
+        <StackPanel Spacing="16">
+            <TextBlock Text="Recent Activity"
+                       FontSize="18"
+                       FontWeight="SemiBold"
+                       Foreground="#FFFFFF"/>
+
+            <Border Background="#18FFFFFF"
+                    BorderBrush="#28FFFFFF"
+                    BorderThickness="1"
+                    CornerRadius="12"
+                    Padding="24">
+                <Grid>
+                    <ItemsControl ItemsSource="{Binding RecentActivities}"
+                                  IsVisible="{Binding HasRecentActivities}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Spacing="12"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="models:RecentActivityItem">
+                                <Grid ColumnDefinitions="Auto,*,Auto">
+                                    <Border Grid.Column="0"
+                                            Width="40"
+                                            Height="40"
+                                            CornerRadius="10"
+                                            Background="{Binding BadgeBackground}"
+                                            Margin="0,0,16,0">
+                                        <TextBlock Text="{Binding BadgeGlyph}"
+                                                   FontSize="20"
+                                                   FontWeight="Bold"
+                                                   Foreground="{Binding BadgeForeground}"
+                                                   HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center"/>
+                                    </Border>
+                                    <StackPanel Grid.Column="1" Spacing="4">
+                                        <TextBlock Text="{Binding Title}"
+                                                   FontSize="14"
+                                                   FontWeight="Medium"
+                                                   Foreground="#FFFFFF"/>
+                                        <TextBlock Text="{Binding Subtitle}"
+                                                   FontSize="12"
+                                                   Foreground="#80FFFFFF"/>
+                                    </StackPanel>
+                                    <TextBlock Grid.Column="2"
+                                               Text="{Binding Timestamp}"
+                                               FontSize="12"
+                                               Foreground="#80FFFFFF"
+                                               VerticalAlignment="Center"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <StackPanel IsVisible="{Binding IsRecentActivityEmpty}"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Spacing="6">
+                        <TextBlock Text="No recent activity yet"
+                                   FontSize="14"
+                                   Foreground="#80FFFFFF"
+                                   HorizontalAlignment="Center"/>
+                        <TextBlock Text="Run a backup to see the latest events"
+                                   FontSize="12"
+                                   Foreground="#60FFFFFF"
+                                   HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </StackPanel>
+
+        <!-- Quick Actions -->
+        <Grid ColumnDefinitions="*,*" ColumnSpacing="16">
+            <Button Grid.Column="0"
+                    Background="#0A84FF"
+                    Foreground="White"
+                    Padding="20,16"
+                    CornerRadius="12"
+                    BorderThickness="0"
+                    Cursor="Hand"
+                    HorizontalAlignment="Stretch">
+                <StackPanel Spacing="8">
+                    <TextBlock Text="⚡ Run All Jobs"
+                               FontSize="16"
+                               FontWeight="SemiBold"
+                               HorizontalAlignment="Center"/>
+                    <TextBlock Text="Execute all active backups"
+                               FontSize="12"
+                               Foreground="#B0FFFFFF"
+                               HorizontalAlignment="Center"/>
+                </StackPanel>
+            </Button>
+
+            <Button Grid.Column="1"
+                    Background="#28FFFFFF"
+                    Foreground="White"
+                    BorderBrush="#35FFFFFF"
+                    BorderThickness="1"
+                    Padding="20,16"
+                    CornerRadius="12"
+                    Cursor="Hand"
+                    HorizontalAlignment="Stretch">
+                <StackPanel Spacing="8">
+                    <TextBlock Text="📁 Manage Jobs"
+                               FontSize="16"
+                               FontWeight="SemiBold"
+                               HorizontalAlignment="Center"/>
+                    <TextBlock Text="View and edit backup jobs"
+                               FontSize="12"
+                               Foreground="#B0FFFFFF"
+                               HorizontalAlignment="Center"/>
+                </StackPanel>
+            </Button>
+        </Grid>
+
+    </StackPanel>
+
+</UserControl>
