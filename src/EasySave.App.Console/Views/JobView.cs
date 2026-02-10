@@ -5,7 +5,9 @@ using EasySave.Core.Resources;
 
 namespace EasySave.App.Console.Views;
 
-// Cette classe gère tout ce que l'utilisateur voit quand il crée ou modifie un travail
+/// <summary>
+/// Cette classe gère tout ce que l'utilisateur voit quand il crée ou modifie un travail
+/// </summary>
 public sealed class JobView
 {
     private readonly ConsoleInput _input;

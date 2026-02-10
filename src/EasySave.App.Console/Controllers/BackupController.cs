@@ -7,10 +7,14 @@ using EasySave.Core.Resources;
 
 namespace EasySave.App.Console.Controllers;
 
-// 'sealed' : Personne ne peut hériter de cette classe.Cela permet de sécuriser la classe.
+/// <summary>
+/// 'sealed' : Personne ne peut hériter de cette classe.Cela permet de sécuriser la classe.
+/// </summary>
 public sealed class BackupController
 {
-    // On prépare les outils (services et vues) dont on aura besoin plus tard.
+    /// <summary>
+    /// On prépare les outils (services et vues) dont on aura besoin plus tard.
+    /// </summary>
     private readonly IBackupService _backupService;
     private readonly IJobService _jobService;
     private readonly BackupView _backupView;
@@ -31,20 +35,26 @@ public sealed class BackupController
         _argsParser = argsParser;
     }
 
-    // La boucle principale du menu sauvegarde.
+    /// <summary>
+    /// La boucle principale du menu sauvegarde.
+    /// </summary>
     public void RunMenu()
     {
         var exit = false;
         while (!exit)
         {
-            // On nettoie l'écran et on affiche le menu via la "Vue".
+            ///<summary>
+            /// On nettoie l'écran et on affiche le menu via la "Vue".
+            /// </summary> 
             _consoleView.Clear();
             _consoleView.ShowHeader();
             _backupView.ShowBackupMenu();
 
             var choice = _backupView.ReadMenuChoice();
 
-            // On gère les actions selon le chiffre tapé.
+            ///<summary>
+            /// On gère les actions selon le chiffre tapé.
+            /// </summary> 
             switch (choice)
             {
                 case 1:
@@ -57,7 +67,9 @@ public sealed class BackupController
                     exit = true;
                     break;
                 default:
-                    // Si l'utilisateur tape n'importe quoi, on affiche une erreur.
+                    ///<summary>
+                    /// Si l'utilisateur tape n'importe quoi, on affiche une erreur.
+                    /// </summary> 
                     _consoleView.ShowError(Strings.Error_InvalidChoice);
                     _consoleView.WaitForKey();
                     break;
@@ -65,18 +77,24 @@ public sealed class BackupController
         }
     }
 
-    // Lancement de jobs.:
+    /// <summary>
+    /// Lancement de jobs.:
+    /// </summary>
     public void RunFromArgs(string rawArgs)
     {
         IReadOnlyList<int> ids;
         try
         {
-            // On transforme le texte en une liste de nombres.
+            ///<summary>
+            /// On transforme le texte en une liste de nombres.
+            /// </summary> 
             ids = _argsParser.Parse(rawArgs);
         }
         catch (Exception ex) when (ex is ArgumentException or FormatException or ArgumentOutOfRangeException)
         {
-            // Si le texte est mal écrit, on affiche l'erreur.
+            ///<summary>
+            /// Si le texte est mal écrit, on affiche l'erreur.
+            /// </summary>
             _consoleView.ShowError(ex.Message);
             return;
         }
@@ -84,20 +102,28 @@ public sealed class BackupController
         var results = new List<BackupResultDto>();
         foreach (var id in ids)
         {
-            // On lance chaque job trouvé un par un.
+            ///<summary>
+            /// On lance chaque job trouvé un par un.
+            /// </summary>
             var result = RunJobById(id, waitForKey: false);
             if (result is not null)
                 results.Add(result);
         }
 
-        // On affiche le bilan final de tout ce qui a été fait.
+        ///<summary>
+        /// On affiche le bilan final de tout ce qui a été fait.
+        /// </summary>
         _backupView.ShowBatchResult(results);
     }
 
-    // La méthode qui fait le vrai boulot pour UN seul job.
+    ///<summary>
+    /// La méthode qui fait le vrai boulot pour UN seul job.
+    /// </summary> 
     public BackupResultDto? RunJobById(int id, bool waitForKey = true)
     {
-        // On demande au service de nous donner les infos du job via son ID.
+        ///<summary>
+        /// On demande au service de nous donner les infos du job via son ID.
+        /// </summary> 
         var job = _jobService.GetById(id.ToString());
         if (job is null)
         {
@@ -117,7 +143,9 @@ public sealed class BackupController
         return result;
     }
 
-    // Lancer tous les jobs enregistrés.
+    /// <summary>
+    /// Lancer tous les jobs enregistrés.
+    /// </summary>
     public void RunAll()
     {
         var jobs = _jobService.GetAll();
@@ -131,7 +159,9 @@ public sealed class BackupController
         var results = new List<BackupResultDto>();
         foreach (var job in jobs)
         {
-            // On réutilise la logique de sauvegarde pour chaque job.
+            ///<summary>
+            /// On réutilise la logique de sauvegarde pour chaque job.
+            /// </summary>
             _backupView.ShowRunStart(job);
             var result = _backupService.Run(job);
             _backupView.ShowRunEnd(result);
@@ -142,7 +172,9 @@ public sealed class BackupController
         _consoleView.WaitForKey();
     }
 
-    // Mode où l'on choisit visuellement quel job lancer.
+    /// <summary>
+    /// Mode où l'on choisit visuellement quel job lancer.
+    /// </summary>
     private void RunOneInteractive()
     {
         var jobs = _jobService.GetAll();
@@ -154,7 +186,9 @@ public sealed class BackupController
             return;
         }
 
-        // On demande l'ID à l'utilisateur et on le lance.
+        ///<summary>
+        /// On demande l'ID à l'utilisateur et on le lance.
+        /// </summary> On demande l'ID à l'utilisateur et on le lance.
         var id = _backupView.AskJobId();
         RunJobById(id, waitForKey: false);
         _consoleView.WaitForKey();

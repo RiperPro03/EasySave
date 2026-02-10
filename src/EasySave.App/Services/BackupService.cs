@@ -7,7 +7,9 @@ using EasySave.EasyLog.Options;
 
 namespace EasySave.App.Services;
 
-// Ce service coordonne l'exécution des sauvegardes et la mise à jour du fichier d'état global
+/// <summary>
+/// Ce service coordonne l'exécution des sauvegardes et la mise à jour du fichier d'état global
+/// </summary>
 public sealed class BackupService : IBackupService
 {
     private IBackupEngine _backupEngine;
@@ -39,7 +41,9 @@ public sealed class BackupService : IBackupService
         InitializeSnapshot();
     }
 
-    // Lance la sauvegarde d'un travail spécifique
+    ///<summary>
+    ///Lance la sauvegarde d'un travail spécifique
+    ///</summary> 
     public BackupResultDto Run(BackupJob job)
     {
         EnsureEngine();
@@ -48,7 +52,9 @@ public sealed class BackupService : IBackupService
         return result;
     }
 
-    // Se déclenche à chaque fois que l'Engine progresse
+    ///<summary>
+    /// Se déclenche à chaque fois que l'Engine progresse
+    /// </summary>
     private void OnEngineStateChanged(object? sender, JobStateChangedEventArgs e)
     {
         lock (_stateLock)
@@ -70,7 +76,9 @@ public sealed class BackupService : IBackupService
         }
     }
 
-    // Synchronise la liste des états en mémoire avec les jobs configurés
+    /// <summary>
+    /// Synchronise la liste des états en mémoire avec les jobs configurés
+    /// </summary>
     private void SyncJobs()
     {
         var jobs = _jobService.GetAll();
@@ -95,7 +103,9 @@ public sealed class BackupService : IBackupService
         }
     }
 
-    // Transforme le dictionnaire d'états en un fichier
+    /// <summary>
+    /// Transforme le dictionnaire d'états en un fichier
+    /// </summary>
     private void WriteSnapshot()
     {
         var states = _jobStates.Values.ToList();
@@ -143,7 +153,10 @@ public sealed class BackupService : IBackupService
         };
     }
 
-    // Méthode utilitaire pour copier les données d'état afin d'éviter les bugs de référence mémoire
+    /// <summary>
+    /// Méthode utilitaire pour copier les données d'état afin d'éviter les bugs de référence mémoire
+    /// </summary>
+
     private static JobStateDto CopyState(JobStateDto state)
     {
         return new JobStateDto

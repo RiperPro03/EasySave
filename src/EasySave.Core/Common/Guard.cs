@@ -1,7 +1,10 @@
 ﻿namespace EasySave.Core.Common;
 
-// Classe utilitaire de validation .
-// Elle sert de barrière de sécurité pour empêcher la création d'objets avec des données invalides.
+/// <summary>
+/// Classe utilitaire de validation .
+/// Elle sert de barrière de sécurité pour empêcher la création d'objets avec des données invalides.
+/// </summary>
+
 internal static class Guard
 {
     public static string NotNullOrWhiteSpace(string? value, string paramName)

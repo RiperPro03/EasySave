@@ -5,7 +5,9 @@ using EasySave.Core.Resources;
 
 namespace EasySave.App.Console.Controllers;
 
-// Cette classe est le point d'entrée principal qui redirige l'utilisateur vers les différents sous-menus (Jobs, Sauvegardes, Paramètres)
+///<summary>
+/// Cette classe est le point d'entrée principal qui redirige l'utilisateur vers les différents sous-menus (Jobs, Sauvegardes, Paramètres)
+/// </summary> 
 public sealed class MenuController
 {
     private readonly ConsoleView _view;
@@ -36,7 +38,9 @@ public sealed class MenuController
             _view.Clear();
             _view.ShowHeader();
 
-            // Création de la liste des options affichées à l'écran
+            ///<summary>
+            /// Création de la liste des options affichées à l'écran
+            /// </summary> 
             var options = new List<MenuOption>
             {
                 new(1, Strings.Menu_Create),
@@ -49,7 +53,9 @@ public sealed class MenuController
 
             var choice = _input.ReadInt("> ");
 
-            // Redirection vers le contrôleur spécialisé selon le choix de l'utilisateur
+            ///<summary>
+            /// Redirection vers le contrôleur spécialisé selon le choix de l'utilisateur 
+            /// </summary> 
             switch (choice)
             {
                 case 1:

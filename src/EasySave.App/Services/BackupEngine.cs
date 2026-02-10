@@ -12,12 +12,17 @@ using EasySave.EasyLog.Options;
 
 namespace EasySave.App.Services;
 
-// BackupEngine est le moteur qui exécute physiquement la copie des fichiers
+
+/// <summary>
+/// BackupEngine est le moteur qui exécute physiquement la copie des fichiers
+/// </summary>
 internal sealed class BackupEngine : IBackupEngine
 {
     private readonly ILogger<LogEntryDto>? _logger;
 
-    // Événement pour informer le reste de l'appli (comme le fichier d'état) que la progression change
+    /// <summary>
+    /// Événement pour informer le reste de l'appli (comme le fichier d'état) que la progression change
+    /// </summary>
     public event EventHandler<JobStateChangedEventArgs>? StateChanged;
 
     public BackupEngine(string? logDirectory = null, LogFormat logFormat = LogFormat.Json)
@@ -34,7 +39,10 @@ internal sealed class BackupEngine : IBackupEngine
         }
     }
 
-    // Fonction principale qui lance le processus complet pour un travail
+    /// <summary>
+    /// Fonction principale qui lance le processus complet pour un travail
+    /// </summary>
+
     public BackupResultDto Run(BackupJob job)
     {
         if (job is null)
@@ -44,7 +52,9 @@ internal sealed class BackupEngine : IBackupEngine
         var stopwatch = Stopwatch.StartNew();
         var state = CreateInitialState(job);
 
-        // Vérification de sécurité avant de commencer
+        ///<summary>
+        ///Vérification de sécurité avant de commencer
+        /// </summary> 
         if (!Directory.Exists(job.SourcePath))
         {
             result.Success = false;
@@ -57,7 +67,9 @@ internal sealed class BackupEngine : IBackupEngine
             return result;
         }
 
-        // Choix de la stratégie de copie selon le type choisi (Complet ou Différentiel)
+        ///<summary>
+        /// Choix de la stratégie de copie selon le type choisi (Complet ou Différentiel)
+        /// </summary> 
         IBackupCopyStrategy? strategy = job.Type switch
         {
             BackupType.Differential => new DifferentialCopyStrategy(),
@@ -77,16 +89,22 @@ internal sealed class BackupEngine : IBackupEngine
             return result;
         }
 
-        // Analyse initiale des fichiers pour calculer le poids total et le nombre de fichiers
+        ///<summary>
+        /// Analyse initiale des fichiers pour calculer le poids total et le nombre de fichiers
+        /// </summary> 
         var files = Directory.EnumerateFiles(job.SourcePath, "*", SearchOption.AllDirectories).ToList();
         var totalSizeBytes = files.Sum(file => new FileInfo(file).Length);
         InitializeTotals(state, files.Count, totalSizeBytes);
         PublishState(state);
 
-        // Lancement de la boucle de copie
+        ///<summary>
+        /// Lancement de la boucle de copie
+        /// </summary>
         ExecuteBackup(files, job.SourcePath, job.TargetPath, strategy, result, state);
 
-        // Finalisation du résultat
+        ///<summary>
+        /// Finalisation du résultat
+        /// </summary> Finalisation du résultat
         result.Success = result.ErrorCount == 0;
         result.Message = result.Success ? Strings.Backup_Success : Strings.Info_BackupCompletedWithErrors;
         result.Duration = stopwatch.Elapsed;
@@ -97,7 +115,10 @@ internal sealed class BackupEngine : IBackupEngine
         return result;
     }
 
-    // Boucle qui parcourt chaque fichier et décide s'il faut le copier ou non
+    /// <summary>
+    /// Boucle qui parcourt chaque fichier et décide s'il faut le copier ou non
+    /// </summary>
+
     private void ExecuteBackup(
         IReadOnlyList<string> files,
         string sourceRoot,
@@ -137,7 +158,9 @@ internal sealed class BackupEngine : IBackupEngine
         }
     }
 
-    // Création physique du dossier de destination et copie du fichier
+    /// <summary>
+    /// Création physique du dossier de destination et copie du fichier
+    /// </summary>
     private static void CopyFile(string sourcePath, string targetPath)
     {
         var directory = Path.GetDirectoryName(targetPath);
@@ -147,7 +170,9 @@ internal sealed class BackupEngine : IBackupEngine
         File.Copy(sourcePath, targetPath, true);
     }
 
-    // Enregistre les informations dans le fichier de log
+    ///<summary>
+    ///  Enregistre les informations dans le fichier de log
+    /// </summary>
     private void WriteSummaryLog(BackupJob job, BackupResultDto result)
     {
         if (_logger is null)

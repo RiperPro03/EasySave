@@ -3,7 +3,9 @@ using EasySave.Core.Interfaces;
 
 namespace EasySave.App.Services;
 
-// Cette stratégie permet de ne copier que les fichiers modifiés depuis la dernière sauvegarde
+/// <summary>
+/// Cette stratégie permet de ne copier que les fichiers modifiés depuis la dernière sauvegarde
+/// </summary>
 internal sealed class DifferentialCopyStrategy : IBackupCopyStrategy
 {
     public bool ShouldCopy(string sourcePath, string targetPath)

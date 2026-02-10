@@ -1,12 +1,10 @@
 using EasySave.Core.DTO;
 using EasySave.Core.Interfaces;
 using EasySave.Core.Models;
-using System.Net;
 using System.Text.Json;
 
 namespace EasySave.App.Repositories;
 
-// Cette classe gère le stockage de la liste des travaux dans le fichier "jobs.json"
 internal sealed class JobRepository : IJobRepository
 {
     private readonly IPathProvider _pathProvider;
@@ -19,16 +17,13 @@ internal sealed class JobRepository : IJobRepository
         _pathProvider = pathProvider ?? throw new ArgumentNullException(nameof(pathProvider));
         _pathProvider.EnsureDirectoriesCreated();
 
-        // On définit l'emplacement du fichier JSON
         _jobsFilePath = Path.Combine(_pathProvider.ConfigPath, "jobs.json");
-        // On charge les données existantes dès le démarrage
         _jobs = LoadJobs();
     }
 
     public IReadOnlyList<BackupJob> GetAll() => _jobs.AsReadOnly();
     public BackupJob? GetById(string id) => _jobs.FirstOrDefault(job => job.Id == id);
 
-    // Ajoute un nouveau job et enregistre immédiatement sur le disque
     public void Add(BackupJob job)
     {
         if (job is null)
@@ -45,8 +40,6 @@ internal sealed class JobRepository : IJobRepository
         _jobs.Add(job);
         SaveJobs();
     }
-
-    // Supprime un job et met à jour le fichier JSON
     public void Remove(string id)
     {
         var job = GetById(id);
@@ -57,7 +50,6 @@ internal sealed class JobRepository : IJobRepository
         SaveJobs();
     }
 
-    // Modifie les infos d'un job existant
     public void Update(BackupJob updatedjob)
     {
         if (updatedjob == null)
@@ -83,7 +75,6 @@ internal sealed class JobRepository : IJobRepository
         SaveJobs();
     }
 
-    // Lit le fichier JSON et convertit les données en objets C# utilisables
     private List<BackupJob> LoadJobs()
     {
         if (!File.Exists(_jobsFilePath))
@@ -118,12 +109,10 @@ internal sealed class JobRepository : IJobRepository
                 // Ignore invalid persisted entries.
             }
         }
-        }
 
         return jobs;
     }
 
-    // Transforme la liste de travaux en texte JSON et l'écrit sur le disque
     private void SaveJobs()
     {
         _pathProvider.EnsureDirectoriesCreated();
@@ -132,6 +121,6 @@ internal sealed class JobRepository : IJobRepository
         var json = JsonSerializer.Serialize(dtos, new JsonSerializerOptions { WriteIndented = true });
         File.WriteAllText(_jobsFilePath, json);
     }
-    
+
 
 }

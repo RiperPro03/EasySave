@@ -33,6 +33,8 @@ public class JobStateDto
 
     public string? ErrorMessage { get; set; }
 
-    // Constructeur vide requis pour certains sérialiseurs (XML)
+    /// <summary>
+    /// Constructeur vide requis pour certains sérialiseurs (XML)
+    /// </summary>
     public JobStateDto() { }
 }

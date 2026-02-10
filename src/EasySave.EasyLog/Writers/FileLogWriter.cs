@@ -3,7 +3,9 @@ using EasySave.EasyLog.Interfaces;
 
 namespace EasySave.EasyLog.Writers
 {
-    // Cette classe est responsable de l'écriture physique des logs dans un fichier sur le disque
+    /// <summary>
+    /// Cette classe est responsable de l'écriture physique des logs dans un fichier sur le disque
+    /// </summary>
     internal sealed class FileLogWriter : ILogWriter
     {
         public bool Write(string filepath, string message)

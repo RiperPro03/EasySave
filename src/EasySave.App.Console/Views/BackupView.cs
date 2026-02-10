@@ -5,7 +5,9 @@ using EasySave.Core.Resources;
 
 namespace EasySave.App.Console.Views;
 
-// Cette classe s'occupe uniquement d'afficher du texte à l'écran concernant les sauvegardes
+/// <summary>
+/// Cette classe s'occupe uniquement d'afficher du texte à l'écran concernant les sauvegardes
+/// </summary>
 public sealed class BackupView
 {
     private readonly ConsoleInput _input;

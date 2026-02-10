@@ -2,7 +2,9 @@
 
 namespace EasySave.App.Console.Input;
 
-// Cette classe sert à forcer l'utilisateur à donner une réponse correcte avant de continuer
+///<summary>
+/// Cette classe sert à forcer l'utilisateur à donner une réponse correcte avant de continuer
+/// </summary> 
 public sealed class ConsoleInput
 {
     public int ReadInt(string prompt)
@@ -18,7 +20,9 @@ public sealed class ConsoleInput
         }
     }
 
-    // Empêche l'utilisateur de laisser un champ vide
+    /// <summary>
+    /// Empêche l'utilisateur de laisser un champ vide
+    /// </summary>
     public string ReadNonEmptyString(string prompt)
     {
         while (true)
@@ -26,7 +30,9 @@ public sealed class ConsoleInput
             System.Console.Write(prompt);
             var input = System.Console.ReadLine();
 
-            // Vérifie que le texte n'est pas vide ou rempli d'espaces
+            ///<summary>
+            /// Vérifie que le texte n'est pas vide ou rempli d'espaces
+            /// </summary> 
             if (!string.IsNullOrWhiteSpace(input))
                 return input.Trim();
 
@@ -34,7 +40,9 @@ public sealed class ConsoleInput
         }
     }
 
-    // Vérifie que le chiffre tapé fait bien partie des options proposées
+    /// <summary>
+    /// Vérifie que le chiffre tapé fait bien partie des options proposées
+    /// </summary>
     public int ReadChoice(string prompt, IEnumerable<int> validChoices)
     {
         var validSet = new HashSet<int>(validChoices);

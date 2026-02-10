@@ -18,7 +18,9 @@ public sealed class JobController
         _consoleView = consoleView;
     }
 
-    // Gère la navigation principale pour la configuration des travaux
+    /// <summary>
+    /// Gère la navigation principale pour la configuration des travaux
+    /// </summary>
     public void RunMenu()
     {
         var exit = false;
@@ -48,7 +50,9 @@ public sealed class JobController
                     exit = true;
                     break;
                 default:
-                    // Utilisation des fichiers de ressources pour les messages d'erreur
+                    ///<summary>
+                    /// Utilisation des fichiers de ressources pour les messages d'erreur
+                    /// </summary> 
                     _consoleView.ShowError(Strings.Error_InvalidChoice);
                     _consoleView.WaitForKey();
                     break;
@@ -67,20 +71,26 @@ public sealed class JobController
     {
         try
         {
-            // Récupération séquentielle des données via la Vue
+            ///<summary>
+            /// Récupération séquentielle des données via la Vue
+            /// </summary>
             var id = _jobView.AskJobId();
             var name = _jobView.AskJobName();
             var sourcePath = _jobView.AskSourcePath();
             var targetPath = _jobView.AskTargetPath();
             var type = _jobView.AskBackupType();
 
-            // Envoi des données au Service qui contient la logique de validation
+            ///<summary>
+            /// Envoi des données au Service qui contient la logique de validation
+            /// </summary>
             _jobService.Create(id, name, sourcePath, targetPath, type);
             _consoleView.ShowSuccess("Job created.");
         }
         catch (Exception ex)
         {
-            // Capture toute erreur métier pour l'afficher proprement
+            ///<summary>
+            /// Capture toute erreur métier pour l'afficher proprement
+            /// </summary> 
             _consoleView.ShowError(ex.Message);
         }
         _consoleView.WaitForKey();
@@ -101,7 +111,9 @@ public sealed class JobController
                 return;
             }
 
-            // Permet de ne modifier qu'une seule propriété au lieu de tout ressaisir
+            ///<summary>
+            /// Permet de ne modifier qu'une seule propriété au lieu de tout ressaisir
+            /// </summary> 
             var fieldChoice = _jobView.AskJobFieldToEdit();
             if (fieldChoice == 0)
             {
@@ -149,12 +161,16 @@ public sealed class JobController
     {
         try
         {
-            //Affichage des jobs déja crée
+            ///<summary>
+            /// Affichage des jobs déja crée
+            /// </summary>
             var jobs = _jobService.GetAll();
             _consoleView.ShowInfo("Existing jobs:");
             _jobView.ShowJobs(jobs);
 
-            //Confirmation du job supprimé
+            ///<summary>
+            /// Confirmation du job supprimé
+            /// </summary>
             var id = _jobView.AskJobId();
             _jobService.Delete(id);
             _consoleView.ShowSuccess("Job deleted.");
