@@ -6,14 +6,14 @@ using EasySave.Core.Interfaces;
 namespace EasySave.App.Services;
 
 /// <summary>
-/// Cette classe écrit l'état global de l'application dans un fichier JSON
+/// Writes application state snapshots to disk.
 /// </summary>
 public sealed class StateWriter : IStateWriter
 {
     private readonly IPathProvider _pathProvider;
 
     /// <summary>
-    /// Options pour rendre le fichier JSON lisible (indentation) et transformer les énumérations en texte
+    /// Options to make the JSON file readable (indentation) and convert enumerations to text
     /// </summary>
     private readonly JsonSerializerOptions _options = new()
     {
@@ -21,14 +21,21 @@ public sealed class StateWriter : IStateWriter
         Converters = { new JsonStringEnumConverter() }
     };
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="StateWriter"/> class.
+    /// </summary>
+    /// <param name="pathProvider">Provides state file paths.</param>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="pathProvider"/> is null.</exception>
     public StateWriter(IPathProvider pathProvider)
     {
         _pathProvider = pathProvider ?? throw new ArgumentNullException(nameof(pathProvider));
     }
 
     /// <summary>
-    /// Méthode appelée par le BackupService pour mettre à jour le fichier state.json
+    /// Writes the provided application state to disk.
     /// </summary>
+    /// <param name="state">The state snapshot to persist.</param>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="state"/> is null.</exception>
     public void Write(AppStateDto state)
     {
         if (state is null)

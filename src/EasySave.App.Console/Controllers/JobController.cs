@@ -1,16 +1,25 @@
-using EasySave.App.Console.Views;
+ï»¿using EasySave.App.Console.Views;
 using EasySave.App.Services;
 using EasySave.Core.Interfaces;
 using EasySave.Core.Resources;
 
 namespace EasySave.App.Console.Controllers;
 
+/// <summary>
+/// Handles job management actions in the console UI.
+/// </summary>
 public sealed class JobController
 {
     private readonly IJobService _jobService;
     private readonly JobView _jobView;
     private readonly ConsoleView _consoleView;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="JobController"/> class.
+    /// </summary>
+    /// <param name="jobService">Service used to manage jobs.</param>
+    /// <param name="jobView">View used to display job UI.</param>
+    /// <param name="consoleView">View used for global console output.</param>
     public JobController(IJobService jobService, JobView jobView, ConsoleView consoleView)
     {
         _jobService = jobService;
@@ -19,7 +28,7 @@ public sealed class JobController
     }
 
     /// <summary>
-    /// Gère la navigation principale pour la configuration des travaux
+    /// Shows the job menu and handles user choices.
     /// </summary>
     public void RunMenu()
     {
@@ -35,24 +44,25 @@ public sealed class JobController
             switch (choice)
             {
                 case 1:
+                    // Liste tous les jobs.
                     ListJobs();
                     break;
                 case 2:
+                    // Creation d'un nouveau job.
                     CreateJob();
                     break;
                 case 3:
+                    // Mise a jour d'un job existant.
                     UpdateJob();
                     break;
                 case 4:
+                    // Suppression d'un job.
                     DeleteJob();
                     break;
                 case 0:
                     exit = true;
                     break;
                 default:
-                    ///<summary>
-                    /// Utilisation des fichiers de ressources pour les messages d'erreur
-                    /// </summary> 
                     _consoleView.ShowError(Strings.Error_InvalidChoice);
                     _consoleView.WaitForKey();
                     break;
@@ -60,6 +70,9 @@ public sealed class JobController
         }
     }
 
+    /// <summary>
+    /// Lists all jobs in the console.
+    /// </summary>
     public void ListJobs()
     {
         var jobs = _jobService.GetAll();
@@ -67,35 +80,34 @@ public sealed class JobController
         _consoleView.WaitForKey();
     }
 
+    /// <summary>
+    /// Creates a new job from user input.
+    /// </summary>
     public void CreateJob()
     {
         try
         {
-            ///<summary>
-            /// Récupération séquentielle des données via la Vue
-            /// </summary>
             var id = _jobView.AskJobId();
             var name = _jobView.AskJobName();
             var sourcePath = _jobView.AskSourcePath();
             var targetPath = _jobView.AskTargetPath();
             var type = _jobView.AskBackupType();
-
-            ///<summary>
-            /// Envoi des données au Service qui contient la logique de validation
-            /// </summary>
+            
+            // Envoi des donnees au Service pour crÃ©er le job
             _jobService.Create(id, name, sourcePath, targetPath, type);
             _consoleView.ShowSuccess("Job created.");
         }
         catch (Exception ex)
         {
-            ///<summary>
-            /// Capture toute erreur métier pour l'afficher proprement
-            /// </summary> 
+            // Capture toute erreur metier pour l'afficher proprement
             _consoleView.ShowError(ex.Message);
         }
         _consoleView.WaitForKey();
     }
 
+    /// <summary>
+    /// Updates an existing job based on user choices.
+    /// </summary>
     public void UpdateJob()
     {
         try
@@ -110,13 +122,12 @@ public sealed class JobController
                 _consoleView.WaitForKey();
                 return;
             }
-
-            ///<summary>
-            /// Permet de ne modifier qu'une seule propriété au lieu de tout ressaisir
-            /// </summary> 
+            
+            // Permet de ne modifier qu'une seule propriete au lieu de tout ressaisir
             var fieldChoice = _jobView.AskJobFieldToEdit();
             if (fieldChoice == 0)
             {
+                // L'utilisateur annule la mise a jour.
                 _consoleView.ShowInfo("Update cancelled.");
                 _consoleView.WaitForKey();
                 return;
@@ -131,18 +142,23 @@ public sealed class JobController
             switch (fieldChoice)
             {
                 case 1:
+                    // Nom
                     name = _jobView.AskJobName();
                     break;
                 case 2:
+                    // Chemin source
                     sourcePath = _jobView.AskSourcePath();
                     break;
                 case 3:
+                    // Chemin cible
                     targetPath = _jobView.AskTargetPath();
                     break;
                 case 4:
+                    // Type de sauvegarde
                     type = _jobView.AskBackupType();
                     break;
                 case 5:
+                    // Etat actif/inactif
                     isActive = _jobView.AskJobActiveState();
                     break;
             }
@@ -157,20 +173,20 @@ public sealed class JobController
         _consoleView.WaitForKey();
     }
 
+    /// <summary>
+    /// Deletes a job selected by the user.
+    /// </summary>
     public void DeleteJob()
     {
         try
         {
-            ///<summary>
-            /// Affichage des jobs déja crée
-            /// </summary>
+            // Affichage des jobs deja crees.
             var jobs = _jobService.GetAll();
             _consoleView.ShowInfo("Existing jobs:");
             _jobView.ShowJobs(jobs);
 
-            ///<summary>
-            /// Confirmation du job supprimé
-            /// </summary>
+
+            // Choix du job a supprimee
             var id = _jobView.AskJobId();
             _jobService.Delete(id);
             _consoleView.ShowSuccess("Job deleted.");

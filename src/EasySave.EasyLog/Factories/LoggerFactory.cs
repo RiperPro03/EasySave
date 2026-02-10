@@ -7,10 +7,24 @@ using EasySave.EasyLog.Writers;
 namespace EasySave.EasyLog.Factories
 {
     /// <summary>
-    /// Cette classe statique implémente le pattern "Factory" pour créer des loggers configurés
+    /// Creates logger instances from configuration options.
+    /// Pattern "Factory"
     /// </summary>
     public static class LoggerFactory
     {
+        /// <summary>
+        /// Builds a logger for the specified entry type.
+        /// </summary>
+        /// <typeparam name="T">The log entry type.</typeparam>
+        /// <param name="options">Logger configuration options.</param>
+        /// <returns>A configured logger instance.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="options"/> is null.</exception>
+        /// <exception cref="ArgumentException">
+        /// Thrown when <see cref="LogOptions.LogDirectory"/> is missing.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// Thrown when the log format is unknown.
+        /// </exception>
         public static ILogger<T> Create<T>(LogOptions options)
         {
             if (options is null)

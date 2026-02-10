@@ -6,17 +6,25 @@ using EasySave.Core.Resources;
 namespace EasySave.App.Console.Views;
 
 /// <summary>
-/// Cette classe gère tout ce que l'utilisateur voit quand il crée ou modifie un travail
+/// Renders job-related console UI.
+/// This class manages everything the user sees when creating or modifying a job.
 /// </summary>
 public sealed class JobView
 {
     private readonly ConsoleInput _input;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="JobView"/> class.
+    /// </summary>
+    /// <param name="input">Console input helper.</param>
     public JobView(ConsoleInput input)
     {
         _input = input;
     }
 
+    /// <summary>
+    /// Displays the job menu.
+    /// </summary>
     public void ShowJobMenu()
     {
         System.Console.WriteLine();
@@ -33,21 +41,37 @@ public sealed class JobView
         return _input.ReadInt("> ");
     }
 
+    /// <summary>
+    /// Asks the user for a job name.
+    /// </summary>
+    /// <returns>The job name.</returns>
     public string AskJobName()
     {
         return _input.ReadNonEmptyString(Strings.UI_JobNamePrompt);
     }
 
+    /// <summary>
+    /// Asks the user for a source path.
+    /// </summary>
+    /// <returns>The source path.</returns>
     public string AskSourcePath()
     {
         return _input.ReadNonEmptyString(Strings.UI_SourcePathPrompt);
     }
 
+    /// <summary>
+    /// Asks the user for a target path.
+    /// </summary>
+    /// <returns>The target path.</returns>
     public string AskTargetPath()
     {
         return _input.ReadNonEmptyString(Strings.UI_TargetPathPrompt);
     }
 
+    /// <summary>
+    /// Asks the user for a backup type.
+    /// </summary>
+    /// <returns>The selected backup type.</returns>
     public BackupType AskBackupType()
     {
         System.Console.WriteLine(Strings.UI_BackupTypePrompt);
@@ -58,11 +82,16 @@ public sealed class JobView
         return choice == 1 ? BackupType.Full : BackupType.Differential;
     }
 
+    /// <summary>
+    /// Displays the list of jobs.
+    /// </summary>
+    /// <param name="jobs">The jobs to display.</param>
     public void ShowJobs(IReadOnlyList<BackupJob> jobs)
     {
         System.Console.WriteLine();
         if (jobs.Count == 0)
         {
+            // Aucun job configure.
             System.Console.WriteLine(Strings.UI_NoJobsConfigured);
             return;
         }
@@ -79,6 +108,10 @@ public sealed class JobView
         return id.ToString();
     }
 
+    /// <summary>
+    /// Asks the user which field to edit.
+    /// </summary>
+    /// <returns>The field choice.</returns>
     public int AskJobFieldToEdit()
     {
         System.Console.WriteLine();
@@ -93,6 +126,10 @@ public sealed class JobView
         return _input.ReadChoice("> ", new[] { 0, 1, 2, 3, 4, 5 });
     }
 
+    /// <summary>
+    /// Asks the user to set the active state.
+    /// </summary>
+    /// <returns><c>true</c> for active; <c>false</c> for inactive.</returns>
     public bool AskJobActiveState()
     {
         System.Console.WriteLine();

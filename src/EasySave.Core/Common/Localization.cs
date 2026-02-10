@@ -4,11 +4,16 @@ using EasySave.Core.Enums;
 namespace EasySave.Core.Common;
 
 /// <summary>
-/// Gestionnaire de localisation pour l'application.
-/// Cette classe permet de faire le pont entre l'énumération 'Language' propre à EasySave et les objets 'CultureInfo' standards de .NET.
+/// Provides culture resolution for the application.
+/// This class bridges the gap between EasySave's own ‘Language’ enumeration and .NET's standard ‘CultureInfo’ objects.
 /// </summary>
 public static class Localization
 {
+    /// <summary>
+    /// Maps a language enum to a concrete culture.
+    /// </summary>
+    /// <param name="language">The language to resolve.</param>
+    /// <returns>The matching <see cref="CultureInfo"/> instance.</returns>
     public static CultureInfo GetCulture(Language language)
     {
         return language switch

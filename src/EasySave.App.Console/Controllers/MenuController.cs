@@ -5,9 +5,10 @@ using EasySave.Core.Resources;
 
 namespace EasySave.App.Console.Controllers;
 
-///<summary>
-/// Cette classe est le point d'entrée principal qui redirige l'utilisateur vers les différents sous-menus (Jobs, Sauvegardes, Paramètres)
-/// </summary> 
+/// <summary>
+/// Handles the main console menu navigation.
+/// This class is the main entry point that redirects the user to the various submenus (Jobs, Backups, Settings).
+/// </summary>
 public sealed class MenuController
 {
     private readonly ConsoleView _view;
@@ -16,6 +17,14 @@ public sealed class MenuController
     private readonly BackupController _backupController;
     private readonly SettingsController _settingsController;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="MenuController"/> class.
+    /// </summary>
+    /// <param name="view">Console view for output.</param>
+    /// <param name="input">Console input helper.</param>
+    /// <param name="jobController">Controller for job management.</param>
+    /// <param name="backupController">Controller for backups.</param>
+    /// <param name="settingsController">Controller for settings.</param>
     public MenuController(
         ConsoleView view,
         ConsoleInput input,
@@ -30,6 +39,9 @@ public sealed class MenuController
         _settingsController = settingsController;
     }
 
+    /// <summary>
+    /// Runs the main menu loop.
+    /// </summary>
     public void Run()
     {
         var exit = false;
@@ -38,9 +50,7 @@ public sealed class MenuController
             _view.Clear();
             _view.ShowHeader();
 
-            ///<summary>
-            /// Création de la liste des options affichées à l'écran
-            /// </summary> 
+            // Construit la liste des options du menu principal.
             var options = new List<MenuOption>
             {
                 new(1, Strings.Menu_Create),
@@ -52,19 +62,20 @@ public sealed class MenuController
             _view.ShowMenu(Strings.Menu_Title, options);
 
             var choice = _input.ReadInt("> ");
-
-            ///<summary>
-            /// Redirection vers le contrôleur spécialisé selon le choix de l'utilisateur 
-            /// </summary> 
+            
+            // Redirection vers le controleur spécialise selon le choix de l'utilisateur 
             switch (choice)
             {
                 case 1:
+                    // Gestion des jobs
                     _jobController.RunMenu();
                     break;
                 case 2:
+                    // Lancement des sauvegardes
                     _backupController.RunMenu();
                     break;
                 case 3:
+                    // Parametres applicatifs
                     _settingsController.Run();
                     break;
                 case 0:

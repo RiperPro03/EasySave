@@ -6,9 +6,10 @@ using EasySave.Core.Models;
 using EasySave.EasyLog.Options;
 
 namespace EasySave.App.Repositories;
+
 /// <summary>
-///Cette classe sert à lire et écrire le fichier "setting.json" qui contient les options de l'appli
-/// <summary>
+/// Handles persistence of application configuration settings.
+/// </summary>
 public sealed class AppConfigRepository
 {
     private const string ConfigFileName = "setting.json";
@@ -19,16 +20,22 @@ public sealed class AppConfigRepository
         WriteIndented = true,
         Converters = { new JsonStringEnumConverter() }
     };
-    
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AppConfigRepository"/> class.
+    /// </summary>
+    /// <param name="pathProvider">Provides configuration paths.</param>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="pathProvider"/> is null.</exception>
     public AppConfigRepository(IPathProvider pathProvider)
     {
         _pathProvider = pathProvider ?? throw new ArgumentNullException(nameof(pathProvider));
         _configFilePath = Path.Combine(_pathProvider.ConfigPath, ConfigFileName);
     }
-    /// <summary>
-    /// Charge les réglages depuis le fichier, ou crée des réglages par défaut si le fichier n'existe pas
-    /// <summary>
 
+    /// <summary>
+    /// Loads configuration from disk or creates defaults when missing or invalid.
+    /// </summary>
+    /// <returns>The loaded configuration.</returns>
     public AppConfig Load()
     {
         _pathProvider.EnsureDirectoriesCreated();
@@ -51,17 +58,12 @@ public sealed class AppConfigRepository
         SettingsDto? dto;
         try
         {
-            /// <summary>
-            /// On transforme le texte JSON en objet C#
-            /// <summary>
+            // On transforme le texte JSON en objet C#
             dto = JsonSerializer.Deserialize<SettingsDto>(json, _options);
         }
         catch (JsonException)
         {
-            /// <summary>
-            /// Si le fichier est corrompu, on remet tout par défaut pour éviter le plantage
-            /// <summary>
-            
+            // Si le fichier est corrompu, on remet tout par defaut pour eviter le plantage
             var defaults = AppConfig.LoadDefaults();
             Save(defaults);
             return defaults;
@@ -79,9 +81,12 @@ public sealed class AppConfigRepository
         config.ChangeLogFormat(dto.LogFormat);
         return config;
     }
+
     /// <summary>
-    /// Enregistre les réglages actuels dans le fichier JSON
+    /// Saves configuration to disk.
     /// </summary>
+    /// <param name="config">The configuration to persist.</param>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="config"/> is null.</exception>
     public void Save(AppConfig config)
     {
         if (config is null)
@@ -99,6 +104,9 @@ public sealed class AppConfigRepository
         File.WriteAllText(_configFilePath, json);
     }
 
+    /// <summary>
+    /// DTO used for JSON serialization of settings.
+    /// </summary>
     private sealed class SettingsDto
     {
         public Language Language { get; set; } = Language.English;

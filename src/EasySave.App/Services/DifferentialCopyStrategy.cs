@@ -4,10 +4,16 @@ using EasySave.Core.Interfaces;
 namespace EasySave.App.Services;
 
 /// <summary>
-/// Cette stratégie permet de ne copier que les fichiers modifiés depuis la dernière sauvegarde
+/// Copies files only when content differs from the target.
 /// </summary>
 internal sealed class DifferentialCopyStrategy : IBackupCopyStrategy
 {
+    /// <summary>
+    /// Determines whether a source file should be copied to the target.
+    /// </summary>
+    /// <param name="sourcePath">Source file path.</param>
+    /// <param name="targetPath">Target file path.</param>
+    /// <returns><c>true</c> if the file should be copied; otherwise <c>false</c>.</returns>
     public bool ShouldCopy(string sourcePath, string targetPath)
     {
         if (!File.Exists(targetPath))
@@ -27,6 +33,11 @@ internal sealed class DifferentialCopyStrategy : IBackupCopyStrategy
         return !CryptographicOperations.FixedTimeEquals(sourceHash, targetHash);
     }
 
+    /// <summary>
+    /// Computes a SHA-256 hash for a file.
+    /// </summary>
+    /// <param name="path">The file path.</param>
+    /// <returns>The hash bytes.</returns>
     private static byte[] ComputeHash(string path)
     {
         using var stream = File.OpenRead(path);

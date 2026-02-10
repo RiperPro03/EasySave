@@ -4,8 +4,8 @@ using EasySave.Core.Models;
 namespace EasySave.Core.DTO;
 
 /// <summary>
-/// DTO de persistence pour un job de sauvegarde (JSON / disque).
-/// Représente des données externes potentiellement invalides.
+/// Persistence DTO for a backup job (JSON/disk).
+/// Represents external data that may be invalid.
 /// </summary>
 public sealed class BackupJobDto
 {
@@ -15,7 +15,7 @@ public sealed class BackupJobDto
     public string? TargetPath { get; set; }
 
     /// <summary>
-    /// Type stocké sous forme de string pour compatibilité JSON.
+    /// Gets or sets the backup type stored as a string for JSON compatibility.
     /// </summary>
     public string? Type { get; set; }
 
@@ -25,13 +25,17 @@ public sealed class BackupJobDto
     public DateTime? LastRun { get; set; }
 
     /// <summary>
-    /// Constructeur vide requis pour certains sérialiseurs (JSON/XML).
+    /// Initializes a new instance of the <see cref="BackupJobDto"/> class.
     /// </summary>
+    /// <remarks>Required by some JSON/XML serializers.</remarks>
     public BackupJobDto() { }
 
     /// <summary>
-    /// Vérifie la cohérence minimale des données lues depuis la persistence.
+    /// Checks minimal consistency of data loaded from persistence.
     /// </summary>
+    /// <returns>
+    /// <c>true</c> when the DTO contains the minimum required fields; otherwise <c>false</c>.
+    /// </returns>
     public bool IsValid()
         => !string.IsNullOrWhiteSpace(Id)
         && !string.IsNullOrWhiteSpace(Name)
@@ -41,9 +45,12 @@ public sealed class BackupJobDto
         && Enum.TryParse<BackupType>(Type, out _);
 
     /// <summary>
-    /// Transforme le DTO en modèle métier.
-    /// Lève une exception si les données sont invalides.
+    /// Converts the DTO to a domain model.
     /// </summary>
+    /// <returns>The corresponding <see cref="BackupJob"/> instance.</returns>
+    /// <exception cref="ArgumentException">
+    /// Thrown when the DTO is invalid or the backup type cannot be parsed.
+    /// </exception>
     public BackupJob ToModel()
     {
         if (!IsValid())
@@ -65,8 +72,10 @@ public sealed class BackupJobDto
     }
 
     /// <summary>
-    /// Crée un DTO à partir d'un modèle métier valide.
+    /// Creates a DTO from a valid domain model.
     /// </summary>
+    /// <param name="job">The domain model to convert.</param>
+    /// <returns>A DTO representing the provided job.</returns>
     public static BackupJobDto FromModel(BackupJob job)
     {
         return new BackupJobDto
