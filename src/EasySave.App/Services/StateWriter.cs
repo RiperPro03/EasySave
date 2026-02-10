@@ -11,6 +11,10 @@ namespace EasySave.App.Services;
 public sealed class StateWriter : IStateWriter
 {
     private readonly IPathProvider _pathProvider;
+
+    /// <summary>
+    /// Options to make the JSON file readable (indentation) and convert enumerations to text
+    /// </summary>
     private readonly JsonSerializerOptions _options = new()
     {
         WriteIndented = true,

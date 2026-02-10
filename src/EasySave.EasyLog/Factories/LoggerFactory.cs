@@ -8,6 +8,7 @@ namespace EasySave.EasyLog.Factories
 {
     /// <summary>
     /// Creates logger instances from configuration options.
+    /// Pattern "Factory"
     /// </summary>
     public static class LoggerFactory
     {

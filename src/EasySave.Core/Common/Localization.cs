@@ -5,6 +5,7 @@ namespace EasySave.Core.Common;
 
 /// <summary>
 /// Provides culture resolution for the application.
+/// This class bridges the gap between EasySave's own ‘Language’ enumeration and .NET's standard ‘CultureInfo’ objects.
 /// </summary>
 public static class Localization
 {

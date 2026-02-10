@@ -6,7 +6,8 @@ using EasySave.Core.Resources;
 namespace EasySave.App.Console.Views;
 
 /// <summary>
-/// Renders backup-related console UI.
+/// Renders backup console UI.
+/// This class is only responsible for displaying text.
 /// </summary>
 public sealed class BackupView
 {

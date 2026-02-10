@@ -92,12 +92,14 @@ public sealed class JobController
             var sourcePath = _jobView.AskSourcePath();
             var targetPath = _jobView.AskTargetPath();
             var type = _jobView.AskBackupType();
-
+            
+            // Envoi des donnees au Service pour créer le job
             _jobService.Create(id, name, sourcePath, targetPath, type);
             _consoleView.ShowSuccess("Job created.");
         }
         catch (Exception ex)
         {
+            // Capture toute erreur metier pour l'afficher proprement
             _consoleView.ShowError(ex.Message);
         }
         _consoleView.WaitForKey();
@@ -120,7 +122,8 @@ public sealed class JobController
                 _consoleView.WaitForKey();
                 return;
             }
-
+            
+            // Permet de ne modifier qu'une seule propriete au lieu de tout ressaisir
             var fieldChoice = _jobView.AskJobFieldToEdit();
             if (fieldChoice == 0)
             {
@@ -139,23 +142,23 @@ public sealed class JobController
             switch (fieldChoice)
             {
                 case 1:
-                    // Nom.
+                    // Nom
                     name = _jobView.AskJobName();
                     break;
                 case 2:
-                    // Chemin source.
+                    // Chemin source
                     sourcePath = _jobView.AskSourcePath();
                     break;
                 case 3:
-                    // Chemin cible.
+                    // Chemin cible
                     targetPath = _jobView.AskTargetPath();
                     break;
                 case 4:
-                    // Type de sauvegarde.
+                    // Type de sauvegarde
                     type = _jobView.AskBackupType();
                     break;
                 case 5:
-                    // Etat actif/inactif.
+                    // Etat actif/inactif
                     isActive = _jobView.AskJobActiveState();
                     break;
             }
@@ -182,6 +185,8 @@ public sealed class JobController
             _consoleView.ShowInfo("Existing jobs:");
             _jobView.ShowJobs(jobs);
 
+
+            // Choix du job a supprimee
             var id = _jobView.AskJobId();
             _jobService.Delete(id);
             _consoleView.ShowSuccess("Job deleted.");

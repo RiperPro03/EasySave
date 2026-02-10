@@ -37,6 +37,7 @@ public class PathProvider : IPathProvider
     /// </summary>
     public void EnsureDirectoriesCreated()
     {
+        // Cree toute l'arborescence si elle n'existe pas
         Directory.CreateDirectory(LogsPath);
         Directory.CreateDirectory(StatePath);
         Directory.CreateDirectory(ConfigPath);

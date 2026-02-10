@@ -165,6 +165,6 @@ internal sealed class JobRepository : IJobRepository
         var json = JsonSerializer.Serialize(dtos, new JsonSerializerOptions { WriteIndented = true });
         File.WriteAllText(_jobsFilePath, json);
     }
-    
+
 
 }

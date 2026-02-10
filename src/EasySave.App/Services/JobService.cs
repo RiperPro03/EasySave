@@ -7,6 +7,7 @@ namespace EasySave.App.Services;
 
 /// <summary>
 /// Application service for managing backup jobs.
+/// This service acts as a link between controllers (UI) and data storage (Repository).
 /// </summary>
 public sealed class JobService : IJobService
 {

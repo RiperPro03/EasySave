@@ -7,6 +7,7 @@ namespace EasySave.App.Console.Controllers;
 
 /// <summary>
 /// Handles the main console menu navigation.
+/// This class is the main entry point that redirects the user to the various submenus (Jobs, Backups, Settings).
 /// </summary>
 public sealed class MenuController
 {
@@ -61,19 +62,20 @@ public sealed class MenuController
             _view.ShowMenu(Strings.Menu_Title, options);
 
             var choice = _input.ReadInt("> ");
-
+            
+            // Redirection vers le controleur spécialise selon le choix de l'utilisateur 
             switch (choice)
             {
                 case 1:
-                    // Gestion des jobs.
+                    // Gestion des jobs
                     _jobController.RunMenu();
                     break;
                 case 2:
-                    // Lancement des sauvegardes.
+                    // Lancement des sauvegardes
                     _backupController.RunMenu();
                     break;
                 case 3:
-                    // Parametres applicatifs.
+                    // Parametres applicatifs
                     _settingsController.Run();
                     break;
                 case 0:

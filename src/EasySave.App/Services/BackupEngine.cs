@@ -21,7 +21,7 @@ internal sealed class BackupEngine : IBackupEngine
     private readonly ILogger<LogEntryDto>? _logger;
 
     /// <summary>
-    /// Raised when job state changes during execution.
+    /// Raised when job state changes during execution. (update state.json)
     /// </summary>
     public event EventHandler<JobStateChangedEventArgs>? StateChanged;
 
@@ -99,11 +99,7 @@ internal sealed class BackupEngine : IBackupEngine
         // Charge la liste des fichiers pour calculer les totaux avant execution.
         var files = Directory.EnumerateFiles(job.SourcePath, "*", SearchOption.AllDirectories).ToList();
         var totalSizeBytes = files.Sum(file => new FileInfo(file).Length);
-        
-        // Initialise les compteurs de progres avant la boucle principale.
         InitializeTotals(state, files.Count, totalSizeBytes);
-        
-        // Publie un premier snapshot avec les totaux.
         PublishState(state);
 
         // Execute la copie fichier par fichier.

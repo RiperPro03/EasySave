@@ -196,13 +196,13 @@ public sealed class BackupService : IBackupService
     }
 
     /// <summary>
-    /// Creates a defensive copy of a state snapshot.
+    /// Creates a copy of a state snapshot.
     /// </summary>
     /// <param name="state">The source state.</param>
     /// <returns>A copy of the state.</returns>
     private static JobStateDto CopyState(JobStateDto state)
     {
-        // Copie defensive pour eviter des modifications concurrentes.
+        // Copie pour eviter des modifications concurrentes.
         return new JobStateDto
         {
             JobId = state.JobId,

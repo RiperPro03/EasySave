@@ -20,19 +20,20 @@ public sealed class ArgsParser
     {
         if (string.IsNullOrWhiteSpace(rawArgs))
             throw new ArgumentException("No job ids were provided.", nameof(rawArgs));
-
-        // Supprime les espaces pour simplifier le parsing.
+        
+        // Nettoie les espaces inutiles pour éviter les erreurs de parsing
         var sanitized = rawArgs.Replace(" ", string.Empty);
 
         var hasRange = sanitized.Contains('-');
         var hasList = sanitized.Contains(';');
-
+        
+        // Empêche de mélanger les tirets et les points-virgules
         if (hasRange && hasList)
             throw new FormatException("Mixed range and list syntax is not supported.");
 
         if (hasRange)
         {
-            // Format attendu: "start-end".
+            // Format attendu: "startIdJob-endIdJob".
             var parts = sanitized.Split('-', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
             if (parts.Length != 2)
                 throw new FormatException("Invalid range format.");

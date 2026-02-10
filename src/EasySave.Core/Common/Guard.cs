@@ -2,6 +2,7 @@
 
 /// <summary>
 /// Provides guard clauses for argument validation.
+/// It serves as a safety barrier to prevent the creation of objects with invalid data.
 /// </summary>
 internal static class Guard
 {

@@ -7,6 +7,7 @@ namespace EasySave.App.Console.Views;
 
 /// <summary>
 /// Renders job-related console UI.
+/// This class manages everything the user sees when creating or modifying a job.
 /// </summary>
 public sealed class JobView
 {

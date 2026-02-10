@@ -36,6 +36,8 @@ public sealed class ConsoleInput
         {
             System.Console.Write(prompt);
             var input = System.Console.ReadLine();
+            
+            // Vérifie que le texte n'est pas vide ou rempli d'espaces
             if (!string.IsNullOrWhiteSpace(input))
                 return input.Trim();
 
