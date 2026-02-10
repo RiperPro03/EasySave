@@ -3,18 +3,383 @@
         xmlns:vm="using:EasySave.App.Gui.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        mc:Ignorable="d"
+        d:DesignWidth="1400"
+        d:DesignHeight="800"
         x:Class="EasySave.App.Gui.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
-        Icon="/Assets/avalonia-logo.ico"
-        Title="EasySave.App.Gui">
+        Title="EasySave"
+        MinWidth="1100"
+        MinHeight="650"
+        Background="#000000"
+        TransparencyLevelHint="Blur">
 
     <Design.DataContext>
-        <!-- This only sets the DataContext for the previewer in an IDE,
-             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
         <vm:MainWindowViewModel/>
     </Design.DataContext>
 
-    <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+    <Window.Styles>
+        <!-- Boutons sidebar -->
+        <Style Selector="Button.sidebar-btn">
+            <Setter Property="Background" Value="#18FFFFFF"/>
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#30FFFFFF"/>
+            <Setter Property="Padding" Value="16,12"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="CornerRadius" Value="12"/>
+            <Setter Property="Margin" Value="0,4"/>
+            <Setter Property="FontWeight" Value="Regular"/>
+        </Style>
+        
+        <Style Selector="Button.sidebar-btn.inactive:pointerover">
+            <Setter Property="Background" Value="#25FFFFFF"/>
+            <Setter Property="BorderBrush" Value="#40FFFFFF"/>
+        </Style>
 
+        <Style Selector="Button.sidebar-btn.active">
+            <Setter Property="Background" Value="#0A84FF"/>
+            <Setter Property="BorderBrush" Value="#0A84FF"/>
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+        </Style>
+
+        <Style Selector="Button.sidebar-btn.active:pointerover">
+            <Setter Property="Background" Value="#0A84FF"/>
+            <Setter Property="BorderBrush" Value="#0A84FF"/>
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+        </Style>
+        
+        <!-- Boutons d'action avec effet blur -->
+        <Style Selector="Button.action-btn">
+            <Setter Property="Padding" Value="20,11"/>
+            <Setter Property="CornerRadius" Value="10"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="14"/>
+        </Style>
+        
+        <Style Selector="Button.action-btn.primary">
+            <Setter Property="Background" Value="#0A84FF"/>
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+        </Style>
+        
+        <Style Selector="Button.action-btn.primary:pointerover">
+            <Setter Property="Background" Value="#0066DD"/>
+        </Style>
+        
+        <Style Selector="Button.action-btn.secondary">
+            <Setter Property="Background" Value="#28FFFFFF"/>
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#35FFFFFF"/>
+        </Style>
+        
+        <Style Selector="Button.action-btn.secondary:pointerover">
+            <Setter Property="Background" Value="#35FFFFFF"/>
+        </Style>
+
+        <!-- Cards avec glassmorphism -->
+        <Style Selector="Border.glass-card">
+            <Setter Property="Background" Value="#15FFFFFF"/>
+            <Setter Property="BorderBrush" Value="#28FFFFFF"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="16"/>
+            <Setter Property="BoxShadow" Value="0 8 32 0 #40000000"/>
+        </Style>
+    </Window.Styles>
+
+    <Border Background="#0F1419">
+
+        <Grid RowDefinitions="70,*" Margin="0">
+
+            <!-- ================= HEADER avec blur ================= -->
+            <Border Grid.Row="0"
+                    Background="#12FFFFFF"
+                    BorderBrush="#20FFFFFF"
+                    BorderThickness="0,0,0,1"
+                    Margin="0"
+                    Padding="32,0">
+                <Grid ColumnDefinitions="Auto,*,Auto">
+                    
+                    <!-- Logo -->
+                    <StackPanel Grid.Column="0" 
+                                Orientation="Horizontal" 
+                                Spacing="14"
+                                VerticalAlignment="Center">
+                        <Border Width="44" 
+                                Height="44"
+                                CornerRadius="11">
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                                    <GradientStop Color="#0A84FF" Offset="0"/>
+                                    <GradientStop Color="#0066DD" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Border.Background>
+                            <TextBlock Text="💾"
+                                       FontSize="24"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"/>
+                        </Border>
+                        <StackPanel VerticalAlignment="Center" Spacing="2">
+                            <TextBlock Text="EasySave"
+                                       FontSize="20"
+                                       FontWeight="Bold"
+                                       Foreground="#FFFFFF"
+                                       LetterSpacing="0.5"/>
+                            <TextBlock Text="Backup Manager Pro"
+                                       FontSize="11"
+                                       Foreground="#90FFFFFF"
+                                       LetterSpacing="0.8"/>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <!-- Controls droite -->
+                    <StackPanel Grid.Column="2" 
+                                Orientation="Horizontal" 
+                                Spacing="10"
+                                VerticalAlignment="Center">
+                        <Border Background="#20FFFFFF"
+                                BorderBrush="#30FFFFFF"
+                                BorderThickness="1"
+                                Padding="12,6"
+                                CornerRadius="8">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <Ellipse Width="8" Height="8" Fill="#30D158"/>
+                                <TextBlock Text="Active"
+                                           Foreground="#FFFFFF"
+                                           FontSize="12"
+                                           FontWeight="Medium"/>
+                            </StackPanel>
+                        </Border>
+                        <Border Background="#18FFFFFF"
+                                BorderBrush="#28FFFFFF"
+                                BorderThickness="1"
+                                Padding="12,6"
+                                CornerRadius="8">
+                            <TextBlock Text="{Binding AppVersion}"
+                                       Foreground="#90FFFFFF"
+                                       FontSize="12"
+                                       FontWeight="Medium"/>
+                        </Border>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- ================= MAIN CONTENT ================= -->
+            <Grid Grid.Row="1" ColumnDefinitions="280,*" Margin="24,24,24,24">
+
+                <!-- ================= SIDEBAR ================= -->
+                <Border Grid.Column="0"
+                        Classes="glass-card"
+                        Padding="20"
+                        Margin="0,0,24,0">
+                    
+                    <StackPanel Spacing="6">
+                        
+                        <!-- Section Navigation -->
+                        <StackPanel Spacing="6" Margin="0,0,0,16">
+                            <TextBlock Text="WORKSPACE"
+                                       FontSize="11"
+                                       FontWeight="Bold"
+                                       Foreground="#70FFFFFF"
+                                       Margin="12,8,0,8"
+                                       LetterSpacing="1.2"/>
+                            
+                            <Button Classes="sidebar-btn"
+                                    Classes.active="{Binding IsDashboardActive}"
+                                    Classes.inactive="{Binding IsDashboardInactive}"
+                                    Command="{Binding ShowDashboardCommand}">
+                                <StackPanel Orientation="Horizontal" Spacing="12">
+                                    <Border Width="24" Height="24" CornerRadius="6" Background="#20FFFFFF">
+                                        <TextBlock Text="📊" FontSize="14" 
+                                                   HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center"/>
+                                    </Border>
+                                    <TextBlock Text="Dashboard" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+
+                            <Button Classes="sidebar-btn"
+                                    Classes.active="{Binding IsJobsActive}"
+                                    Classes.inactive="{Binding IsJobsInactive}"
+                                    Command="{Binding ShowJobsCommand}">
+                                <StackPanel Orientation="Horizontal" Spacing="12">
+                                    <Border Width="24" Height="24" CornerRadius="6" Background="#20FFFFFF">
+                                        <TextBlock Text="📁" FontSize="14"
+                                                   HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center"/>
+                                    </Border>
+                                    <TextBlock Text="Backup Jobs" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+
+                            <Button Classes="sidebar-btn"
+                                    Classes.active="{Binding IsExecutionActive}"
+                                    Classes.inactive="{Binding IsExecutionInactive}"
+                                    Command="{Binding ShowExecutionCommand}">
+                                <StackPanel Orientation="Horizontal" Spacing="12">
+                                    <Border Width="24" Height="24" CornerRadius="6" Background="#20FFFFFF">
+                                        <TextBlock Text="▶" FontSize="14"
+                                                   HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center"/>
+                                    </Border>
+                                    <TextBlock Text="Live Execution" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+
+                            <Button Classes="sidebar-btn"
+                                    Classes.active="{Binding IsLogsActive}"
+                                    Classes.inactive="{Binding IsLogsInactive}"
+                                    Command="{Binding ShowLogsCommand}">
+                                <StackPanel Orientation="Horizontal" Spacing="12">
+                                    <Border Width="24" Height="24" CornerRadius="6" Background="#20FFFFFF">
+                                        <TextBlock Text="📝" FontSize="14"
+                                                   HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center"/>
+                                    </Border>
+                                    <TextBlock Text="Logs" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+
+                        <!-- Divider avec gradient -->
+                        <Border Height="1" Margin="8,8">
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
+                                    <GradientStop Color="#00FFFFFF" Offset="0"/>
+                                    <GradientStop Color="#30FFFFFF" Offset="0.5"/>
+                                    <GradientStop Color="#00FFFFFF" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Border.Background>
+                        </Border>
+
+                        <!-- Section System -->
+                        <StackPanel Spacing="6" Margin="0,16,0,0">
+                            <TextBlock Text="SYSTEM"
+                                       FontSize="11"
+                                       FontWeight="Bold"
+                                       Foreground="#70FFFFFF"
+                                       Margin="12,0,0,8"
+                                       LetterSpacing="1.2"/>
+
+                            <Button Classes="sidebar-btn"
+                                    Classes.active="{Binding IsSettingsActive}"
+                                    Classes.inactive="{Binding IsSettingsInactive}"
+                                    Command="{Binding ShowSettingsCommand}">
+                                <StackPanel Orientation="Horizontal" Spacing="12">
+                                    <Border Width="24" Height="24" CornerRadius="6" Background="#20FFFFFF">
+                                        <TextBlock Text="⚙" FontSize="14"
+                                                   HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center"/>
+                                    </Border>
+                                    <TextBlock Text="Settings" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+
+                            <Button Classes="sidebar-btn"
+                                    Classes.active="{Binding IsAboutActive}"
+                                    Classes.inactive="{Binding IsAboutInactive}"
+                                    Command="{Binding ShowAboutCommand}">
+                                <StackPanel Orientation="Horizontal" Spacing="12">
+                                    <Border Width="24" Height="24" CornerRadius="6" Background="#20FFFFFF">
+                                        <TextBlock Text="ℹ" FontSize="14"
+                                                   HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center"/>
+                                    </Border>
+                                    <TextBlock Text="About" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+
+                        <!-- Stats card en bas -->
+                        <!-- <Border Background="#15FFFFFF" -->
+                        <!--         BorderBrush="#25FFFFFF" -->
+                        <!--         BorderThickness="1" -->
+                        <!--         CornerRadius="12" -->
+                        <!--         Padding="16" -->
+                        <!--         Margin="0,24,0,0"> -->
+                        <!--     <StackPanel Spacing="8"> -->
+                        <!--         <TextBlock Text="STORAGE" -->
+                        <!--                    FontSize="10" -->
+                        <!--                    FontWeight="Bold" -->
+                        <!--                    Foreground="#70FFFFFF" -->
+                        <!--                    LetterSpacing="1"/> -->
+                        <!--         <TextBlock Text="127.4 GB" -->
+                        <!--                    FontSize="24" -->
+                        <!--                    FontWeight="Bold" -->
+                        <!--                    Foreground="#FFFFFF"/> -->
+                        <!--         <TextBlock Text="Used of 500 GB" -->
+                        <!--                    FontSize="12" -->
+                        <!--                    Foreground="#80FFFFFF"/> -->
+                        <!--         ~1~ Progress bar @1@ -->
+                        <!--         <Border Height="4"  -->
+                        <!--                 Background="#20FFFFFF" -->
+                        <!--                 CornerRadius="2" -->
+                        <!--                 Margin="0,4,0,0"> -->
+                        <!--             <Border Width="80" -->
+                        <!--                     Height="4" -->
+                        <!--                     Background="#0A84FF" -->
+                        <!--                     CornerRadius="2" -->
+                        <!--                     HorizontalAlignment="Left"/> -->
+                        <!--         </Border> -->
+                        <!--     </StackPanel> -->
+                        <!-- </Border> -->
+
+                    </StackPanel>
+                </Border>
+
+                <!-- ================= CONTENT AREA ================= -->
+                <Grid Grid.Column="1" RowDefinitions="Auto,*">
+                    
+                    <!-- Header de page avec actions -->
+                    <Grid Grid.Row="0" 
+                          ColumnDefinitions="*,Auto"
+                          Margin="0,0,0,28">
+                        
+                        <StackPanel Grid.Column="0" Spacing="6">
+                            <TextBlock Text="{Binding CurrentPageTitle}"
+                                       FontSize="34"
+                                       FontWeight="Bold"
+                                       Foreground="#FFFFFF"
+                                       LetterSpacing="0.5"/>
+                            <TextBlock Text="Manage and execute your backup operations"
+                                       FontSize="14"
+                                       Foreground="#80FFFFFF"/>
+                        </StackPanel>
+                        
+                        <StackPanel Grid.Column="1"
+                                    Orientation="Horizontal"
+                                    Spacing="12"
+                                    VerticalAlignment="Center">
+                            <Button Content="＋  New Backup"
+                                    Classes="action-btn primary"/>
+                            <Button Content="⟳ Refresh"
+                                    Classes="action-btn secondary"
+                                    Padding="12,11"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- Main content card -->
+                    <Border Grid.Row="1"
+                            Classes="glass-card"
+                            Padding="0">
+                            
+                            <ScrollViewer VerticalScrollBarVisibility="Auto"
+                                          HorizontalScrollBarVisibility="Disabled"
+                                          Padding="32">
+                                <ContentControl Content="{Binding CurrentView}" />
+                            </ScrollViewer>
+                    </Border>
+
+                </Grid>
+
+            </Grid>
+
+        </Grid>
+    </Border>
 </Window>
