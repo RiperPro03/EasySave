@@ -101,7 +101,7 @@ internal sealed class BackupEngine : IBackupEngine
         ///<summary>
         /// Lancement de la boucle de copie
         /// </summary>
-        ExecuteBackup(files, job.SourcePath, job.TargetPath, strategy, result, state);
+        ExecuteBackup(job, files, job.SourcePath, job.TargetPath, strategy, result, state);
 
         ///<summary>
         /// Finalisation du résultat
