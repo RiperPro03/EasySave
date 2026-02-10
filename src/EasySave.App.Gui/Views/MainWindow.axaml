@@ -9,6 +9,7 @@
         x:Class="EasySave.App.Gui.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Title="EasySave"
+        Icon="avares://EasySave.App.Gui/Assets/easysave-logo.ico"
         MinWidth="1100"
         MinHeight="650"
         Background="#000000"
