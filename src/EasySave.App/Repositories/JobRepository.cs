@@ -5,6 +5,9 @@ using System.Text.Json;
 
 namespace EasySave.App.Repositories;
 
+/// <summary>
+/// JSON-backed repository for backup jobs.
+/// </summary>
 internal sealed class JobRepository : IJobRepository
 {
     private readonly IPathProvider _pathProvider;
@@ -12,6 +15,11 @@ internal sealed class JobRepository : IJobRepository
     private readonly string _jobsFilePath;
     private const int MaxJobs = 5;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="JobRepository"/> class.
+    /// </summary>
+    /// <param name="pathProvider">Provides configuration paths.</param>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="pathProvider"/> is null.</exception>
     public JobRepository(IPathProvider pathProvider)
     {
         _pathProvider = pathProvider ?? throw new ArgumentNullException(nameof(pathProvider));
@@ -21,9 +29,27 @@ internal sealed class JobRepository : IJobRepository
         _jobs = LoadJobs();
     }
 
+    /// <summary>
+    /// Returns all persisted jobs.
+    /// </summary>
+    /// <returns>A read-only list of jobs.</returns>
     public IReadOnlyList<BackupJob> GetAll() => _jobs.AsReadOnly();
+
+    /// <summary>
+    /// Gets a job by identifier.
+    /// </summary>
+    /// <param name="id">The job identifier.</param>
+    /// <returns>The matching job, or <c>null</c> if not found.</returns>
     public BackupJob? GetById(string id) => _jobs.FirstOrDefault(job => job.Id == id);
 
+    /// <summary>
+    /// Adds a new job.
+    /// </summary>
+    /// <param name="job">The job to add.</param>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="job"/> is null.</exception>
+    /// <exception cref="InvalidOperationException">
+    /// Thrown when the maximum job count is reached or the ID already exists.
+    /// </exception>
     public void Add(BackupJob job)
     {
         if (job is null)
@@ -40,6 +66,11 @@ internal sealed class JobRepository : IJobRepository
         _jobs.Add(job);
         SaveJobs();
     }
+    /// <summary>
+    /// Removes a job by identifier.
+    /// </summary>
+    /// <param name="id">The job identifier.</param>
+    /// <exception cref="KeyNotFoundException">Thrown when the job does not exist.</exception>
     public void Remove(string id)
     {
         var job = GetById(id);
@@ -50,6 +81,12 @@ internal sealed class JobRepository : IJobRepository
         SaveJobs();
     }
 
+    /// <summary>
+    /// Updates an existing job.
+    /// </summary>
+    /// <param name="updatedjob">The updated job definition.</param>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="updatedjob"/> is null.</exception>
+    /// <exception cref="KeyNotFoundException">Thrown when the job does not exist.</exception>
     public void Update(BackupJob updatedjob)
     {
         if (updatedjob == null)
@@ -75,6 +112,10 @@ internal sealed class JobRepository : IJobRepository
         SaveJobs();
     }
 
+    /// <summary>
+    /// Loads jobs from the JSON file.
+    /// </summary>
+    /// <returns>A list of valid jobs.</returns>
     private List<BackupJob> LoadJobs()
     {
         if (!File.Exists(_jobsFilePath))
@@ -113,6 +154,9 @@ internal sealed class JobRepository : IJobRepository
         return jobs;
     }
 
+    /// <summary>
+    /// Persists jobs to the JSON file.
+    /// </summary>
     private void SaveJobs()
     {
         _pathProvider.EnsureDirectoriesCreated();
@@ -121,6 +165,6 @@ internal sealed class JobRepository : IJobRepository
         var json = JsonSerializer.Serialize(dtos, new JsonSerializerOptions { WriteIndented = true });
         File.WriteAllText(_jobsFilePath, json);
     }
-    
+
 
 }

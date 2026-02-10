@@ -3,7 +3,7 @@
 namespace EasySave.Core.DTO;
 
 /// <summary>
-/// Représente l'état temps réel d'un job (state.json).
+/// Represents the real-time state of a job (state.json).
 /// </summary>
 public class JobStateDto
 {
@@ -22,7 +22,7 @@ public class JobStateDto
     public long SizeProcessedBytes { get; set; }
 
     /// <summary>
-    /// Pourcentage déjà calculé côté moteur (ou service)
+    /// Gets or sets the progress percentage computed by the engine/service.
     /// </summary>
     public int ProgressPercentage { get; set; }
 
@@ -33,6 +33,9 @@ public class JobStateDto
 
     public string? ErrorMessage { get; set; }
 
-    // Constructeur vide requis pour certains sérialiseurs (XML)
+    /// <summary>
+    /// Initializes a new instance of the <see cref="JobStateDto"/> class.
+    /// </summary>
+    /// <remarks>Required by some XML serializers.</remarks>
     public JobStateDto() { }
 }

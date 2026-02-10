@@ -5,8 +5,8 @@ using EasySave.EasyLog.Options;
 namespace EasySave.Core.Models;
 
 /// <summary>
-/// Configuration globale de l'application.
-/// Centralise les parametres applicatifs (langue, repertoires, etc.).
+/// Global application configuration.
+/// Centralizes application settings (language, directories, and so on).
 /// </summary>
 public class AppConfig
 {
@@ -14,6 +14,12 @@ public class AppConfig
     public string LogDirectory { get; private set; }
     public LogFormat LogFormat { get; private set; }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AppConfig"/> class.
+    /// </summary>
+    /// <param name="language">The default language.</param>
+    /// <param name="logDirectory">The log directory.</param>
+    /// <param name="logFormat">The log format.</param>
     private AppConfig(Language language, string logDirectory, LogFormat logFormat)
     {
         Language = language;
@@ -22,8 +28,9 @@ public class AppConfig
     }
 
     /// <summary>
-    /// Charge la configuration par defaut de l'application.
+    /// Loads the default application configuration.
     /// </summary>
+    /// <returns>The default configuration.</returns>
     public static AppConfig LoadDefaults()
     {
         return new AppConfig(
@@ -34,32 +41,39 @@ public class AppConfig
     }
 
     /// <summary>
-    /// Permet de modifier la langue a l'execution.
+    /// Changes the current language.
     /// </summary>
+    /// <param name="language">The new language.</param>
     public void ChangeLanguage(Language language)
     {
         Language = language;
     }
 
     /// <summary>
-    /// Met a jour le repertoire de logs.
+    /// Updates the log directory.
     /// </summary>
+    /// <param name="logDirectory">The new log directory.</param>
     public void UpdateLogDirectory(string logDirectory)
     {
         LogDirectory = Guard.NotNullOrWhiteSpace(logDirectory, nameof(logDirectory));
     }
 
     /// <summary>
-    /// Met a jour le format de logs.
+    /// Updates the log format.
     /// </summary>
+    /// <param name="logFormat">The new log format.</param>
     public void ChangeLogFormat(LogFormat logFormat)
     {
         LogFormat = logFormat;
     }
 
+    /// <summary>
+    /// Builds the default log directory path.
+    /// </summary>
+    /// <returns>The default log directory path.</returns>
     private static string GetDefaultLogDirectory()
     {
-        // Exemple simple et portable (a adapter si besoin)
+        // Use a per-user application data folder to keep logs writable.
         return Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
             "EasySave",
