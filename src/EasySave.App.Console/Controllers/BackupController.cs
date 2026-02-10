@@ -1,6 +1,5 @@
 ﻿using EasySave.App.Console.Input;
 using EasySave.App.Console.Views;
-using EasySave.App.Services;
 using EasySave.Core.DTO;
 using EasySave.Core.Interfaces;
 using EasySave.Core.Resources;
@@ -56,7 +55,7 @@ public sealed class BackupController
 
             var choice = _backupView.ReadMenuChoice();
             
-            /// On gere les actions selon le chiffre tape.
+            // On gere les actions selon le chiffre tape.
             switch (choice)
             {
                 case 1:

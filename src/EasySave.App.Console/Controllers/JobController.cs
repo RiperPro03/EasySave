@@ -1,5 +1,4 @@
 ﻿using EasySave.App.Console.Views;
-using EasySave.App.Services;
 using EasySave.Core.Interfaces;
 using EasySave.Core.Resources;
 
