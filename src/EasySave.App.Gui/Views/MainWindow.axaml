@@ -117,14 +117,16 @@
                                 CornerRadius="11">
                             <Border.Background>
                                 <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
-                                    <GradientStop Color="#0A84FF" Offset="0"/>
-                                    <GradientStop Color="#0066DD" Offset="1"/>
+                                    <GradientStop Color="#ffff" Offset="0"/>
+                                    <GradientStop Color="#ffff" Offset="1"/>
                                 </LinearGradientBrush>
                             </Border.Background>
-                            <TextBlock Text="💾"
-                                       FontSize="24"
-                                       HorizontalAlignment="Center"
-                                       VerticalAlignment="Center"/>
+                            <Image Source="avares://EasySave.App.Gui/Assets/easysave-logo.ico"
+                                   Width="40"
+                                   Height="40"
+                                   Stretch="Uniform"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"/>
                         </Border>
                         <StackPanel VerticalAlignment="Center" Spacing="2">
                             <TextBlock Text="EasySave"
