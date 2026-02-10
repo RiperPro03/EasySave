@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Linq;
+using EasySave.App.Utils;
 using EasySave.Core.DTO;
 using EasySave.Core.Enums;
 using EasySave.Core.Events;
@@ -14,14 +15,14 @@ namespace EasySave.App.Services;
 
 
 /// <summary>
-/// BackupEngine est le moteur qui exécute physiquement la copie des fichiers
+/// BackupEngine est le moteur qui exÃ©cute physiquement la copie des fichiers
 /// </summary>
 internal sealed class BackupEngine : IBackupEngine
 {
     private readonly ILogger<LogEntryDto>? _logger;
 
     /// <summary>
-    /// Événement pour informer le reste de l'appli (comme le fichier d'état) que la progression change
+    /// Ã‰vÃ©nement pour informer le reste de l'appli (comme le fichier d'Ã©tat) que la progression change
     /// </summary>
     public event EventHandler<JobStateChangedEventArgs>? StateChanged;
 
@@ -53,7 +54,7 @@ internal sealed class BackupEngine : IBackupEngine
         var state = CreateInitialState(job);
 
         ///<summary>
-        ///Vérification de sécurité avant de commencer
+        ///VÃ©rification de sÃ©curitÃ© avant de commencer
         /// </summary> 
         if (!Directory.Exists(job.SourcePath))
         {
@@ -68,7 +69,7 @@ internal sealed class BackupEngine : IBackupEngine
         }
 
         ///<summary>
-        /// Choix de la stratégie de copie selon le type choisi (Complet ou Différentiel)
+        /// Choix de la stratÃ©gie de copie selon le type choisi (Complet ou DiffÃ©rentiel)
         /// </summary> 
         IBackupCopyStrategy? strategy = job.Type switch
         {
@@ -103,8 +104,8 @@ internal sealed class BackupEngine : IBackupEngine
         ExecuteBackup(files, job.SourcePath, job.TargetPath, strategy, result, state);
 
         ///<summary>
-        /// Finalisation du résultat
-        /// </summary> Finalisation du résultat
+        /// Finalisation du rÃ©sultat
+        /// </summary> Finalisation du rÃ©sultat
         result.Success = result.ErrorCount == 0;
         result.Message = result.Success ? Strings.Backup_Success : Strings.Info_BackupCompletedWithErrors;
         result.Duration = stopwatch.Elapsed;
@@ -116,10 +117,11 @@ internal sealed class BackupEngine : IBackupEngine
     }
 
     /// <summary>
-    /// Boucle qui parcourt chaque fichier et décide s'il faut le copier ou non
+    /// Boucle qui parcourt chaque fichier et dÃ©cide s'il faut le copier ou non
     /// </summary>
 
     private void ExecuteBackup(
+        BackupJob job,
         IReadOnlyList<string> files,
         string sourceRoot,
         string targetRoot,
@@ -132,6 +134,7 @@ internal sealed class BackupEngine : IBackupEngine
             var relativePath = Path.GetRelativePath(sourceRoot, sourcePath);
             var targetPath = Path.Combine(targetRoot, relativePath);
             var fileSize = new FileInfo(sourcePath).Length;
+            var transferStopwatch = new Stopwatch();
             UpdateProgressState(state, sourcePath, targetPath, fileSize, incrementProcessed: false);
 
             result.FilesProcessed++;
@@ -141,16 +144,46 @@ internal sealed class BackupEngine : IBackupEngine
                 if (!strategy.ShouldCopy(sourcePath, targetPath))
                 {
                     result.SkippedCount++;
+                    WriteLogEntry(job, sourcePath, targetPath, fileSize, 0, "SKIPPED");
+                    UpdateProgressState(state, sourcePath, targetPath, fileSize, incrementProcessed: true);
                     continue;
                 }
 
+                EnsureTargetDirectory(job, sourcePath, targetPath);
+                transferStopwatch.Start();
                 CopyFile(sourcePath, targetPath);
+                transferStopwatch.Stop();
                 result.CopiedCount++;
                 result.TotalBytesProcessed += fileSize;
+                WriteLogEntry(
+                    job,
+                    sourcePath,
+                    targetPath,
+                    fileSize,
+                    transferStopwatch.Elapsed.TotalMilliseconds,
+                    "OK");
             }
             catch (Exception ex)
             {
-                result.Errors.Add($"{sourcePath} -> {targetPath}: {ex.Message}");
+                if (transferStopwatch.IsRunning)
+                    transferStopwatch.Stop();
+
+                var sourceUnc = UncResolver.ResolveToUncForLog(sourcePath);
+                var targetUnc = UncResolver.ResolveToUncForLog(targetPath);
+                var transferMs = -transferStopwatch.Elapsed.TotalMilliseconds;
+                if (transferMs >= 0)
+                    transferMs = -1;
+
+                WriteLogEntry(
+                    job,
+                    sourcePath,
+                    targetPath,
+                    fileSize,
+                    transferMs,
+                    "ERROR",
+                    ex.Message);
+                result.Errors.Add(
+                    $"{sourceUnc} -> {targetUnc}: {ex.Message}; SizeBytes={fileSize}; TransferMs={transferMs:0.###}");
                 result.ErrorCount++;
             }
 
@@ -159,16 +192,10 @@ internal sealed class BackupEngine : IBackupEngine
     }
 
     /// <summary>
-    /// Création physique du dossier de destination et copie du fichier
+    /// CrÃ©ation physique du dossier de destination et copie du fichier
     /// </summary>
     private static void CopyFile(string sourcePath, string targetPath)
-    {
-        var directory = Path.GetDirectoryName(targetPath);
-        if (!string.IsNullOrWhiteSpace(directory))
-            Directory.CreateDirectory(directory);
-
-        File.Copy(sourcePath, targetPath, true);
-    }
+        => File.Copy(sourcePath, targetPath, true);
 
     ///<summary>
     ///  Enregistre les informations dans le fichier de log
@@ -182,16 +209,60 @@ internal sealed class BackupEngine : IBackupEngine
         if (result.Errors.Count > 0)
             summary = $"{summary}; Details={string.Join(" | ", result.Errors)}";
 
+        WriteLogEntry(
+            job,
+            job.SourcePath,
+            job.TargetPath,
+            result.TotalBytesProcessed,
+            result.Duration.TotalMilliseconds,
+            result.ErrorCount == 0 ? "OK" : "ERROR",
+            summary);
+    }
+
+    private void EnsureTargetDirectory(BackupJob job, string sourcePath, string targetPath)
+    {
+        var directory = Path.GetDirectoryName(targetPath);
+        if (string.IsNullOrWhiteSpace(directory))
+            return;
+
+        if (Directory.Exists(directory))
+            return;
+
+        Directory.CreateDirectory(directory);
+
+        var sourceDirectory = Path.GetDirectoryName(sourcePath);
+        if (string.IsNullOrWhiteSpace(sourceDirectory))
+            sourceDirectory = job.SourcePath;
+
+        WriteLogEntry(job, sourceDirectory, directory, 0, 0, "DIR_CREATED");
+    }
+
+    private void WriteLogEntry(
+        BackupJob job,
+        string? sourcePath,
+        string? targetPath,
+        long fileSizeBytes,
+        double transferTimeMs,
+        string status,
+        string? errorMessage = null)
+    {
+        if (_logger is null)
+            return;
+
         var entry = new LogEntryDto
         {
             TimestampUtc = DateTime.UtcNow,
             JobName = job.Name,
-            SourcePath = job.SourcePath,
-            TargetPath = job.TargetPath,
-            FileSizeBytes = result.TotalBytesProcessed,
-            TransferTimeMs = result.Duration.TotalMilliseconds,
-            Status = result.ErrorCount == 0 ? "OK" : "ERROR",
-            ErrorMessage = summary
+            SourcePath = string.IsNullOrWhiteSpace(sourcePath)
+                ? string.Empty
+                : UncResolver.ResolveToUncForLog(sourcePath),
+            TargetPath = string.IsNullOrWhiteSpace(targetPath)
+                ? string.Empty
+                : UncResolver.ResolveToUncForLog(targetPath),
+            FileSizeBytes = fileSizeBytes,
+            TransferTimeMs = transferTimeMs,
+            Status = status,
+            ErrorMessage = errorMessage
         };
 
         _logger.Write(entry);
@@ -225,8 +296,8 @@ internal sealed class BackupEngine : IBackupEngine
         long fileSize,
         bool incrementProcessed)
     {
-        state.CurrentSourceFile = sourcePath;
-        state.CurrentTargetFile = targetPath;
+        state.CurrentSourceFile = UncResolver.ResolveToUncForLog(sourcePath);
+        state.CurrentTargetFile = UncResolver.ResolveToUncForLog(targetPath);
 
         if (incrementProcessed)
         {

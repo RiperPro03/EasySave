@@ -4,7 +4,7 @@
 
 - Windows
 - .NET SDK 10.0
-- Visual Studio 2022+ ou Rider
+- Visual Studio 2026+ ou Rider
 - Git
 
 Vérifier l'installation : **dotnet --version**
@@ -70,7 +70,9 @@ Options disponibles :
 	- French
 
 - Format de journalisation :
-	- JSON				- XML
+
+	- JSON			
+	- XML
 
 Les modifications sont sauvegardées automatiquement.
 
@@ -112,4 +114,5 @@ Les tests couvrent :
 	- Sélection des fichiers à copier 
 	- Logique de la sauvegarde complète 
 	- Logique de la sauvegarde différentielle
+
 	- Génération des fichiers JSON 

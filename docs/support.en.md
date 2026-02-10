@@ -4,7 +4,7 @@
 
 - Windows
 - .NET SDK 10.0
-- Visual Studio 2022+ or Rider
+- Visual Studio 2026+ or Rider
 - Git
 
 Check installation: **dotnet --version**
