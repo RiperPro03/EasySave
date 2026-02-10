@@ -5,6 +5,9 @@ using EasySave.Core.Models;
 
 namespace EasySave.App.Services;
 
+///<summary>
+///  Ce service fait le lien entre les contrôleurs (UI) et le stockage des données (Repository)
+/// </summary>
 public sealed class JobService : IJobService
 {
     private readonly IJobRepository _jobRepository;
@@ -23,6 +26,9 @@ public sealed class JobService : IJobService
 
     public BackupJob? GetById(string id) => _jobRepository.GetById(id);
 
+    ///<summary>
+    /// Crée un nouvel objet BackupJob et demande au Repository de l'enregistrer
+    /// </summary> 
     public void Create(string id, string name, string sourcePath, string targetPath, BackupType type, bool isActive = true)
     {
         var job = new BackupJob(
@@ -36,6 +42,9 @@ public sealed class JobService : IJobService
         _jobRepository.Add(job);
     }
 
+    /// <summary>
+    /// Met à jour un travail existant tout en conservant sa date de création d'origine
+    /// </summary>
     public void Update(string id, string name, string sourcePath, string targetPath, BackupType type, bool isActive)
     {
         var existing = _jobRepository.GetById(id);
@@ -54,6 +63,10 @@ public sealed class JobService : IJobService
 
         _jobRepository.Update(updated);
     }
+
+    /// <summary>
+    /// Spécifiquement utilisé pour mettre à jour l'horodatage après une sauvegarde réussie
+    /// </summary>
 
     public void MarkExecuted(string id, DateTime? nowUtc = null)
     {

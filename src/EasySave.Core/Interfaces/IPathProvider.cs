@@ -9,5 +9,5 @@ public interface IPathProvider
     string LogsPath { get; }
     string StatePath { get; }
     string ConfigPath { get; }
-    void EnsureDirectoriesCreated(); // Crée les dossiers s'ils manquent
+    void EnsureDirectoriesCreated(); ///<summary>  Crée les dossiers s'ils manquent </summary>
 }

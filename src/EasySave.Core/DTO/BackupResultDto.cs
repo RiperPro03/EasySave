@@ -14,7 +14,9 @@ public class BackupResultDto
     public int SkippedCount { get; set; }
     public int ErrorCount { get; set; }
 
-    /// <summary>Durée totale (en ticks .NET). Alternative : DurationMs (long) si tu préfères.</summary>
+    /// <summary>
+    /// Durée totale (en ticks .NET). Alternative : DurationMs (long) si tu préfères.
+    /// </summary>
     public TimeSpan Duration { get; set; }
 
     public List<string> Errors { get; set; } = new();

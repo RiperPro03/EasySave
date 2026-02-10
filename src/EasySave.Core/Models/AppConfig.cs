@@ -59,7 +59,9 @@ public class AppConfig
 
     private static string GetDefaultLogDirectory()
     {
-        // Exemple simple et portable (a adapter si besoin)
+        ///<summary>
+        /// Exemple simple et portable (a adapter si besoin)
+        /// </summary>
         return Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
             "EasySave",

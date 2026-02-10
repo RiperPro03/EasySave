@@ -5,6 +5,9 @@ using EasySave.EasyLog.Interfaces;
 
 namespace EasySave.EasyLog.Serialization
 {
+    /// <summary>
+    /// Cette classe transforme les objets de log en format XML
+    /// </summary>
     internal sealed class XmlSerializer : ILogSerializer
     {
         private static readonly ConcurrentDictionary<Type, System.Xml.Serialization.XmlSerializer> Cache =
