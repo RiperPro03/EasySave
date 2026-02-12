@@ -7,3 +7,4 @@ public sealed class SettingsViewModel : ViewModelBase
 {
     public string Info => "Configure global application settings";
 }
+ 
