@@ -1,7 +1,9 @@
 using System;
+using System.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using EasySave.App.Gui.Enums;
+using EasySave.App.Services;
 using EasySave.Core.Events;
 using EasySave.Core.Interfaces;
 
@@ -22,6 +24,8 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
     private readonly LogsViewModel _logsViewModel;
     private readonly SettingsViewModel _settingsViewModel;
     private readonly AboutViewModel _aboutViewModel;
+    private readonly IAppLogService? _appLogService;
+    private readonly SynchronizationContext? _uiContext;
     private bool _disposed;
 
     public string AppVersion { get; } = "v2.0.0";
@@ -75,12 +79,14 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
     /// </summary>
     public MainWindowViewModel()
     {
+        _uiContext = SynchronizationContext.Current;
         _dashboardViewModel = new DashboardViewModel();
         _jobsViewModel = new JobsViewModel();
         _executionViewModel = new ExecutionViewModel();
         _logsViewModel = new LogsViewModel();
         _settingsViewModel = new SettingsViewModel();
         _aboutViewModel = new AboutViewModel();
+        _jobsViewModel.JobsChanged += OnJobsChanged;
         ShowDashboard();
     }
 
@@ -91,19 +97,30 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
     /// <param name="backupService">Backup service that publishes state updates.</param>
     /// <param name="logsPath">Directory containing log files.</param>
     /// <exception cref="ArgumentNullException">Thrown when a required service is null.</exception>
-    public MainWindowViewModel(IJobService jobService, IBackupService backupService, string? logsPath)
+    public MainWindowViewModel(
+        IJobService jobService,
+        IBackupService backupService,
+        string? logsPath,
+        IAppLogService? appLogService = null)
     {
+        _uiContext = SynchronizationContext.Current;
         if (jobService is null)
             throw new ArgumentNullException(nameof(jobService));
 
         _backupService = backupService ?? throw new ArgumentNullException(nameof(backupService));
         _dashboardViewModel = new DashboardViewModel(jobService, _backupService, logsPath);
-        _jobsViewModel = new JobsViewModel();
+        _jobsViewModel = new JobsViewModel(jobService);
         _executionViewModel = new ExecutionViewModel();
         _logsViewModel = new LogsViewModel();
         _settingsViewModel = new SettingsViewModel();
         _aboutViewModel = new AboutViewModel();
+        _appLogService = appLogService;
+        _jobsViewModel.JobsChanged += OnJobsChanged;
         _backupService.StateChanged += OnBackupStateChanged;
+        if (_appLogService != null)
+        {
+            _appLogService.LogWritten += OnLogWritten;
+        }
         ShowDashboard();
     }
 
@@ -174,6 +191,27 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
         LastUpdateTime = DateTime.Now;
     }
 
+    private void OnJobsChanged()
+    {
+        _dashboardViewModel.RefreshJobSummary();
+    }
+
+    private void OnLogWritten(object? sender, EventArgs e)
+    {
+        if (_uiContext != null)
+        {
+            _uiContext.Post(_ => HandleLogWritten(), null);
+            return;
+        }
+
+        HandleLogWritten();
+    }
+
+    private void HandleLogWritten()
+    {
+        _dashboardViewModel.NotifyLogWritten();
+    }
+
     /// <summary>
     /// Unsubscribes from events and releases managed resources.
     /// </summary>
@@ -189,6 +227,11 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
             _backupService.StateChanged -= OnBackupStateChanged;
         }
 
+        _jobsViewModel.JobsChanged -= OnJobsChanged;
+        if (_appLogService != null)
+        {
+            _appLogService.LogWritten -= OnLogWritten;
+        }
         _dashboardViewModel.Dispose();
         GC.SuppressFinalize(this);
     }
