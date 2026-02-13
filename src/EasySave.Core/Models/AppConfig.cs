@@ -79,4 +79,22 @@ public class AppConfig
             "EasySave",
             "Logs");
     }
+    
+    // Pour la partie chiffrement, on stock la variable qui nous dit si on doit chiffrer 
+    // ainsi que la clé elle même
+    public bool EncryptionEnabled { get; private set; }
+    public string EncryptionKey { get; private set; } = "default_key_change_it";
+
+    public void ToggleEncryption()
+    {
+        EncryptionEnabled = !EncryptionEnabled;
+    }
+
+    public void UpdateEncryptionKey(string newKey)
+    {
+        EncryptionKey = newKey;
+    }
+
 }
+
+

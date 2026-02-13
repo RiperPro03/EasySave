@@ -7,6 +7,8 @@ using EasySave.App.Console.Views;
 using EasySave.App.Repositories;
 using EasySave.App.Services;
 
+
+
 namespace EasySave.App.Console;
 
 /// <summary>
@@ -18,6 +20,7 @@ internal static class Program
     /// Configures services and starts the console workflow.
     /// </summary>
     /// <param name="args">Command-line arguments.</param>
+
     private static void Main(string[] args)
     {
         var pathProvider = new PathProvider();

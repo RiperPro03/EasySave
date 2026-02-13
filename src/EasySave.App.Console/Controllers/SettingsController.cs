@@ -52,9 +52,17 @@ public sealed class SettingsController
         _consoleView.ShowInfo($"2 - {Strings.Lang_French}");
         _consoleView.ShowInfo($"3 - {Strings.UI_LogFormatJson}");
         _consoleView.ShowInfo($"4 - {Strings.UI_LogFormatXml}");
+
+        // Affiche l'état actuel du chiffrement.
+        _consoleView.ShowInfo($"5 - Toggle Encryption ({_config.EncryptionEnabled})");
+
+        // Affiche la clé actuelle (si existante).
+        _consoleView.ShowInfo($"6 - Update key (current: {_config.EncryptionKey})");
+
         _consoleView.ShowInfo($"0 - {Strings.UI_Back}");
 
-        var choice = _input.ReadChoice("> ", new[] { 0, 1, 2, 3, 4 });
+        // Lecture du choix utilisateur.
+        var choice = _input.ReadChoice("> ", new[] { 0, 1, 2, 3, 4, 5, 6 });
 
         switch (choice)
         {
@@ -63,7 +71,7 @@ public sealed class SettingsController
                 UpdateLanguage(Language.English);
                 break;
             case 2:
-                // Change la langue en francais.
+                // Change la langue en français.
                 UpdateLanguage(Language.French);
                 break;
             case 3:
@@ -74,11 +82,19 @@ public sealed class SettingsController
                 // Change le format de log en XML.
                 UpdateLogFormat(LogFormat.Xml);
                 break;
+            case 5:
+                // Active/désactive le chiffrement.
+                ToggleEncryption();
+                break;
+            case 6:
+                // Met à jour la clé de chiffrement.
+                UpdateEncryptionKey();
+                break;
             case 0:
                 return;
         }
 
-        // Persiste la configuration apres modification.
+        // Persiste la configuration après modification.
         _configRepository.Save(_config);
         _consoleView.WaitForKey();
     }
@@ -91,7 +107,7 @@ public sealed class SettingsController
     {
         _config.ChangeLanguage(language);
 
-        // Met a jour la culture courante pour l'UI.
+        // Met à jour la culture courante pour l'UI.
         var culture = Localization.GetCulture(_config.Language);
         CultureInfo.CurrentCulture = culture;
         CultureInfo.CurrentUICulture = culture;
@@ -99,9 +115,31 @@ public sealed class SettingsController
         _consoleView.ShowSuccess(Strings.Info_LanguageChanged);
     }
 
+    /// <summary>
+    /// Updates the log format used by the application.
+    /// </summary>
     private void UpdateLogFormat(LogFormat logFormat)
     {
         _config.ChangeLogFormat(logFormat);
         _consoleView.ShowSuccess(Strings.Info_LogFormatChanged);
+    }
+
+    /// <summary>
+    /// Toggles encryption on/off.
+    /// </summary>
+    private void ToggleEncryption()
+    {
+        _config.ToggleEncryption();
+        _consoleView.ShowSuccess($"Encryption is now: {_config.EncryptionEnabled}");
+    }
+
+    /// <summary>
+    /// Updates the encryption key used for secure operations.
+    /// </summary>
+    private void UpdateEncryptionKey()
+    {
+        string newKey = _input.ReadNonEmptyString("> New encryption key: ");
+        _config.UpdateEncryptionKey(newKey);
+        _consoleView.ShowSuccess("Encryption key updated.");
     }
 }
