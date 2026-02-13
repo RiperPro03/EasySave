@@ -12,6 +12,7 @@ namespace EasySave.EasyLog.Serialization
         private static readonly JsonSerializerOptions Options = new JsonSerializerOptions
         {
             WriteIndented = false,
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
             Converters = { new JsonStringEnumConverter() }
         };
 
