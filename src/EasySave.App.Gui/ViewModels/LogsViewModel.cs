@@ -1,9 +1,26 @@
-namespace EasySave.App.Gui.ViewModels;
+using System.Collections.ObjectModel;
+using EasySave.App.Gui.Services;
 
-/// <summary>
-/// View model for the Logs page placeholder.
-/// </summary>
-public sealed class LogsViewModel : ViewModelBase
+namespace EasySave.App.Gui.ViewModels
 {
-    public string Info => "View detailed execution logs (JSON/XML)";
+    public class LogsViewModel : ViewModelBase
+    {
+        private readonly LogReaderService _logReader;
+        public ObservableCollection<LogEntry> Logs { get; } = new ObservableCollection<LogEntry>();
+
+        public LogsViewModel()
+        {
+            _logReader = new LogReaderService();
+            LoadLogs();
+        }
+
+        private void LoadLogs()
+        {
+            Logs.Clear();
+            foreach (var logEntry in _logReader.GetAllLogs())
+            {
+                Logs.Add(logEntry);
+            }
+        }
+    }
 }

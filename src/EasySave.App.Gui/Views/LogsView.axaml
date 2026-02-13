@@ -3,10 +3,31 @@
              xmlns:vm="using:EasySave.App.Gui.ViewModels"
              x:Class="EasySave.App.Gui.Views.LogsView"
              x:DataType="vm:LogsViewModel">
-    <StackPanel Spacing="8">
-        <TextBlock Text="Logs"
-                   FontSize="20"
-                   FontWeight="Bold"/>
-        <TextBlock Text="{Binding Info}"/>
-    </StackPanel>
+
+	<ScrollViewer>
+		<ItemsControl ItemsSource="{Binding Logs}">
+			<ItemsControl.ItemTemplate>
+				<DataTemplate>
+					<StackPanel Margin="5" Spacing="5">
+			
+						<TextBlock Text="{Binding FileName}"
+                                   FontWeight="Bold"
+                                   FontSize="14"
+                                   Foreground="White"
+                                   Background="#2D2D30"
+                                   Padding="5"/>
+
+			
+						<TextBlock Text="{Binding Content}"
+                                   FontFamily="Consolas"
+                                   FontSize="12"
+                                   TextWrapping="Wrap"
+                                   Foreground="White"
+                                   Background="#1E1E1E"
+                                   Padding="5"/>
+					</StackPanel>
+				</DataTemplate>
+			</ItemsControl.ItemTemplate>
+		</ItemsControl>
+	</ScrollViewer>
 </UserControl>
