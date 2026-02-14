@@ -4,42 +4,33 @@
              x:Class="EasySave.App.Gui.Views.SettingsView"
              x:DataType="vm:SettingsViewModel">
 
-    <StackPanel Margin="20" Spacing="16">
+    <StackPanel Margin="20" Spacing="15">
+        <TextBlock Text="PARAMÈTRES" FontSize="18" FontWeight="Bold"/>
 
-        <!-- Encryption -->
-        <StackPanel Spacing="8">
-            <TextBlock Text="Encryption" FontWeight="Bold"/>
+        <TextBlock Text="Langue :"/>
+        <ComboBox ItemsSource="{Binding Languages}" 
+                  SelectedItem="{Binding SelectedLanguage}" 
+                  HorizontalAlignment="Stretch"/>
 
-            <CheckBox Content="Enable encryption"
+        <TextBlock Text="Format des Logs :"/>
+        <ComboBox ItemsSource="{Binding LogFormats}" 
+                  SelectedItem="{Binding SelectedLogFormat}" 
+                  HorizontalAlignment="Stretch"/>
+
+        <Separator/>
+
+        <ToggleSwitch Content="Activer le chiffrement XOR" 
                       IsChecked="{Binding EncryptionEnabled}"/>
+        
+        <TextBlock Text="Clé secrète :"/>
+        <TextBox Text="{Binding EncryptionKey}" 
+                 IsEnabled="{Binding EncryptionEnabled}"
+                 PasswordChar="*"/>
 
-            <Button Content="Toggle encryption"
-                    Command="{Binding ToggleEncryptionCommand}"/>
-
-            <TextBlock Text="Encryption key:"/>
-            <TextBox Text="{Binding EncryptionKey}" Width="250"/>
-
-            <Button Content="Save key"
-                    Command="{Binding SaveEncryptionKeyCommand}"/>
-        </StackPanel>
-
-        <Separator/>
-
-        <!-- Language -->
-        <StackPanel Spacing="8">
-            <TextBlock Text="Language" FontWeight="Bold"/>
-            <ComboBox Items="{Binding Languages}"
-                      SelectedItem="{Binding Language}" />
-        </StackPanel>
-
-        <Separator/>
-
-        <!-- Log format -->
-        <StackPanel Spacing="8">
-            <TextBlock Text="Log format" FontWeight="Bold"/>
-            <ComboBox Items="{Binding LogFormats}"
-                      SelectedItem="{Binding LogFormat}"/>
-        </StackPanel>
-
+        <Button Content="Enregistrer les modifications" 
+                Command="{Binding SaveSettingsCommand}"
+                HorizontalAlignment="Center"
+                Padding="20,10"
+                Classes="accent"/>
     </StackPanel>
 </UserControl>
