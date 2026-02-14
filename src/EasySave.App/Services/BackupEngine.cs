@@ -46,33 +46,30 @@ internal sealed class BackupEngine : IBackupEngine
             
         var traceId = Guid.NewGuid().ToString("N");
 
+        // Resultat cumule pour l'appelant (CLI/GUI/tests).
+        var result = new BackupResultDto();
+        // Etat initial publie des le debut de l'execution.
+        var state = CreateInitialState(job);
         try
         {
             // Check that the configured business software is not currently running before starting the backup.
-            BusinessSoftwareDetector.ValidateNotRunning(job.AppConfig?.BusinessSoftwareProcessName);
+            BusinessSoftwareDetector.ValidateNotRunning(job.BusinessSoftwareProcessName);
         }
         catch (InvalidOperationException ex)
         {
             // if the business software is running, create an explicit failure result for the job.
-            var result = new BackupResultDto
-            {
-                Success = false,
-                Message = ex.Message,
-                Duration = TimeSpan.Zero,
-                ErrorCount = 1,
-                Errors = new List<string> { ex.Message }
-            };
-            var state = CreateInitialState(job);
+            result.Success = false;
+            result.Message = ex.Message;
+            result.Duration = TimeSpan.Zero;
+            result.ErrorCount = 1;
+            result.Errors = new List<string> { ex.Message };
             UpdateTerminalState(state, JobStatus.Error, ex.Message);
-            WriteSummaryLog(job, result);
+            WriteSummaryLog(job, result, traceId);
             return result;
         }
-        // Resultat cumule pour l'appelant (CLI/GUI/tests).
-        var result = new BackupResultDto();
+
         // Chronometre la duree totale de la sauvegarde.
         var stopwatch = Stopwatch.StartNew();
-        // Etat initial publie des le debut de l'execution.
-        var state = CreateInitialState(job);
 
         if (!Directory.Exists(job.SourcePath))
         {
