@@ -8,21 +8,21 @@ public enum JobStatus
     /// <summary>
     /// The job exists but has not started yet.
     /// </summary>
-    Idle = 0,
+    Idle,
     /// <summary>
     /// Backup is currently running.
     /// </summary>
-    Running = 1,
+    Running,
     /// <summary>
     /// Backup is paused manually or automatically.
     /// </summary>
-    Paused = 2,
+    Paused,
     /// <summary>
     /// Backup completed successfully.
     /// </summary>
-    Completed = 3,
+    Completed,
     /// <summary>
     /// A blocking error occurred.
     /// </summary>
-    Error = 4
+    Error
 }

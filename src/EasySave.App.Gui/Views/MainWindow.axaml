@@ -1,4 +1,4 @@
-<Window xmlns="https://github.com/avaloniaui"
+﻿<Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:EasySave.App.Gui.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -355,16 +355,11 @@
                                        Foreground="#80FFFFFF"/>
                         </StackPanel>
                         
-                        <StackPanel Grid.Column="1"
-                                    Orientation="Horizontal"
-                                    Spacing="12"
-                                    VerticalAlignment="Center">
-                            <Button Content="＋  New Backup"
-                                    Classes="action-btn primary"/>
-                            <Button Content="⟳ Refresh"
-                                    Classes="action-btn secondary"
-                                    Padding="12,11"/>
-                        </StackPanel>
+                        <!-- <StackPanel Grid.Column="1" -->
+                        <!--             Orientation="Horizontal" -->
+                        <!--             Spacing="12" -->
+                        <!--             VerticalAlignment="Center"> -->
+                        <!-- </StackPanel> -->
                     </Grid>
 
                     <!-- Main content card -->
