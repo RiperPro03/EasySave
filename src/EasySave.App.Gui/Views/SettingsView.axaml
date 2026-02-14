@@ -3,10 +3,43 @@
              xmlns:vm="using:EasySave.App.Gui.ViewModels"
              x:Class="EasySave.App.Gui.Views.SettingsView"
              x:DataType="vm:SettingsViewModel">
-    <StackPanel Spacing="8">
-        <TextBlock Text="Settings"
-                   FontSize="20"
-                   FontWeight="Bold"/>
-        <TextBlock Text="{Binding Info}"/>
+
+    <StackPanel Margin="20" Spacing="16">
+
+        <!-- Encryption -->
+        <StackPanel Spacing="8">
+            <TextBlock Text="Encryption" FontWeight="Bold"/>
+
+            <CheckBox Content="Enable encryption"
+                      IsChecked="{Binding EncryptionEnabled}"/>
+
+            <Button Content="Toggle encryption"
+                    Command="{Binding ToggleEncryptionCommand}"/>
+
+            <TextBlock Text="Encryption key:"/>
+            <TextBox Text="{Binding EncryptionKey}" Width="250"/>
+
+            <Button Content="Save key"
+                    Command="{Binding SaveEncryptionKeyCommand}"/>
+        </StackPanel>
+
+        <Separator/>
+
+        <!-- Language -->
+        <StackPanel Spacing="8">
+            <TextBlock Text="Language" FontWeight="Bold"/>
+            <ComboBox Items="{Binding Languages}"
+                      SelectedItem="{Binding Language}" />
+        </StackPanel>
+
+        <Separator/>
+
+        <!-- Log format -->
+        <StackPanel Spacing="8">
+            <TextBlock Text="Log format" FontWeight="Bold"/>
+            <ComboBox Items="{Binding LogFormats}"
+                      SelectedItem="{Binding LogFormat}"/>
+        </StackPanel>
+
     </StackPanel>
 </UserControl>

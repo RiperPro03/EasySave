@@ -84,7 +84,7 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
         _jobsViewModel = new JobsViewModel();
         _executionViewModel = new ExecutionViewModel();
         _logsViewModel = new LogsViewModel();
-        _settingsViewModel = new SettingsViewModel();
+        _settingsViewModel = new SettingsViewModel(_settingsService);
         _aboutViewModel = new AboutViewModel();
         _jobsViewModel.JobsChanged += OnJobsChanged;
         ShowDashboard();
