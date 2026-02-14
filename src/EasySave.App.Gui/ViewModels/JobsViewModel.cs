@@ -132,7 +132,7 @@ public sealed partial class JobsViewModel : ViewModelBase
             if (_jobService != null)
             {
                 var id = GenerateNextId();
-                _jobService.Create(id, editor.Name, editor.SourcePath, editor.TargetPath, editor.SelectedType, null, editor.IsActive);
+                _jobService.Create(id, editor.Name, editor.SourcePath, editor.TargetPath, editor.SelectedType, editor.IsActive);
                 LastError = null;
                 Refresh();
             }
