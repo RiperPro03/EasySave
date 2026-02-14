@@ -13,8 +13,6 @@ internal sealed class JobRepository : IJobRepository
     private readonly IPathProvider _pathProvider;
     private readonly List<BackupJob> _jobs;
     private readonly string _jobsFilePath;
-    private const int MaxJobs = 5;
-
     /// <summary>
     /// Initializes a new instance of the <see cref="JobRepository"/> class.
     /// </summary>
@@ -54,12 +52,7 @@ internal sealed class JobRepository : IJobRepository
     {
         if (job is null)
             throw new ArgumentNullException(nameof(job));
-
-        if (_jobs.Count >= MaxJobs)
-        {
-            throw new InvalidOperationException("Maximum number of jobs reached.");
-        }
-
+        
         if (_jobs.Any(existing => existing.Id == job.Id))
             throw new InvalidOperationException($"Job with ID {job.Id} already exists.");
 

@@ -1,11 +1,14 @@
-﻿using System.Globalization;
-using EasySave.Core.Common;
-using EasySave.Core.Models;
+using System;
+using System.Globalization;
+using System.Reflection;
 using EasySave.App.Console.Controllers;
 using EasySave.App.Console.Input;
 using EasySave.App.Console.Views;
 using EasySave.App.Repositories;
 using EasySave.App.Services;
+using EasySave.Core.Common;
+using EasySave.Core.Logging;
+using EasySave.Core.Models;
 
 
 
@@ -24,20 +27,24 @@ internal static class Program
     private static void Main(string[] args)
     {
         var pathProvider = new PathProvider();
-        var configRepository = new AppConfigRepository(pathProvider);
+        var config = AppConfig.LoadDefaults();
+        var logContext = BuildLogContext();
+        var appLogService = new AppLogService(pathProvider.LogsPath, () => config.LogFormat, logContext);
+        var configRepository = new AppConfigRepository(pathProvider, appLogService);
         // Charge la configuration utilisateur.
-        var config = configRepository.Load();
+        config = configRepository.Load();
 
         // Applique la culture selon la langue config.
         var culture = Localization.GetCulture(config.Language);
         CultureInfo.CurrentCulture = culture;
         CultureInfo.CurrentUICulture = culture;
 
-        var jobService = new JobService(pathProvider);
+        var jobService = new JobService(pathProvider, appLogService);
         var backupService = new BackupService(
             jobService,
             logDirectory: pathProvider.LogsPath,
-            logFormatProvider: () => config.LogFormat);
+            logFormatProvider: () => config.LogFormat,
+            logService: appLogService);
 
         var input = new ConsoleInput();
         var argsParser = new ArgsParser();
@@ -62,5 +69,20 @@ internal static class Program
         // Mode interactif: affiche le menu principal.
         menuController.Run();
     }
-}
 
+    /// <summary>
+    /// Builds a log context shared by console log entries.
+    /// </summary>
+    private static LogContext BuildLogContext()
+    {
+        var version = Assembly.GetEntryAssembly()?.GetName().Version?.ToString() ?? "unknown";
+        return new LogContext
+        {
+            AppName = "EasySave",
+            AppVersion = version,
+            HostName = Environment.MachineName,
+            UserName = Environment.UserName,
+            ProcessId = Environment.ProcessId
+        };
+    }
+}

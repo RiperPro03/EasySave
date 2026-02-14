@@ -17,9 +17,7 @@ public sealed class BackupService : IBackupService
     private readonly IStateWriter _stateWriter;
     private readonly Dictionary<string, JobStateDto> _jobStates = new();
     private readonly object _stateLock = new();
-    private readonly string? _logDirectory;
-    private readonly Func<LogFormat> _logFormatProvider;
-    private LogFormat _currentLogFormat;
+    private readonly IAppLogService? _logService;
 
     /// <summary>
     /// Raised when job state changes during execution.
@@ -35,6 +33,7 @@ public sealed class BackupService : IBackupService
     /// <param name="pathProvider">Optional path provider for default state writer.</param>
     /// <param name="logFormat">Optional fixed log format.</param>
     /// <param name="logFormatProvider">Optional log format provider for runtime changes.</param>
+    /// <param name="logService">Optional log service override.</param>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="jobService"/> is null.</exception>
     public BackupService(
         IJobService jobService,
@@ -42,16 +41,18 @@ public sealed class BackupService : IBackupService
         IStateWriter? stateWriter = null,
         IPathProvider? pathProvider = null,
         LogFormat? logFormat = null,
-        Func<LogFormat>? logFormatProvider = null)
+        Func<LogFormat>? logFormatProvider = null,
+        IAppLogService? logService = null)
     {
         _jobService = jobService ?? throw new ArgumentNullException(nameof(jobService));
         // Si aucun writer n'est fourni, on cree celui par defaut avec un PathProvider local.
         _stateWriter = stateWriter ?? new StateWriter(pathProvider ?? new PathProvider());
-        _logDirectory = logDirectory;
         // La source du format de log peut changer a l'execution (GUI/CLI).
-        _logFormatProvider = logFormatProvider ?? (() => logFormat ?? LogFormat.Json);
-        _currentLogFormat = _logFormatProvider();
-        _backupEngine = CreateEngine(_currentLogFormat);
+        var formatProvider = logFormatProvider ?? (() => logFormat ?? LogFormat.Json);
+        _logService = logService ?? (string.IsNullOrWhiteSpace(logDirectory)
+            ? null
+            : new AppLogService(logDirectory, formatProvider));
+        _backupEngine = CreateEngine();
         _backupEngine.StateChanged += OnEngineStateChanged;
         // Publie un snapshot initial pour exposer l'etat au demarrage.
         InitializeSnapshot();
@@ -64,8 +65,6 @@ public sealed class BackupService : IBackupService
     /// <returns>The execution result.</returns>
     public BackupResultDto Run(BackupJob job)
     {
-        // Reconfigure l'engine si le format de log a change.
-        EnsureEngine();
         var result = _backupEngine.Run(job);
         // Marque le job comme execute pour conserver l'horodatage.
         _jobService.MarkExecuted(job.Id);
@@ -223,28 +222,11 @@ public sealed class BackupService : IBackupService
     }
 
     /// <summary>
-    /// Recreates the engine if the log format has changed.
+    /// Creates a backup engine instance.
     /// </summary>
-    private void EnsureEngine()
-    {
-        var desiredFormat = _logFormatProvider();
-        if (desiredFormat == _currentLogFormat)
-            return;
-
-        // Reinstancie l'engine pour appliquer le nouveau format de log.
-        _backupEngine.StateChanged -= OnEngineStateChanged;
-        _currentLogFormat = desiredFormat;
-        _backupEngine = CreateEngine(_currentLogFormat);
-        _backupEngine.StateChanged += OnEngineStateChanged;
-    }
-
-    /// <summary>
-    /// Creates a backup engine instance for the specified format.
-    /// </summary>
-    /// <param name="format">The desired log format.</param>
     /// <returns>A configured backup engine.</returns>
-    private IBackupEngine CreateEngine(LogFormat format)
+    private IBackupEngine CreateEngine()
     {
-        return new BackupEngine(_logDirectory, format);
+        return new BackupEngine(_logService);
     }
 }

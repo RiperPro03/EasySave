@@ -1,4 +1,5 @@
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using EasySave.EasyLog.Interfaces;
 
 namespace EasySave.EasyLog.Serialization
@@ -10,7 +11,9 @@ namespace EasySave.EasyLog.Serialization
     {
         private static readonly JsonSerializerOptions Options = new JsonSerializerOptions
         {
-            WriteIndented = false
+            WriteIndented = false,
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+            Converters = { new JsonStringEnumConverter() }
         };
 
         /// <summary>

@@ -1,0 +1,269 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:EasySave.App.Gui.ViewModels"
+        x:Class="EasySave.App.Gui.Views.JobEditorDialog"
+        x:DataType="vm:JobEditorViewModel"
+        Title="{Binding DialogTitle}"
+        Width="600"
+        Height="550"
+        MinWidth="500"
+        MinHeight="500"
+        CanResize="False"
+        WindowStartupLocation="CenterOwner"
+        Background="#0F1419">
+
+    <Window.Styles>
+        <!-- Labels -->
+        <Style Selector="TextBlock.label">
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="Foreground" Value="#E5E5E7"/>
+            <Setter Property="Margin" Value="0,0,0,8"/>
+        </Style>
+        
+        <!-- TextBox personnalise -->
+        <Style Selector="TextBox.input">
+            <Setter Property="Background" Value="#2C2C2E"/>
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+            <Setter Property="BorderBrush" Value="#3A3A3C"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Padding" Value="12,10"/>
+            <Setter Property="FontSize" Value="14"/>
+        </Style>
+        
+        <Style Selector="TextBox.input:focus">
+            <Setter Property="BorderBrush" Value="#0A84FF"/>
+        </Style>
+        
+        <Style Selector="TextBox.input:error">
+            <Setter Property="BorderBrush" Value="#FF3B30"/>
+        </Style>
+        
+        <!-- ComboBox -->
+        <Style Selector="ComboBox.input">
+            <Setter Property="Background" Value="#2C2C2E"/>
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+            <Setter Property="BorderBrush" Value="#3A3A3C"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Padding" Value="12,10"/>
+            <Setter Property="FontSize" Value="14"/>
+        </Style>
+        
+        <!-- CheckBox -->
+        <Style Selector="CheckBox">
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+        </Style>
+        
+        <!-- Boutons -->
+        <Style Selector="Button.dialog-btn">
+            <Setter Property="Padding" Value="24,12"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="MinWidth" Value="120"/>
+        </Style>
+        
+        <Style Selector="Button.primary">
+            <Setter Property="Background" Value="#0A84FF"/>
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+        
+        <Style Selector="Button.primary:pointerover">
+            <Setter Property="Background" Value="#0066DD"/>
+        </Style>
+        
+        <Style Selector="Button.primary:disabled">
+            <Setter Property="Background" Value="#3A3A3C"/>
+            <Setter Property="Foreground" Value="#636366"/>
+            <Setter Property="Opacity" Value="0.5"/>
+        </Style>
+        
+        <Style Selector="Button.secondary">
+            <Setter Property="Background" Value="#3A3A3C"/>
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+        </Style>
+        
+        <Style Selector="Button.secondary:pointerover">
+            <Setter Property="Background" Value="#48484A"/>
+        </Style>
+        
+        <!-- Bouton de browse -->
+        <Style Selector="Button.browse-btn">
+            <Setter Property="Background" Value="#3A3A3C"/>
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Padding" Value="12,10"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontSize" Value="14"/>
+        </Style>
+        
+        <Style Selector="Button.browse-btn:pointerover">
+            <Setter Property="Background" Value="#48484A"/>
+        </Style>
+    </Window.Styles>
+
+    <Border Background="#15FFFFFF"
+            BorderBrush="#28FFFFFF"
+            BorderThickness="1"
+            CornerRadius="12"
+            Margin="24"
+            Padding="24">
+        
+        <Grid RowDefinitions="Auto,*,Auto">
+            
+            <!-- Header -->
+            <StackPanel Grid.Row="0" Spacing="8" Margin="0,0,0,24">
+                <TextBlock Text="{Binding DialogTitle}"
+                           FontSize="24"
+                           FontWeight="Bold"
+                           Foreground="#FFFFFF"/>
+                <TextBlock Text="{Binding DialogSubtitle}"
+                           FontSize="13"
+                           Foreground="#80FFFFFF"/>
+            </StackPanel>
+            
+            <!-- Formulaire -->
+            <ScrollViewer Grid.Row="1" 
+                          VerticalScrollBarVisibility="Auto"
+                          HorizontalScrollBarVisibility="Disabled">
+                <StackPanel Spacing="20">
+                    
+                    <!-- Nom du job -->
+                    <StackPanel>
+                        <TextBlock Classes="label" Text="Job Name *"/>
+                        <TextBox Classes="input"
+                                 Text="{Binding Name}"
+                                 Watermark="e.g., Documents Backup"
+                                 MaxLength="50"/>
+                        <TextBlock Text="{Binding NameError}"
+                                   FontSize="11"
+                                   Foreground="#FF3B30"
+                                   Margin="4,4,0,0"
+                                   IsVisible="{Binding HasNameError}"/>
+                    </StackPanel>
+                    
+                    <!-- Chemin source -->
+                    <StackPanel>
+                        <TextBlock Classes="label" Text="Source Path *"/>
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                            <TextBox Grid.Column="0"
+                                     Classes="input"
+                                     Text="{Binding SourcePath}"
+                                     Watermark="C:\Users\Documents"
+                                     IsReadOnly="True"/>
+                            <Button Grid.Column="1"
+                                    Classes="browse-btn"
+                                    Content="Browse"
+                                    Click="OnBrowseSource"/>
+                        </Grid>
+                        <TextBlock Text="{Binding SourcePathError}"
+                                   FontSize="11"
+                                   Foreground="#FF3B30"
+                                   Margin="4,4,0,0"
+                                   IsVisible="{Binding HasSourcePathError}"/>
+                    </StackPanel>
+                    
+                    <!-- Chemin cible -->
+                    <StackPanel>
+                        <TextBlock Classes="label" Text="Target Path *"/>
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                            <TextBox Grid.Column="0"
+                                     Classes="input"
+                                     Text="{Binding TargetPath}"
+                                     Watermark="D:\Backups\Documents"
+                                     IsReadOnly="True"/>
+                            <Button Grid.Column="1"
+                                    Classes="browse-btn"
+                                    Content="Browse"
+                                    Click="OnBrowseTarget"/>
+                        </Grid>
+                        <TextBlock Text="{Binding TargetPathError}"
+                                   FontSize="11"
+                                   Foreground="#FF3B30"
+                                   Margin="4,4,0,0"
+                                   IsVisible="{Binding HasTargetPathError}"/>
+                    </StackPanel>
+                    
+                    <!-- Type de sauvegarde -->
+                    <StackPanel>
+                        <TextBlock Classes="label" Text="Backup Type *"/>
+                        <ComboBox Classes="input"
+                                  ItemsSource="{Binding AvailableTypes}"
+                                  SelectedItem="{Binding SelectedType}"
+                                  HorizontalAlignment="Stretch"/>
+                        <TextBlock Text="Complete: backs up all files | Differential: backs up only modified files"
+                                   FontSize="11"
+                                   Foreground="#80FFFFFF"
+                                   Margin="4,8,0,0"
+                                   TextWrapping="Wrap"/>
+                    </StackPanel>
+                    
+                    <!-- Statut actif -->
+                    <StackPanel>
+                        <CheckBox IsChecked="{Binding IsActive}"
+                                  Content="Active Job"
+                                  FontSize="14"
+                                  Margin="0,8,0,0"/>
+                        <TextBlock Text="Only active jobs can be executed"
+                                   FontSize="11"
+                                   Foreground="#80FFFFFF"
+                                   Margin="28,4,0,0"/>
+                    </StackPanel>
+                    
+                    <!-- Info card si edition -->
+                    <Border Background="#182C2C2E"
+                            BorderBrush="#2C2C2E"
+                            BorderThickness="1"
+                            CornerRadius="8"
+                            Padding="12"
+                            IsVisible="{Binding IsEditMode}">
+                        <StackPanel Spacing="4">
+                            <TextBlock Text="Job Information"
+                                       FontSize="12"
+                                       FontWeight="Medium"
+                                       Foreground="#E5E5E7"/>
+                            <TextBlock Text="{Binding CreatedAt, StringFormat='Created: {0:dd/MM/yyyy HH:mm}'}"
+                                       FontSize="11"
+                                       Foreground="#80FFFFFF"/>
+                            <TextBlock Text="{Binding LastRun, StringFormat='Last run: {0:dd/MM/yyyy HH:mm}', TargetNullValue='Last run: Never'}"
+                                       FontSize="11"
+                                       Foreground="#80FFFFFF"/>
+                        </StackPanel>
+                    </Border>
+                    
+                </StackPanel>
+            </ScrollViewer>
+            
+            <!-- Footer avec boutons -->
+            <Grid Grid.Row="2" 
+                  ColumnDefinitions="*,Auto,Auto"
+                  Margin="0,24,0,0">
+                
+                <TextBlock Grid.Column="0"
+                           Text="* Required fields"
+                           FontSize="11"
+                           Foreground="#80FFFFFF"
+                           VerticalAlignment="Center"/>
+                
+                <Button Grid.Column="1"
+                        Classes="dialog-btn secondary"
+                        Content="Cancel"
+                        Click="OnCancel"
+                        Margin="0,0,12,0"/>
+                
+                <Button Grid.Column="2"
+                        Classes="dialog-btn primary"
+                        Content="{Binding SaveButtonText}"
+                        Command="{Binding SaveCommand}"
+                        IsEnabled="{Binding CanSave}"/>
+            </Grid>
+            
+        </Grid>
+    </Border>
+    
+</Window>

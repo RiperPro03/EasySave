@@ -109,10 +109,10 @@ public class EasyLogTests
     }
 
     [Fact]
-    public void DailyLogger_WritesToExpectedFile()
+    public void DailyLogger_WritesJsonWithoutWrapping()
     {
         string root = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
-        var serializer = new FakeSerializer();
+        var serializer = new FakeSerializer("json");
         var writer = new FakeWriter();
         var logger = new DailyLogger<SampleEntry>(
             root,
@@ -124,8 +124,30 @@ public class EasyLogTests
 
         string expectedPath = Path.Combine(root, "2026-02-05.json");
         Assert.Equal(expectedPath, writer.LastFilePath);
+
+        Assert.Equal("line\n", writer.LastMessage);
         
-        string expectedContent = "<logs>\nline\n\n</logs>"; 
+        if (Directory.Exists(root)) Directory.Delete(root, true);
+    }
+
+    [Fact]
+    public void DailyLogger_WrapsXmlWithRoot()
+    {
+        string root = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
+        var serializer = new FakeSerializer("xml");
+        var writer = new FakeWriter();
+        var logger = new DailyLogger<SampleEntry>(
+            root,
+            serializer,
+            writer,
+            () => new DateTime(2026, 2, 5));
+
+        logger.Write(new SampleEntry { Message = "hello" });
+
+        string expectedPath = Path.Combine(root, "2026-02-05.xml");
+        Assert.Equal(expectedPath, writer.LastFilePath);
+        
+        string expectedContent = "<logs>\nline\n\n</logs>";
         Assert.Equal(expectedContent, writer.LastMessage);
         
         if (Directory.Exists(root)) Directory.Delete(root, true);
@@ -139,7 +161,14 @@ public class EasyLogTests
 
     private sealed class FakeSerializer : ILogSerializer
     {
-        public string FileExtension => "json";
+        private readonly string _extension;
+
+        public FakeSerializer(string extension)
+        {
+            _extension = extension;
+        }
+
+        public string FileExtension => _extension;
 
         public string Serialize(object entry)
         {
