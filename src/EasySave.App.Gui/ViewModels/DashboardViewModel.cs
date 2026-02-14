@@ -8,6 +8,8 @@ using System.Text.Json;
 using System.Threading;
 using System.Xml.Linq;
 using System.Xml.Serialization;
+using System.Text.Json.Serialization;
+using System.Text.Json.Serialization;
 using CommunityToolkit.Mvvm.ComponentModel;
 using EasySave.App.Gui.Models;
 using EasySave.Core.DTO;
@@ -23,6 +25,11 @@ namespace EasySave.App.Gui.ViewModels;
 public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
 {
     private static readonly TimeSpan LogRefreshCooldown = TimeSpan.FromSeconds(2);
+    private static readonly JsonSerializerOptions LogJsonOptions = new()
+    {
+        PropertyNameCaseInsensitive = true,
+        Converters = { new JsonStringEnumConverter() }
+    };
     private readonly IJobService? _jobService;
     private readonly IBackupService? _backupService;
     private readonly string? _logsPath;
@@ -96,6 +103,25 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
     }
 
     /// <summary>
+    /// Refreshes job counters when job definitions change.
+    /// </summary>
+    public void RefreshJobSummary()
+    {
+        if (_jobService is null)
+            return;
+
+        RefreshFromJobs();
+    }
+
+    /// <summary>
+    /// Refreshes recent activities when logs are updated.
+    /// </summary>
+    public void NotifyLogWritten()
+    {
+        RefreshLogsIfNeeded();
+    }
+
+    /// <summary>
     /// Relays state updates on the UI thread when available.
     /// </summary>
     private void OnStateChanged(object? sender, JobStateChangedEventArgs e)
@@ -151,19 +177,10 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
         if (string.IsNullOrWhiteSpace(_logsPath) || !Directory.Exists(_logsPath))
             return;
 
-        var entries = ReadLogEntries(_logsPath);
-        if (entries.Count == 0)
-            return;
-
-        // Prefere les lignes de resume pour ne pas surcharger l UI.
-        var summaryEntries = entries.Where(IsSummaryEntry).ToList();
-        var sourceEntries = summaryEntries.Count > 0 ? summaryEntries : entries;
-
-        foreach (var entry in sourceEntries
-                     .OrderByDescending(entry => entry.TimestampUtc)
-                     .Take(5))
+        var activityItems = BuildRecentActivities(_logsPath);
+        foreach (var item in activityItems)
         {
-            RecentActivities.Add(CreateActivityItem(entry));
+            RecentActivities.Add(item);
         }
 
         HasRecentActivities = RecentActivities.Count > 0;
@@ -179,47 +196,36 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
     /// </summary>
     /// <param name="logsPath">Directory containing log files.</param>
     /// <returns>List of log entries.</returns>
-    private static List<LogEntryDto> ReadLogEntries(string logsPath)
+    private List<RecentActivityItem> BuildRecentActivities(string logsRootPath)
     {
-        // Lecture d un sous-ensemble des fichiers journaliers recents pour limiter les IO.
-        var files = Directory
-            .EnumerateFiles(logsPath, "*.json")
-            .Concat(Directory.EnumerateFiles(logsPath, "*.xml"))
-            .OrderByDescending(Path.GetFileName)
-            .Take(7)
-            .ToList();
+        var logPath = logsRootPath;
 
-        var entries = new List<LogEntryDto>();
-        foreach (var file in files)
+        var activities = new List<(DateTime TimestampUtc, RecentActivityItem Item)>();
+
+        foreach (var entry in ReadLogEntries<LogEntryDto>(logPath))
         {
-            var extension = Path.GetExtension(file);
-            if (string.Equals(extension, ".json", StringComparison.OrdinalIgnoreCase))
+            if (entry.TimestampUtc == default)
+                continue;
+
+            if (!ShouldShowOnDashboard(entry))
+                continue;
+
+            RecentActivityItem item = entry.Event.Category switch
             {
-                try
-                {
-                    entries.AddRange(ReadJsonEntries(file));
-                }
-                catch (IOException)
-                {
-                    // Ignore les fichiers illisibles.
-                }
-            }
-            else if (string.Equals(extension, ".xml", StringComparison.OrdinalIgnoreCase))
-            {
-                try
-                {
-                    entries.AddRange(ReadXmlEntries(file));
-                }
-                catch (IOException)
-                {
-                    // Ignore les fichiers illisibles.
-                }
-            }
+                LogEventCategory.Job when IsJobCrudAction(entry.Event.Action)
+                    => CreateJobActivityItem(entry),
+                LogEventCategory.Settings
+                    => CreateSettingsActivityItem(entry),
+                _ => CreateActivityItem(entry)
+            };
+
+            activities.Add((entry.TimestampUtc, item));
         }
 
-        return entries
-            .Where(entry => entry != null)
-            .Where(entry => entry.TimestampUtc != default)
+        return activities
+            .OrderByDescending(item => item.TimestampUtc)
+            .Take(5)
+            .Select(item => item.Item)
             .ToList();
     }
 
@@ -228,7 +234,7 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
     /// </summary>
     /// <param name="filePath">Path to the JSON file.</param>
     /// <returns>Sequence of log entries.</returns>
-    private static IEnumerable<LogEntryDto> ReadJsonEntries(string filePath)
+    private static IEnumerable<T> ReadJsonEntries<T>(string filePath) where T : class
     {
         foreach (var line in File.ReadLines(filePath))
         {
@@ -240,10 +246,10 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
             if (string.Equals(trimmed, "</logs>", StringComparison.OrdinalIgnoreCase))
                 continue;
 
-            LogEntryDto? entry;
+            T? entry;
             try
             {
-                entry = JsonSerializer.Deserialize<LogEntryDto>(trimmed);
+                entry = JsonSerializer.Deserialize<T>(trimmed, LogJsonOptions);
             }
             catch (JsonException)
             {
@@ -260,7 +266,7 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
     /// </summary>
     /// <param name="filePath">Path to the XML file.</param>
     /// <returns>Sequence of log entries.</returns>
-    private static IEnumerable<LogEntryDto> ReadXmlEntries(string filePath)
+    private static IEnumerable<T> ReadXmlEntries<T>(string filePath) where T : class
     {
         XDocument document;
         try
@@ -272,18 +278,18 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
             yield break;
         }
 
-        var serializer = new XmlSerializer(typeof(LogEntryDto));
+        var serializer = new XmlSerializer(typeof(T));
         var root = document.Root;
         if (root is null)
             yield break;
 
         foreach (var element in root.Elements())
         {
-            LogEntryDto? entry = null;
+            T? entry = null;
             try
             {
                 using var reader = element.CreateReader();
-                entry = serializer.Deserialize(reader) as LogEntryDto;
+                entry = serializer.Deserialize(reader) as T;
             }
             catch (InvalidOperationException)
             {
@@ -295,18 +301,93 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
         }
     }
 
+    private static List<T> ReadLogEntries<T>(string logsPath) where T : class
+    {
+        if (string.IsNullOrWhiteSpace(logsPath) || !Directory.Exists(logsPath))
+            return new List<T>();
+
+        var files = Directory
+            .EnumerateFiles(logsPath, "*.json")
+            .Concat(Directory.EnumerateFiles(logsPath, "*.xml"))
+            .OrderByDescending(Path.GetFileName)
+            .Take(7)
+            .ToList();
+
+        var entries = new List<T>();
+        foreach (var file in files)
+        {
+            var extension = Path.GetExtension(file);
+            if (string.Equals(extension, ".json", StringComparison.OrdinalIgnoreCase))
+            {
+                try
+                {
+                    entries.AddRange(ReadJsonEntries<T>(file));
+                }
+                catch (IOException)
+                {
+                    // Ignore les fichiers illisibles.
+                }
+            }
+            else if (string.Equals(extension, ".xml", StringComparison.OrdinalIgnoreCase))
+            {
+                try
+                {
+                    entries.AddRange(ReadXmlEntries<T>(file));
+                }
+                catch (IOException)
+                {
+                    // Ignore les fichiers illisibles.
+                }
+            }
+        }
+
+        return entries;
+    }
+
     /// <summary>
     /// Indicates whether the entry is a job summary row.
     /// </summary>
     /// <param name="entry">Entry to analyze.</param>
     /// <returns><c>true</c> when the entry is a summary.</returns>
+    /// <summary>
+    /// Indicates whether an entry represents a summary.
+    /// </summary>
+    /// <param name="entry">Entry to inspect.</param>
+    /// <returns><c>true</c> when the entry is a summary.</returns>
     private static bool IsSummaryEntry(LogEntryDto entry)
     {
-        if (entry.ErrorMessage is null)
-            return false;
+        if (entry.Summary is not null)
+            return true;
 
-        // Les entrées de type résumé incluent des compteurs agrégés.
-        return entry.ErrorMessage.Contains("Copied=", StringComparison.OrdinalIgnoreCase);
+        return entry.Event.Action == LogEventAction.Summary;
+    }
+
+    /// <summary>
+    /// Filters which log entries are visible on the dashboard.
+    /// </summary>
+    /// <param name="entry">Entry to inspect.</param>
+    /// <returns><c>true</c> when the entry should be displayed.</returns>
+    private static bool ShouldShowOnDashboard(LogEntryDto entry)
+    {
+        if (IsSummaryEntry(entry))
+            return true;
+
+        return entry.Event.Category switch
+        {
+            LogEventCategory.Job => IsJobCrudAction(entry.Event.Action),
+            LogEventCategory.Settings => true,
+            _ => false
+        };
+    }
+
+    /// <summary>
+    /// Indicates whether an action is a job CRUD action.
+    /// </summary>
+    /// <param name="action">Action to inspect.</param>
+    /// <returns><c>true</c> for Create/Update/Delete.</returns>
+    private static bool IsJobCrudAction(LogEventAction action)
+    {
+        return action is LogEventAction.Create or LogEventAction.Update or LogEventAction.Delete;
     }
 
     /// <summary>
@@ -317,8 +398,8 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
     private RecentActivityItem CreateActivityItem(LogEntryDto entry)
     {
         var timestamp = entry.TimestampUtc.ToLocalTime().ToString("g", CultureInfo.CurrentCulture);
-        var (glyph, color) = MapStatusGlyph(entry.Status);
-        var title = string.IsNullOrWhiteSpace(entry.JobName) ? "Backup activity" : entry.JobName;
+        var (glyph, color) = MapStatusGlyph(entry.Event.Action, entry.Event.Outcome);
+        var title = string.IsNullOrWhiteSpace(entry.Job?.Name) ? "Backup activity" : entry.Job.Name;
         var subtitle = IsSummaryEntry(entry)
             ? BuildSummarySubtitle(entry)
             : BuildNonSummarySubtitle(entry);
@@ -332,6 +413,53 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
             color);
     }
 
+    private RecentActivityItem CreateJobActivityItem(LogEntryDto entry)
+    {
+        var timestamp = entry.TimestampUtc.ToLocalTime().ToString("g", CultureInfo.CurrentCulture);
+        var title = string.IsNullOrWhiteSpace(entry.Job?.Name) ? "Job" : entry.Job.Name;
+        var actionLabel = entry.Event.Action switch
+        {
+            LogEventAction.Create => "Job created",
+            LogEventAction.Update => "Job updated",
+            LogEventAction.Delete => "Job deleted",
+            _ => "Job changed"
+        };
+
+        var statusLabel = entry.Job?.IsActive == true ? "Active" : "Inactive";
+        var typeLabel = entry.Job?.Type switch
+        {
+            BackupType.Full => "Full",
+            BackupType.Differential => "Differential",
+            _ => "Backup"
+        };
+        var subtitle = Truncate($"{actionLabel} | {typeLabel} | {statusLabel}", 140);
+        var (glyph, color) = entry.Event.Action switch
+        {
+            LogEventAction.Create => ("+", "#30D158"),
+            LogEventAction.Update => ("~", "#0A84FF"),
+            LogEventAction.Delete => ("x", "#FF3B30"),
+            _ => ("J", "#80FFFFFF")
+        };
+
+        return new RecentActivityItem(title, subtitle, timestamp, glyph, "#20FFFFFF", color);
+    }
+
+    private RecentActivityItem CreateSettingsActivityItem(LogEntryDto entry)
+    {
+        var timestamp = entry.TimestampUtc.ToLocalTime().ToString("g", CultureInfo.CurrentCulture);
+        var title = "Settings";
+        var actionLabel = entry.Event.Action switch
+        {
+            LogEventAction.Update => "Settings updated",
+            _ => "Settings saved"
+        };
+
+        var languageLabel = entry.Settings?.Language?.ToString() ?? "Unknown";
+        var formatLabel = entry.Settings?.LogFormat?.ToString() ?? "Unknown";
+        var subtitle = Truncate($"{actionLabel} | {languageLabel} | {formatLabel}", 140);
+        return new RecentActivityItem(title, subtitle, timestamp, "S", "#20FFFFFF", "#FF9F0A");
+    }
+
     /// <summary>
     /// Builds the subtitle for a summary entry.
     /// </summary>
@@ -339,11 +467,16 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
     /// <returns>Subtitle text.</returns>
     private string BuildSummarySubtitle(LogEntryDto entry)
     {
-        var typeLabel = ResolveBackupType(entry.JobName);
-        var sizeLabel = entry.FileSizeBytes > 0 ? FormatBytes(entry.FileSizeBytes) : "0 B";
-        var countsLabel = BuildCountsSummary(entry.ErrorMessage);
-        var durationLabel = entry.TransferTimeMs > 0
-            ? FormatDuration(TimeSpan.FromMilliseconds(entry.TransferTimeMs))
+        if (entry.Summary is null)
+            return Truncate(entry.Message, 140);
+
+        var typeLabel = ResolveBackupType(entry.Job?.Type, entry.Job?.Name);
+        var sizeLabel = entry.Summary.TotalBytes > 0
+            ? FormatBytes(entry.Summary.TotalBytes)
+            : "0 B";
+        var countsLabel = BuildCountsSummary(entry.Summary);
+        var durationLabel = entry.Summary.DurationMs > 0
+            ? FormatDuration(TimeSpan.FromMilliseconds(entry.Summary.DurationMs))
             : string.Empty;
 
         var parts = new List<string> { typeLabel, $"{sizeLabel} transferred" };
@@ -362,31 +495,34 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
     /// <returns>Subtitle text.</returns>
     private static string BuildNonSummarySubtitle(LogEntryDto entry)
     {
-        if (string.Equals(entry.Status, "ERROR", StringComparison.OrdinalIgnoreCase)
-            && !string.IsNullOrWhiteSpace(entry.ErrorMessage))
+        if (entry.Event.Outcome == LogEventOutcome.Failure)
         {
-            return Truncate($"Error | {entry.ErrorMessage}", 140);
+            var errorText = entry.Error?.Message ?? entry.Message;
+            if (!string.IsNullOrWhiteSpace(errorText))
+                return Truncate($"Error | {errorText}", 140);
         }
 
-        if (string.Equals(entry.Status, "DIR_CREATED", StringComparison.OrdinalIgnoreCase))
+        if (entry.Event.Action == LogEventAction.DirectoryCreated)
         {
-            var targetName = Path.GetFileName(entry.TargetPath);
+            var targetName = Path.GetFileName(entry.File?.TargetPath);
             if (string.IsNullOrWhiteSpace(targetName))
-                targetName = entry.TargetPath;
+                targetName = entry.File?.TargetPath ?? string.Empty;
             return Truncate($"Directory created | {targetName}", 140);
         }
 
-        var sourceName = Path.GetFileName(entry.SourcePath);
-        var targetNameFallback = Path.GetFileName(entry.TargetPath);
+        var sourceName = Path.GetFileName(entry.File?.SourcePath);
+        var targetNameFallback = Path.GetFileName(entry.File?.TargetPath);
         if (string.IsNullOrWhiteSpace(sourceName))
-            sourceName = entry.SourcePath;
+            sourceName = entry.File?.SourcePath ?? string.Empty;
         if (string.IsNullOrWhiteSpace(targetNameFallback))
-            targetNameFallback = entry.TargetPath;
+            targetNameFallback = entry.File?.TargetPath ?? string.Empty;
 
-        var sizeLabel = entry.FileSizeBytes > 0 ? FormatBytes(entry.FileSizeBytes) : "0 B";
-        var action = string.Equals(entry.Status, "SKIPPED", StringComparison.OrdinalIgnoreCase)
-            ? "Skipped"
-            : "File copy";
+        var sizeBytes = entry.File?.SizeBytes ?? 0;
+        var sizeLabel = sizeBytes > 0 ? FormatBytes(sizeBytes) : "0 B";
+        var action = entry.Event.Action == LogEventAction.Skip ? "Skipped" : "File copy";
+
+        if (string.IsNullOrWhiteSpace(sourceName) && string.IsNullOrWhiteSpace(targetNameFallback))
+            return Truncate(entry.Message, 140);
 
         return Truncate($"{action} | {sizeLabel} | {sourceName} -> {targetNameFallback}", 140);
     }
@@ -396,8 +532,18 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
     /// </summary>
     /// <param name="jobName">Job name.</param>
     /// <returns>Backup type label.</returns>
-    private string ResolveBackupType(string? jobName)
+    private string ResolveBackupType(BackupType? type, string? jobName)
     {
+        if (type.HasValue)
+        {
+            return type.Value switch
+            {
+                BackupType.Full => "Full backup",
+                BackupType.Differential => "Differential backup",
+                _ => "Backup"
+            };
+        }
+
         if (_jobService is null || string.IsNullOrWhiteSpace(jobName))
             return "Backup";
 
@@ -413,68 +559,41 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
     }
 
     /// <summary>
-    /// Extracts counters from a summary message.
+    /// Extracts counters from a summary object.
     /// </summary>
-    /// <param name="errorMessage">Message containing counters.</param>
+    /// <param name="summary">Summary counters.</param>
     /// <returns>Counter summary text.</returns>
-    private static string BuildCountsSummary(string? errorMessage)
+    private static string BuildCountsSummary(LogSummaryDto summary)
     {
-        if (string.IsNullOrWhiteSpace(errorMessage))
-            return string.Empty;
-
-        int? copied = null;
-        int? skipped = null;
-        int? errors = null;
-
-        var segments = errorMessage.Split(';', StringSplitOptions.RemoveEmptyEntries);
-        foreach (var segment in segments)
+        var parts = new List<string>
         {
-            var trimmed = segment.Trim();
-            if (trimmed.StartsWith("Copied=", StringComparison.OrdinalIgnoreCase))
-            {
-                if (int.TryParse(trimmed["Copied=".Length..], out var value))
-                    copied = value;
-            }
-            else if (trimmed.StartsWith("Skipped=", StringComparison.OrdinalIgnoreCase))
-            {
-                if (int.TryParse(trimmed["Skipped=".Length..], out var value))
-                    skipped = value;
-            }
-            else if (trimmed.StartsWith("Errors=", StringComparison.OrdinalIgnoreCase))
-            {
-                if (int.TryParse(trimmed["Errors=".Length..], out var value))
-                    errors = value;
-            }
-        }
-
-        var parts = new List<string>();
-        if (copied.HasValue)
-            parts.Add($"Copied {copied.Value}");
-        if (skipped.HasValue)
-            parts.Add($"Skipped {skipped.Value}");
-        if (errors.HasValue)
-            parts.Add($"Errors {errors.Value}");
+            $"Copied {summary.CopiedCount}",
+            $"Skipped {summary.SkippedCount}",
+            $"Errors {summary.ErrorCount}"
+        };
 
         return string.Join(" | ", parts);
     }
 
     /// <summary>
-    /// Maps a status to a glyph and color.
+    /// Maps an action/outcome to a glyph and color.
     /// </summary>
-    /// <param name="status">Status to interpret.</param>
+    /// <param name="action">Action to interpret.</param>
+    /// <param name="outcome">Outcome to interpret.</param>
     /// <returns>Glyph and color.</returns>
-    private static (string glyph, string color) MapStatusGlyph(string status)
+    private static (string glyph, string color) MapStatusGlyph(LogEventAction action, LogEventOutcome outcome)
     {
-        if (string.IsNullOrWhiteSpace(status))
-            return ("?", "#80FFFFFF");
+        if (outcome == LogEventOutcome.Failure)
+            return ("!", "#FF3B30");
 
-        return status.ToUpperInvariant() switch
+        return action switch
         {
-            "OK" => ("✓", "#30D158"),
-            "ERROR" => ("!", "#FF3B30"),
-            "SKIPPED" => ("-", "#FF9F0A"),
-            "DIR_CREATED" => ("+", "#0A84FF"),
-            _ => (status.ToUpperInvariant(), "#80FFFFFF")
+            LogEventAction.Skip => ("-", "#FF9F0A"),
+            LogEventAction.DirectoryCreated => ("+", "#0A84FF"),
+            LogEventAction.Update => ("~", "#0A84FF"),
+            LogEventAction.Delete => ("x", "#FF3B30"),
+            LogEventAction.Create => ("+", "#30D158"),
+            _ => ("✓", "#30D158")
         };
     }
 

@@ -1,5 +1,7 @@
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
+using System;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core;
@@ -10,6 +12,8 @@ using EasySave.App.Gui.Views;
 using EasySave.App.Repositories;
 using EasySave.App.Services;
 using EasySave.Core.Common;
+using EasySave.Core.Logging;
+using EasySave.Core.Models;
 
 namespace EasySave.App.Gui;
 
@@ -38,25 +42,45 @@ public partial class App : Application
             DisableAvaloniaDataAnnotationValidation();
             // Construit les services une seule fois pour la duree de l'app GUI.
             var pathProvider = new PathProvider();
-            var configRepository = new AppConfigRepository(pathProvider);
-            var config = configRepository.Load();
+            var config = AppConfig.LoadDefaults();
+            var logContext = BuildLogContext();
+            var appLogService = new AppLogService(pathProvider.LogsPath, () => config.LogFormat, logContext);
+            var configRepository = new AppConfigRepository(pathProvider, appLogService);
+            config = configRepository.Load();
 
             var culture = Localization.GetCulture(config.Language);
             CultureInfo.CurrentCulture = culture;
             CultureInfo.CurrentUICulture = culture;
 
-            var jobService = new JobService(pathProvider);
+            var jobService = new JobService(pathProvider, appLogService);
             var backupService = new BackupService(
                 jobService,
                 logDirectory: pathProvider.LogsPath,
-                logFormatProvider: () => config.LogFormat);
+                logFormatProvider: () => config.LogFormat,
+                logService: appLogService);
             desktop.MainWindow = new MainWindow
             {
-                DataContext = new MainWindowViewModel(jobService, backupService, pathProvider.LogsPath),
+                DataContext = new MainWindowViewModel(jobService, backupService, pathProvider.LogsPath, appLogService),
             };
         }
 
         base.OnFrameworkInitializationCompleted();
+    }
+
+    /// <summary>
+    /// Builds a log context shared by GUI log entries.
+    /// </summary>
+    private static LogContext BuildLogContext()
+    {
+        var version = Assembly.GetEntryAssembly()?.GetName().Version?.ToString() ?? "unknown";
+        return new LogContext
+        {
+            AppName = "EasySave",
+            AppVersion = version,
+            HostName = Environment.MachineName,
+            UserName = Environment.UserName,
+            ProcessId = Environment.ProcessId
+        };
     }
 
     /// <summary>
