@@ -62,16 +62,12 @@ public class LogEntryBuilderTests
                 "C:\\Src",
                 "D:\\Dst",
                 JobStatus.Running,
-                true,
-                "run-1",
-                "sequential")
+                true)
             .WithFile(
                 "C:\\Src\\a.txt",
                 "D:\\Dst\\a.txt",
                 123,
-                45.6,
-                false,
-                true)
+                45.6)
             .WithSummary(1, 2, 3, 100, 2000, "details")
             .Build();
 
@@ -80,8 +76,6 @@ public class LogEntryBuilderTests
         Assert.Equal(BackupType.Full, entry.Job?.Type);
         Assert.Equal(JobStatus.Running, entry.Job?.Status);
         Assert.True(entry.Job?.IsActive);
-        Assert.Equal("run-1", entry.Job?.RunId);
-        Assert.Equal("sequential", entry.Job?.Strategy);
         Assert.Equal("C:\\Src", entry.Job?.SourcePath);
         Assert.Equal("D:\\Dst", entry.Job?.TargetPath);
 
@@ -90,7 +84,6 @@ public class LogEntryBuilderTests
         Assert.Equal(123, entry.File?.SizeBytes);
         Assert.Equal(45.6, entry.File?.TransferTimeMs);
         Assert.False(entry.File?.IsDirectory);
-        Assert.True(entry.File?.Priority);
 
         Assert.Equal(1, entry.Summary?.CopiedCount);
         Assert.Equal(2, entry.Summary?.SkippedCount);

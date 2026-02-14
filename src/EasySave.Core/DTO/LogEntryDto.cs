@@ -132,11 +132,6 @@ public sealed class LogTraceDto
     /// Trace identifier.
     /// </summary>
     public string Id { get; set; } = string.Empty;
-
-    /// <summary>
-    /// Optional span identifier.
-    /// </summary>
-    public string? SpanId { get; set; }
 }
 
 /// <summary>
@@ -194,16 +189,6 @@ public sealed class LogJobDto
     public bool? IsActive { get; set; }
 
     /// <summary>
-    /// Optional run identifier.
-    /// </summary>
-    public string? RunId { get; set; }
-
-    /// <summary>
-    /// Optional run strategy.
-    /// </summary>
-    public string? Strategy { get; set; }
-
-    /// <summary>
     /// Job source path.
     /// </summary>
     public string? SourcePath { get; set; }
@@ -243,11 +228,7 @@ public sealed class LogFileDto
     /// Indicates whether the entry is a directory.
     /// </summary>
     public bool? IsDirectory { get; set; }
-
-    /// <summary>
-    /// Indicates whether the file was prioritized.
-    /// </summary>
-    public bool? Priority { get; set; }
+    
 }
 
 /// <summary>

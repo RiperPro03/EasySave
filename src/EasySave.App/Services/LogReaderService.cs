@@ -61,6 +61,23 @@ public sealed class LogReaderService
     }
 
     /// <summary>
+    /// Reads all entries across all available log files.
+    /// </summary>
+    public IReadOnlyList<LogEntryDto> ReadAllEntries()
+    {
+        if (string.IsNullOrWhiteSpace(_logDirectory) || !Directory.Exists(_logDirectory))
+            return Array.Empty<LogEntryDto>();
+
+        var entries = new List<LogEntryDto>();
+        foreach (var file in EnumerateLogFiles(null))
+        {
+            entries.AddRange(ReadEntriesFromFile(file));
+        }
+
+        return entries;
+    }
+
+    /// <summary>
     /// Reads log files and returns formatted content for the log view.
     /// </summary>
     public IReadOnlyList<LogFileEntry> ReadLogFiles(int? maxFiles = null)
