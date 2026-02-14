@@ -139,7 +139,7 @@ public sealed partial class JobsViewModel : ViewModelBase
             else
             {
                 var id = GenerateNextId();
-                Jobs.Add(new BackupJob(id, editor.Name, editor.SourcePath, editor.TargetPath, editor.SelectedType, editor.IsActive));
+                Jobs.Add(new BackupJob(id, editor.Name, editor.SourcePath, editor.TargetPath, editor.SelectedType, null, editor.IsActive));
                 LastError = null;
                 NotifyJobsChanged();
             }
@@ -216,7 +216,7 @@ public sealed partial class JobsViewModel : ViewModelBase
 
     private void SeedSampleJobs()
     {
-        Jobs.Add(new BackupJob("1", "Documents", "C:\\Users\\Demo\\Documents", "D:\\Backups\\Docs", BackupType.Full, true));
-        Jobs.Add(new BackupJob("2", "Photos", "C:\\Users\\Demo\\Pictures", "D:\\Backups\\Photos", BackupType.Differential, false));
+        Jobs.Add(new BackupJob("1", "Documents", "C:\\Users\\Demo\\Documents", "D:\\Backups\\Docs", BackupType.Full, null, true));
+        Jobs.Add(new BackupJob("2", "Photos", "C:\\Users\\Demo\\Pictures", "D:\\Backups\\Photos", BackupType.Differential, null, false));
     }
 }
