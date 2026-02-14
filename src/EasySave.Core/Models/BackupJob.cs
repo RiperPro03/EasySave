@@ -18,6 +18,15 @@ public sealed class BackupJob
     public DateTime CreatedAt { get; }
     public DateTime? LastRun { get; private set; }
 
+    public bool EncryptFiles { get; private set; } = false;
+    public string? EncryptionKey { get; private set; }
+
+    public void SetEncryption(bool encrypt, string? key)
+    {
+        EncryptFiles = encrypt;
+        EncryptionKey = key;
+    }
+
     /// <summary>
     /// Initializes a new instance of the <see cref="BackupJob"/> class.
     /// </summary>
@@ -40,7 +49,9 @@ public sealed class BackupJob
         BackupType type,
         bool isActive = true,
         DateTime? createdAtUtc = null,
-        DateTime? lastRunUtc = null)
+        DateTime? lastRunUtc = null,
+        bool encryptFiles = false,
+        string? encryptionKey = null)
     {
         Id = Guard.NotNullOrWhiteSpace(id, nameof(id));
         Name = Guard.NotNullOrWhiteSpace(name, nameof(name));
@@ -53,6 +64,9 @@ public sealed class BackupJob
         // Normalize timestamps to UTC for consistent persistence.
         CreatedAt = (createdAtUtc ?? DateTime.UtcNow).ToUniversalTime();
         LastRun = lastRunUtc?.ToUniversalTime();
+
+        EncryptFiles = encryptFiles;
+        EncryptionKey = encryptionKey;
     }
 
     /// <summary>
