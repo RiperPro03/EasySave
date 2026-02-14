@@ -247,8 +247,8 @@ internal sealed class BackupEngine : IBackupEngine
                 eventName: "job.summary",
                 category: LogEventCategory.Job,
                 action: LogEventAction.Summary,
-                level: level,
                 message: summary)
+            .WithLevel(level)
             .WithTraceIfPresent(traceId)
             .WithJob(
                 id: job.Id,
@@ -361,8 +361,8 @@ internal sealed class BackupEngine : IBackupEngine
                 eventName: eventName,
                 category: LogEventCategory.File,
                 action: action,
-                level: level,
                 message: message)
+            .WithLevel(level)
             .WithTraceIfPresent(traceId)
             .WithJob(
                 id: job.Id,

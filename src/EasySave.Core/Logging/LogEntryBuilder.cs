@@ -16,13 +16,12 @@ public sealed class LogEntryBuilder
         string eventName,
         LogEventCategory category,
         LogEventAction action,
-        LogLevel level,
         string message)
     {
         _entry = new LogEntryDto
         {
             TimestampUtc = DateTime.UtcNow,
-            Level = level,
+            Level = LogLevel.Info,
             Message = message ?? string.Empty,
             Event = new LogEventDto
             {
@@ -40,16 +39,18 @@ public sealed class LogEntryBuilder
     /// <param name="eventName">Event identifier (ex: job.created).</param>
     /// <param name="category">High level category.</param>
     /// <param name="action">Action performed.</param>
-    /// <param name="level">Severity level.</param>
     /// <param name="message">Human readable message.</param>
     /// <returns>The configured builder.</returns>
+    /// <example>
+    /// var entry = LogEntryBuilder.Create("job.created", LogEventCategory.Job, LogEventAction.Create, "created")
+    ///     .Build();
+    /// </example>
     public static LogEntryBuilder Create(
         string eventName,
         LogEventCategory category,
         LogEventAction action,
-        LogLevel level = LogLevel.Info,
         string message = "")
-        => new(eventName, category, action, level, message);
+        => new(eventName, category, action, message);
 
     /// <summary>
     /// Adds a trace identifier when provided.
@@ -223,6 +224,17 @@ public sealed class LogEntryBuilder
     public LogEntryBuilder WithOutcome(LogEventOutcome outcome)
     {
         _entry.Event.Outcome = outcome;
+        return this;
+    }
+
+    /// <summary>
+    /// Overrides the severity level.
+    /// </summary>
+    /// <param name="level">Severity level.</param>
+    /// <returns>The current builder.</returns>
+    public LogEntryBuilder WithLevel(LogLevel level)
+    {
+        _entry.Level = level;
         return this;
     }
 
