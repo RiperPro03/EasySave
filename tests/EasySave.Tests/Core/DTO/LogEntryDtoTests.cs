@@ -52,7 +52,7 @@ public class LogEntryDtoTests
                 Outcome = LogEventOutcome.Success
             },
             App = new LogAppDto { Name = "EasySave", Version = "1.2.3" },
-            Trace = new LogTraceDto { Id = "trace-1", SpanId = "span-1" },
+            Trace = new LogTraceDto { Id = "trace-1" },
             Host = new LogHostDto { Name = "host", User = "user", Pid = 123 },
             Job = new LogJobDto
             {
@@ -61,8 +61,6 @@ public class LogEntryDtoTests
                 Type = BackupType.Full,
                 Status = JobStatus.Running,
                 IsActive = true,
-                RunId = "run-1",
-                Strategy = "sequential",
                 SourcePath = "C:\\Src",
                 TargetPath = "D:\\Dst"
             },
@@ -72,8 +70,7 @@ public class LogEntryDtoTests
                 TargetPath = "D:\\Dst\\a.txt",
                 SizeBytes = 123,
                 TransferTimeMs = 45.6,
-                IsDirectory = false,
-                Priority = true
+                IsDirectory = false
             },
             Crypto = new LogCryptoDto
             {
@@ -121,7 +118,6 @@ public class LogEntryDtoTests
         Assert.Equal("EasySave", dto.App?.Name);
         Assert.Equal("1.2.3", dto.App?.Version);
         Assert.Equal("trace-1", dto.Trace?.Id);
-        Assert.Equal("span-1", dto.Trace?.SpanId);
         Assert.Equal("host", dto.Host?.Name);
         Assert.Equal("user", dto.Host?.User);
         Assert.Equal(123, dto.Host?.Pid);
@@ -131,8 +127,6 @@ public class LogEntryDtoTests
         Assert.Equal(BackupType.Full, dto.Job?.Type);
         Assert.Equal(JobStatus.Running, dto.Job?.Status);
         Assert.True(dto.Job?.IsActive);
-        Assert.Equal("run-1", dto.Job?.RunId);
-        Assert.Equal("sequential", dto.Job?.Strategy);
         Assert.Equal("C:\\Src", dto.Job?.SourcePath);
         Assert.Equal("D:\\Dst", dto.Job?.TargetPath);
 
@@ -141,7 +135,6 @@ public class LogEntryDtoTests
         Assert.Equal(123, dto.File?.SizeBytes);
         Assert.Equal(45.6, dto.File?.TransferTimeMs);
         Assert.False(dto.File?.IsDirectory);
-        Assert.True(dto.File?.Priority);
 
         Assert.Equal("CryptoSoft", dto.Crypto?.Tool);
         Assert.True(dto.Crypto?.ExtensionMatched);

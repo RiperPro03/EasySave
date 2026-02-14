@@ -76,8 +76,6 @@ public sealed class LogEntryBuilder
     /// <param name="targetPath">Target path.</param>
     /// <param name="status">Optional job status.</param>
     /// <param name="isActive">Optional active flag.</param>
-    /// <param name="runId">Optional run id.</param>
-    /// <param name="strategy">Optional run strategy.</param>
     /// <returns>The current builder.</returns>
     public LogEntryBuilder WithJob(
         string id,
@@ -86,9 +84,7 @@ public sealed class LogEntryBuilder
         string sourcePath,
         string targetPath,
         JobStatus? status = null,
-        bool? isActive = null,
-        string? runId = null,
-        string? strategy = null)
+        bool? isActive = null)
     {
         _entry.Job = new LogJobDto
         {
@@ -97,8 +93,6 @@ public sealed class LogEntryBuilder
             Type = type,
             Status = status,
             IsActive = isActive,
-            RunId = runId,
-            Strategy = strategy,
             SourcePath = sourcePath,
             TargetPath = targetPath
         };
@@ -113,15 +107,13 @@ public sealed class LogEntryBuilder
     /// <param name="sizeBytes">File size in bytes.</param>
     /// <param name="transferTimeMs">Transfer duration in milliseconds.</param>
     /// <param name="isDirectory">Whether the entry is a directory.</param>
-    /// <param name="priority">Optional priority flag.</param>
     /// <returns>The current builder.</returns>
     public LogEntryBuilder WithFile(
         string sourcePath,
         string targetPath,
         long sizeBytes,
         double transferTimeMs,
-        bool isDirectory = false,
-        bool? priority = null)
+        bool isDirectory = false)
     {
         _entry.File = new LogFileDto
         {
@@ -130,7 +122,6 @@ public sealed class LogEntryBuilder
             SizeBytes = sizeBytes,
             TransferTimeMs = transferTimeMs,
             IsDirectory = isDirectory,
-            Priority = priority
         };
         return this;
     }

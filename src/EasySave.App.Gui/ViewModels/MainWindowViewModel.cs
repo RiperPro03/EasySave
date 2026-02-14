@@ -108,10 +108,11 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
             throw new ArgumentNullException(nameof(jobService));
 
         _backupService = backupService ?? throw new ArgumentNullException(nameof(backupService));
-        _dashboardViewModel = new DashboardViewModel(jobService, _backupService, logsPath);
+        var logReader = new LogReaderService(logsPath);
+        _dashboardViewModel = new DashboardViewModel(jobService, _backupService, logReader);
         _jobsViewModel = new JobsViewModel(jobService);
         _executionViewModel = new ExecutionViewModel();
-        _logsViewModel = new LogsViewModel();
+        _logsViewModel = new LogsViewModel(logReader);
         _settingsViewModel = new SettingsViewModel();
         _aboutViewModel = new AboutViewModel();
         _appLogService = appLogService;
@@ -210,6 +211,7 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
     private void HandleLogWritten()
     {
         _dashboardViewModel.NotifyLogWritten();
+        _logsViewModel.RefreshLogs();
     }
 
     /// <summary>
