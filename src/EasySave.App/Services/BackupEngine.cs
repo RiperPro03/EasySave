@@ -151,15 +151,15 @@ internal sealed class BackupEngine : IBackupEngine
                 {
                     // Cas "skip": on journalise et on avance.
                     result.SkippedCount++;
-                WriteLogEntry(
-                    job,
-                    sourcePath,
-                    targetPath,
-                    fileSize,
-                    0,
-                    LogEventAction.Skip,
-                    LogEventOutcome.Success,
-                    traceId);
+                    WriteLogEntry(
+                        job,
+                        sourcePath,
+                        targetPath,
+                        fileSize,
+                        0,
+                        LogEventAction.Skip,
+                        LogEventOutcome.Success,
+                        traceId);
                     UpdateProgressState(state, sourcePath, targetPath, fileSize, incrementProcessed: true);
                     continue;
                 }
@@ -180,6 +180,46 @@ internal sealed class BackupEngine : IBackupEngine
                     LogEventAction.Transfer,
                     LogEventOutcome.Success,
                     traceId);
+
+                if (job.EncryptFiles && !string.IsNullOrWhiteSpace(job.EncryptionKey)
+                {
+                    var swEncrypt = Stopwatch.StartNew();
+
+                    // TODO Issue 99 : appel CryptoSoft ici 
+                    
+                    swEncrypt.Stop();
+                    var encryptionTimeMs = swEncrypt.ElapsedMilliseconds;
+
+                    if (_logService != null)
+                    {
+                        var cryptoDto = new LogCryptoDto
+                        {
+                            Tool = "CryptoSoft",
+                            ExtensionMatched = true,
+                            EncryptionTimeMs = encryptionTimeMs,
+                            Extension = Path.GetExtension(sourcePath),
+                            InstanceLock = null
+                        };
+                        var logEntry = LogEntryBuilder.Create(
+                            eventName: "file.encrypted",
+                            category: LogEventCategory.File,
+                            action: LogEventAction.Encrypt,
+                            message: $"File {Path.GetFileName(sourcePath)} encrypted")
+                        .WithFile(
+                            sourcePath: sourcePath,
+                            targetPath: targetPath,
+                            sizeBytes: fileSize,
+                            transferTimeMs: encryptionTimeMs)
+                        .WithCrypto(
+                            tool: cryptoDto.Tool,
+                            extensionMatched: cryptoDto.ExtensionMatched,
+                            encryptionTimeMs: cryptoDto.EncryptionTimeMs,
+                            extension: cryptoDto.Extension)
+                        .Build();
+
+                        _logService.Write(logEntry);
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -189,7 +229,7 @@ internal sealed class BackupEngine : IBackupEngine
                 // Convertit en UNC pour des logs coherents.
                 var sourceUnc = UncResolver.ResolveToUncForLog(sourcePath);
                 var targetUnc = UncResolver.ResolveToUncForLog(targetPath);
-                
+
                 // Temps de transfert negatif pour signaler un echec dans les logs.
                 var transferMs = -transferStopwatch.Elapsed.TotalMilliseconds;
                 if (transferMs >= 0)
