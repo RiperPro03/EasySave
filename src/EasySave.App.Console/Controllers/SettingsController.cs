@@ -52,12 +52,7 @@ public sealed class SettingsController
         _consoleView.ShowInfo($"2 - {Strings.Lang_French}");
         _consoleView.ShowInfo($"3 - {Strings.UI_LogFormatJson}");
         _consoleView.ShowInfo($"4 - {Strings.UI_LogFormatXml}");
-
-        // Affiche l'état actuel du chiffrement.
-        _consoleView.ShowInfo($"5 - Toggle Encryption ({_config.EncryptionEnabled})");
-
-        // Affiche la clé actuelle (si existante).
-        _consoleView.ShowInfo($"6 - Update key (current: {_config.EncryptionKey})");
+        
 
         _consoleView.ShowInfo($"0 - {Strings.UI_Back}");
 
@@ -81,14 +76,6 @@ public sealed class SettingsController
             case 4:
                 // Change le format de log en XML.
                 UpdateLogFormat(LogFormat.Xml);
-                break;
-            case 5:
-                // Active/désactive le chiffrement.
-                ToggleEncryption();
-                break;
-            case 6:
-                // Met à jour la clé de chiffrement.
-                UpdateEncryptionKey();
                 break;
             case 0:
                 return;
@@ -124,22 +111,4 @@ public sealed class SettingsController
         _consoleView.ShowSuccess(Strings.Info_LogFormatChanged);
     }
 
-    /// <summary>
-    /// Toggles encryption on/off.
-    /// </summary>
-    private void ToggleEncryption()
-    {
-        _config.ToggleEncryption();
-        _consoleView.ShowSuccess($"Encryption is now: {_config.EncryptionEnabled}");
-    }
-
-    /// <summary>
-    /// Updates the encryption key used for secure operations.
-    /// </summary>
-    private void UpdateEncryptionKey()
-    {
-        string newKey = _input.ReadNonEmptyString("> New encryption key: ");
-        _config.UpdateEncryptionKey(newKey);
-        _consoleView.ShowSuccess("Encryption key updated.");
-    }
 }

@@ -63,7 +63,7 @@ internal sealed class BackupEngine : IBackupEngine
 
         if (!Directory.Exists(job.SourcePath))
         {
-            // Dossier source manquant: on termine avec une erreur explicite.
+            // Dossier source manquant : on termine avec une erreur explicite.
             result.Success = false;
             result.Message = string.Format(Strings.Error_SourceFolderMissing, job.SourcePath);
             result.Errors.Add(result.Message);
