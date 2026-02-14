@@ -181,7 +181,7 @@ internal sealed class BackupEngine : IBackupEngine
                     LogEventOutcome.Success,
                     traceId);
 
-                if (job.EncryptFiles && !string.IsNullOrWhiteSpace(job.EncryptionKey)
+                if (job.EncryptFiles && !string.IsNullOrWhiteSpace(job.EncryptionKey))
                 {
                     var swEncrypt = Stopwatch.StartNew();
 
