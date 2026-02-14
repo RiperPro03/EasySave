@@ -1,4 +1,6 @@
 using System.Collections.ObjectModel;
+using System.Linq;
+using EasySave.App.Gui.Models;
 using EasySave.App.Services;
 
 namespace EasySave.App.Gui.ViewModels
@@ -6,7 +8,7 @@ namespace EasySave.App.Gui.ViewModels
     public class LogsViewModel : ViewModelBase
     {
         private readonly LogReaderService _logReader;
-        public ObservableCollection<LogFileEntry> Logs { get; } = new ObservableCollection<LogFileEntry>();
+        public ObservableCollection<LogEntryItem> Logs { get; } = new ObservableCollection<LogEntryItem>();
 
         public LogsViewModel()
         {
@@ -28,7 +30,11 @@ namespace EasySave.App.Gui.ViewModels
         private void LoadLogs()
         {
             Logs.Clear();
-            foreach (var logEntry in _logReader.ReadLogFiles())
+            var entries = _logReader.ReadAllEntries()
+                .OrderByDescending(entry => entry.TimestampUtc)
+                .Select(entry => new LogEntryItem(entry));
+
+            foreach (var logEntry in entries)
             {
                 Logs.Add(logEntry);
             }

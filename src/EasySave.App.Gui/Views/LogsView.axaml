@@ -1,33 +1,181 @@
-<UserControl xmlns="https://github.com/avaloniaui"
+﻿<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:EasySave.App.Gui.ViewModels"
+             xmlns:models="using:EasySave.App.Gui.Models"
+             xmlns:converters="using:EasySave.App.Gui.Converters"
              x:Class="EasySave.App.Gui.Views.LogsView"
              x:DataType="vm:LogsViewModel">
 
-	<ScrollViewer>
-		<ItemsControl ItemsSource="{Binding Logs}">
-			<ItemsControl.ItemTemplate>
-				<DataTemplate>
-					<StackPanel Margin="5" Spacing="5">
-			
-						<TextBlock Text="{Binding FileName}"
-                                   FontWeight="Bold"
-                                   FontSize="14"
-                                   Foreground="White"
-                                   Background="#2D2D30"
-                                   Padding="5"/>
+    <UserControl.Resources>
+        <converters:LogLevelToBrushConverter x:Key="LogLevelToBrushConverter"/>
+    </UserControl.Resources>
 
-			
-						<TextBlock Text="{Binding Content}"
-                                   FontFamily="Consolas"
-                                   FontSize="12"
-                                   TextWrapping="Wrap"
-                                   Foreground="White"
-                                   Background="#1E1E1E"
-                                   Padding="5"/>
-					</StackPanel>
-				</DataTemplate>
-			</ItemsControl.ItemTemplate>
-		</ItemsControl>
-	</ScrollViewer>
+    <StackPanel Spacing="16">
+        <Border Background="#18FFFFFF"
+                BorderBrush="#28FFFFFF"
+                BorderThickness="1"
+                CornerRadius="14"
+                Padding="16">
+            <ItemsControl ItemsSource="{Binding Logs}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Spacing="12"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="models:LogEntryItem">
+                        <Border Background="#12FFFFFF"
+                                BorderBrush="#24FFFFFF"
+                                BorderThickness="1"
+                                CornerRadius="14">
+                            <Expander>
+                                <Expander.Header>
+                                    <Border Padding="16">
+                                        <Grid ColumnDefinitions="4,Auto,*,Auto"
+                                              ColumnSpacing="14">
+                                        <Border Background="{Binding Entry.Level, Converter={StaticResource LogLevelToBrushConverter}}"
+                                                CornerRadius="2"/>
+                                        <Border Grid.Column="1"
+                                                Width="44"
+                                                Height="44"
+                                                CornerRadius="12"
+                                                Background="{Binding Entry.Level, Converter={StaticResource LogLevelToBrushConverter}}">
+                                            <TextBlock Text="{Binding Entry.Level}"
+                                                       FontSize="11"
+                                                       FontWeight="Bold"
+                                                       Foreground="White"
+                                                       HorizontalAlignment="Center"
+                                                       VerticalAlignment="Center"/>
+                                        </Border>
+                                        <StackPanel Grid.Column="2" Spacing="8">
+                                            <StackPanel Spacing="4">
+                                                <TextBlock Text="{Binding Entry.Event.Name}"
+                                                           FontSize="15"
+                                                           FontWeight="SemiBold"
+                                                           Foreground="#FFFFFF"/>
+                                                <TextBlock Text="{Binding Entry.Message}"
+                                                           FontSize="12"
+                                                           Foreground="#B0FFFFFF"
+                                                           TextWrapping="Wrap"/>
+                                            </StackPanel>
+                                            <WrapPanel>
+                                                <Border Background="#1AFFFFFF"
+                                                        BorderBrush="#2AFFFFFF"
+                                                        BorderThickness="1"
+                                                        CornerRadius="6"
+                                                        Padding="6,2"
+                                                        Margin="0,0,6,6">
+                                                    <TextBlock Text="{Binding Entry.Event.Category}"
+                                                               FontSize="10"
+                                                               Foreground="#E0FFFFFF"/>
+                                                </Border>
+                                                <Border Background="#1AFFFFFF"
+                                                        BorderBrush="#2AFFFFFF"
+                                                        BorderThickness="1"
+                                                        CornerRadius="6"
+                                                        Padding="6,2"
+                                                        Margin="0,0,6,6">
+                                                    <TextBlock Text="{Binding Entry.Event.Action}"
+                                                               FontSize="10"
+                                                               Foreground="#E0FFFFFF"/>
+                                                </Border>
+                                                <Border Background="#1AFFFFFF"
+                                                        BorderBrush="#2AFFFFFF"
+                                                        BorderThickness="1"
+                                                        CornerRadius="6"
+                                                        Padding="6,2"
+                                                        Margin="0,0,6,6">
+                                                    <TextBlock Text="{Binding Entry.Event.Outcome}"
+                                                               FontSize="10"
+                                                               Foreground="#E0FFFFFF"/>
+                                                </Border>
+                                            </WrapPanel>
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="3" Spacing="6" HorizontalAlignment="Right">
+                                            <TextBlock Text="{Binding Entry.TimestampUtc, StringFormat={}{0:dd MMM yyyy - HH:mm}}"
+                                                       FontSize="11"
+                                                       Foreground="#80FFFFFF"
+                                                       HorizontalAlignment="Right"/>
+                                            <Border Background="#1AFFFFFF"
+                                                    BorderBrush="#2AFFFFFF"
+                                                    BorderThickness="1"
+                                                    CornerRadius="8"
+                                                    Padding="8,2"
+                                                    HorizontalAlignment="Right">
+                                                <TextBlock FontSize="10"
+                                                           Foreground="#D0FFFFFF">
+                                                    <Run Text="v"/>
+                                                    <Run Text="{Binding Entry.SchemaVersion}"/>
+                                                </TextBlock>
+                                            </Border>
+                                        </StackPanel>
+                                        </Grid>
+                                    </Border>
+                                </Expander.Header>
+
+                                <Expander.Content>
+                                    <Border Padding="16,0,16,16">
+                                        <Grid ColumnDefinitions="4,44,*"
+                                              ColumnSpacing="14">
+                                        <Border Grid.Column="2"
+                                                Background="#10FFFFFF"
+                                                BorderBrush="#22FFFFFF"
+                                                BorderThickness="1"
+                                                CornerRadius="10"
+                                                Padding="12">
+                                            <ItemsControl ItemsSource="{Binding Sections}">
+                                                <ItemsControl.ItemsPanel>
+                                                    <ItemsPanelTemplate>
+                                                        <StackPanel Spacing="10"/>
+                                                    </ItemsPanelTemplate>
+                                                </ItemsControl.ItemsPanel>
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate x:DataType="models:LogSection">
+                                                        <Border Background="#0F1419"
+                                                                BorderBrush="#22FFFFFF"
+                                                                BorderThickness="1"
+                                                                CornerRadius="8"
+                                                                Padding="10">
+                                                            <StackPanel Spacing="6">
+                                                                <TextBlock Text="{Binding Title}"
+                                                                           FontSize="12"
+                                                                           FontWeight="SemiBold"
+                                                                           Foreground="#FFFFFF"/>
+                                                                <ItemsControl ItemsSource="{Binding Fields}">
+                                                                    <ItemsControl.ItemsPanel>
+                                                                        <ItemsPanelTemplate>
+                                                                            <StackPanel Spacing="4"/>
+                                                                        </ItemsPanelTemplate>
+                                                                    </ItemsControl.ItemsPanel>
+                                                                    <ItemsControl.ItemTemplate>
+                                                                        <DataTemplate x:DataType="models:LogField">
+                                                                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                                                                                <TextBlock Text="{Binding Label}"
+                                                                                           Foreground="#90FFFFFF"
+                                                                                           FontSize="11"/>
+                                                                                <TextBlock Text="{Binding Value}"
+                                                                                           Grid.Column="1"
+                                                                                           Foreground="#EFFFFFFF"
+                                                                                           FontSize="11"
+                                                                                           TextWrapping="Wrap"/>
+                                                                            </Grid>
+                                                                        </DataTemplate>
+                                                                    </ItemsControl.ItemTemplate>
+                                                                </ItemsControl>
+                                                            </StackPanel>
+                                                        </Border>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </Border>
+                                        </Grid>
+                                    </Border>
+                                </Expander.Content>
+                            </Expander>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Border>
+    </StackPanel>
 </UserControl>

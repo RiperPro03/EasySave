@@ -350,7 +350,7 @@
                                        FontWeight="Bold"
                                        Foreground="#FFFFFF"
                                        LetterSpacing="0.5"/>
-                            <TextBlock Text="Manage and execute your backup operations"
+                            <TextBlock Text="{Binding StatusMessage}"
                                        FontSize="14"
                                        Foreground="#80FFFFFF"/>
                         </StackPanel>
