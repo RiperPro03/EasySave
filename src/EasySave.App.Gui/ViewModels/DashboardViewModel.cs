@@ -4,13 +4,9 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text.Json;
 using System.Threading;
-using System.Xml.Linq;
-using System.Xml.Serialization;
-using System.Text.Json.Serialization;
-using System.Text.Json.Serialization;
 using CommunityToolkit.Mvvm.ComponentModel;
+using EasySave.App.Services;
 using EasySave.App.Gui.Models;
 using EasySave.Core.DTO;
 using EasySave.Core.Enums;
@@ -25,14 +21,9 @@ namespace EasySave.App.Gui.ViewModels;
 public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
 {
     private static readonly TimeSpan LogRefreshCooldown = TimeSpan.FromSeconds(2);
-    private static readonly JsonSerializerOptions LogJsonOptions = new()
-    {
-        PropertyNameCaseInsensitive = true,
-        Converters = { new JsonStringEnumConverter() }
-    };
     private readonly IJobService? _jobService;
     private readonly IBackupService? _backupService;
-    private readonly string? _logsPath;
+    private readonly LogReaderService? _logReader;
     private readonly SynchronizationContext? _uiContext;
     private DateTime _lastLogRefreshUtc;
     private bool _disposed;
@@ -71,14 +62,14 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
     /// </summary>
     /// <param name="jobService">Job service used for counts and types.</param>
     /// <param name="backupService">Backup service that publishes state updates.</param>
-    /// <param name="logsPath">Directory containing log files.</param>
+    /// <param name="logReader">Log reader used to parse entries.</param>
     /// <exception cref="ArgumentNullException">Thrown when a required service is null.</exception>
-    public DashboardViewModel(IJobService jobService, IBackupService backupService, string? logsPath)
+    public DashboardViewModel(IJobService jobService, IBackupService backupService, LogReaderService logReader)
     {
         _uiContext = SynchronizationContext.Current;
         _jobService = jobService ?? throw new ArgumentNullException(nameof(jobService));
         _backupService = backupService ?? throw new ArgumentNullException(nameof(backupService));
-        _logsPath = logsPath;
+        _logReader = logReader ?? throw new ArgumentNullException(nameof(logReader));
         RefreshFromJobs();
         LoadRecentActivities();
         _backupService.StateChanged += OnStateChanged;
@@ -154,7 +145,7 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
     /// </summary>
     private void RefreshLogsIfNeeded()
     {
-        if (string.IsNullOrWhiteSpace(_logsPath))
+        if (_logReader is null)
             return;
 
         var nowUtc = DateTime.UtcNow;
@@ -173,11 +164,10 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
     {
         RecentActivities.Clear();
         HasRecentActivities = false;
-
-        if (string.IsNullOrWhiteSpace(_logsPath) || !Directory.Exists(_logsPath))
+        if (_logReader is null)
             return;
 
-        var activityItems = BuildRecentActivities(_logsPath);
+        var activityItems = BuildRecentActivities();
         foreach (var item in activityItems)
         {
             RecentActivities.Add(item);
@@ -196,13 +186,13 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
     /// </summary>
     /// <param name="logsPath">Directory containing log files.</param>
     /// <returns>List of log entries.</returns>
-    private List<RecentActivityItem> BuildRecentActivities(string logsRootPath)
+    private List<RecentActivityItem> BuildRecentActivities()
     {
-        var logPath = logsRootPath;
-
         var activities = new List<(DateTime TimestampUtc, RecentActivityItem Item)>();
+        if (_logReader is null)
+            return new List<RecentActivityItem>();
 
-        foreach (var entry in ReadLogEntries<LogEntryDto>(logPath))
+        foreach (var entry in _logReader.ReadEntries())
         {
             if (entry.TimestampUtc == default)
                 continue;
@@ -229,120 +219,6 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
             .ToList();
     }
 
-    /// <summary>
-    /// Reads JSON entries line by line.
-    /// </summary>
-    /// <param name="filePath">Path to the JSON file.</param>
-    /// <returns>Sequence of log entries.</returns>
-    private static IEnumerable<T> ReadJsonEntries<T>(string filePath) where T : class
-    {
-        foreach (var line in File.ReadLines(filePath))
-        {
-            var trimmed = line.Trim();
-            if (trimmed.Length == 0)
-                continue;
-            if (string.Equals(trimmed, "<logs>", StringComparison.OrdinalIgnoreCase))
-                continue;
-            if (string.Equals(trimmed, "</logs>", StringComparison.OrdinalIgnoreCase))
-                continue;
-
-            T? entry;
-            try
-            {
-                entry = JsonSerializer.Deserialize<T>(trimmed, LogJsonOptions);
-            }
-            catch (JsonException)
-            {
-                continue;
-            }
-
-            if (entry != null)
-                yield return entry;
-        }
-    }
-
-    /// <summary>
-    /// Reads XML entries from a file.
-    /// </summary>
-    /// <param name="filePath">Path to the XML file.</param>
-    /// <returns>Sequence of log entries.</returns>
-    private static IEnumerable<T> ReadXmlEntries<T>(string filePath) where T : class
-    {
-        XDocument document;
-        try
-        {
-            document = XDocument.Load(filePath);
-        }
-        catch (Exception)
-        {
-            yield break;
-        }
-
-        var serializer = new XmlSerializer(typeof(T));
-        var root = document.Root;
-        if (root is null)
-            yield break;
-
-        foreach (var element in root.Elements())
-        {
-            T? entry = null;
-            try
-            {
-                using var reader = element.CreateReader();
-                entry = serializer.Deserialize(reader) as T;
-            }
-            catch (InvalidOperationException)
-            {
-                entry = null;
-            }
-
-            if (entry != null)
-                yield return entry;
-        }
-    }
-
-    private static List<T> ReadLogEntries<T>(string logsPath) where T : class
-    {
-        if (string.IsNullOrWhiteSpace(logsPath) || !Directory.Exists(logsPath))
-            return new List<T>();
-
-        var files = Directory
-            .EnumerateFiles(logsPath, "*.json")
-            .Concat(Directory.EnumerateFiles(logsPath, "*.xml"))
-            .OrderByDescending(Path.GetFileName)
-            .Take(7)
-            .ToList();
-
-        var entries = new List<T>();
-        foreach (var file in files)
-        {
-            var extension = Path.GetExtension(file);
-            if (string.Equals(extension, ".json", StringComparison.OrdinalIgnoreCase))
-            {
-                try
-                {
-                    entries.AddRange(ReadJsonEntries<T>(file));
-                }
-                catch (IOException)
-                {
-                    // Ignore les fichiers illisibles.
-                }
-            }
-            else if (string.Equals(extension, ".xml", StringComparison.OrdinalIgnoreCase))
-            {
-                try
-                {
-                    entries.AddRange(ReadXmlEntries<T>(file));
-                }
-                catch (IOException)
-                {
-                    // Ignore les fichiers illisibles.
-                }
-            }
-        }
-
-        return entries;
-    }
 
     /// <summary>
     /// Indicates whether the entry is a job summary row.
