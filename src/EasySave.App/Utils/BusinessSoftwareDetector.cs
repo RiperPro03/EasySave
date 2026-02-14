@@ -1,5 +1,5 @@
 using System.Diagnostics;
-namespace EasySave.App.Utils;
+namespace EasySave.App.Utils
 {
     /// <summary>
     /// Utility to detect if a business software process is currently running.
