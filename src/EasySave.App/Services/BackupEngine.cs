@@ -4,11 +4,9 @@ using EasySave.Core.DTO;
 using EasySave.Core.Enums;
 using EasySave.Core.Events;
 using EasySave.Core.Interfaces;
+using EasySave.Core.Logging;
 using EasySave.Core.Models;
 using EasySave.Core.Resources;
-using EasySave.EasyLog.Factories;
-using EasySave.EasyLog.Interfaces;
-using EasySave.EasyLog.Options;
 
 namespace EasySave.App.Services;
 
@@ -17,7 +15,7 @@ namespace EasySave.App.Services;
 /// </summary>
 internal sealed class BackupEngine : IBackupEngine
 {
-    private readonly ILogger<LogEntryDto>? _logger;
+    private readonly IAppLogService? _logService;
 
     /// <summary>
     /// Raised when job state changes during execution. (update state.json)
@@ -29,18 +27,10 @@ internal sealed class BackupEngine : IBackupEngine
     /// </summary>
     /// <param name="logDirectory">Optional log directory; when null, logging is disabled.</param>
     /// <param name="logFormat">Log serialization format.</param>
-    public BackupEngine(string? logDirectory = null, LogFormat logFormat = LogFormat.Json)
+    /// <param name="logService">Optional log service.</param>
+    public BackupEngine(IAppLogService? logService = null)
     {
-        if (!string.IsNullOrWhiteSpace(logDirectory))
-        {
-            var options = new LogOptions
-            {
-                LogDirectory = logDirectory,
-                Format = logFormat
-            };
-
-            _logger = LoggerFactory.Create<LogEntryDto>(options);
-        }
+        _logService = logService;
     }
 
     /// <summary>
@@ -54,6 +44,7 @@ internal sealed class BackupEngine : IBackupEngine
         if (job is null)
             throw new ArgumentNullException(nameof(job));
 
+        var traceId = Guid.NewGuid().ToString("N");
         // Resultat cumule pour l'appelant (CLI/GUI/tests).
         var result = new BackupResultDto();
         // Chronometre la duree totale de la sauvegarde.
@@ -70,7 +61,7 @@ internal sealed class BackupEngine : IBackupEngine
             result.ErrorCount = result.Errors.Count;
             result.Duration = stopwatch.Elapsed;
             UpdateTerminalState(state, JobStatus.Error, result.Message);
-            WriteSummaryLog(job, result);
+            WriteSummaryLog(job, result, traceId);
             return result;
         }
 
@@ -91,7 +82,7 @@ internal sealed class BackupEngine : IBackupEngine
             result.ErrorCount = result.Errors.Count;
             result.Duration = stopwatch.Elapsed;
             UpdateTerminalState(state, JobStatus.Error, result.Message);
-            WriteSummaryLog(job, result);
+            WriteSummaryLog(job, result, traceId);
             return result;
         }
 
@@ -102,7 +93,7 @@ internal sealed class BackupEngine : IBackupEngine
         PublishState(state);
 
         // Execute la copie fichier par fichier.
-        ExecuteBackup(job, files, job.SourcePath, job.TargetPath, strategy, result, state);
+        ExecuteBackup(job, files, job.SourcePath, job.TargetPath, strategy, result, state, traceId);
 
         // Le succes est determine par l'absence d'erreurs.
         result.Success = result.ErrorCount == 0;
@@ -115,7 +106,7 @@ internal sealed class BackupEngine : IBackupEngine
         // Concatene les erreurs pour l'etat final (utile pour la GUI).
         var finalError = result.Success ? null : string.Join(" | ", result.Errors);
         UpdateTerminalState(state, finalStatus, finalError);
-        WriteSummaryLog(job, result);
+        WriteSummaryLog(job, result, traceId);
         return result;
     }
 
@@ -129,6 +120,7 @@ internal sealed class BackupEngine : IBackupEngine
     /// <param name="strategy">The copy strategy to use.</param>
     /// <param name="result">The mutable result collector.</param>
     /// <param name="state">The mutable state snapshot.</param>
+    /// <param name="traceId">Trace identifier for the execution.</param>
     private void ExecuteBackup(
         BackupJob job,
         IReadOnlyList<string> files,
@@ -136,7 +128,8 @@ internal sealed class BackupEngine : IBackupEngine
         string targetRoot,
         IBackupCopyStrategy strategy,
         BackupResultDto result,
-        JobStateDto state)
+        JobStateDto state,
+        string traceId)
     {
         foreach (var sourcePath in files)
         {
@@ -158,13 +151,21 @@ internal sealed class BackupEngine : IBackupEngine
                 {
                     // Cas "skip": on journalise et on avance.
                     result.SkippedCount++;
-                    WriteLogEntry(job, sourcePath, targetPath, fileSize, 0, "SKIPPED");
+                    WriteLogEntry(
+                        job,
+                        sourcePath,
+                        targetPath,
+                        fileSize,
+                        0,
+                        LogEventAction.Skip,
+                        LogEventOutcome.Success,
+                        traceId);
                     UpdateProgressState(state, sourcePath, targetPath, fileSize, incrementProcessed: true);
                     continue;
                 }
 
                 // Cree le dossier cible si necessaire.
-                EnsureTargetDirectory(job, sourcePath, targetPath);
+                EnsureTargetDirectory(job, sourcePath, targetPath, traceId);
                 transferStopwatch.Start();
                 CopyFile(sourcePath, targetPath);
                 transferStopwatch.Stop();
@@ -176,7 +177,49 @@ internal sealed class BackupEngine : IBackupEngine
                     targetPath,
                     fileSize,
                     transferStopwatch.Elapsed.TotalMilliseconds,
-                    "OK");
+                    LogEventAction.Transfer,
+                    LogEventOutcome.Success,
+                    traceId);
+
+                if (job.EncryptFiles && !string.IsNullOrWhiteSpace(job.EncryptionKey))
+                {
+                    var swEncrypt = Stopwatch.StartNew();
+
+                    // TODO Issue 99 : appel CryptoSoft ici 
+                    
+                    swEncrypt.Stop();
+                    var encryptionTimeMs = swEncrypt.ElapsedMilliseconds;
+
+                    if (_logService != null)
+                    {
+                        var cryptoDto = new LogCryptoDto
+                        {
+                            Tool = "CryptoSoft",
+                            ExtensionMatched = true,
+                            EncryptionTimeMs = encryptionTimeMs,
+                            Extension = Path.GetExtension(sourcePath),
+                            InstanceLock = null
+                        };
+                        var logEntry = LogEntryBuilder.Create(
+                            eventName: "file.encrypted",
+                            category: LogEventCategory.File,
+                            action: LogEventAction.Unknown,
+                            message: $"File {Path.GetFileName(sourcePath)} encrypted")
+                        .WithFile(
+                            sourcePath: sourcePath,
+                            targetPath: targetPath,
+                            sizeBytes: fileSize,
+                            transferTimeMs: encryptionTimeMs)
+                        .WithCrypto(
+                            tool: cryptoDto.Tool,
+                            extensionMatched: cryptoDto.ExtensionMatched,
+                            encryptionTimeMs: cryptoDto.EncryptionTimeMs,
+                            extension: cryptoDto.Extension)
+                        .Build();
+
+                        _logService.Write(logEntry);
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -186,7 +229,7 @@ internal sealed class BackupEngine : IBackupEngine
                 // Convertit en UNC pour des logs coherents.
                 var sourceUnc = UncResolver.ResolveToUncForLog(sourcePath);
                 var targetUnc = UncResolver.ResolveToUncForLog(targetPath);
-                
+
                 // Temps de transfert negatif pour signaler un echec dans les logs.
                 var transferMs = -transferStopwatch.Elapsed.TotalMilliseconds;
                 if (transferMs >= 0)
@@ -198,7 +241,9 @@ internal sealed class BackupEngine : IBackupEngine
                     targetPath,
                     fileSize,
                     transferMs,
-                    "ERROR",
+                    LogEventAction.Transfer,
+                    LogEventOutcome.Failure,
+                    traceId,
                     ex.Message);
                 // Stocke l'erreur detaillee pour le resume final.
                 result.Errors.Add(
@@ -224,24 +269,52 @@ internal sealed class BackupEngine : IBackupEngine
     /// </summary>
     /// <param name="job">The job that completed.</param>
     /// <param name="result">The execution result.</param>
-    private void WriteSummaryLog(BackupJob job, BackupResultDto result)
+    private void WriteSummaryLog(BackupJob job, BackupResultDto result, string? traceId)
     {
-        if (_logger is null)
+        if (_logService is null)
             return;
 
         // Resume lisible par l'utilisateur final.
         var summary = $"Copied={result.CopiedCount}; Skipped={result.SkippedCount}; Errors={result.ErrorCount}";
-        if (result.Errors.Count > 0)
-            summary = $"{summary}; Details={string.Join(" | ", result.Errors)}";
+        var details = result.Errors.Count > 0 ? string.Join(" | ", result.Errors) : null;
+        if (!string.IsNullOrWhiteSpace(details))
+            summary = $"{summary}; Details={details}";
 
-        WriteLogEntry(
-            job,
-            job.SourcePath,
-            job.TargetPath,
-            result.TotalBytesProcessed,
-            result.Duration.TotalMilliseconds,
-            result.ErrorCount == 0 ? "OK" : "ERROR",
-            summary);
+        var outcome = result.ErrorCount == 0 ? LogEventOutcome.Success : LogEventOutcome.Failure;
+        var level = result.ErrorCount == 0 ? LogLevel.Info : LogLevel.Error;
+
+        var builder = LogEntryBuilder.Create(
+                eventName: "job.summary",
+                category: LogEventCategory.Job,
+                action: LogEventAction.Summary,
+                message: summary)
+            .WithLevel(level)
+            .WithTraceIfPresent(traceId)
+            .WithJob(
+                id: job.Id,
+                name: job.Name,
+                type: job.Type,
+                sourcePath: ToUncOrEmpty(job.SourcePath),
+                targetPath: ToUncOrEmpty(job.TargetPath),
+                status: result.ErrorCount == 0 ? JobStatus.Completed : JobStatus.Error)
+            .WithSummary(
+                copiedCount: result.CopiedCount,
+                skippedCount: result.SkippedCount,
+                errorCount: result.ErrorCount,
+                totalBytes: result.TotalBytesProcessed,
+                durationMs: result.Duration.TotalMilliseconds,
+                details: details);
+
+        if (outcome == LogEventOutcome.Failure && !string.IsNullOrWhiteSpace(details))
+        {
+            builder.Fail("JobSummary", details);
+        }
+        else
+        {
+            builder.WithOutcome(outcome);
+        }
+
+        _logService.Write(builder.Build());
     }
 
     /// <summary>
@@ -250,7 +323,8 @@ internal sealed class BackupEngine : IBackupEngine
     /// <param name="job">The job being executed.</param>
     /// <param name="sourcePath">The source file path.</param>
     /// <param name="targetPath">The target file path.</param>
-    private void EnsureTargetDirectory(BackupJob job, string sourcePath, string targetPath)
+    /// <param name="traceId">Trace identifier for the execution.</param>
+    private void EnsureTargetDirectory(BackupJob job, string sourcePath, string targetPath, string traceId)
     {
         var directory = Path.GetDirectoryName(targetPath);
         if (string.IsNullOrWhiteSpace(directory))
@@ -266,7 +340,16 @@ internal sealed class BackupEngine : IBackupEngine
         if (string.IsNullOrWhiteSpace(sourceDirectory))
             sourceDirectory = job.SourcePath;
 
-        WriteLogEntry(job, sourceDirectory, directory, 0, 0, "DIR_CREATED");
+        WriteLogEntry(
+            job,
+            sourceDirectory,
+            directory,
+            0,
+            0,
+            LogEventAction.DirectoryCreated,
+            LogEventOutcome.Success,
+            traceId,
+            isDirectory: true);
     }
 
     /// <summary>
@@ -277,38 +360,85 @@ internal sealed class BackupEngine : IBackupEngine
     /// <param name="targetPath">The target file path.</param>
     /// <param name="fileSizeBytes">The file size in bytes.</param>
     /// <param name="transferTimeMs">The transfer time in milliseconds.</param>
-    /// <param name="status">The status text.</param>
+    /// <param name="action">The log action.</param>
+    /// <param name="outcome">The log outcome.</param>
+    /// <param name="traceId">Trace identifier for the execution.</param>
     /// <param name="errorMessage">Optional error message.</param>
+    /// <param name="isDirectory">Whether the entry describes a directory.</param>
     private void WriteLogEntry(
         BackupJob job,
         string? sourcePath,
         string? targetPath,
         long fileSizeBytes,
         double transferTimeMs,
-        string status,
-        string? errorMessage = null)
+        LogEventAction action,
+        LogEventOutcome outcome,
+        string traceId,
+        string? errorMessage = null,
+        bool isDirectory = false)
     {
-        if (_logger is null)
+        if (_logService is null)
             return;
 
-        var entry = new LogEntryDto
+        var sourceUnc = string.IsNullOrWhiteSpace(sourcePath)
+            ? string.Empty
+            : UncResolver.ResolveToUncForLog(sourcePath);
+        var targetUnc = string.IsNullOrWhiteSpace(targetPath)
+            ? string.Empty
+            : UncResolver.ResolveToUncForLog(targetPath);
+
+        var (eventName, message, level) = action switch
         {
-            TimestampUtc = DateTime.UtcNow,
-            JobName = job.Name,
-            // Conversion en UNC pour une lecture coherente sur le reseau.
-            SourcePath = string.IsNullOrWhiteSpace(sourcePath)
-                ? string.Empty
-                : UncResolver.ResolveToUncForLog(sourcePath),
-            TargetPath = string.IsNullOrWhiteSpace(targetPath)
-                ? string.Empty
-                : UncResolver.ResolveToUncForLog(targetPath),
-            FileSizeBytes = fileSizeBytes,
-            TransferTimeMs = transferTimeMs,
-            Status = status,
-            ErrorMessage = errorMessage
+            LogEventAction.Skip => ("file.skipped", "File skipped", LogLevel.Info),
+            LogEventAction.DirectoryCreated => ("directory.created", "Directory created", LogLevel.Info),
+            LogEventAction.Transfer when outcome == LogEventOutcome.Failure
+                => ("file.transfer.failed", "File transfer failed", LogLevel.Error),
+            LogEventAction.Transfer => ("file.transferred", "File transferred", LogLevel.Info),
+            _ => ("file.event", "File event", LogLevel.Info)
         };
 
-        _logger.Write(entry);
+        var builder = LogEntryBuilder.Create(
+                eventName: eventName,
+                category: LogEventCategory.File,
+                action: action,
+                message: message)
+            .WithLevel(level)
+            .WithTraceIfPresent(traceId)
+            .WithJob(
+                id: job.Id,
+                name: job.Name,
+                type: job.Type,
+                sourcePath: ToUncOrEmpty(job.SourcePath),
+                targetPath: ToUncOrEmpty(job.TargetPath),
+                status: JobStatus.Running)
+            .WithFile(
+                sourcePath: sourceUnc,
+                targetPath: targetUnc,
+                sizeBytes: fileSizeBytes,
+                transferTimeMs: transferTimeMs,
+                isDirectory: isDirectory);
+
+        if (outcome == LogEventOutcome.Failure && !string.IsNullOrWhiteSpace(errorMessage))
+        {
+            builder.Fail("FileTransfer", errorMessage);
+        }
+        else
+        {
+            builder.WithOutcome(outcome);
+        }
+
+        _logService.Write(builder.Build());
+    }
+
+    /// <summary>
+    /// Normalizes a path to UNC for logging.
+    /// </summary>
+    private static string ToUncOrEmpty(string? path)
+    {
+        if (string.IsNullOrWhiteSpace(path))
+            return string.Empty;
+
+        return UncResolver.ResolveToUncForLog(path);
     }
 
     /// <summary>

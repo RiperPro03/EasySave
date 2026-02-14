@@ -8,9 +8,9 @@ public enum BackupType
     /// <summary>
     /// Copies all files.
     /// </summary>
-    Full = 0,
+    Full,
     /// <summary>
     /// Copies only files changed since the last backup.
     /// </summary>
-    Differential = 1
+    Differential
 }
