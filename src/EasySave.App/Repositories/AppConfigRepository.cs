@@ -3,7 +3,10 @@ using System.Text.Json.Serialization;
 using EasySave.Core.Enums;
 using EasySave.Core.Interfaces;
 using EasySave.Core.Models;
+using EasySave.Core.Logging;
+using EasySave.App.Services;
 using EasySave.EasyLog.Options;
+using EasySave.App.Utils;
 
 namespace EasySave.App.Repositories;
 
@@ -15,6 +18,7 @@ public sealed class AppConfigRepository
     private const string ConfigFileName = "setting.json";
     private readonly IPathProvider _pathProvider;
     private readonly string _configFilePath;
+    private readonly IAppLogService? _logService;
     private readonly JsonSerializerOptions _options = new()
     {
         WriteIndented = true,
@@ -26,10 +30,11 @@ public sealed class AppConfigRepository
     /// </summary>
     /// <param name="pathProvider">Provides configuration paths.</param>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="pathProvider"/> is null.</exception>
-    public AppConfigRepository(IPathProvider pathProvider)
+    public AppConfigRepository(IPathProvider pathProvider, IAppLogService? logService = null)
     {
         _pathProvider = pathProvider ?? throw new ArgumentNullException(nameof(pathProvider));
         _configFilePath = Path.Combine(_pathProvider.ConfigPath, ConfigFileName);
+        _logService = logService;
     }
 
     /// <summary>
@@ -102,6 +107,39 @@ public sealed class AppConfigRepository
 
         var json = JsonSerializer.Serialize(dto, _options);
         File.WriteAllText(_configFilePath, json);
+
+        WriteSettingsLog(config);
+    }
+
+    private void WriteSettingsLog(AppConfig config)
+    {
+        if (_logService == null)
+            return;
+
+        var entry = LogEntryBuilder.Create(
+                eventName: "settings.saved",
+                category: LogEventCategory.Settings,
+                action: LogEventAction.Save,
+                message: $"Language={config.Language}; LogFormat={config.LogFormat}")
+            .WithSettings(
+                config.Language,
+                config.LogFormat,
+                ToUncOrEmpty(config.LogDirectory),
+                ToUncOrEmpty(_configFilePath))
+            .Build();
+
+        _logService.Write(entry);
+    }
+
+    /// <summary>
+    /// Normalizes a path to UNC for logging.
+    /// </summary>
+    private static string ToUncOrEmpty(string? path)
+    {
+        if (string.IsNullOrWhiteSpace(path))
+            return string.Empty;
+
+        return UncResolver.ResolveToUncForLog(path);
     }
 
     /// <summary>

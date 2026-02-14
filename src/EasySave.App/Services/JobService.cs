@@ -1,7 +1,9 @@
 using EasySave.App.Repositories;
 using EasySave.Core.Enums;
 using EasySave.Core.Interfaces;
+using EasySave.Core.Logging;
 using EasySave.Core.Models;
+using EasySave.App.Utils;
 
 namespace EasySave.App.Services;
 
@@ -12,13 +14,14 @@ namespace EasySave.App.Services;
 public sealed class JobService : IJobService
 {
     private readonly IJobRepository _jobRepository;
+    private readonly IAppLogService? _logService;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="JobService"/> class.
     /// </summary>
     /// <param name="pathProvider">Provides configuration paths.</param>
-    public JobService(IPathProvider pathProvider)
-        : this(new JobRepository(pathProvider))
+    public JobService(IPathProvider pathProvider, IAppLogService? logService = null)
+        : this(new JobRepository(pathProvider), logService)
     {
     }
 
@@ -26,9 +29,10 @@ public sealed class JobService : IJobService
     /// Initializes a new instance of the <see cref="JobService"/> class with a custom repository.
     /// </summary>
     /// <param name="jobRepository">The repository to use.</param>
-    internal JobService(IJobRepository jobRepository)
+    internal JobService(IJobRepository jobRepository, IAppLogService? logService = null)
     {
         _jobRepository = jobRepository;
+        _logService = logService;
     }
 
     /// <summary>
@@ -64,6 +68,7 @@ public sealed class JobService : IJobService
             isActive: isActive);
 
         _jobRepository.Add(job);
+        WriteJobLog(LogEventAction.Create, job);
     }
 
     /// <summary>
@@ -93,6 +98,7 @@ public sealed class JobService : IJobService
             lastRunUtc: existing.LastRun);
 
         _jobRepository.Update(updated);
+        WriteJobLog(LogEventAction.Update, updated);
     }
 
     /// <summary>
@@ -124,5 +130,63 @@ public sealed class JobService : IJobService
     /// Deletes a job by identifier.
     /// </summary>
     /// <param name="id">The job identifier.</param>
-    public void Delete(string id) => _jobRepository.Remove(id);
+    public void Delete(string id)
+    {
+        var existing = _jobRepository.GetById(id);
+        _jobRepository.Remove(id);
+        if (existing != null)
+        {
+            WriteJobLog(LogEventAction.Delete, existing);
+        }
+    }
+
+    private void WriteJobLog(LogEventAction action, BackupJob job)
+    {
+        if (_logService == null)
+            return;
+
+        var eventName = action switch
+        {
+            LogEventAction.Create => "job.created",
+            LogEventAction.Update => "job.updated",
+            LogEventAction.Delete => "job.deleted",
+            _ => "job.changed"
+        };
+
+        var message = action switch
+        {
+            LogEventAction.Create => "Job created",
+            LogEventAction.Update => "Job updated",
+            LogEventAction.Delete => "Job deleted",
+            _ => "Job changed"
+        };
+
+        var entry = LogEntryBuilder.Create(
+                eventName: eventName,
+                category: LogEventCategory.Job,
+                action: action,
+                message: message)
+            .WithJob(
+                id: job.Id,
+                name: job.Name,
+                type: job.Type,
+                sourcePath: ToUncOrEmpty(job.SourcePath),
+                targetPath: ToUncOrEmpty(job.TargetPath),
+                status: null,
+                isActive: job.IsActive)
+            .Build();
+
+        _logService.Write(entry);
+    }
+
+    /// <summary>
+    /// Normalizes a path to UNC for logging.
+    /// </summary>
+    private static string ToUncOrEmpty(string? path)
+    {
+        if (string.IsNullOrWhiteSpace(path))
+            return string.Empty;
+
+        return UncResolver.ResolveToUncForLog(path);
+    }
 }

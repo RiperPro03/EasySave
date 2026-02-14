@@ -73,35 +73,47 @@ namespace EasySave.EasyLog.Loggers
                 _dateTimeProvider());
 
             string serializedEntry = _logSerializer.Serialize(entry!);
+            bool isXml = string.Equals(_logSerializer.FileExtension, "xml", StringComparison.OrdinalIgnoreCase);
     
             try
             {
                 if (!File.Exists(filePath) || new FileInfo(filePath).Length == 0)
                 {
-                    // Initialisation du fichier avec la balise racine.
-                    string initialContent = $"<logs>\n{serializedEntry}\n</logs>";
-                    return _logWriter.Write(filePath, initialContent);
+                    if (isXml)
+                    {
+                        // Initialisation du fichier XML avec la balise racine.
+                        string initialContent = $"<logs>\n{serializedEntry}\n</logs>";
+                        return _logWriter.Write(filePath, initialContent);
+                    }
+
+                    // JSON: ecriture directe sans balise XML.
+                    return _logWriter.Write(filePath, serializedEntry);
                 }
                 
-                // Le fichier existe : on insere l'entree avant la balise </logs>.
-                // On utilise un FileStream pour manipuler la fin du fichier sans tout charger en memoire.
-                using (var fs = new FileStream(filePath, FileMode.Open, FileAccess.ReadWrite))
+                if (isXml)
                 {
-                    // On se place juste avant </logs> (7 caracteres : </logs>).
-                    if (fs.Length > 7)
+                    // Le fichier existe : on insere l'entree avant la balise </logs>.
+                    // On utilise un FileStream pour manipuler la fin du fichier sans tout charger en memoire.
+                    using (var fs = new FileStream(filePath, FileMode.Open, FileAccess.ReadWrite))
                     {
-                        fs.SetLength(fs.Length - 7);
-                        fs.Position = fs.Length;
-                    }
+                        // On se place juste avant </logs> (7 caracteres : </logs>).
+                        if (fs.Length > 7)
+                        {
+                            fs.SetLength(fs.Length - 7);
+                            fs.Position = fs.Length;
+                        }
 
-                    using (var sw = new StreamWriter(fs))
-                    {
-                        sw.WriteLine(serializedEntry);
-                        sw.Write("</logs>");
+                        using (var sw = new StreamWriter(fs))
+                        {
+                            sw.WriteLine(serializedEntry);
+                            sw.Write("</logs>");
+                        }
                     }
+                    return true;
                 }
 
-                return true;
+                // JSON: append direct.
+                return _logWriter.Write(filePath, serializedEntry);
             }
             catch (IOException)
             {

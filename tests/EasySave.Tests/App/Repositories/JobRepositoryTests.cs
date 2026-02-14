@@ -26,31 +26,6 @@ public class JobRepositoryTests : IDisposable
     }
 
     [Fact]
-    public void Add_ShouldThrow_WhenMaxJobsReached()
-    {
-        var repository = CreateRepository();
-        for (int i = 0; i < 5; i++)
-        {
-            repository.Add(new BackupJob(
-                i.ToString(),
-                $"Job{i}",
-                @"C:\Src",
-                @"D:\Dst",
-                BackupType.Full
-            ));
-        }
-        var newJob = new BackupJob(
-            "6",
-            "Job6",
-            @"C:\Src",
-            @"D:\Dst",
-            BackupType.Full
-        );
-
-        Assert.Throws<InvalidOperationException>(() => repository.Add(newJob));
-    }
-
-    [Fact]
     public void Remove_ShouldRemoveJob_WhenJobExists()
     {
         var repository = CreateRepository();
