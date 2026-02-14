@@ -203,7 +203,7 @@ internal sealed class BackupEngine : IBackupEngine
                         var logEntry = LogEntryBuilder.Create(
                             eventName: "file.encrypted",
                             category: LogEventCategory.File,
-                            action: LogEventAction.Copy,
+                            action: LogEventAction.Unknown,
                             message: $"File {Path.GetFileName(sourcePath)} encrypted")
                         .WithFile(
                             sourcePath: sourcePath,
