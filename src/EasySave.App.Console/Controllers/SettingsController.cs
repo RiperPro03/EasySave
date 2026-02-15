@@ -52,9 +52,12 @@ public sealed class SettingsController
         _consoleView.ShowInfo($"2 - {Strings.Lang_French}");
         _consoleView.ShowInfo($"3 - {Strings.UI_LogFormatJson}");
         _consoleView.ShowInfo($"4 - {Strings.UI_LogFormatXml}");
+        
+
         _consoleView.ShowInfo($"0 - {Strings.UI_Back}");
 
-        var choice = _input.ReadChoice("> ", new[] { 0, 1, 2, 3, 4 });
+        // Lecture du choix utilisateur.
+        var choice = _input.ReadChoice("> ", new[] { 0, 1, 2, 3, 4, 5, 6 });
 
         switch (choice)
         {
@@ -63,7 +66,7 @@ public sealed class SettingsController
                 UpdateLanguage(Language.English);
                 break;
             case 2:
-                // Change la langue en francais.
+                // Change la langue en français.
                 UpdateLanguage(Language.French);
                 break;
             case 3:
@@ -78,7 +81,7 @@ public sealed class SettingsController
                 return;
         }
 
-        // Persiste la configuration apres modification.
+        // Persiste la configuration après modification.
         _configRepository.Save(_config);
         _consoleView.WaitForKey();
     }
@@ -91,7 +94,7 @@ public sealed class SettingsController
     {
         _config.ChangeLanguage(language);
 
-        // Met a jour la culture courante pour l'UI.
+        // Met à jour la culture courante pour l'UI.
         var culture = Localization.GetCulture(_config.Language);
         CultureInfo.CurrentCulture = culture;
         CultureInfo.CurrentUICulture = culture;
@@ -99,9 +102,13 @@ public sealed class SettingsController
         _consoleView.ShowSuccess(Strings.Info_LanguageChanged);
     }
 
+    /// <summary>
+    /// Updates the log format used by the application.
+    /// </summary>
     private void UpdateLogFormat(LogFormat logFormat)
     {
         _config.ChangeLogFormat(logFormat);
         _consoleView.ShowSuccess(Strings.Info_LogFormatChanged);
     }
+
 }

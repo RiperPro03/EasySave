@@ -26,6 +26,8 @@ public class AppConfig
         Language = language;
         LogDirectory = Guard.NotNullOrWhiteSpace(logDirectory, nameof(logDirectory));
         LogFormat = logFormat;
+        // Initialisation de la liste pour éviter les surprises
+        ExcludedExtensions = new List<string>();
     }
 
     /// <summary>
@@ -89,4 +91,37 @@ public class AppConfig
             "EasySave",
             "Logs");
     }
+    
+    // Pour la partie chiffrement, on stock la variable qui nous dit si on doit chiffrer 
+    // ainsi que la clé elle même
+    public bool EncryptionEnabled { get; private set; }
+    public string EncryptionKey { get; private set; } = "default_key_change_it";
+    
+    // Propriété pour les extensions exclues
+    public List<string> ExcludedExtensions { get; private set; } = new();
+
+    public void ToggleEncryption()
+    {
+        EncryptionEnabled = !EncryptionEnabled;
+    }
+
+    public void UpdateEncryptionKey(string newKey)
+    {
+        EncryptionKey = newKey;
+    }
+    
+    /// <summary>
+    /// Updates the list of file extensions excluded from encryption.
+    /// </summary>
+    /// <param name="extensions">The list of extensions (e.g., ".pdf", ".txt").</param>
+    public void UpdateExcludedExtensions(List<string> extensions)
+    {
+        // On s'assure que la liste n'est jamais null (KISS/CLEAN)
+        ExcludedExtensions = extensions ?? new List<string>();
+    }
+    
+    
+
 }
+
+

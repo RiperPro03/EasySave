@@ -30,35 +30,20 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
 
     public string AppVersion { get; } = "v2.0.0";
 
-    [ObservableProperty]
-    private string _statusMessage = "Ready";
-
-    [ObservableProperty]
-    private string _currentState = "Idle";
-
-    [ObservableProperty]
-    private DateTime _lastUpdateTime = DateTime.Now;
-
-    [ObservableProperty]
-    private string _currentPageTitle = "Dashboard";
-
-    [ObservableProperty]
-    private object? _currentView;
+    [ObservableProperty] private string _statusMessage = "Ready";
+    [ObservableProperty] private string _currentState = "Idle";
+    [ObservableProperty] private DateTime _lastUpdateTime = DateTime.Now;
+    [ObservableProperty] private string _currentPageTitle = "Dashboard";
+    [ObservableProperty] private object? _currentView;
 
     // Suivi de l onglet actif pour le style de la sidebar.
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(IsDashboardActive))]
-    [NotifyPropertyChangedFor(nameof(IsDashboardInactive))]
-    [NotifyPropertyChangedFor(nameof(IsJobsActive))]
-    [NotifyPropertyChangedFor(nameof(IsJobsInactive))]
-    [NotifyPropertyChangedFor(nameof(IsExecutionActive))]
-    [NotifyPropertyChangedFor(nameof(IsExecutionInactive))]
-    [NotifyPropertyChangedFor(nameof(IsLogsActive))]
-    [NotifyPropertyChangedFor(nameof(IsLogsInactive))]
-    [NotifyPropertyChangedFor(nameof(IsSettingsActive))]
-    [NotifyPropertyChangedFor(nameof(IsSettingsInactive))]
-    [NotifyPropertyChangedFor(nameof(IsAboutActive))]
-    [NotifyPropertyChangedFor(nameof(IsAboutInactive))]
+    [NotifyPropertyChangedFor(nameof(IsDashboardActive)), NotifyPropertyChangedFor(nameof(IsDashboardInactive))]
+    [NotifyPropertyChangedFor(nameof(IsJobsActive)), NotifyPropertyChangedFor(nameof(IsJobsInactive))]
+    [NotifyPropertyChangedFor(nameof(IsExecutionActive)), NotifyPropertyChangedFor(nameof(IsExecutionInactive))]
+    [NotifyPropertyChangedFor(nameof(IsLogsActive)), NotifyPropertyChangedFor(nameof(IsLogsInactive))]
+    [NotifyPropertyChangedFor(nameof(IsSettingsActive)), NotifyPropertyChangedFor(nameof(IsSettingsInactive))]
+    [NotifyPropertyChangedFor(nameof(IsAboutActive)), NotifyPropertyChangedFor(nameof(IsAboutInactive))]
     private NavigationTab _activeTab = NavigationTab.Dashboard;
 
     public bool IsDashboardActive => ActiveTab == NavigationTab.Dashboard;
@@ -84,7 +69,10 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
         _jobsViewModel = new JobsViewModel();
         _executionViewModel = new ExecutionViewModel();
         _logsViewModel = new LogsViewModel();
-        _settingsViewModel = new SettingsViewModel();
+        
+        // FIX KISS : On passe null! ici pour éviter l'erreur de paramètre obligatoire
+        _settingsViewModel = new SettingsViewModel(null!); 
+        
         _aboutViewModel = new AboutViewModel();
         _jobsViewModel.JobsChanged += OnJobsChanged;
         ShowDashboard();
@@ -96,16 +84,18 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
     /// <param name="jobService">Job service used by the dashboard.</param>
     /// <param name="backupService">Backup service that publishes state updates.</param>
     /// <param name="logsPath">Directory containing log files.</param>
+    /// <param name="settingsService">Service for application settings.</param>
+    /// <param name="appLogService">Service for application logging.</param>
     /// <exception cref="ArgumentNullException">Thrown when a required service is null.</exception>
     public MainWindowViewModel(
         IJobService jobService,
         IBackupService backupService,
         string? logsPath,
+        SettingsService settingsService, // <--- AJOUT POUR TES SETTINGS
         IAppLogService? appLogService = null)
     {
         _uiContext = SynchronizationContext.Current;
-        if (jobService is null)
-            throw new ArgumentNullException(nameof(jobService));
+        if (jobService is null) throw new ArgumentNullException(nameof(jobService));
 
         _backupService = backupService ?? throw new ArgumentNullException(nameof(backupService));
         var logReader = new LogReaderService(logsPath);
@@ -113,77 +103,24 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
         _jobsViewModel = new JobsViewModel(jobService);
         _executionViewModel = new ExecutionViewModel(jobService, _backupService);
         _logsViewModel = new LogsViewModel(logReader);
-        _settingsViewModel = new SettingsViewModel();
+        
+        // FIX KISS : On branche ton service ici
+        _settingsViewModel = new SettingsViewModel(settingsService); 
+        
         _aboutViewModel = new AboutViewModel();
         _appLogService = appLogService;
         _jobsViewModel.JobsChanged += OnJobsChanged;
         _backupService.StateChanged += OnBackupStateChanged;
-        if (_appLogService != null)
-        {
-            _appLogService.LogWritten += OnLogWritten;
-        }
+        if (_appLogService != null) _appLogService.LogWritten += OnLogWritten;
         ShowDashboard();
     }
 
-    [RelayCommand]
-    private void ShowDashboard()
-    {
-        CurrentPageTitle = "Dashboard";
-        StatusMessage = "Overview of all backup operations";
-        CurrentView = _dashboardViewModel;
-        ActiveTab = NavigationTab.Dashboard;
-        LastUpdateTime = DateTime.Now;
-    }
-
-    [RelayCommand]
-    private void ShowJobs()
-    {
-        CurrentPageTitle = "Backup Jobs";
-        StatusMessage = "Manage your backup jobs";
-        CurrentView = _jobsViewModel;
-        ActiveTab = NavigationTab.Jobs;
-        LastUpdateTime = DateTime.Now;
-    }
-
-    [RelayCommand]
-    private void ShowExecution()
-    {
-        CurrentPageTitle = "Live Execution";
-        StatusMessage = "Real-time backup monitoring";
-        CurrentView = _executionViewModel;
-        ActiveTab = NavigationTab.Execution;
-        LastUpdateTime = DateTime.Now;
-    }
-
-    [RelayCommand]
-    private void ShowLogs()
-    {
-        CurrentPageTitle = "Logs";
-        StatusMessage = "View execution logs";
-        CurrentView = _logsViewModel;
-        ActiveTab = NavigationTab.Logs;
-        LastUpdateTime = DateTime.Now;
-    }
-
-    [RelayCommand]
-    private void ShowSettings()
-    {
-        CurrentPageTitle = "Settings";
-        StatusMessage = "Configure application settings";
-        CurrentView = _settingsViewModel;
-        ActiveTab = NavigationTab.Settings;
-        LastUpdateTime = DateTime.Now;
-    }
-
-    [RelayCommand]
-    private void ShowAbout()
-    {
-        CurrentPageTitle = "About";
-        StatusMessage = "Application information";
-        CurrentView = _aboutViewModel;
-        ActiveTab = NavigationTab.About;
-        LastUpdateTime = DateTime.Now;
-    }
+    [RelayCommand] private void ShowDashboard() { CurrentPageTitle = "Dashboard"; StatusMessage = "Overview"; CurrentView = _dashboardViewModel; ActiveTab = NavigationTab.Dashboard; LastUpdateTime = DateTime.Now; }
+    [RelayCommand] private void ShowJobs() { CurrentPageTitle = "Backup Jobs"; StatusMessage = "Manage jobs"; CurrentView = _jobsViewModel; ActiveTab = NavigationTab.Jobs; LastUpdateTime = DateTime.Now; }
+    [RelayCommand] private void ShowExecution() { CurrentPageTitle = "Live Execution"; StatusMessage = "Monitoring"; CurrentView = _executionViewModel; ActiveTab = NavigationTab.Execution; LastUpdateTime = DateTime.Now; }
+    [RelayCommand] private void ShowLogs() { CurrentPageTitle = "Logs"; StatusMessage = "View logs"; CurrentView = _logsViewModel; ActiveTab = NavigationTab.Logs; LastUpdateTime = DateTime.Now; }
+    [RelayCommand] private void ShowSettings() { CurrentPageTitle = "Settings"; StatusMessage = "Configuration"; CurrentView = _settingsViewModel; ActiveTab = NavigationTab.Settings; LastUpdateTime = DateTime.Now; }
+    [RelayCommand] private void ShowAbout() { CurrentPageTitle = "About"; StatusMessage = "Info"; CurrentView = _aboutViewModel; ActiveTab = NavigationTab.About; LastUpdateTime = DateTime.Now; }
     
     private void OnBackupStateChanged(object? sender, JobStateChangedEventArgs e)
     {
@@ -223,21 +160,11 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
     /// </summary>
     public void Dispose()
     {
-        if (_disposed)
-            return;
-
+        if (_disposed) return;
         _disposed = true;
-
-        if (_backupService != null)
-        {
-            _backupService.StateChanged -= OnBackupStateChanged;
-        }
-
+        if (_backupService != null) _backupService.StateChanged -= OnBackupStateChanged;
         _jobsViewModel.JobsChanged -= OnJobsChanged;
-        if (_appLogService != null)
-        {
-            _appLogService.LogWritten -= OnLogWritten;
-        }
+        if (_appLogService != null) _appLogService.LogWritten -= OnLogWritten;
         _dashboardViewModel.Dispose();
         _executionViewModel.Dispose();
         GC.SuppressFinalize(this);

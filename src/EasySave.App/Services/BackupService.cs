@@ -207,7 +207,7 @@ public sealed class BackupService : IBackupService
             }
             else if (!string.Equals(state.JobName, job.Name, StringComparison.Ordinal))
             {
-                // Met a jour le nom si le job a ete renomme.
+                // Met a jour le nom si le job à ete renomme.
                 state.JobName = job.Name;
             }
         }
