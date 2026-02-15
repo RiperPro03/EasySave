@@ -180,6 +180,19 @@
                                                    FontSize="11"
                                                    Foreground="#80FFFFFF"/>
                                     </WrapPanel>
+                                    <WrapPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding SizeProcessedBytes, StringFormat='Done: {0} bytes'}"
+                                                   FontSize="11"
+                                                   Foreground="#80FFFFFF"
+                                                   Margin="0,0,12,4"/>
+                                        <TextBlock Text="{Binding TotalSizeBytes, StringFormat='Total: {0} bytes'}"
+                                                   FontSize="11"
+                                                   Foreground="#80FFFFFF"
+                                                   Margin="0,0,12,4"/>
+                                        <TextBlock Text="{Binding RemainingSizeBytes, StringFormat='Remaining: {0} bytes'}"
+                                                   FontSize="11"
+                                                   Foreground="#80FFFFFF"/>
+                                    </WrapPanel>
                                 </StackPanel>
 
                                 <StackPanel Grid.Row="2" Grid.Column="0" Spacing="4" Margin="0,8,0,0">
@@ -191,6 +204,9 @@
                                                FontSize="11"
                                                Foreground="#70FFFFFF"
                                                TextWrapping="Wrap"/>
+                                    <TextBlock Text="{Binding LastActionLabel, StringFormat='Last action: {0}'}"
+                                               FontSize="11"
+                                               Foreground="#70FFFFFF"/>
                                 </StackPanel>
 
                                 <TextBlock Grid.Row="3" Grid.Column="0"
