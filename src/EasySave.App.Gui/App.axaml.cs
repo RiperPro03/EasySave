@@ -60,6 +60,7 @@ public partial class App : Application
             var jobService = new JobService(pathProvider, appLogService);
             var backupService = new BackupService(
                 jobService,
+                config,
                 logDirectory: pathProvider.LogsPath,
                 logFormatProvider: () => config.LogFormat,
                 logService: appLogService);

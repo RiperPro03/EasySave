@@ -17,7 +17,7 @@ public class BackupServiceTests
         File.WriteAllText(Path.Combine(source, "test.txt"), "hello");
 
         var jobService = new FakeJobService();
-        var service = new BackupService(jobService, stateWriter: new NoOpStateWriter());
+        var service = new BackupService(jobService, AppConfig.LoadDefaults(), stateWriter: new NoOpStateWriter());
         var job = new BackupJob("1", "Job", source, target, BackupType.Full);
 
         var result = service.Run(job);
@@ -34,7 +34,7 @@ public class BackupServiceTests
     public void Run_ShouldSkipInactiveJob_AndNotMarkExecuted()
     {
         var jobService = new FakeJobService();
-        var service = new BackupService(jobService, stateWriter: new NoOpStateWriter());
+        var service = new BackupService(jobService, AppConfig.LoadDefaults(), stateWriter: new NoOpStateWriter());
         var job = new BackupJob("1", "Job", @"C:\source", @"C:\target", BackupType.Full, isActive: false);
 
         var result = service.Run(job);
@@ -52,7 +52,7 @@ public class BackupServiceTests
         Directory.CreateDirectory(source);
         var job = new BackupJob("10", "Job", source, target, BackupType.Full);
         var jobService = new FakeJobService(new[] { job });
-        var service = new BackupService(jobService, stateWriter: new NoOpStateWriter());
+        var service = new BackupService(jobService, AppConfig.LoadDefaults(), stateWriter: new NoOpStateWriter());
 
         var statesField = typeof(BackupService)
             .GetField("_jobStates", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
@@ -78,7 +78,7 @@ public class BackupServiceTests
         var job = new BackupJob("42", "Job", source, target, BackupType.Full);
         var jobService = new FakeJobService(new[] { job });
         var writer = new CapturingStateWriter();
-        var service = new BackupService(jobService, stateWriter: writer);
+        var service = new BackupService(jobService, AppConfig.LoadDefaults(), stateWriter: writer);
 
         var result = service.Run(job);
 

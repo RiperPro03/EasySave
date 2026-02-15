@@ -17,6 +17,7 @@ public sealed class BackupService : IBackupService
     private IBackupEngine _backupEngine;
     private readonly IJobService _jobService;
     private readonly IStateWriter _stateWriter;
+    private readonly AppConfig _config;
     private readonly Dictionary<string, JobStateDto> _jobStates = new();
     private readonly object _stateLock = new();
     private readonly IAppLogService? _logService;
@@ -39,6 +40,7 @@ public sealed class BackupService : IBackupService
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="jobService"/> is null.</exception>
     public BackupService(
         IJobService jobService,
+        AppConfig config,
         string? logDirectory = null,
         IStateWriter? stateWriter = null,
         IPathProvider? pathProvider = null,
@@ -47,6 +49,7 @@ public sealed class BackupService : IBackupService
         IAppLogService? logService = null)
     {
         _jobService = jobService ?? throw new ArgumentNullException(nameof(jobService));
+        _config = config ?? throw new ArgumentNullException(nameof(config));
         // Si aucun writer n'est fourni, on cree celui par defaut avec un PathProvider local.
         _stateWriter = stateWriter ?? new StateWriter(pathProvider ?? new PathProvider());
         // La source du format de log peut changer a l'execution (GUI/CLI).
@@ -315,7 +318,7 @@ public sealed class BackupService : IBackupService
     /// <returns>A configured backup engine.</returns>
     private IBackupEngine CreateEngine()
     {
-        return new BackupEngine(_logService);
+        return new BackupEngine(_config, _logService);
     }
 
     private void WriteInactiveJobLog(BackupJob job)

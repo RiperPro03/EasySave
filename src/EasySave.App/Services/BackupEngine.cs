@@ -17,6 +17,7 @@ namespace EasySave.App.Services;
 internal sealed class BackupEngine : IBackupEngine
 {
     private readonly IAppLogService? _logService;
+    private readonly AppConfig _config;
     private readonly ConcurrentDictionary<string, JobExecutionControl> _jobControls = new(StringComparer.Ordinal);
 
     /// <summary>
@@ -30,8 +31,9 @@ internal sealed class BackupEngine : IBackupEngine
     /// <param name="logDirectory">Optional log directory; when null, logging is disabled.</param>
     /// <param name="logFormat">Log serialization format.</param>
     /// <param name="logService">Optional log service.</param>
-    public BackupEngine(IAppLogService? logService = null)
+    public BackupEngine(AppConfig config, IAppLogService? logService = null)
     {
+        _config = config ?? throw new ArgumentNullException(nameof(config));
         _logService = logService;
     }
 
@@ -60,7 +62,7 @@ internal sealed class BackupEngine : IBackupEngine
             try
             {
                 // Check that the configured business software is not currently running before starting the backup.
-                BusinessSoftwareDetector.ValidateNotRunning(job.BusinessSoftwareProcessName);
+                BusinessSoftwareDetector.ValidateNotRunning(_config.BusinessSoftwareProcessName);
             }
             catch (InvalidOperationException ex)
             {
@@ -293,7 +295,7 @@ internal sealed class BackupEngine : IBackupEngine
                     LogEventOutcome.Success,
                     traceId);
 
-                if (job.EncryptFiles && !string.IsNullOrWhiteSpace(job.EncryptionKey))
+                if (ShouldEncrypt(sourcePath))
                 {
                     var swEncrypt = Stopwatch.StartNew();
 
@@ -366,8 +368,8 @@ internal sealed class BackupEngine : IBackupEngine
             // Publie l'etat apres traitement du fichier.
             UpdateProgressState(control, state, sourcePath, targetPath, fileSize, incrementProcessed: true);
 
-            if (!string.IsNullOrWhiteSpace(job.BusinessSoftwareProcessName)
-                && BusinessSoftwareDetector.IsRunning(job.BusinessSoftwareProcessName))
+            if (!string.IsNullOrWhiteSpace(_config.BusinessSoftwareProcessName)
+                && BusinessSoftwareDetector.IsRunning(_config.BusinessSoftwareProcessName))
             {
                 if (_logService != null)
                 {
@@ -388,7 +390,7 @@ internal sealed class BackupEngine : IBackupEngine
                     _logService.Write(logEntry);
                 }
 
-                result.Errors.Add($"Backup stopped because {job.BusinessSoftwareProcessName} detected");
+                result.Errors.Add($"Backup stopped because {_config.BusinessSoftwareProcessName} detected");
                 result.ErrorCount++;
                 break;
             }
@@ -793,5 +795,23 @@ internal sealed class BackupEngine : IBackupEngine
         }
 
         return 0;
+    }
+
+    private bool ShouldEncrypt(string sourcePath)
+    {
+        if (!_config.EncryptionEnabled)
+            return false;
+        if (string.IsNullOrWhiteSpace(_config.EncryptionKey))
+            return false;
+
+        var extension = Path.GetExtension(sourcePath);
+        if (string.IsNullOrWhiteSpace(extension))
+            return false;
+
+        if (_config.ExtensionsToEncrypt.Count == 0)
+            return false;
+
+        return _config.ExtensionsToEncrypt
+            .Any(ext => string.Equals(ext, extension, StringComparison.OrdinalIgnoreCase));
     }
 }
