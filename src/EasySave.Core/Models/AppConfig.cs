@@ -14,6 +14,10 @@ public class AppConfig
     public string LogDirectory { get; private set; }
     public LogFormat LogFormat { get; private set; }
     public string? BusinessSoftwareProcessName { get; private set; }
+    public bool EncryptionEnabled { get; private set; }
+    public string EncryptionKey { get; private set; } = string.Empty;
+    private List<string> _extensionsToEncrypt = new();
+    public IReadOnlyList<string> ExtensionsToEncrypt => _extensionsToEncrypt;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="AppConfig"/> class.
@@ -26,6 +30,7 @@ public class AppConfig
         Language = language;
         LogDirectory = Guard.NotNullOrWhiteSpace(logDirectory, nameof(logDirectory));
         LogFormat = logFormat;
+        EncryptionEnabled = false;
     }
 
     /// <summary>
@@ -66,6 +71,45 @@ public class AppConfig
     public void ChangeLogFormat(LogFormat logFormat)
     {
         LogFormat = logFormat;
+    }
+
+    /// <summary>
+    /// Enables or disables encryption.
+    /// </summary>
+    /// <param name="enabled">Whether encryption is enabled.</param>
+    public void SetEncryptionEnabled(bool enabled)
+    {
+        EncryptionEnabled = enabled;
+    }
+
+    /// <summary>
+    /// Toggles encryption on or off.
+    /// </summary>
+    public void ToggleEncryption()
+    {
+        EncryptionEnabled = !EncryptionEnabled;
+    }
+
+    /// <summary>
+    /// Updates the encryption key.
+    /// </summary>
+    /// <param name="newKey">The new key (empty to clear).</param>
+    public void UpdateEncryptionKey(string? newKey)
+    {
+        EncryptionKey = newKey ?? string.Empty;
+    }
+
+    /// <summary>
+    /// Updates the list of extensions to encrypt.
+    /// </summary>
+    /// <param name="extensions">The extensions to encrypt.</param>
+    public void UpdateExtensionsToEncrypt(IEnumerable<string> extensions)
+    {
+        _extensionsToEncrypt = extensions
+            .Where(ext => !string.IsNullOrWhiteSpace(ext))
+            .Select(ext => ext.Trim())
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
     }
 
     /// <summary>

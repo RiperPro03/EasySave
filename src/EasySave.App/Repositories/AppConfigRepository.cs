@@ -85,6 +85,9 @@ public sealed class AppConfigRepository
         config.ChangeLanguage(dto.Language);
         config.ChangeLogFormat(dto.LogFormat);
         config.ChangeBussinessSoftware(dto.BusinessSoftwareProcessName);
+        config.SetEncryptionEnabled(dto.EncryptionEnabled);
+        config.UpdateEncryptionKey(dto.EncryptionKey);
+        config.UpdateExtensionsToEncrypt(dto.ExtensionsToEncrypt ?? new List<string>());
         return config;
     }
 
@@ -104,7 +107,10 @@ public sealed class AppConfigRepository
         {
             Language = config.Language,
             LogFormat = config.LogFormat,
-            BusinessSoftwareProcessName = config.BusinessSoftwareProcessName
+            BusinessSoftwareProcessName = config.BusinessSoftwareProcessName,
+            EncryptionEnabled = config.EncryptionEnabled,
+            EncryptionKey = config.EncryptionKey,
+            ExtensionsToEncrypt = config.ExtensionsToEncrypt.ToList()
         };
 
         var json = JsonSerializer.Serialize(dto, _options);
@@ -152,5 +158,8 @@ public sealed class AppConfigRepository
         public Language Language { get; set; } = Language.English;
         public LogFormat LogFormat { get; set; } = LogFormat.Json;
         public string? BusinessSoftwareProcessName { get; set; }
+        public bool EncryptionEnabled { get; set; }
+        public string? EncryptionKey { get; set; }
+        public List<string>? ExtensionsToEncrypt { get; set; }
     }
 }

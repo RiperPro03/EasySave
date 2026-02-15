@@ -10,20 +10,20 @@ namespace EasySave.App.Gui.ViewModels;
 
 public partial class SettingsViewModel : ViewModelBase
 {
-    private readonly SettingsService _settings;
+    private readonly SettingsService? _settings;
 
     // Propriétés automatiques (le toolkit crée le reste pour nous)
     [ObservableProperty] private bool _encryptionEnabled;
     [ObservableProperty] private string _encryptionKey = string.Empty;
     [ObservableProperty] private Language _selectedLanguage;
     [ObservableProperty] private LogFormat _selectedLogFormat;
-    [ObservableProperty] private string _excludedExtensions = string.Empty;
+    [ObservableProperty] private string _extensionsToEncrypt = string.Empty;
     
     // Listes pour remplir les menus déroulants (ComboBox)
     public Language[] Languages => Enum.GetValues<Language>();
     public LogFormat[] LogFormats => Enum.GetValues<LogFormat>();
 
-    public SettingsViewModel(SettingsService settings)
+    public SettingsViewModel(SettingsService? settings = null)
     {
         _settings = settings;
 
@@ -37,28 +37,43 @@ public partial class SettingsViewModel : ViewModelBase
         SelectedLogFormat = settings.LogFormat;
         
         // On transforme la liste d'extensions en une chaîne de caractères séparée par des virgules
-        // Si ton service possède une propriété ExcludedExtensions (List<string>)
-        ExcludedExtensions = string.Join(", ", settings.ExcludedExtensions);
+        // Si ton service possède une propriété ExtensionsToEncrypt (List<string>)
+        ExtensionsToEncrypt = string.Join(", ", settings.ExtensionsToEncrypt);
     }
     // Sauvegarde auto quand on change d'option
-    partial void OnSelectedLanguageChanged(Language value) => _settings.UpdateLanguage(value);
-    partial void OnSelectedLogFormatChanged(LogFormat value) => _settings.UpdateLogFormat(value);
+    partial void OnSelectedLanguageChanged(Language value)
+    {
+        if (_settings == null)
+            return;
+        _settings.UpdateLanguage(value);
+    }
+
+    partial void OnSelectedLogFormatChanged(LogFormat value)
+    {
+        if (_settings == null)
+            return;
+        _settings.UpdateLogFormat(value);
+    }
 
     // Cette méthode est appelée automatiquement quand l'utilisateur change le texte
-    partial void OnExcludedExtensionsChanged(string value)
+    partial void OnExtensionsToEncryptChanged(string value)
     {
+        if (_settings == null)
+            return;
         // On transforme la chaîne en liste : on sépare par virgule, on enlève les espaces et les vides
         var list = value.Split(',')
             .Select(x => x.Trim())
             .Where(x => !string.IsNullOrWhiteSpace(x))
             .ToList();
         
-        _settings.UpdateExcludedExtensions(list);
+        _settings.UpdateExtensionsToEncrypt(list);
     }
     
     [RelayCommand]
     private void SaveSettings()
     {
+        if (_settings == null)
+            return;
         _settings.UpdateEncryptionKey(EncryptionKey);
         if (EncryptionEnabled != _settings.EncryptionEnabled) _settings.ToggleEncryption();
     }

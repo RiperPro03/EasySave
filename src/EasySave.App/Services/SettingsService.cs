@@ -1,7 +1,7 @@
 ﻿
 using EasySave.App.Repositories;
 using EasySave.Core.Models;
-using  EasySave.Core.Enums;
+using EasySave.Core.Enums;
 using EasySave.EasyLog.Options;
     
 namespace EasySave.App.Services;
@@ -22,7 +22,7 @@ public class SettingsService
     public Language Language => _config.Language;
     public LogFormat LogFormat => _config.LogFormat;
     
-    public List<string> ExcludedExtensions { get; private set; } = new();
+    public IReadOnlyList<string> ExtensionsToEncrypt => _config.ExtensionsToEncrypt;
 
     public void ToggleEncryption()
     {
@@ -48,9 +48,9 @@ public class SettingsService
         _repository.Save(_config);
     }
     
-    public void UpdateExcludedExtensions(List<string> extensions)
+    public void UpdateExtensionsToEncrypt(List<string> extensions)
     {
-        _config.UpdateExcludedExtensions(extensions);
+        _config.UpdateExtensionsToEncrypt(extensions);
         _repository.Save(_config); // Sauvegarde physique sur le disque
     }
 }
