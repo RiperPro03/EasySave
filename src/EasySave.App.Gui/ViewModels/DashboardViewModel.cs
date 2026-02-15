@@ -214,7 +214,7 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
 
         return activities
             .OrderByDescending(item => item.TimestampUtc)
-            .Take(5)
+            .Take(7)
             .Select(item => item.Item)
             .ToList();
     }
