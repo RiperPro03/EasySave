@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Diagnostics;
 using EasySave.App.Utils;
 using EasySave.Core.DTO;
@@ -16,6 +17,7 @@ namespace EasySave.App.Services;
 internal sealed class BackupEngine : IBackupEngine
 {
     private readonly IAppLogService? _logService;
+    private readonly ConcurrentDictionary<string, JobExecutionControl> _jobControls = new(StringComparer.Ordinal);
 
     /// <summary>
     /// Raised when job state changes during execution. (update state.json)
@@ -70,63 +72,146 @@ internal sealed class BackupEngine : IBackupEngine
 
         // Chronometre la duree totale de la sauvegarde.
         var stopwatch = Stopwatch.StartNew();
+        var control = new JobExecutionControl(state);
+        _jobControls[job.Id] = control;
 
-        if (!Directory.Exists(job.SourcePath))
+        try
         {
-            // Dossier source manquant: on termine avec une erreur explicite.
+            if (!Directory.Exists(job.SourcePath))
+            {
+                // Dossier source manquant: on termine avec une erreur explicite.
+                result.Success = false;
+                result.Message = string.Format(Strings.Error_SourceFolderMissing, job.SourcePath);
+                result.Errors.Add(result.Message);
+                result.ErrorCount = result.Errors.Count;
+                result.Duration = stopwatch.Elapsed;
+                WriteSummaryLog(job, result, traceId);
+                UpdateTerminalState(control, state, JobStatus.Error, result.Message);
+                return result;
+            }
+
+            // Choisit la strategie de copie selon le type de sauvegarde.
+            IBackupCopyStrategy? strategy = job.Type switch
+            {
+                BackupType.Differential => new DifferentialCopyStrategy(),
+                BackupType.Full => new FullCopyStrategy(),
+                _ => null
+            };
+
+            if (strategy is null)
+            {
+                // Type de sauvegarde inconnu: on ne sait pas copier correctement.
+                result.Success = false;
+                result.Message = string.Format(Strings.Error_BackupTypeNotSupported, job.Type);
+                result.Errors.Add(result.Message);
+                result.ErrorCount = result.Errors.Count;
+                result.Duration = stopwatch.Elapsed;
+                WriteSummaryLog(job, result, traceId);
+                UpdateTerminalState(control, state, JobStatus.Error, result.Message);
+                return result;
+            }
+
+            // Charge la liste des fichiers pour calculer les totaux avant execution.
+            var files = Directory.EnumerateFiles(job.SourcePath, "*", SearchOption.AllDirectories).ToList();
+            var totalSizeBytes = files.Sum(file => new FileInfo(file).Length);
+            InitializeTotals(control, state, files.Count, totalSizeBytes);
+            PublishState(state);
+
+            // Execute la copie fichier par fichier.
+            var cancelled = ExecuteBackup(control, job, files, job.SourcePath, job.TargetPath, strategy, result, state, traceId);
+            if (cancelled)
+            {
+                result.Success = false;
+                result.Message = Strings.Error_BackupStoppedByUser;
+                result.Errors.Add(result.Message);
+                result.ErrorCount = result.Errors.Count;
+                result.Duration = stopwatch.Elapsed;
+                WriteSummaryLog(job, result, traceId);
+                UpdateTerminalState(control, state, JobStatus.Error, result.Message);
+                return result;
+            }
+
+            // Le succes est determine par l'absence d'erreurs.
+            result.Success = result.ErrorCount == 0;
+            result.Message = result.Success ? Strings.Backup_Success : Strings.Info_BackupCompletedWithErrors;
+            result.Duration = stopwatch.Elapsed;
+            
+            // Statut final dependant du succes global.
+            var finalStatus = result.Success ? JobStatus.Completed : JobStatus.Error;
+            
+            // Concatene les erreurs pour l'etat final (utile pour la GUI).
+            var finalError = result.Success ? null : string.Join(" | ", result.Errors);
+            WriteSummaryLog(job, result, traceId);
+            UpdateTerminalState(control, state, finalStatus, finalError);
+            return result;
+        }
+        catch (Exception ex)
+        {
             result.Success = false;
-            result.Message = string.Format(Strings.Error_SourceFolderMissing, job.SourcePath);
+            result.Message = string.Format(Strings.Error_Generic, ex.Message);
             result.Errors.Add(result.Message);
             result.ErrorCount = result.Errors.Count;
             result.Duration = stopwatch.Elapsed;
-            UpdateTerminalState(state, JobStatus.Error, result.Message);
+
             WriteSummaryLog(job, result, traceId);
+            UpdateTerminalState(control, state, JobStatus.Error, result.Message);
             return result;
         }
-
-        // Choisit la strategie de copie selon le type de sauvegarde.
-        IBackupCopyStrategy? strategy = job.Type switch
+        finally
         {
-            BackupType.Differential => new DifferentialCopyStrategy(),
-            BackupType.Full => new FullCopyStrategy(),
-            _ => null
-        };
-
-        if (strategy is null)
-        {
-            // Type de sauvegarde inconnu: on ne sait pas copier correctement.
-            result.Success = false;
-            result.Message = string.Format(Strings.Error_BackupTypeNotSupported, job.Type);
-            result.Errors.Add(result.Message);
-            result.ErrorCount = result.Errors.Count;
-            result.Duration = stopwatch.Elapsed;
-            UpdateTerminalState(state, JobStatus.Error, result.Message);
-            WriteSummaryLog(job, result, traceId);
-            return result;
+            _jobControls.TryRemove(job.Id, out var removed);
+            removed?.Dispose();
         }
+    }
 
-        // Charge la liste des fichiers pour calculer les totaux avant execution.
-        var files = Directory.EnumerateFiles(job.SourcePath, "*", SearchOption.AllDirectories).ToList();
-        var totalSizeBytes = files.Sum(file => new FileInfo(file).Length);
-        InitializeTotals(state, files.Count, totalSizeBytes);
-        PublishState(state);
+    /// <summary>
+    /// Requests a pause for a running job.
+    /// </summary>
+    /// <param name="jobId">The job identifier.</param>
+    /// <returns><c>true</c> when the pause was requested.</returns>
+    public bool Pause(string jobId)
+    {
+        if (string.IsNullOrWhiteSpace(jobId))
+            return false;
 
-        // Execute la copie fichier par fichier.
-        ExecuteBackup(job, files, job.SourcePath, job.TargetPath, strategy, result, state, traceId);
+        if (!_jobControls.TryGetValue(jobId, out var control))
+            return false;
 
-        // Le succes est determine par l'absence d'erreurs.
-        result.Success = result.ErrorCount == 0;
-        result.Message = result.Success ? Strings.Backup_Success : Strings.Info_BackupCompletedWithErrors;
-        result.Duration = stopwatch.Elapsed;
-        
-        // Statut final dependant du succes global.
-        var finalStatus = result.Success ? JobStatus.Completed : JobStatus.Error;
-        
-        // Concatene les erreurs pour l'etat final (utile pour la GUI).
-        var finalError = result.Success ? null : string.Join(" | ", result.Errors);
-        UpdateTerminalState(state, finalStatus, finalError);
-        WriteSummaryLog(job, result, traceId);
-        return result;
+        return TrySetPaused(control);
+    }
+
+    /// <summary>
+    /// Requests a resume for a paused job.
+    /// </summary>
+    /// <param name="jobId">The job identifier.</param>
+    /// <returns><c>true</c> when the resume was requested.</returns>
+    public bool Resume(string jobId)
+    {
+        if (string.IsNullOrWhiteSpace(jobId))
+            return false;
+
+        if (!_jobControls.TryGetValue(jobId, out var control))
+            return false;
+
+        control.RequestResume();
+        return TrySetRunning(control);
+    }
+
+    /// <summary>
+    /// Requests a stop for a running job.
+    /// </summary>
+    /// <param name="jobId">The job identifier.</param>
+    /// <returns><c>true</c> when the stop was requested.</returns>
+    public bool Stop(string jobId)
+    {
+        if (string.IsNullOrWhiteSpace(jobId))
+            return false;
+
+        if (!_jobControls.TryGetValue(jobId, out var control))
+            return false;
+
+        control.RequestStop();
+        return TrySetStopped(control);
     }
 
     /// <summary>
@@ -140,7 +225,8 @@ internal sealed class BackupEngine : IBackupEngine
     /// <param name="result">The mutable result collector.</param>
     /// <param name="state">The mutable state snapshot.</param>
     /// <param name="traceId">Trace identifier for the execution.</param>
-    private void ExecuteBackup(
+    private bool ExecuteBackup(
+        JobExecutionControl control,
         BackupJob job,
         IReadOnlyList<string> files,
         string sourceRoot,
@@ -152,6 +238,12 @@ internal sealed class BackupEngine : IBackupEngine
     {
         foreach (var sourcePath in files)
         {
+            if (control.IsStopRequested)
+                return true;
+
+            WaitIfPaused(control, state);
+            if (control.IsStopRequested)
+                return true;
             // Construit le chemin cible en preservant la structure relative.
             var relativePath = Path.GetRelativePath(sourceRoot, sourcePath);
             var targetPath = Path.Combine(targetRoot, relativePath);
@@ -159,7 +251,7 @@ internal sealed class BackupEngine : IBackupEngine
             var transferStopwatch = new Stopwatch();
 
             // Publie l'etat du fichier courant sans incrementer les compteurs.
-            UpdateProgressState(state, sourcePath, targetPath, fileSize, incrementProcessed: false);
+            UpdateProgressState(control, state, sourcePath, targetPath, fileSize, incrementProcessed: false);
 
             // Compte le fichier comme traite (meme s'il est saute ensuite).
             result.FilesProcessed++;
@@ -180,6 +272,16 @@ internal sealed class BackupEngine : IBackupEngine
                         LogEventOutcome.Success,
                         traceId);
                     UpdateProgressState(state, sourcePath, targetPath, fileSize, incrementProcessed: true);
+                WriteLogEntry(
+                    job,
+                    sourcePath,
+                    targetPath,
+                    fileSize,
+                    0,
+                    LogEventAction.Skip,
+                    LogEventOutcome.Success,
+                    traceId);
+                    UpdateProgressState(control, state, sourcePath, targetPath, fileSize, incrementProcessed: true);
                     continue;
                 }
 
@@ -297,7 +399,11 @@ internal sealed class BackupEngine : IBackupEngine
                 // Publie l'etat apres traitement du fichier.
                 UpdateProgressState(state, sourcePath, targetPath, fileSize, incrementProcessed: true);
             }
+            // Publie l'etat apres traitement du fichier.
+            UpdateProgressState(control, state, sourcePath, targetPath, fileSize, incrementProcessed: true);
         }
+
+        return control.IsStopRequested;
     }
 
     /// <summary>
@@ -507,14 +613,17 @@ internal sealed class BackupEngine : IBackupEngine
     /// <param name="state">The state snapshot to update.</param>
     /// <param name="totalFiles">Total number of files.</param>
     /// <param name="totalSizeBytes">Total size in bytes.</param>
-    private void InitializeTotals(JobStateDto state, int totalFiles, long totalSizeBytes)
+    private void InitializeTotals(JobExecutionControl control, JobStateDto state, int totalFiles, long totalSizeBytes)
     {
-        state.TotalFiles = totalFiles;
-        state.TotalSizeBytes = totalSizeBytes;
-        state.RemainingFiles = totalFiles;
-        state.RemainingSizeBytes = totalSizeBytes;
-        state.ProgressPercentage = 0;
-        state.LastActionTimestampUtc = DateTime.UtcNow;
+        lock (control.Sync)
+        {
+            state.TotalFiles = totalFiles;
+            state.TotalSizeBytes = totalSizeBytes;
+            state.RemainingFiles = totalFiles;
+            state.RemainingSizeBytes = totalSizeBytes;
+            state.ProgressPercentage = 0;
+            state.LastActionTimestampUtc = DateTime.UtcNow;
+        }
     }
 
     /// <summary>
@@ -526,27 +635,31 @@ internal sealed class BackupEngine : IBackupEngine
     /// <param name="fileSize">Current file size in bytes.</param>
     /// <param name="incrementProcessed">Whether to increment processed counters.</param>
     private void UpdateProgressState(
+        JobExecutionControl control,
         JobStateDto state,
         string sourcePath,
         string targetPath,
         long fileSize,
         bool incrementProcessed)
     {
-        state.CurrentSourceFile = UncResolver.ResolveToUncForLog(sourcePath);
-        state.CurrentTargetFile = UncResolver.ResolveToUncForLog(targetPath);
-
-        if (incrementProcessed)
+        lock (control.Sync)
         {
-            state.FilesProcessed++;
-            state.SizeProcessedBytes += fileSize;
-        }
+            state.CurrentSourceFile = UncResolver.ResolveToUncForLog(sourcePath);
+            state.CurrentTargetFile = UncResolver.ResolveToUncForLog(targetPath);
 
-        // Recalcule le reste et le pourcentage apres chaque fichier.
-        state.RemainingFiles = Math.Max(0, state.TotalFiles - state.FilesProcessed);
-        state.RemainingSizeBytes = Math.Max(0, state.TotalSizeBytes - state.SizeProcessedBytes);
-        state.ProgressPercentage = CalculateProgress(state);
-        state.LastActionTimestampUtc = DateTime.UtcNow;
-        PublishState(state);
+            if (incrementProcessed)
+            {
+                state.FilesProcessed++;
+                state.SizeProcessedBytes += fileSize;
+            }
+
+            // Recalcule le reste et le pourcentage apres chaque fichier.
+            state.RemainingFiles = Math.Max(0, state.TotalFiles - state.FilesProcessed);
+            state.RemainingSizeBytes = Math.Max(0, state.TotalSizeBytes - state.SizeProcessedBytes);
+            state.ProgressPercentage = CalculateProgress(state);
+            state.LastActionTimestampUtc = DateTime.UtcNow;
+            PublishState(state);
+        }
     }
 
     /// <summary>
@@ -555,15 +668,18 @@ internal sealed class BackupEngine : IBackupEngine
     /// <param name="state">The state snapshot to update.</param>
     /// <param name="status">The terminal status.</param>
     /// <param name="errorMessage">Optional error message.</param>
-    private void UpdateTerminalState(JobStateDto state, JobStatus status, string? errorMessage)
+    private void UpdateTerminalState(JobExecutionControl control, JobStateDto state, JobStatus status, string? errorMessage)
     {
-        state.Status = status;
-        state.CurrentSourceFile = null;
-        state.CurrentTargetFile = null;
-        state.ErrorMessage = errorMessage;
-        state.ProgressPercentage = status == JobStatus.Completed ? 100 : state.ProgressPercentage;
-        state.LastActionTimestampUtc = DateTime.UtcNow;
-        PublishState(state);
+        lock (control.Sync)
+        {
+            state.Status = status;
+            state.CurrentSourceFile = null;
+            state.CurrentTargetFile = null;
+            state.ErrorMessage = errorMessage;
+            state.ProgressPercentage = status == JobStatus.Completed ? 100 : state.ProgressPercentage;
+            state.LastActionTimestampUtc = DateTime.UtcNow;
+            PublishState(state);
+        }
     }
 
     /// <summary>
@@ -573,6 +689,95 @@ internal sealed class BackupEngine : IBackupEngine
     private void PublishState(JobStateDto state)
     {
         StateChanged?.Invoke(this, new JobStateChangedEventArgs(state));
+    }
+
+    private void WaitIfPaused(JobExecutionControl control, JobStateDto state)
+    {
+        if (!control.IsPaused)
+            return;
+
+        lock (control.Sync)
+        {
+            if (state.Status != JobStatus.Paused)
+            {
+                state.Status = JobStatus.Paused;
+                state.LastActionTimestampUtc = DateTime.UtcNow;
+                PublishState(state);
+            }
+        }
+
+        try
+        {
+            control.WaitWhilePaused();
+        }
+        catch (OperationCanceledException)
+        {
+            return;
+        }
+
+        if (control.IsStopRequested)
+            return;
+
+        lock (control.Sync)
+        {
+            if (state.Status == JobStatus.Paused)
+            {
+                state.Status = JobStatus.Running;
+                state.LastActionTimestampUtc = DateTime.UtcNow;
+                PublishState(state);
+            }
+        }
+    }
+
+    private bool TrySetPaused(JobExecutionControl control)
+    {
+        lock (control.Sync)
+        {
+            if (control.State.Status is JobStatus.Completed or JobStatus.Error)
+                return false;
+            if (control.State.Status == JobStatus.Paused)
+            {
+                control.RequestPause();
+                return true;
+            }
+
+            control.RequestPause();
+            control.State.Status = JobStatus.Paused;
+            control.State.LastActionTimestampUtc = DateTime.UtcNow;
+            PublishState(control.State);
+            return true;
+        }
+    }
+
+    private bool TrySetRunning(JobExecutionControl control)
+    {
+        lock (control.Sync)
+        {
+            if (control.State.Status is JobStatus.Completed or JobStatus.Error)
+                return false;
+            if (control.State.Status != JobStatus.Paused)
+                return true;
+
+            control.State.Status = JobStatus.Running;
+            control.State.LastActionTimestampUtc = DateTime.UtcNow;
+            PublishState(control.State);
+            return true;
+        }
+    }
+
+    private bool TrySetStopped(JobExecutionControl control)
+    {
+        lock (control.Sync)
+        {
+            if (control.State.Status is not (JobStatus.Running or JobStatus.Paused))
+                return false;
+
+            control.State.Status = JobStatus.Error;
+            control.State.ErrorMessage = Strings.Error_BackupStoppedByUser;
+            control.State.LastActionTimestampUtc = DateTime.UtcNow;
+            PublishState(control.State);
+            return true;
+        }
     }
 
     /// <summary>

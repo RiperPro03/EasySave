@@ -72,7 +72,7 @@ internal static class Program
     /// </summary>
     private static LogContext BuildLogContext()
     {
-        var version = Assembly.GetEntryAssembly()?.GetName().Version?.ToString() ?? "unknown";
+        var version = "2.0.0";
         return new LogContext
         {
             AppName = "EasySave",
