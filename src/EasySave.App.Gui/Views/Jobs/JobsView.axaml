@@ -104,7 +104,7 @@
                       VerticalScrollBarVisibility="Auto"
                       HorizontalScrollBarVisibility="Disabled">
             
-            <StackPanel Spacing="0">
+            <StackPanel Spacing="0" Margin="0,0,0,80">
                 
                 <!-- Message si aucun job -->
                 <Border IsVisible="{Binding !HasJobs}"
@@ -258,7 +258,7 @@
                 BorderThickness="1,1,1,0"
                 CornerRadius="12,12,0,0"
                 Padding="20,12"
-                Margin="0,24,0,0">
+                Margin="0,0,0,100">
             <Grid ColumnDefinitions="*,Auto,Auto">
                 <TextBlock Grid.Column="0"
                            Text="{Binding ActiveJobsCount, StringFormat='{}{0} active job(s)'}"

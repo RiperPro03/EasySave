@@ -13,7 +13,7 @@
     <StackPanel Spacing="24">
 
         <!-- Status Cards Grid -->
-        <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="16">
+        <Grid ColumnDefinitions="*,*,*" ColumnSpacing="16">
 
             <!-- Total Jobs Card -->
             <Border Grid.Column="0"
@@ -84,32 +84,7 @@
                                FontSize="32"
                                FontWeight="Bold"
                                Foreground="#FF9F0A"/>
-                    <TextBlock Text="Paused jobs"
-                               FontSize="11"
-                               Foreground="#80FFFFFF"/>
-                </StackPanel>
-            </Border>
-
-            <!-- System Status Card -->
-            <Border Grid.Column="3"
-                    Background="#18FFFFFF"
-                    BorderBrush="#28FFFFFF"
-                    BorderThickness="1"
-                    CornerRadius="12"
-                    Padding="20">
-                <StackPanel Spacing="8">
-                    <TextBlock Text="⚡"
-                               FontSize="28"/>
-                    <TextBlock Text="STATUS"
-                               FontSize="10"
-                               FontWeight="Bold"
-                               Foreground="#70FFFFFF"
-                               LetterSpacing="1"/>
-                    <TextBlock Text="{Binding SystemStatus}"
-                               FontSize="32"
-                               FontWeight="Bold"
-                               Foreground="#0A84FF"/>
-                    <TextBlock Text="System ready"
+                    <TextBlock Text="Jobs deactivated (not runnable)"
                                FontSize="11"
                                Foreground="#80FFFFFF"/>
                 </StackPanel>
