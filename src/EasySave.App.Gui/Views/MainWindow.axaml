@@ -10,8 +10,8 @@
         x:DataType="vm:MainWindowViewModel"
         Title="EasySave"
         Icon="avares://EasySave.App.Gui/Assets/easysave-logo.ico"
-        MinWidth="1100"
-        MinHeight="650"
+        MinWidth="1400"
+        MinHeight="800"
         Background="#000000"
         TransparencyLevelHint="Blur">
 

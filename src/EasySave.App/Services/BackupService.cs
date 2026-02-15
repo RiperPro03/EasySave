@@ -81,10 +81,82 @@ public sealed class BackupService : IBackupService
             };
         }
 
+        JobStateDto? startedState = null;
+        lock (_stateLock)
+        {
+            // Bloque le lancement si le job est deja en cours ou en pause.
+            SyncJobs();
+            if (_jobStates.TryGetValue(job.Id, out var existing) &&
+                existing.Status is JobStatus.Running or JobStatus.Paused)
+            {
+                return new BackupResultDto
+                {
+                    Success = false,
+                    Message = "Job is already running or paused.",
+                    Duration = TimeSpan.Zero
+                };
+            }
+
+            // Publie un etat "Running" immediat pour eviter les doubles lancements.
+            _jobStates[job.Id] = new JobStateDto
+            {
+                JobId = job.Id,
+                JobName = job.Name,
+                Status = JobStatus.Running,
+                LastActionTimestampUtc = DateTime.UtcNow
+            };
+            WriteSnapshot();
+            startedState = CopyState(_jobStates[job.Id]);
+        }
+
+        if (startedState != null)
+        {
+            StateChanged?.Invoke(this, new JobStateChangedEventArgs(startedState));
+        }
+
         var result = _backupEngine.Run(job);
         // Marque le job comme execute pour conserver l'horodatage.
         _jobService.MarkExecuted(job.Id);
         return result;
+    }
+
+    /// <summary>
+    /// Requests a pause for a running job.
+    /// </summary>
+    /// <param name="jobId">The job identifier.</param>
+    /// <returns><c>true</c> when the pause request was accepted.</returns>
+    public bool Pause(string jobId)
+    {
+        if (string.IsNullOrWhiteSpace(jobId))
+            return false;
+
+        return _backupEngine.Pause(jobId);
+    }
+
+    /// <summary>
+    /// Requests a resume for a paused job.
+    /// </summary>
+    /// <param name="jobId">The job identifier.</param>
+    /// <returns><c>true</c> when the resume request was accepted.</returns>
+    public bool Resume(string jobId)
+    {
+        if (string.IsNullOrWhiteSpace(jobId))
+            return false;
+
+        return _backupEngine.Resume(jobId);
+    }
+
+    /// <summary>
+    /// Requests a stop for a running job.
+    /// </summary>
+    /// <param name="jobId">The job identifier.</param>
+    /// <returns><c>true</c> when the stop request was accepted.</returns>
+    public bool Stop(string jobId)
+    {
+        if (string.IsNullOrWhiteSpace(jobId))
+            return false;
+
+        return _backupEngine.Stop(jobId);
     }
 
     /// <summary>
