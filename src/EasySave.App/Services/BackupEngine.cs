@@ -45,14 +45,33 @@ internal sealed class BackupEngine : IBackupEngine
     {
         if (job is null)
             throw new ArgumentNullException(nameof(job));
-
+            
         var traceId = Guid.NewGuid().ToString("N");
+
         // Resultat cumule pour l'appelant (CLI/GUI/tests).
         var result = new BackupResultDto();
-        // Chronometre la duree totale de la sauvegarde.
-        var stopwatch = Stopwatch.StartNew();
         // Etat initial publie des le debut de l'execution.
         var state = CreateInitialState(job);
+        try
+        {
+            // Check that the configured business software is not currently running before starting the backup.
+            BusinessSoftwareDetector.ValidateNotRunning(job.BusinessSoftwareProcessName);
+        }
+        catch (InvalidOperationException ex)
+        {
+            // if the business software is running, create an explicit failure result for the job.
+            result.Success = false;
+            result.Message = ex.Message;
+            result.Duration = TimeSpan.Zero;
+            result.ErrorCount = 1;
+            result.Errors = new List<string> { ex.Message };
+            UpdateTerminalState(state, JobStatus.Error, ex.Message);
+            WriteSummaryLog(job, result, traceId);
+            return result;
+        }
+
+        // Chronometre la duree totale de la sauvegarde.
+        var stopwatch = Stopwatch.StartNew();
         var control = new JobExecutionControl(state);
         _jobControls[job.Id] = control;
 
@@ -230,7 +249,7 @@ internal sealed class BackupEngine : IBackupEngine
             var targetPath = Path.Combine(targetRoot, relativePath);
             var fileSize = new FileInfo(sourcePath).Length;
             var transferStopwatch = new Stopwatch();
-            
+
             // Publie l'etat du fichier courant sans incrementer les compteurs.
             UpdateProgressState(control, state, sourcePath, targetPath, fileSize, incrementProcessed: false);
 
@@ -243,6 +262,16 @@ internal sealed class BackupEngine : IBackupEngine
                 {
                     // Cas "skip": on journalise et on avance.
                     result.SkippedCount++;
+                    WriteLogEntry(
+                        job,
+                        sourcePath,
+                        targetPath,
+                        fileSize,
+                        0,
+                        LogEventAction.Skip,
+                        LogEventOutcome.Success,
+                        traceId);
+                    UpdateProgressState(state, sourcePath, targetPath, fileSize, incrementProcessed: true);
                 WriteLogEntry(
                     job,
                     sourcePath,
@@ -272,6 +301,46 @@ internal sealed class BackupEngine : IBackupEngine
                     LogEventAction.Transfer,
                     LogEventOutcome.Success,
                     traceId);
+
+                if (job.EncryptFiles && !string.IsNullOrWhiteSpace(job.EncryptionKey))
+                {
+                    var swEncrypt = Stopwatch.StartNew();
+
+                    // TODO Issue 99 : appel CryptoSoft ici 
+
+                    swEncrypt.Stop();
+                    var encryptionTimeMs = swEncrypt.ElapsedMilliseconds;
+
+                    if (_logService != null)
+                    {
+                        var cryptoDto = new LogCryptoDto
+                        {
+                            Tool = "CryptoSoft",
+                            ExtensionMatched = true,
+                            EncryptionTimeMs = encryptionTimeMs,
+                            Extension = Path.GetExtension(sourcePath),
+                            InstanceLock = null
+                        };
+                        var logEntry = LogEntryBuilder.Create(
+                            eventName: "file.encrypted",
+                            category: LogEventCategory.File,
+                            action: LogEventAction.Unknown,
+                            message: $"File {Path.GetFileName(sourcePath)} encrypted")
+                        .WithFile(
+                            sourcePath: sourcePath,
+                            targetPath: targetPath,
+                            sizeBytes: fileSize,
+                            transferTimeMs: encryptionTimeMs)
+                        .WithCrypto(
+                            tool: cryptoDto.Tool,
+                            extensionMatched: cryptoDto.ExtensionMatched,
+                            encryptionTimeMs: cryptoDto.EncryptionTimeMs,
+                            extension: cryptoDto.Extension)
+                        .Build();
+
+                        _logService.Write(logEntry);
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -281,7 +350,7 @@ internal sealed class BackupEngine : IBackupEngine
                 // Convertit en UNC pour des logs coherents.
                 var sourceUnc = UncResolver.ResolveToUncForLog(sourcePath);
                 var targetUnc = UncResolver.ResolveToUncForLog(targetPath);
-                
+
                 // Temps de transfert negatif pour signaler un echec dans les logs.
                 var transferMs = -transferStopwatch.Elapsed.TotalMilliseconds;
                 if (transferMs >= 0)
@@ -303,6 +372,33 @@ internal sealed class BackupEngine : IBackupEngine
                 result.ErrorCount++;
             }
 
+            if (!string.IsNullOrWhiteSpace(job.BusinessSoftwareProcessName) && BusinessSoftwareDetector.IsRunning(job.BusinessSoftwareProcessName))
+            {
+                if (_logService != null)
+                {
+                    var logEntry = LogEntryBuilder.Create(
+                        eventName: "job.stopped.businesssoftware",
+                        category: LogEventCategory.Job,
+                        action: LogEventAction.Summary,
+                        message: $"Backup stopped because business software detected")
+                    .WithJob(
+                        id: job.Id,
+                        name: job.Name,
+                        type: job.Type,
+                        sourcePath: ToUncOrEmpty(job.SourcePath),
+                        targetPath: ToUncOrEmpty(job.TargetPath),
+                        status: JobStatus.Error)
+                    .WithOutcome(LogEventOutcome.Failure)
+                    .Build();
+                    _logService.Write(logEntry);
+                }
+                result.Errors.Add($"Backup stopped because {job.BusinessSoftwareProcessName} detected");
+                result.ErrorCount++;
+                break;
+
+                // Publie l'etat apres traitement du fichier.
+                UpdateProgressState(state, sourcePath, targetPath, fileSize, incrementProcessed: true);
+            }
             // Publie l'etat apres traitement du fichier.
             UpdateProgressState(control, state, sourcePath, targetPath, fileSize, incrementProcessed: true);
         }

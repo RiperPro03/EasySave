@@ -84,6 +84,7 @@ public sealed class AppConfigRepository
         var config = AppConfig.LoadDefaults();
         config.ChangeLanguage(dto.Language);
         config.ChangeLogFormat(dto.LogFormat);
+        config.ChangeBussinessSoftware(dto.BusinessSoftwareProcessName);
         return config;
     }
 
@@ -102,7 +103,8 @@ public sealed class AppConfigRepository
         var dto = new SettingsDto
         {
             Language = config.Language,
-            LogFormat = config.LogFormat
+            LogFormat = config.LogFormat,
+            BusinessSoftwareProcessName = config.BusinessSoftwareProcessName
         };
 
         var json = JsonSerializer.Serialize(dto, _options);
@@ -149,5 +151,6 @@ public sealed class AppConfigRepository
     {
         public Language Language { get; set; } = Language.English;
         public LogFormat LogFormat { get; set; } = LogFormat.Json;
+        public string? BusinessSoftwareProcessName { get; set; }
     }
 }
