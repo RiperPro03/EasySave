@@ -128,7 +128,7 @@
                       VerticalScrollBarVisibility="Auto"
                       HorizontalScrollBarVisibility="Disabled"
                       IsVisible="{Binding HasJobs}">
-            <ItemsControl ItemsSource="{Binding Jobs}">
+            <ItemsControl ItemsSource="{Binding Jobs}" Margin="0,0,0,100">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Border Classes="exec-card">
