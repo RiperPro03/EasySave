@@ -124,16 +124,23 @@ public sealed class AppConfigRepository
         if (_logService == null)
             return;
 
+        var extensionsLabel = config.ExtensionsToEncrypt.Count == 0
+            ? "-"
+            : string.Join(", ", config.ExtensionsToEncrypt);
+
         var entry = LogEntryBuilder.Create(
                 eventName: "settings.saved",
                 category: LogEventCategory.Settings,
                 action: LogEventAction.Save,
-                message: $"Language={config.Language}; LogFormat={config.LogFormat}")
+                message: $"Language={config.Language}; LogFormat={config.LogFormat}; EncryptionEnabled={config.EncryptionEnabled}; ExtensionsToEncrypt={extensionsLabel}; BusinessSoftware={config.BusinessSoftwareProcessName ?? "-"}")
             .WithSettings(
                 config.Language,
                 config.LogFormat,
                 ToUncOrEmpty(config.LogDirectory),
-                ToUncOrEmpty(_configFilePath))
+                ToUncOrEmpty(_configFilePath),
+                config.EncryptionEnabled,
+                config.ExtensionsToEncrypt,
+                config.BusinessSoftwareProcessName)
             .Build();
 
         _logService.Write(entry);
