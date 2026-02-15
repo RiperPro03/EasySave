@@ -21,4 +21,25 @@ public interface IBackupService
     /// <param name="job">The job to run.</param>
     /// <returns>The execution result.</returns>
     BackupResultDto Run(BackupJob job);
+
+    /// <summary>
+    /// Requests a pause for a running job.
+    /// </summary>
+    /// <param name="jobId">The job identifier.</param>
+    /// <returns><c>true</c> if the pause was requested; otherwise <c>false</c>.</returns>
+    bool Pause(string jobId);
+
+    /// <summary>
+    /// Requests a resume for a paused job.
+    /// </summary>
+    /// <param name="jobId">The job identifier.</param>
+    /// <returns><c>true</c> if the resume was requested; otherwise <c>false</c>.</returns>
+    bool Resume(string jobId);
+
+    /// <summary>
+    /// Requests a stop for a running job.
+    /// </summary>
+    /// <param name="jobId">The job identifier.</param>
+    /// <returns><c>true</c> if the stop was requested; otherwise <c>false</c>.</returns>
+    bool Stop(string jobId);
 }

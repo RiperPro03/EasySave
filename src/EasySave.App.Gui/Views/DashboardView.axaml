@@ -13,7 +13,7 @@
     <StackPanel Spacing="24">
 
         <!-- Status Cards Grid -->
-        <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="16">
+        <Grid ColumnDefinitions="*,*,*" ColumnSpacing="16">
 
             <!-- Total Jobs Card -->
             <Border Grid.Column="0"
@@ -84,32 +84,7 @@
                                FontSize="32"
                                FontWeight="Bold"
                                Foreground="#FF9F0A"/>
-                    <TextBlock Text="Paused jobs"
-                               FontSize="11"
-                               Foreground="#80FFFFFF"/>
-                </StackPanel>
-            </Border>
-
-            <!-- System Status Card -->
-            <Border Grid.Column="3"
-                    Background="#18FFFFFF"
-                    BorderBrush="#28FFFFFF"
-                    BorderThickness="1"
-                    CornerRadius="12"
-                    Padding="20">
-                <StackPanel Spacing="8">
-                    <TextBlock Text="⚡"
-                               FontSize="28"/>
-                    <TextBlock Text="STATUS"
-                               FontSize="10"
-                               FontWeight="Bold"
-                               Foreground="#70FFFFFF"
-                               LetterSpacing="1"/>
-                    <TextBlock Text="{Binding SystemStatus}"
-                               FontSize="32"
-                               FontWeight="Bold"
-                               Foreground="#0A84FF"/>
-                    <TextBlock Text="System ready"
+                    <TextBlock Text="Jobs deactivated (not runnable)"
                                FontSize="11"
                                Foreground="#80FFFFFF"/>
                 </StackPanel>
@@ -188,49 +163,49 @@
             </Border>
         </StackPanel>
 
-        <!-- Quick Actions -->
-        <Grid ColumnDefinitions="*,*" ColumnSpacing="16">
-            <Button Grid.Column="0"
-                    Background="#0A84FF"
-                    Foreground="White"
-                    Padding="20,16"
-                    CornerRadius="12"
-                    BorderThickness="0"
-                    Cursor="Hand"
-                    HorizontalAlignment="Stretch">
-                <StackPanel Spacing="8">
-                    <TextBlock Text="⚡ Run All Jobs"
-                               FontSize="16"
-                               FontWeight="SemiBold"
-                               HorizontalAlignment="Center"/>
-                    <TextBlock Text="Execute all active backups"
-                               FontSize="12"
-                               Foreground="#B0FFFFFF"
-                               HorizontalAlignment="Center"/>
-                </StackPanel>
-            </Button>
-
-            <Button Grid.Column="1"
-                    Background="#28FFFFFF"
-                    Foreground="White"
-                    BorderBrush="#35FFFFFF"
-                    BorderThickness="1"
-                    Padding="20,16"
-                    CornerRadius="12"
-                    Cursor="Hand"
-                    HorizontalAlignment="Stretch">
-                <StackPanel Spacing="8">
-                    <TextBlock Text="📁 Manage Jobs"
-                               FontSize="16"
-                               FontWeight="SemiBold"
-                               HorizontalAlignment="Center"/>
-                    <TextBlock Text="View and edit backup jobs"
-                               FontSize="12"
-                               Foreground="#B0FFFFFF"
-                               HorizontalAlignment="Center"/>
-                </StackPanel>
-            </Button>
-        </Grid>
+        <!-- ~1~ Quick Actions @1@ -->
+        <!-- <Grid ColumnDefinitions="*,*" ColumnSpacing="16"> -->
+        <!--     <Button Grid.Column="0" -->
+        <!--             Background="#0A84FF" -->
+        <!--             Foreground="White" -->
+        <!--             Padding="20,16" -->
+        <!--             CornerRadius="12" -->
+        <!--             BorderThickness="0" -->
+        <!--             Cursor="Hand" -->
+        <!--             HorizontalAlignment="Stretch"> -->
+        <!--         <StackPanel Spacing="8"> -->
+        <!--             <TextBlock Text="⚡ Run All Jobs" -->
+        <!--                        FontSize="16" -->
+        <!--                        FontWeight="SemiBold" -->
+        <!--                        HorizontalAlignment="Center"/> -->
+        <!--             <TextBlock Text="Execute all active backups" -->
+        <!--                        FontSize="12" -->
+        <!--                        Foreground="#B0FFFFFF" -->
+        <!--                        HorizontalAlignment="Center"/> -->
+        <!--         </StackPanel> -->
+        <!--     </Button> -->
+        <!-- -->
+        <!--     <Button Grid.Column="1" -->
+        <!--             Background="#28FFFFFF" -->
+        <!--             Foreground="White" -->
+        <!--             BorderBrush="#35FFFFFF" -->
+        <!--             BorderThickness="1" -->
+        <!--             Padding="20,16" -->
+        <!--             CornerRadius="12" -->
+        <!--             Cursor="Hand" -->
+        <!--             HorizontalAlignment="Stretch"> -->
+        <!--         <StackPanel Spacing="8"> -->
+        <!--             <TextBlock Text="📁 Manage Jobs" -->
+        <!--                        FontSize="16" -->
+        <!--                        FontWeight="SemiBold" -->
+        <!--                        HorizontalAlignment="Center"/> -->
+        <!--             <TextBlock Text="View and edit backup jobs" -->
+        <!--                        FontSize="12" -->
+        <!--                        Foreground="#B0FFFFFF" -->
+        <!--                        HorizontalAlignment="Center"/> -->
+        <!--         </StackPanel> -->
+        <!--     </Button> -->
+        <!-- </Grid> -->
 
     </StackPanel>
 

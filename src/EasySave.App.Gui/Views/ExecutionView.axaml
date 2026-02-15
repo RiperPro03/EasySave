@@ -3,10 +3,230 @@
              xmlns:vm="using:EasySave.App.Gui.ViewModels"
              x:Class="EasySave.App.Gui.Views.ExecutionView"
              x:DataType="vm:ExecutionViewModel">
-    <StackPanel Spacing="8">
-        <TextBlock Text="Live Execution"
-                   FontSize="20"
-                   FontWeight="Bold"/>
-        <TextBlock Text="{Binding Info}"/>
-    </StackPanel>
+
+    <UserControl.Styles>
+        <Style Selector="Border.exec-card">
+            <Setter Property="Background" Value="#18FFFFFF"/>
+            <Setter Property="BorderBrush" Value="#28FFFFFF"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="12"/>
+            <Setter Property="Padding" Value="20"/>
+            <Setter Property="Margin" Value="0,0,0,12"/>
+        </Style>
+
+        <Style Selector="Border.exec-card:pointerover">
+            <Setter Property="Background" Value="#25FFFFFF"/>
+            <Setter Property="BorderBrush" Value="#35FFFFFF"/>
+        </Style>
+
+        <Style Selector="Border.status-badge">
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="Padding" Value="8,4"/>
+            <Setter Property="BorderThickness" Value="1"/>
+        </Style>
+
+        <Style Selector="Border.status-running">
+            <Setter Property="Background" Value="#1530D158"/>
+            <Setter Property="BorderBrush" Value="#30D158"/>
+        </Style>
+
+        <Style Selector="Border.status-paused">
+            <Setter Property="Background" Value="#15FF9F0A"/>
+            <Setter Property="BorderBrush" Value="#FF9F0A"/>
+        </Style>
+
+        <Style Selector="Border.status-idle">
+            <Setter Property="Background" Value="#1540C8E0"/>
+            <Setter Property="BorderBrush" Value="#40C8E0"/>
+        </Style>
+
+        <Style Selector="Border.status-completed">
+            <Setter Property="Background" Value="#1519C37D"/>
+            <Setter Property="BorderBrush" Value="#19C37D"/>
+        </Style>
+
+        <Style Selector="Border.status-error">
+            <Setter Property="Background" Value="#15FF3B30"/>
+            <Setter Property="BorderBrush" Value="#FF3B30"/>
+        </Style>
+
+        <Style Selector="ProgressBar.exec-progress">
+            <Setter Property="Height" Value="8"/>
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="Background" Value="#20FFFFFF"/>
+            <Setter Property="Foreground" Value="#0A84FF"/>
+        </Style>
+
+        <Style Selector="Button.exec-play">
+            <Setter Property="Padding" Value="16,8"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Background" Value="#0A84FF"/>
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+
+        <Style Selector="Button.exec-play:pointerover">
+            <Setter Property="Background" Value="#0066DD"/>
+        </Style>
+
+        <Style Selector="Button.exec-play:disabled">
+            <Setter Property="Background" Value="#204A90"/>
+            <Setter Property="Foreground" Value="#80FFFFFF"/>
+            <Setter Property="Opacity" Value="0.7"/>
+        </Style>
+
+        <Style Selector="Button.exec-runall">
+            <Setter Property="Padding" Value="14,8"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Background" Value="#0A84FF"/>
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+
+        <Style Selector="Button.exec-runall:pointerover">
+            <Setter Property="Background" Value="#0066DD"/>
+        </Style>
+
+    </UserControl.Styles>
+
+    <Grid RowDefinitions="Auto,*,Auto">
+        <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,16">
+            <Button Grid.Column="1"
+                    Classes="exec-runall"
+                    Content="Run All"
+                    VerticalAlignment="Center"
+                    Command="{Binding RunAllCommand}"/>
+        </Grid>
+
+        <Border Grid.Row="1"
+                IsVisible="{Binding !HasJobs}"
+                Background="#15FFFFFF"
+                BorderBrush="#25FFFFFF"
+                BorderThickness="1"
+                CornerRadius="12"
+                Padding="40"
+                HorizontalAlignment="Center"
+                Margin="0,40,0,0">
+            <StackPanel Spacing="12" HorizontalAlignment="Center">
+                <TextBlock Text="No jobs"
+                           FontSize="36"
+                           HorizontalAlignment="Center"/>
+                <TextBlock Text="Create a backup job to start monitoring"
+                           FontSize="14"
+                           Foreground="#80FFFFFF"
+                           HorizontalAlignment="Center"/>
+            </StackPanel>
+        </Border>
+
+        <ScrollViewer Grid.Row="1"
+                      VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Disabled"
+                      IsVisible="{Binding HasJobs}">
+            <ItemsControl ItemsSource="{Binding Jobs}" Margin="0,0,0,100">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Classes="exec-card">
+                            <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto,Auto" ColumnSpacing="16">
+                                <StackPanel Grid.Row="0" Grid.Column="0" Spacing="6">
+                                    <Grid ColumnDefinitions="*,Auto">
+                                        <TextBlock Grid.Column="0"
+                                                   Text="{Binding JobName}"
+                                                   FontSize="16"
+                                                   FontWeight="SemiBold"/>
+                                        <Border Grid.Column="1"
+                                                Classes="status-badge"
+                                                Classes.status-running="{Binding IsRunning}"
+                                                Classes.status-paused="{Binding IsPaused}"
+                                                Classes.status-idle="{Binding IsIdle}"
+                                                Classes.status-completed="{Binding IsCompleted}"
+                                                Classes.status-error="{Binding IsError}">
+                                            <TextBlock Text="{Binding StatusLabel}"
+                                                       FontSize="11"
+                                                       FontWeight="Medium"/>
+                                        </Border>
+                                    </Grid>
+                                    <TextBlock Text="{Binding BackupTypeLabel, StringFormat='{}Type: {0}'}"
+                                               FontSize="12"
+                                               Foreground="#80FFFFFF"/>
+                                    <TextBlock Text="{Binding ProgressLabel, StringFormat='{}Progress: {0}'}"
+                                               FontSize="12"
+                                               Foreground="#80FFFFFF"/>
+                                </StackPanel>
+
+                                <StackPanel Grid.Row="1" Grid.Column="0" Spacing="8" Margin="0,8,0,0">
+                                    <ProgressBar Classes="exec-progress"
+                                                 Minimum="0"
+                                                 Maximum="100"
+                                                 Value="{Binding ProgressPercentage}"/>
+                                    <WrapPanel Orientation="Horizontal">
+                                        <TextBlock Grid.Column="0"
+                                                   Text="{Binding FilesProcessed, StringFormat='Files: {0}'}"
+                                                   FontSize="11"
+                                                   Foreground="#80FFFFFF"
+                                                   Margin="0,0,12,4"/>
+                                        <TextBlock Grid.Column="1"
+                                                   Text="{Binding TotalFiles, StringFormat='Total: {0}'}"
+                                                   FontSize="11"
+                                                   Foreground="#80FFFFFF"
+                                                   Margin="0,0,12,4"/>
+                                        <TextBlock Grid.Column="2"
+                                                   Text="{Binding RemainingFiles, StringFormat='Remaining: {0}'}"
+                                                   FontSize="11"
+                                                   Foreground="#80FFFFFF"/>
+                                    </WrapPanel>
+                                </StackPanel>
+
+                                <StackPanel Grid.Row="2" Grid.Column="0" Spacing="4" Margin="0,8,0,0">
+                                    <TextBlock Text="{Binding CurrentSourceFile, StringFormat='Source: {0}', TargetNullValue='Source: -'}"
+                                               FontSize="11"
+                                               Foreground="#70FFFFFF"
+                                               TextWrapping="Wrap"/>
+                                    <TextBlock Text="{Binding CurrentTargetFile, StringFormat='Target: {0}', TargetNullValue='Target: -'}"
+                                               FontSize="11"
+                                               Foreground="#70FFFFFF"
+                                               TextWrapping="Wrap"/>
+                                </StackPanel>
+
+                                <TextBlock Grid.Row="3" Grid.Column="0"
+                                           Text="{Binding ErrorMessage, StringFormat='Error: {0}', TargetNullValue=''}"
+                                           FontSize="11"
+                                           Foreground="#FF3B30"
+                                           TextWrapping="Wrap"
+                                           IsVisible="{Binding HasErrorMessage}"/>
+
+                                <StackPanel Grid.Row="0" Grid.RowSpan="4" Grid.Column="1"
+                                            VerticalAlignment="Center">
+                                    <Button Classes="exec-play"
+                                            Content="Play"
+                                            IsEnabled="{Binding CanStart}"
+                                            Command="{Binding $parent[ItemsControl].((vm:ExecutionViewModel)DataContext).TogglePlayPauseCommand}"
+                                            CommandParameter="{Binding}"/>
+                                </StackPanel>
+
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+
+        <Border Grid.Row="2"
+                IsVisible="{Binding HasError}"
+                Background="#15FF3B30"
+                BorderBrush="#FF3B30"
+                BorderThickness="1"
+                CornerRadius="8"
+                Padding="12"
+                Margin="0,12,0,0">
+            <TextBlock Text="{Binding LastError}"
+                       FontSize="12"
+                       Foreground="White"/>
+        </Border>
+    </Grid>
 </UserControl>

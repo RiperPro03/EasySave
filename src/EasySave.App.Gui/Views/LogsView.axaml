@@ -10,7 +10,7 @@
         <converters:LogLevelToBrushConverter x:Key="LogLevelToBrushConverter"/>
     </UserControl.Resources>
 
-    <StackPanel Spacing="16">
+    <StackPanel Spacing="16" Margin="0,0,0,80">
         <Border Background="#18FFFFFF"
                 BorderBrush="#28FFFFFF"
                 BorderThickness="1"

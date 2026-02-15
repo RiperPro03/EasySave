@@ -129,6 +129,9 @@ Nommage des ressources :
     <data name="Info_BackupCompletedWithErrors" xml:space="preserve">
         <value>Backup terminé avec des erreurs.</value>
     </data>
+    <data name="Error_BackupStoppedByUser" xml:space="preserve">
+        <value>Backup arrêté par l'utilisateur.</value>
+    </data>
     <data name="UI_BackupTypePrompt" xml:space="preserve">
         <value>Type de sauvegarde</value>
     </data>
