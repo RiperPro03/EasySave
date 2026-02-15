@@ -157,7 +157,7 @@ internal sealed class BackupEngine : IBackupEngine
             var targetPath = Path.Combine(targetRoot, relativePath);
             var fileSize = new FileInfo(sourcePath).Length;
             var transferStopwatch = new Stopwatch();
-            
+
             // Publie l'etat du fichier courant sans incrementer les compteurs.
             UpdateProgressState(state, sourcePath, targetPath, fileSize, incrementProcessed: false);
 
@@ -205,7 +205,7 @@ internal sealed class BackupEngine : IBackupEngine
                     var swEncrypt = Stopwatch.StartNew();
 
                     // TODO Issue 99 : appel CryptoSoft ici 
-                    
+
                     swEncrypt.Stop();
                     var encryptionTimeMs = swEncrypt.ElapsedMilliseconds;
 
@@ -270,8 +270,33 @@ internal sealed class BackupEngine : IBackupEngine
                 result.ErrorCount++;
             }
 
-            // Publie l'etat apres traitement du fichier.
-            UpdateProgressState(state, sourcePath, targetPath, fileSize, incrementProcessed: true);
+            if (!string.IsNullOrWhiteSpace(job.BusinessSoftwareProcessName) && BusinessSoftwareDetector.IsRunning(job.BusinessSoftwareProcessName))
+            {
+                if (_logService != null)
+                {
+                    var logEntry = LogEntryBuilder.Create(
+                        eventName: "job.stopped.businesssoftware",
+                        category: LogEventCategory.Job,
+                        action: LogEventAction.Summary,
+                        message: $"Backup stopped because business software detected")
+                    .WithJob(
+                        id: job.Id,
+                        name: job.Name,
+                        type: job.Type,
+                        sourcePath: ToUncOrEmpty(job.SourcePath),
+                        targetPath: ToUncOrEmpty(job.TargetPath),
+                        status: JobStatus.Error)
+                    .WithOutcome(LogEventOutcome.Failure)
+                    .Build();
+                    _logService.Write(logEntry);
+                }
+                result.Errors.Add($"Backup stopped because {job.BusinessSoftwareProcessName} detected");
+                result.ErrorCount++;
+                break;
+
+                // Publie l'etat apres traitement du fichier.
+                UpdateProgressState(state, sourcePath, targetPath, fileSize, incrementProcessed: true);
+            }
         }
     }
 
