@@ -14,7 +14,6 @@ namespace EasySave.App.Gui.ViewModels;
 /// </summary>
 public sealed partial class JobsViewModel : ViewModelBase
 {
-    private const int MaxJobs = 5;
     private readonly IJobService? _jobService;
 
     public ObservableCollection<BackupJob> Jobs { get; } = new();
@@ -27,9 +26,6 @@ public sealed partial class JobsViewModel : ViewModelBase
 
     [ObservableProperty]
     private bool _hasJobs;
-
-    [ObservableProperty]
-    private bool _canCreateJob;
 
     [ObservableProperty]
     private string? _lastError;
@@ -99,7 +95,6 @@ public sealed partial class JobsViewModel : ViewModelBase
         }
     }
 
-    [RelayCommand]
     private void Refresh()
     {
         if (_jobService == null)
@@ -191,7 +186,6 @@ public sealed partial class JobsViewModel : ViewModelBase
         JobsCount = Jobs.Count;
         ActiveJobsCount = Jobs.Count(job => job.IsActive);
         HasJobs = JobsCount > 0;
-        CanCreateJob = JobsCount < MaxJobs;
     }
 
     private string GenerateNextId()

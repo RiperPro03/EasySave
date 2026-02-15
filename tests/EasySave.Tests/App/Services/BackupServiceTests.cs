@@ -30,6 +30,20 @@ public class BackupServiceTests
         Directory.Delete(target, true);
     }
 
+    [Fact]
+    public void Run_ShouldSkipInactiveJob_AndNotMarkExecuted()
+    {
+        var jobService = new FakeJobService();
+        var service = new BackupService(jobService, stateWriter: new NoOpStateWriter());
+        var job = new BackupJob("1", "Job", @"C:\source", @"C:\target", BackupType.Full, isActive: false);
+
+        var result = service.Run(job);
+
+        Assert.False(result.Success);
+        Assert.Equal("job desactivé run skipper", result.Message);
+        Assert.False(jobService.MarkExecutedCalled);
+    }
+
     private sealed class FakeJobService : IJobService
     {
         public bool MarkExecutedCalled { get; private set; }

@@ -1,7 +1,9 @@
+using EasySave.App.Utils;
 using EasySave.Core.DTO;
 using EasySave.Core.Enums;
 using EasySave.Core.Events;
 using EasySave.Core.Interfaces;
+using EasySave.Core.Logging;
 using EasySave.Core.Models;
 using EasySave.EasyLog.Options;
 
@@ -65,6 +67,20 @@ public sealed class BackupService : IBackupService
     /// <returns>The execution result.</returns>
     public BackupResultDto Run(BackupJob job)
     {
+        if (job is null)
+            throw new ArgumentNullException(nameof(job));
+
+        if (!job.IsActive)
+        {
+            WriteInactiveJobLog(job);
+            return new BackupResultDto
+            {
+                Success = false,
+                Message = "Job is inactive and was skipped.",
+                Duration = TimeSpan.Zero
+            };
+        }
+
         var result = _backupEngine.Run(job);
         // Marque le job comme execute pour conserver l'horodatage.
         _jobService.MarkExecuted(job.Id);
@@ -228,5 +244,40 @@ public sealed class BackupService : IBackupService
     private IBackupEngine CreateEngine()
     {
         return new BackupEngine(_logService);
+    }
+
+    private void WriteInactiveJobLog(BackupJob job)
+    {
+        if (_logService is null)
+            return;
+
+        var entry = LogEntryBuilder.Create(
+                eventName: "job.skipped",
+                category: LogEventCategory.Job,
+                action: LogEventAction.Skip,
+                message: "Job is inactive and was skipped")
+            .WithOutcome(LogEventOutcome.Success)
+            .WithJob(
+                id: job.Id,
+                name: job.Name,
+                type: job.Type,
+                sourcePath: ToUncOrEmpty(job.SourcePath),
+                targetPath: ToUncOrEmpty(job.TargetPath),
+                status: JobStatus.Idle,
+                isActive: job.IsActive)
+            .Build();
+
+        _logService.Write(entry);
+    }
+
+    /// <summary>
+    /// Normalizes a path to UNC for logging.
+    /// </summary>
+    private static string ToUncOrEmpty(string? path)
+    {
+        if (string.IsNullOrWhiteSpace(path))
+            return string.Empty;
+
+        return UncResolver.ResolveToUncForLog(path);
     }
 }
