@@ -21,6 +21,8 @@ public class SettingsService
     public string EncryptionKey => _config.EncryptionKey;
     public Language Language => _config.Language;
     public LogFormat LogFormat => _config.LogFormat;
+    
+    public List<string> ExcludedExtensions { get; private set; } = new();
 
     public void ToggleEncryption()
     {
@@ -44,5 +46,11 @@ public class SettingsService
     {
         _config.ChangeLogFormat(format);
         _repository.Save(_config);
+    }
+    
+    public void UpdateExcludedExtensions(List<string> extensions)
+    {
+        _config.UpdateExcludedExtensions(extensions);
+        _repository.Save(_config); // Sauvegarde physique sur le disque
     }
 }

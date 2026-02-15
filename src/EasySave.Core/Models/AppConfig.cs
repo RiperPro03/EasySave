@@ -13,6 +13,7 @@ public class AppConfig
     public Language Language { get; private set; }
     public string LogDirectory { get; private set; }
     public LogFormat LogFormat { get; private set; }
+    
 
     /// <summary>
     /// Initializes a new instance of the <see cref="AppConfig"/> class.
@@ -25,6 +26,8 @@ public class AppConfig
         Language = language;
         LogDirectory = Guard.NotNullOrWhiteSpace(logDirectory, nameof(logDirectory));
         LogFormat = logFormat;
+        // Initialisation de la liste pour éviter les surprises
+        ExcludedExtensions = new List<string>();
     }
 
     /// <summary>
@@ -84,6 +87,9 @@ public class AppConfig
     // ainsi que la clé elle même
     public bool EncryptionEnabled { get; private set; }
     public string EncryptionKey { get; private set; } = "default_key_change_it";
+    
+    // Propriété pour les extensions exclues
+    public List<string> ExcludedExtensions { get; private set; } = new();
 
     public void ToggleEncryption()
     {
@@ -94,6 +100,18 @@ public class AppConfig
     {
         EncryptionKey = newKey;
     }
+    
+    /// <summary>
+    /// Updates the list of file extensions excluded from encryption.
+    /// </summary>
+    /// <param name="extensions">The list of extensions (e.g., ".pdf", ".txt").</param>
+    public void UpdateExcludedExtensions(List<string> extensions)
+    {
+        // On s'assure que la liste n'est jamais null (KISS/CLEAN)
+        ExcludedExtensions = extensions ?? new List<string>();
+    }
+    
+    
 
 }
 

@@ -26,6 +26,20 @@
         <TextBox Text="{Binding EncryptionKey}" 
                  IsEnabled="{Binding EncryptionEnabled}"
                  PasswordChar="*"/>
+        
+        <TextBlock Text="Extensions exclues du chiffrement (ex: .pdf, .txt) :" 
+                   Margin="0,10,0,0"
+                   IsEnabled="{Binding EncryptionEnabled}"/>
+
+        <TextBox Text="{Binding ExcludedExtensions}" 
+                 Watermark="Saisissez les extensions séparées par des virgules..."
+                 IsEnabled="{Binding EncryptionEnabled}"
+                 ToolTip.Tip="Les fichiers avec ces extensions ne seront pas chiffrés"/>
+
+        <TextBlock Text="Note: Séparez les extensions par une virgule." 
+                   FontSize="10" 
+                   FontStyle="Italic"
+                   Opacity="0.7"/>
 
         <Button Content="Enregistrer les modifications" 
                 Command="{Binding SaveSettingsCommand}"
