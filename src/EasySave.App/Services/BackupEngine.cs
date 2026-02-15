@@ -138,7 +138,7 @@ internal sealed class BackupEngine : IBackupEngine
             var targetPath = Path.Combine(targetRoot, relativePath);
             var fileSize = new FileInfo(sourcePath).Length;
             var transferStopwatch = new Stopwatch();
-            
+
             // Publie l'etat du fichier courant sans incrementer les compteurs.
             UpdateProgressState(state, sourcePath, targetPath, fileSize, incrementProcessed: false);
 
@@ -186,7 +186,7 @@ internal sealed class BackupEngine : IBackupEngine
                     var swEncrypt = Stopwatch.StartNew();
 
                     // TODO Issue 99 : appel CryptoSoft ici 
-                    
+
                     swEncrypt.Stop();
                     var encryptionTimeMs = swEncrypt.ElapsedMilliseconds;
 
@@ -277,6 +277,7 @@ internal sealed class BackupEngine : IBackupEngine
 
                 // Publie l'etat apres traitement du fichier.
                 UpdateProgressState(state, sourcePath, targetPath, fileSize, incrementProcessed: true);
+            }
         }
     }
 
