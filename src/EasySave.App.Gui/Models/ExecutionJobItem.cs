@@ -81,6 +81,7 @@ public sealed partial class ExecutionJobItem : ObservableObject
     private long _remainingSizeBytes;
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(LastActionLabel))]
     private DateTime _lastActionTimestampUtc;
 
     [ObservableProperty]
@@ -116,6 +117,11 @@ public sealed partial class ExecutionJobItem : ObservableObject
     public string ProgressLabel => $"{ProgressPercentage}%";
 
     public bool HasErrorMessage => !string.IsNullOrWhiteSpace(ErrorMessage);
+
+    public string LastActionLabel
+        => LastActionTimestampUtc == default
+            ? "-"
+            : LastActionTimestampUtc.ToLocalTime().ToString("dd/MM/yyyy HH:mm:ss");
 
     public void UpdateDefinition(BackupJob job)
     {

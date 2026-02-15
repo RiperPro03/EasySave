@@ -188,7 +188,10 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
     private void OnBackupStateChanged(object? sender, JobStateChangedEventArgs e)
     {
         CurrentState = e.State.Status.ToString();
-        StatusMessage = $"{e.State.JobName}: {e.State.Status}";
+        if (ActiveTab == NavigationTab.Dashboard)
+        {
+            StatusMessage = $"{e.State.JobName}: {e.State.Status}";
+        }
         LastUpdateTime = DateTime.Now;
     }
 
