@@ -101,7 +101,7 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
         var logReader = new LogReaderService(logsPath);
         _dashboardViewModel = new DashboardViewModel(jobService, _backupService, logReader);
         _jobsViewModel = new JobsViewModel(jobService);
-        _executionViewModel = new ExecutionViewModel();
+        _executionViewModel = new ExecutionViewModel(jobService, _backupService);
         _logsViewModel = new LogsViewModel(logReader);
         
         // FIX KISS : On branche ton service ici
@@ -122,10 +122,38 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
     [RelayCommand] private void ShowSettings() { CurrentPageTitle = "Settings"; StatusMessage = "Configuration"; CurrentView = _settingsViewModel; ActiveTab = NavigationTab.Settings; LastUpdateTime = DateTime.Now; }
     [RelayCommand] private void ShowAbout() { CurrentPageTitle = "About"; StatusMessage = "Info"; CurrentView = _aboutViewModel; ActiveTab = NavigationTab.About; LastUpdateTime = DateTime.Now; }
     
-    private void OnBackupStateChanged(object? sender, JobStateChangedEventArgs e) { CurrentState = e.State.Status.ToString(); StatusMessage = $"{e.State.JobName}: {e.State.Status}"; LastUpdateTime = DateTime.Now; }
-    private void OnJobsChanged() => _dashboardViewModel.RefreshJobSummary();
-    private void OnLogWritten(object? sender, EventArgs e) { if (_uiContext != null) _uiContext.Post(_ => HandleLogWritten(), null); else HandleLogWritten(); }
-    private void HandleLogWritten() { _dashboardViewModel.NotifyLogWritten(); _logsViewModel.RefreshLogs(); }
+    private void OnBackupStateChanged(object? sender, JobStateChangedEventArgs e)
+    {
+        CurrentState = e.State.Status.ToString();
+        if (ActiveTab == NavigationTab.Dashboard)
+        {
+            StatusMessage = $"{e.State.JobName}: {e.State.Status}";
+        }
+        LastUpdateTime = DateTime.Now;
+    }
+
+    private void OnJobsChanged()
+    {
+        _dashboardViewModel.RefreshJobSummary();
+        _executionViewModel.RefreshJobs();
+    }
+
+    private void OnLogWritten(object? sender, EventArgs e)
+    {
+        if (_uiContext != null)
+        {
+            _uiContext.Post(_ => HandleLogWritten(), null);
+            return;
+        }
+
+        HandleLogWritten();
+    }
+
+    private void HandleLogWritten()
+    {
+        _dashboardViewModel.NotifyLogWritten();
+        _logsViewModel.RefreshLogs();
+    }
 
     /// <summary>
     /// Unsubscribes from events and releases managed resources.
@@ -138,6 +166,7 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
         _jobsViewModel.JobsChanged -= OnJobsChanged;
         if (_appLogService != null) _appLogService.LogWritten -= OnLogWritten;
         _dashboardViewModel.Dispose();
+        _executionViewModel.Dispose();
         GC.SuppressFinalize(this);
     }
 }

@@ -13,6 +13,7 @@ public sealed class BackupJob
     public string SourcePath { get; private set; }
     public string TargetPath { get; private set; }
     public BackupType Type { get; private set; }
+    public string? BusinessSoftwareProcessName { get; private set; }
 
     public bool IsActive { get; private set; }
     public DateTime CreatedAt { get; }
@@ -47,6 +48,7 @@ public sealed class BackupJob
         string sourcePath,
         string targetPath,
         BackupType type,
+        string? businessSoftwareProcessName = null,
         bool isActive = true,
         DateTime? createdAtUtc = null,
         DateTime? lastRunUtc = null,
@@ -59,6 +61,7 @@ public sealed class BackupJob
         TargetPath = Guard.NotNullOrWhiteSpace(targetPath, nameof(targetPath));
 
         Type = type;
+        BusinessSoftwareProcessName = businessSoftwareProcessName;
 
         IsActive = isActive;
         // Normalize timestamps to UTC for consistent persistence.

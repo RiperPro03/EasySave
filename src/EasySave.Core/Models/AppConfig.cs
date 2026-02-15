@@ -13,7 +13,7 @@ public class AppConfig
     public Language Language { get; private set; }
     public string LogDirectory { get; private set; }
     public LogFormat LogFormat { get; private set; }
-    
+    public string? BusinessSoftwareProcessName { get; private set; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="AppConfig"/> class.
@@ -68,6 +68,15 @@ public class AppConfig
     public void ChangeLogFormat(LogFormat logFormat)
     {
         LogFormat = logFormat;
+    }
+
+    /// <summary>
+    /// Update the bussiness software process name.
+    /// </summary>
+    /// <param name="name">The process name to monitor.</param>
+    public void ChangeBussinessSoftware(string? name)
+    {
+        BusinessSoftwareProcessName = name;
     }
 
     /// <summary>
