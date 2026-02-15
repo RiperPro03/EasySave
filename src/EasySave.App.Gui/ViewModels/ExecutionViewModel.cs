@@ -200,6 +200,15 @@ public sealed partial class ExecutionViewModel : ViewModelBase, IDisposable
             Jobs.Add(item);
         }
 
+        if (item.BackupTypeValue is null && _jobService != null)
+        {
+            var job = _jobService.GetById(e.State.JobId);
+            if (job != null)
+            {
+                item.UpdateDefinition(job);
+            }
+        }
+
         item.UpdateFromState(e.State);
         HasJobs = Jobs.Count > 0;
     }
@@ -209,6 +218,7 @@ public sealed partial class ExecutionViewModel : ViewModelBase, IDisposable
         var running = new ExecutionJobItem("1", "Documents")
         {
             IsActive = true,
+            BackupTypeValue = EasySave.Core.Enums.BackupType.Full,
             Status = EasySave.Core.Enums.JobStatus.Running,
             ProgressPercentage = 42,
             FilesProcessed = 84,
@@ -218,7 +228,8 @@ public sealed partial class ExecutionViewModel : ViewModelBase, IDisposable
 
         var idle = new ExecutionJobItem("2", "Photos")
         {
-            IsActive = true
+            IsActive = true,
+            BackupTypeValue = EasySave.Core.Enums.BackupType.Differential
         };
 
         Jobs.Add(running);

@@ -15,6 +15,7 @@ public sealed partial class ExecutionJobItem : ObservableObject
         : this(job.Id, job.Name)
     {
         IsActive = job.IsActive;
+        BackupTypeValue = job.Type;
     }
 
     public ExecutionJobItem(string jobId, string jobName)
@@ -33,6 +34,10 @@ public sealed partial class ExecutionJobItem : ObservableObject
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(CanPlayPause))]
     private bool _isActive;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(BackupTypeLabel))]
+    private BackupType? _backupTypeValue;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(StatusLabel))]
@@ -90,6 +95,13 @@ public sealed partial class ExecutionJobItem : ObservableObject
 
     public string StatusLabel => Status.ToString();
 
+    public string BackupTypeLabel => BackupTypeValue switch
+    {
+        BackupType.Full => "Full",
+        BackupType.Differential => "Differential",
+        _ => "-"
+    };
+
     public string PlayPauseLabel => Status switch
     {
         JobStatus.Running => "Pause",
@@ -109,6 +121,7 @@ public sealed partial class ExecutionJobItem : ObservableObject
     {
         JobName = job.Name;
         IsActive = job.IsActive;
+        BackupTypeValue = job.Type;
     }
 
     public void UpdateFromState(JobStateDto state)

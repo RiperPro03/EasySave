@@ -47,36 +47,37 @@ internal sealed class BackupEngine : IBackupEngine
             throw new ArgumentNullException(nameof(job));
             
         var traceId = Guid.NewGuid().ToString("N");
-
         // Resultat cumule pour l'appelant (CLI/GUI/tests).
         var result = new BackupResultDto();
         // Etat initial publie des le debut de l'execution.
         var state = CreateInitialState(job);
-        try
-        {
-            // Check that the configured business software is not currently running before starting the backup.
-            BusinessSoftwareDetector.ValidateNotRunning(job.BusinessSoftwareProcessName);
-        }
-        catch (InvalidOperationException ex)
-        {
-            // if the business software is running, create an explicit failure result for the job.
-            result.Success = false;
-            result.Message = ex.Message;
-            result.Duration = TimeSpan.Zero;
-            result.ErrorCount = 1;
-            result.Errors = new List<string> { ex.Message };
-            UpdateTerminalState(state, JobStatus.Error, ex.Message);
-            WriteSummaryLog(job, result, traceId);
-            return result;
-        }
-
-        // Chronometre la duree totale de la sauvegarde.
-        var stopwatch = Stopwatch.StartNew();
+        Stopwatch? stopwatch = null;
         var control = new JobExecutionControl(state);
         _jobControls[job.Id] = control;
 
         try
         {
+            try
+            {
+                // Check that the configured business software is not currently running before starting the backup.
+                BusinessSoftwareDetector.ValidateNotRunning(job.BusinessSoftwareProcessName);
+            }
+            catch (InvalidOperationException ex)
+            {
+                // if the business software is running, create an explicit failure result for the job.
+                result.Success = false;
+                result.Message = ex.Message;
+                result.Duration = TimeSpan.Zero;
+                result.Errors.Add(ex.Message);
+                result.ErrorCount = result.Errors.Count;
+                WriteSummaryLog(job, result, traceId);
+                UpdateTerminalState(control, state, JobStatus.Error, ex.Message);
+                return result;
+            }
+
+            // Chronometre la duree totale de la sauvegarde.
+            stopwatch = Stopwatch.StartNew();
+
             if (!Directory.Exists(job.SourcePath))
             {
                 // Dossier source manquant: on termine avec une erreur explicite.
@@ -134,7 +135,7 @@ internal sealed class BackupEngine : IBackupEngine
             // Le succes est determine par l'absence d'erreurs.
             result.Success = result.ErrorCount == 0;
             result.Message = result.Success ? Strings.Backup_Success : Strings.Info_BackupCompletedWithErrors;
-            result.Duration = stopwatch.Elapsed;
+            result.Duration = stopwatch?.Elapsed ?? TimeSpan.Zero;
             
             // Statut final dependant du succes global.
             var finalStatus = result.Success ? JobStatus.Completed : JobStatus.Error;
@@ -151,7 +152,7 @@ internal sealed class BackupEngine : IBackupEngine
             result.Message = string.Format(Strings.Error_Generic, ex.Message);
             result.Errors.Add(result.Message);
             result.ErrorCount = result.Errors.Count;
-            result.Duration = stopwatch.Elapsed;
+            result.Duration = stopwatch?.Elapsed ?? TimeSpan.Zero;
 
             WriteSummaryLog(job, result, traceId);
             UpdateTerminalState(control, state, JobStatus.Error, result.Message);
@@ -271,16 +272,6 @@ internal sealed class BackupEngine : IBackupEngine
                         LogEventAction.Skip,
                         LogEventOutcome.Success,
                         traceId);
-                    UpdateProgressState(state, sourcePath, targetPath, fileSize, incrementProcessed: true);
-                WriteLogEntry(
-                    job,
-                    sourcePath,
-                    targetPath,
-                    fileSize,
-                    0,
-                    LogEventAction.Skip,
-                    LogEventOutcome.Success,
-                    traceId);
                     UpdateProgressState(control, state, sourcePath, targetPath, fileSize, incrementProcessed: true);
                     continue;
                 }
@@ -372,35 +363,35 @@ internal sealed class BackupEngine : IBackupEngine
                 result.ErrorCount++;
             }
 
-            if (!string.IsNullOrWhiteSpace(job.BusinessSoftwareProcessName) && BusinessSoftwareDetector.IsRunning(job.BusinessSoftwareProcessName))
+            // Publie l'etat apres traitement du fichier.
+            UpdateProgressState(control, state, sourcePath, targetPath, fileSize, incrementProcessed: true);
+
+            if (!string.IsNullOrWhiteSpace(job.BusinessSoftwareProcessName)
+                && BusinessSoftwareDetector.IsRunning(job.BusinessSoftwareProcessName))
             {
                 if (_logService != null)
                 {
                     var logEntry = LogEntryBuilder.Create(
-                        eventName: "job.stopped.businesssoftware",
-                        category: LogEventCategory.Job,
-                        action: LogEventAction.Summary,
-                        message: $"Backup stopped because business software detected")
-                    .WithJob(
-                        id: job.Id,
-                        name: job.Name,
-                        type: job.Type,
-                        sourcePath: ToUncOrEmpty(job.SourcePath),
-                        targetPath: ToUncOrEmpty(job.TargetPath),
-                        status: JobStatus.Error)
-                    .WithOutcome(LogEventOutcome.Failure)
-                    .Build();
+                            eventName: "job.stopped.businesssoftware",
+                            category: LogEventCategory.Job,
+                            action: LogEventAction.Summary,
+                            message: "Backup stopped because business software detected")
+                        .WithJob(
+                            id: job.Id,
+                            name: job.Name,
+                            type: job.Type,
+                            sourcePath: ToUncOrEmpty(job.SourcePath),
+                            targetPath: ToUncOrEmpty(job.TargetPath),
+                            status: JobStatus.Error)
+                        .WithOutcome(LogEventOutcome.Failure)
+                        .Build();
                     _logService.Write(logEntry);
                 }
+
                 result.Errors.Add($"Backup stopped because {job.BusinessSoftwareProcessName} detected");
                 result.ErrorCount++;
                 break;
-
-                // Publie l'etat apres traitement du fichier.
-                UpdateProgressState(state, sourcePath, targetPath, fileSize, incrementProcessed: true);
             }
-            // Publie l'etat apres traitement du fichier.
-            UpdateProgressState(control, state, sourcePath, targetPath, fileSize, incrementProcessed: true);
         }
 
         return control.IsStopRequested;

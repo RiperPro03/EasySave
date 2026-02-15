@@ -151,6 +151,9 @@
                                                        FontWeight="Medium"/>
                                         </Border>
                                     </Grid>
+                                    <TextBlock Text="{Binding BackupTypeLabel, StringFormat='{}Type: {0}'}"
+                                               FontSize="12"
+                                               Foreground="#80FFFFFF"/>
                                     <TextBlock Text="{Binding ProgressLabel, StringFormat='{}Progress: {0}'}"
                                                FontSize="12"
                                                Foreground="#80FFFFFF"/>

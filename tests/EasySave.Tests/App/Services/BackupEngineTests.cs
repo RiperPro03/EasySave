@@ -2,6 +2,7 @@
 using EasySave.Core.Enums;
 using EasySave.Core.Models;
 using EasySave.Core.Resources;
+using System.Diagnostics;
 
 namespace EasySave.Tests.App.Services;
 
@@ -50,6 +51,26 @@ public class BackupEngineTests : IDisposable
         Assert.True(result.Success);
         Assert.Equal(1, result.CopiedCount);
         Assert.True(File.Exists(Path.Combine(target, "file.txt")));
+    }
+
+    [Fact]
+    public void Run_ShouldReturnFailure_WhenBusinessSoftwareRunning()
+    {
+        var engine = new BackupEngine();
+        var processName = Process.GetCurrentProcess().ProcessName;
+        var job = new BackupJob(
+            "3",
+            "Business software running",
+            Path.Combine(_basePath, "Source"),
+            Path.Combine(_basePath, "Target"),
+            BackupType.Full,
+            businessSoftwareProcessName: processName);
+
+        var result = engine.Run(job);
+
+        Assert.False(result.Success);
+        Assert.Contains(processName, result.Message);
+        Assert.Equal(1, result.ErrorCount);
     }
 
     public void Dispose()
