@@ -3,10 +3,57 @@
              xmlns:vm="using:EasySave.App.Gui.ViewModels"
              x:Class="EasySave.App.Gui.Views.SettingsView"
              x:DataType="vm:SettingsViewModel">
-    <StackPanel Spacing="8">
-        <TextBlock Text="Settings"
-                   FontSize="20"
-                   FontWeight="Bold"/>
-        <TextBlock Text="{Binding Info}"/>
+
+    <StackPanel Margin="20" Spacing="15">
+        <TextBlock Text="PARAMÈTRES" FontSize="18" FontWeight="Bold"/>
+
+        <TextBlock Text="Langue :"/>
+        <ComboBox ItemsSource="{Binding Languages}" 
+                  SelectedItem="{Binding SelectedLanguage}" 
+                  HorizontalAlignment="Stretch"/>
+
+        <TextBlock Text="Format des Logs :"/>
+        <ComboBox ItemsSource="{Binding LogFormats}" 
+                  SelectedItem="{Binding SelectedLogFormat}" 
+                  HorizontalAlignment="Stretch"/>
+
+        <Separator/>
+
+        <ToggleSwitch Content="Activer le chiffrement XOR" 
+                      IsChecked="{Binding EncryptionEnabled}"/>
+        
+        <TextBlock Text="Clé secrète :"/>
+        <TextBox Text="{Binding EncryptionKey}" 
+                 IsEnabled="{Binding EncryptionEnabled}"
+                 PasswordChar="*"/>
+        
+        <TextBlock Text="Extensions a chiffrer (ex: .pdf, .txt) :"
+                   Margin="0,10,0,0"
+                   IsEnabled="{Binding EncryptionEnabled}"/>
+
+        <TextBox Text="{Binding ExtensionsToEncrypt}" 
+                 Watermark="Saisissez les extensions séparées par des virgules..."
+                 IsEnabled="{Binding EncryptionEnabled}"
+                 ToolTip.Tip="Les fichiers avec ces extensions seront chiffres"/>
+
+        <TextBlock Text="Note: Separez les extensions par une virgule." 
+                   FontSize="10" 
+                   FontStyle="Italic"
+                   Opacity="0.7"/>
+
+        <Separator/>
+
+        <TextBlock Text="Business software process name (ex: calc.exe):" />
+        <TextBox Text="{Binding BusinessSoftwareProcessName}"
+                 Watermark="Leave empty to disable"
+                 ToolTip.Tip="Process name used to block backups when running"/>
+
+        <Button Content="Save changes" 
+                Command="{Binding SaveSettingsCommand}"
+                HorizontalAlignment="Center"
+                Padding="20,10"
+                Classes="accent"/>
     </StackPanel>
 </UserControl>
+
+

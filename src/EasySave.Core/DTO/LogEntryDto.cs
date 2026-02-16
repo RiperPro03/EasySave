@@ -289,6 +289,21 @@ public sealed class LogSettingsDto
     /// Configuration file path.
     /// </summary>
     public string? ConfigPath { get; set; }
+
+    /// <summary>
+    /// Whether encryption is enabled.
+    /// </summary>
+    public bool? EncryptionEnabled { get; set; }
+
+    /// <summary>
+    /// Extensions to encrypt (ex: ".pdf").
+    /// </summary>
+    public List<string>? ExtensionsToEncrypt { get; set; }
+
+    /// <summary>
+    /// Business software process name.
+    /// </summary>
+    public string? BusinessSoftwareProcessName { get; set; }
 }
 
 /// <summary>

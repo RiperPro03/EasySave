@@ -38,8 +38,8 @@ public partial class App : Application
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             // Evite les validations en double entre Avalonia et CommunityToolkit.
-            // Plus d infos: https://docs.avaloniaui.net/docs/guides/development-guides/data-validation#manage-validationplugins
             DisableAvaloniaDataAnnotationValidation();
+
             // Construit les services une seule fois pour la duree de l'app GUI.
             var pathProvider = new PathProvider();
             var config = AppConfig.LoadDefaults();
@@ -48,6 +48,11 @@ public partial class App : Application
             var configRepository = new AppConfigRepository(pathProvider, appLogService);
             config = configRepository.Load();
 
+            // --- DEBUT DE TA PARTIE (KISS & FIX) ---
+            // On crée le service avec les ingrédients dont il a besoin (config et repository)
+            var settingsService = new SettingsService(config, configRepository);
+            // --- FIN DE TA PARTIE ---
+
             var culture = Localization.GetCulture(config.Language);
             CultureInfo.CurrentCulture = culture;
             CultureInfo.CurrentUICulture = culture;
@@ -55,12 +60,15 @@ public partial class App : Application
             var jobService = new JobService(pathProvider, appLogService);
             var backupService = new BackupService(
                 jobService,
+                config,
                 logDirectory: pathProvider.LogsPath,
                 logFormatProvider: () => config.LogFormat,
                 logService: appLogService);
+
             desktop.MainWindow = new MainWindow
             {
-                DataContext = new MainWindowViewModel(jobService, backupService, pathProvider.LogsPath, appLogService),
+                // On passe bien settingsService en 4ème position comme prévu dans le ViewModel
+                DataContext = new MainWindowViewModel(jobService, backupService, pathProvider.LogsPath, settingsService, appLogService),
             };
         }
 

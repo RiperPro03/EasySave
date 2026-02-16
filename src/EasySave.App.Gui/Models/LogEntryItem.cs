@@ -73,6 +73,13 @@ public sealed class LogEntryItem
             AddField(fields, "LogFormat", entry.Settings.LogFormat);
             AddField(fields, "LogDirectory", entry.Settings.LogDirectory);
             AddField(fields, "ConfigPath", entry.Settings.ConfigPath);
+            AddField(fields, "EncryptionEnabled", entry.Settings.EncryptionEnabled);
+            if (entry.Settings.ExtensionsToEncrypt is not null)
+            {
+                var extensions = string.Join(", ", entry.Settings.ExtensionsToEncrypt);
+                AddField(fields, "ExtensionsToEncrypt", extensions);
+            }
+            AddField(fields, "BusinessSoftwareProcessName", entry.Settings.BusinessSoftwareProcessName);
 
             if (fields.Count > 0)
                 sections.Add(new LogSection("Settings", fields));
