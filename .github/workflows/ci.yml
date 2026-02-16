@@ -111,7 +111,7 @@ jobs:
   # STAGE 3 — Package (.exe) (ONLY ON TAG RELEASE)
   # -------------------------
   package:
-    name: "Stage 3 - Package (.exe)"
+    name: "Stage 3 - Package"
     needs: build
     if: startsWith(github.ref, 'refs/tags/v') && needs.build.result == 'success'
     runs-on: windows-latest
@@ -123,49 +123,66 @@ jobs:
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
+      - name: "Clean flat output"
+        shell: pwsh
+        run: |
+          if (Test-Path "${{ env.FLAT_DIR }}") { Remove-Item "${{ env.FLAT_DIR }}" -Recurse -Force }
+          New-Item -ItemType Directory -Path "${{ env.FLAT_DIR }}" | Out-Null
+      
       # --- Console ---
       - name: "Publish Console"
         run: >
           dotnet publish src/EasySave.App.Console/EasySave.App.Console.csproj
           -c ${{ env.CONFIGURATION }}
           -r ${{ env.RUNTIME }}
-          --self-contained false
+          --self-contained true
           /p:PublishSingleFile=true
+          /p:IncludeNativeLibrariesForSelfExtract=true
+          /p:PublishTrimmed=false
           /p:DebugType=None
-          -o ./out/publish/console
-
-      - name: "Zip Console"
-        shell: pwsh
-        run: |
-          Compress-Archive -Path out/publish/console/* -DestinationPath EasySave-Console-${{ env.RUNTIME }}.zip -Force
-
-      - name: "Upload Console artifact"
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
-        with:
-          name: EasySave-Console-${{ env.RUNTIME }}
-          path: EasySave-Console-${{ env.RUNTIME }}.zip
-
+          -o ${{ env.FLAT_DIR }}
+      
       # --- GUI (Avalonia) ---
       - name: "Publish GUI"
         run: >
           dotnet publish src/EasySave.App.Gui/EasySave.App.Gui.csproj
           -c ${{ env.CONFIGURATION }}
           -r ${{ env.RUNTIME }}
-          --self-contained false
+          --self-contained true
           /p:PublishSingleFile=true
+          /p:IncludeNativeLibrariesForSelfExtract=true
+          /p:PublishTrimmed=false
           /p:DebugType=None
-          -o ./out/publish/gui
+          -o ${{ env.FLAT_DIR }}
+      
+      # --- CryptoSoft ---
+      - name: "Publish CryptoSoft"
+        run: >
+          dotnet publish src/CryptoSoft/CryptoSoft.csproj
+          -c ${{ env.CONFIGURATION }}
+          -r ${{ env.RUNTIME }}
+          --self-contained true
+          /p:PublishSingleFile=true
+          /p:IncludeNativeLibrariesForSelfExtract=true
+          /p:PublishTrimmed=false
+          /p:DebugType=None
+          -o ${{ env.FLAT_DIR }}
 
-      - name: "Zip GUI"
+      - name: "List output"
         shell: pwsh
         run: |
-          Compress-Archive -Path out/publish/gui/* -DestinationPath EasySave-GUI-${{ env.RUNTIME }}.zip -Force
+          Get-ChildItem "${{ env.FLAT_DIR }}" | Select-Object Name, Length
 
-      - name: "Upload GUI artifact"
+      - name: "Zip package"
+        shell: pwsh
+        run: |
+          Compress-Archive -Path "${{ env.FLAT_DIR }}/*" -DestinationPath "EasySave-${{ env.RUNTIME }}-flat.zip" -Force
+
+      - name: "Upload artifact"
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
         with:
-          name: EasySave-GUI-${{ env.RUNTIME }}
-          path: EasySave-GUI-${{ env.RUNTIME }}.zip
+          name: EasySave-${{ env.RUNTIME }}-flat
+          path: EasySave-${{ env.RUNTIME }}-flat.zip
 
   # -------------------------
   # STAGE 4 — GitHub Release (attach zip) (ONLY ON TAG RELEASE)
@@ -178,21 +195,14 @@ jobs:
     permissions:
       contents: write
     steps:
-      - name: "Download Console artifact"
+      - name: "Download artifact"
         uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131
         with:
-          name: EasySave-Console-${{ env.RUNTIME }}
-          path: .
-
-      - name: "Download GUI artifact"
-        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131
-        with:
-          name: EasySave-GUI-${{ env.RUNTIME }}
+          name: EasySave-${{ env.RUNTIME }}
           path: .
 
       - name: "Create GitHub Release"
         uses: softprops/action-gh-release@a06a81a03ee405af7f2048a818ed3f03bbf83c7b
         with:
           files: |
-            EasySave-Console-${{ env.RUNTIME }}.zip
-            EasySave-GUI-${{ env.RUNTIME }}.zip
+            EasySave-${{ env.RUNTIME }}.zip
