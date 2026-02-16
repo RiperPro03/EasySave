@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using EasySave.App.Gui.Models;
@@ -8,13 +10,25 @@ namespace EasySave.App.Gui.ViewModels
     public class LogsViewModel : ViewModelBase
     {
         private readonly LogReaderService _logReader;
-        public ObservableCollection<LogEntryItem> Logs { get; } = new ObservableCollection<LogEntryItem>();
+        private List<LogEntryItem> _allLogsCache = new();
 
-        public LogsViewModel()
+        public ObservableCollection<LogEntryItem> Logs { get; } = new ObservableCollection<LogEntryItem>();
+        public ObservableCollection<string> EventTypes { get; } = new ObservableCollection<string>();
+
+        private string _selectedEventType = "Tous";
+        public string SelectedEventType
         {
-            _logReader = new LogReaderService();
-            LoadLogs();
+            get => _selectedEventType;
+            set
+            {
+                if (SetProperty(ref _selectedEventType, value))
+                {
+                    ApplyFilter();
+                }
+            }
         }
+
+        public LogsViewModel() : this(new LogReaderService()) { }
 
         public LogsViewModel(LogReaderService logReader)
         {
@@ -24,19 +38,47 @@ namespace EasySave.App.Gui.ViewModels
 
         public void RefreshLogs()
         {
+            _selectedEventType = "Tous";
+            OnPropertyChanged(nameof(SelectedEventType));
             LoadLogs();
         }
 
         private void LoadLogs()
         {
-            Logs.Clear();
             var entries = _logReader.ReadAllEntries()
                 .OrderByDescending(entry => entry.TimestampUtc)
-                .Select(entry => new LogEntryItem(entry));
+                .Select(entry => new LogEntryItem(entry))
+                .ToList();
 
-            foreach (var logEntry in entries)
+            _allLogsCache = entries;
+
+            EventTypes.Clear();
+            EventTypes.Add("Tous");
+
+            var names = _allLogsCache
+                .Select(l => l.Entry.Event?.Name)
+                .Where(n => !string.IsNullOrEmpty(n))
+                .Distinct()
+                .OrderBy(n => n);
+
+            foreach (var name in names)
             {
-                Logs.Add(logEntry);
+                EventTypes.Add(name);
+            }
+
+            ApplyFilter();
+        }
+
+        private void ApplyFilter()
+        {
+            Logs.Clear();
+            var filtered = (_selectedEventType == "Tous")
+                ? _allLogsCache
+                : _allLogsCache.Where(l => l.Entry.Event?.Name == _selectedEventType);
+
+            foreach (var log in filtered)
+            {
+                Logs.Add(log);
             }
         }
     }
