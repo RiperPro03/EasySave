@@ -166,6 +166,7 @@ public sealed class JobService : IJobService
                 category: LogEventCategory.Job,
                 action: action,
                 message: message)
+            .WithLevel(LogLevel.Info)
             .WithJob(
                 id: job.Id,
                 name: job.Name,

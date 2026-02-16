@@ -3,6 +3,7 @@ using EasySave.Core.DTO;
 using EasySave.Core.Enums;
 using EasySave.Core.Interfaces;
 using EasySave.Core.Models;
+using System.Diagnostics;
 
 namespace EasySave.Tests.App.Services;
 
@@ -17,7 +18,7 @@ public class BackupServiceTests
         File.WriteAllText(Path.Combine(source, "test.txt"), "hello");
 
         var jobService = new FakeJobService();
-        var service = new BackupService(jobService, stateWriter: new NoOpStateWriter());
+        var service = new BackupService(jobService, AppConfig.LoadDefaults(), stateWriter: new NoOpStateWriter());
         var job = new BackupJob("1", "Job", source, target, BackupType.Full);
 
         var result = service.Run(job);
@@ -34,7 +35,7 @@ public class BackupServiceTests
     public void Run_ShouldSkipInactiveJob_AndNotMarkExecuted()
     {
         var jobService = new FakeJobService();
-        var service = new BackupService(jobService, stateWriter: new NoOpStateWriter());
+        var service = new BackupService(jobService, AppConfig.LoadDefaults(), stateWriter: new NoOpStateWriter());
         var job = new BackupJob("1", "Job", @"C:\source", @"C:\target", BackupType.Full, isActive: false);
 
         var result = service.Run(job);
@@ -52,7 +53,7 @@ public class BackupServiceTests
         Directory.CreateDirectory(source);
         var job = new BackupJob("10", "Job", source, target, BackupType.Full);
         var jobService = new FakeJobService(new[] { job });
-        var service = new BackupService(jobService, stateWriter: new NoOpStateWriter());
+        var service = new BackupService(jobService, AppConfig.LoadDefaults(), stateWriter: new NoOpStateWriter());
 
         var statesField = typeof(BackupService)
             .GetField("_jobStates", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
@@ -78,7 +79,7 @@ public class BackupServiceTests
         var job = new BackupJob("42", "Job", source, target, BackupType.Full);
         var jobService = new FakeJobService(new[] { job });
         var writer = new CapturingStateWriter();
-        var service = new BackupService(jobService, stateWriter: writer);
+        var service = new BackupService(jobService, AppConfig.LoadDefaults(), stateWriter: writer);
 
         var result = service.Run(job);
 
@@ -87,6 +88,35 @@ public class BackupServiceTests
             snapshot.Jobs.Any(state => state.JobId == job.Id && state.Status == JobStatus.Running));
         Assert.Contains(writer.Snapshots, snapshot =>
             snapshot.Jobs.Any(state => state.JobId == job.Id && state.Status == JobStatus.Error));
+    }
+
+    [Fact]
+    public void CanStartSequence_ShouldReturnFalse_WhenBusinessSoftwareRunning()
+    {
+        var jobService = new FakeJobService();
+        var config = AppConfig.LoadDefaults();
+        var processName = Process.GetCurrentProcess().ProcessName;
+        config.ChangeBussinessSoftware(processName);
+        var service = new BackupService(jobService, config, stateWriter: new NoOpStateWriter());
+
+        var canStart = service.CanStartSequence(out var reason);
+
+        Assert.False(canStart);
+        Assert.NotNull(reason);
+        Assert.Contains(processName, reason);
+    }
+
+    [Fact]
+    public void CanStartSequence_ShouldReturnTrue_WhenBusinessSoftwareNotConfigured()
+    {
+        var jobService = new FakeJobService();
+        var config = AppConfig.LoadDefaults();
+        var service = new BackupService(jobService, config, stateWriter: new NoOpStateWriter());
+
+        var canStart = service.CanStartSequence(out var reason);
+
+        Assert.True(canStart);
+        Assert.Null(reason);
     }
 
     private sealed class FakeJobService : IJobService

@@ -101,11 +101,14 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
         IJobService jobService,
         IBackupService backupService,
         string? logsPath,
+        SettingsService settingsService,
         IAppLogService? appLogService = null)
     {
         _uiContext = SynchronizationContext.Current;
         if (jobService is null)
             throw new ArgumentNullException(nameof(jobService));
+        if (settingsService is null)
+            throw new ArgumentNullException(nameof(settingsService));
 
         _backupService = backupService ?? throw new ArgumentNullException(nameof(backupService));
         var logReader = new LogReaderService(logsPath);
@@ -113,7 +116,7 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
         _jobsViewModel = new JobsViewModel(jobService);
         _executionViewModel = new ExecutionViewModel(jobService, _backupService);
         _logsViewModel = new LogsViewModel(logReader);
-        _settingsViewModel = new SettingsViewModel();
+        _settingsViewModel = new SettingsViewModel(settingsService);
         _aboutViewModel = new AboutViewModel();
         _appLogService = appLogService;
         _jobsViewModel.JobsChanged += OnJobsChanged;

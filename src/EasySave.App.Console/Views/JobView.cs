@@ -33,6 +33,7 @@ public sealed class JobView
         System.Console.WriteLine($"2 - {Strings.UI_CreateJob}");
         System.Console.WriteLine($"3 - {Strings.UI_UpdateJob}");
         System.Console.WriteLine($"4 - {Strings.UI_DeleteJob}");
+        
         System.Console.WriteLine($"0 - {Strings.UI_Back}");
     }
 
