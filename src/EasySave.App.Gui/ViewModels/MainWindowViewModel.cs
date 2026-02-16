@@ -1,8 +1,10 @@
 using System;
+using System.ComponentModel;
 using System.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using EasySave.App.Gui.Enums;
+using EasySave.App.Gui.Localization;
 using EasySave.App.Services;
 using EasySave.Core.Events;
 using EasySave.Core.Interfaces;
@@ -28,6 +30,8 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
     private readonly AboutViewModel _aboutViewModel;
     private readonly IAppLogService? _appLogService;
     private readonly SynchronizationContext? _uiContext;
+    private JobStatus _lastJobStatus = JobStatus.Idle;
+    private string? _lastJobName;
     private bool _disposed;
 
     public string AppVersion { get; } = "v2.0.0";
@@ -89,6 +93,7 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
         _settingsViewModel = new SettingsViewModel();
         _aboutViewModel = new AboutViewModel();
         _jobsViewModel.JobsChanged += OnJobsChanged;
+        Loc.Instance.PropertyChanged += OnLocalizationChanged;
         ShowDashboard();
     }
 
@@ -123,6 +128,7 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
         _appLogService = appLogService;
         _jobsViewModel.JobsChanged += OnJobsChanged;
         _backupService.StateChanged += OnBackupStateChanged;
+        Loc.Instance.PropertyChanged += OnLocalizationChanged;
         if (_appLogService != null)
         {
             _appLogService.LogWritten += OnLogWritten;
@@ -192,6 +198,8 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
     
     private void OnBackupStateChanged(object? sender, JobStateChangedEventArgs e)
     {
+        _lastJobStatus = e.State.Status;
+        _lastJobName = e.State.JobName;
         CurrentState = ResolveJobStatusLabel(e.State.Status);
         if (ActiveTab == NavigationTab.Dashboard)
         {
@@ -223,6 +231,64 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
         _logsViewModel.RefreshLogs();
     }
 
+    private void OnLocalizationChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName != "Item[]")
+            return;
+
+        if (_uiContext != null)
+        {
+            _uiContext.Post(_ => RefreshLocalization(), null);
+            return;
+        }
+
+        RefreshLocalization();
+    }
+
+    private void RefreshLocalization()
+    {
+        CurrentState = ResolveJobStatusLabel(_lastJobStatus);
+        CurrentPageTitle = ActiveTab switch
+        {
+            NavigationTab.Dashboard => Strings.Gui_Nav_Dashboard,
+            NavigationTab.Jobs => Strings.Gui_Nav_BackupJobs,
+            NavigationTab.Execution => Strings.Gui_Nav_LiveExecution,
+            NavigationTab.Logs => Strings.Gui_Nav_Logs,
+            NavigationTab.Settings => Strings.Gui_Nav_Settings,
+            NavigationTab.About => Strings.Gui_Nav_About,
+            _ => Strings.Gui_Nav_Dashboard
+        };
+
+        if (ActiveTab == NavigationTab.Dashboard && !string.IsNullOrWhiteSpace(_lastJobName))
+        {
+            StatusMessage = string.Format(Strings.Gui_Status_JobFormat, _lastJobName, ResolveJobStatusLabel(_lastJobStatus));
+        }
+        else
+        {
+            StatusMessage = ActiveTab switch
+            {
+                NavigationTab.Dashboard => Strings.Gui_Status_Overview,
+                NavigationTab.Jobs => Strings.Gui_Status_ManageJobs,
+                NavigationTab.Execution => Strings.Gui_Status_LiveMonitoring,
+                NavigationTab.Logs => Strings.Gui_Status_ViewLogs,
+                NavigationTab.Settings => Strings.Gui_Status_SettingsInfo,
+                NavigationTab.About => Strings.Gui_Status_AboutInfo,
+                _ => Strings.Gui_Status_Ready
+            };
+        }
+        
+        _settingsViewModel.RefreshLocalization();
+        ReloadCurrentView();
+        LastUpdateTime = DateTime.Now;
+    }
+
+    private void ReloadCurrentView()
+    {
+        var view = CurrentView;
+        CurrentView = null;
+        CurrentView = view;
+    }
+
     /// <summary>
     /// Unsubscribes from events and releases managed resources.
     /// </summary>
@@ -232,6 +298,7 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
             return;
 
         _disposed = true;
+        Loc.Instance.PropertyChanged -= OnLocalizationChanged;
 
         if (_backupService != null)
         {

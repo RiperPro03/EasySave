@@ -1,7 +1,6 @@
-﻿<Window xmlns="https://github.com/avaloniaui"
+<Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:EasySave.App.Gui.ViewModels"
-        xmlns:res="using:EasySave.Core.Resources"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
@@ -9,6 +8,7 @@
         d:DesignHeight="800"
         x:Class="EasySave.App.Gui.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
+        x:CompileBindings="False"
         Title="EasySave"
         Icon="avares://EasySave.App.Gui/Assets/easysave-logo.ico"
         MinWidth="1024"
@@ -135,7 +135,7 @@
                                        FontWeight="Bold"
                                        Foreground="#FFFFFF"
                                        LetterSpacing="0.5"/>
-                            <TextBlock Text="{x:Static res:Strings.Gui_App_Tagline}"
+                            <TextBlock Text="{Binding Source={StaticResource Loc}, Path=[Gui_App_Tagline]}"
                                        FontSize="11"
                                        Foreground="#90FFFFFF"
                                        LetterSpacing="0.8"/>
@@ -174,7 +174,7 @@
                         
                         <!-- Section Navigation -->
                         <StackPanel Spacing="6" Margin="0,0,0,16">
-                            <TextBlock Text="{x:Static res:Strings.Gui_Sidebar_Workspace}"
+                            <TextBlock Text="{Binding Source={StaticResource Loc}, Path=[Gui_Sidebar_Workspace]}"
                                        FontSize="11"
                                        FontWeight="Bold"
                                        Foreground="#70FFFFFF"
@@ -191,7 +191,7 @@
                                                    HorizontalAlignment="Center"
                                                    VerticalAlignment="Center"/>
                                     </Border>
-                                    <TextBlock Text="{x:Static res:Strings.Gui_Nav_Dashboard}" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding Source={StaticResource Loc}, Path=[Gui_Nav_Dashboard]}" VerticalAlignment="Center"/>
                                 </StackPanel>
                             </Button>
 
@@ -205,7 +205,7 @@
                                                    HorizontalAlignment="Center"
                                                    VerticalAlignment="Center"/>
                                     </Border>
-                                    <TextBlock Text="{x:Static res:Strings.Gui_Nav_BackupJobs}" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding Source={StaticResource Loc}, Path=[Gui_Nav_BackupJobs]}" VerticalAlignment="Center"/>
                                 </StackPanel>
                             </Button>
 
@@ -219,7 +219,7 @@
                                                    HorizontalAlignment="Center"
                                                    VerticalAlignment="Center"/>
                                     </Border>
-                                    <TextBlock Text="{x:Static res:Strings.Gui_Nav_LiveExecution}" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding Source={StaticResource Loc}, Path=[Gui_Nav_LiveExecution]}" VerticalAlignment="Center"/>
                                 </StackPanel>
                             </Button>
 
@@ -233,7 +233,7 @@
                                                    HorizontalAlignment="Center"
                                                    VerticalAlignment="Center"/>
                                     </Border>
-                                    <TextBlock Text="{x:Static res:Strings.Gui_Nav_Logs}" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding Source={StaticResource Loc}, Path=[Gui_Nav_Logs]}" VerticalAlignment="Center"/>
                                 </StackPanel>
                             </Button>
                         </StackPanel>
@@ -251,7 +251,7 @@
 
                         <!-- Section System -->
                         <StackPanel Spacing="6" Margin="0,16,0,0">
-                            <TextBlock Text="{x:Static res:Strings.Gui_Sidebar_System}"
+                            <TextBlock Text="{Binding Source={StaticResource Loc}, Path=[Gui_Sidebar_System]}"
                                        FontSize="11"
                                        FontWeight="Bold"
                                        Foreground="#70FFFFFF"
@@ -268,7 +268,7 @@
                                                    HorizontalAlignment="Center"
                                                    VerticalAlignment="Center"/>
                                     </Border>
-                                    <TextBlock Text="{x:Static res:Strings.Gui_Nav_Settings}" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding Source={StaticResource Loc}, Path=[Gui_Nav_Settings]}" VerticalAlignment="Center"/>
                                 </StackPanel>
                             </Button>
 
@@ -282,7 +282,7 @@
                                                    HorizontalAlignment="Center"
                                                    VerticalAlignment="Center"/>
                                     </Border>
-                                    <TextBlock Text="{x:Static res:Strings.Gui_Nav_About}" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding Source={StaticResource Loc}, Path=[Gui_Nav_About]}" VerticalAlignment="Center"/>
                                 </StackPanel>
                             </Button>
                         </StackPanel>
@@ -369,3 +369,4 @@
         </Grid>
     </Border>
 </Window>
+

@@ -1,9 +1,9 @@
-<UserControl xmlns="https://github.com/avaloniaui"
+﻿<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:EasySave.App.Gui.ViewModels"
-             xmlns:res="using:EasySave.Core.Resources"
              x:Class="EasySave.App.Gui.Views.AboutView"
              x:DataType="vm:AboutViewModel"
+             x:CompileBindings="False"
              HorizontalAlignment="Stretch">
 
     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
@@ -19,35 +19,35 @@
                     HorizontalAlignment="Left">
                 <StackPanel Spacing="10">
                     <TextBlock Text="{Binding ProductName}" FontSize="24" FontWeight="Bold" Foreground="White"/>
-                    <TextBlock Text="{x:Static res:Strings.About_Intro}" 
+                    <TextBlock Text="{Binding Source={StaticResource Loc}, Path=[About_Intro]}" 
                                FontSize="13" 
                                Foreground="#B0FFFFFF" 
                                TextWrapping="Wrap"
                                MaxWidth="600"/> </StackPanel>
             </Border>
 
-            <TextBlock Text="{x:Static res:Strings.Guide_Title}" FontSize="12" FontWeight="Bold" Foreground="#70FFFFFF" LetterSpacing="1"/>
+            <TextBlock Text="{Binding Source={StaticResource Loc}, Path=[Guide_Title]}" FontSize="12" FontWeight="Bold" Foreground="#70FFFFFF" LetterSpacing="1"/>
             
             <Border Background="#12FFFFFF" BorderBrush="#20FFFFFF" BorderThickness="1" CornerRadius="12" Padding="20" HorizontalAlignment="Left">
                 <StackPanel Spacing="20">
                     <StackPanel Spacing="5">
-                        <TextBlock Text="{x:Static res:Strings.Step1_Title}" FontWeight="Bold" Foreground="#0A84FF"/>
-                        <TextBlock Text="{x:Static res:Strings.Step1_Desc}" FontSize="13" Foreground="#D0FFFFFF" TextWrapping="Wrap"/>
+                        <TextBlock Text="{Binding Source={StaticResource Loc}, Path=[Step1_Title]}" FontWeight="Bold" Foreground="#0A84FF"/>
+                        <TextBlock Text="{Binding Source={StaticResource Loc}, Path=[Step1_Desc]}" FontSize="13" Foreground="#D0FFFFFF" TextWrapping="Wrap"/>
                     </StackPanel>
                     
                     <StackPanel Spacing="5">
-                        <TextBlock Text="{x:Static res:Strings.Step2_Title}" FontWeight="Bold" Foreground="#0A84FF"/>
-                        <TextBlock Text="{x:Static res:Strings.Step2_Desc}" FontSize="13" Foreground="#D0FFFFFF" TextWrapping="Wrap"/>
+                        <TextBlock Text="{Binding Source={StaticResource Loc}, Path=[Step2_Title]}" FontWeight="Bold" Foreground="#0A84FF"/>
+                        <TextBlock Text="{Binding Source={StaticResource Loc}, Path=[Step2_Desc]}" FontSize="13" Foreground="#D0FFFFFF" TextWrapping="Wrap"/>
                     </StackPanel>
 
                     <StackPanel Spacing="5">
-                        <TextBlock Text="{x:Static res:Strings.Step3_Title}" FontWeight="Bold" Foreground="#0A84FF"/>
-                        <TextBlock Text="{x:Static res:Strings.Step3_Desc}" FontSize="13" Foreground="#D0FFFFFF" TextWrapping="Wrap"/>
+                        <TextBlock Text="{Binding Source={StaticResource Loc}, Path=[Step3_Title]}" FontWeight="Bold" Foreground="#0A84FF"/>
+                        <TextBlock Text="{Binding Source={StaticResource Loc}, Path=[Step3_Desc]}" FontSize="13" Foreground="#D0FFFFFF" TextWrapping="Wrap"/>
                     </StackPanel>
                 </StackPanel>
             </Border>
 
-            <TextBlock Text="{x:Static res:Strings.Team_Title}" FontSize="12" FontWeight="Bold" Foreground="#70FFFFFF" LetterSpacing="1"/>
+            <TextBlock Text="{Binding Source={StaticResource Loc}, Path=[Team_Title]}" FontSize="12" FontWeight="Bold" Foreground="#70FFFFFF" LetterSpacing="1"/>
             
             <WrapPanel Orientation="Horizontal">
                 <TextBlock Text="👤 Christopher ASIN" Margin="0,0,20,5" Foreground="White" FontSize="13"/>
@@ -59,7 +59,7 @@
             <Separator Background="#20FFFFFF" HorizontalAlignment="Stretch"/>
             
             <StackPanel Spacing="5" HorizontalAlignment="Left">
-                <TextBlock Text="{x:Static res:Strings.Gui_About_GitHubLabel}" FontWeight="Medium" Foreground="#70FFFFFF" FontSize="12"/>
+                <TextBlock Text="{Binding Source={StaticResource Loc}, Path=[Gui_About_GitHubLabel]}" FontWeight="Medium" Foreground="#70FFFFFF" FontSize="12"/>
                 <TextBlock Text="https://github.com/RiperPro03/EasySave" 
                            Foreground="#0A84FF" 
                            TextWrapping="Wrap"/>
@@ -68,3 +68,5 @@
         </StackPanel>
     </ScrollViewer>
 </UserControl>
+
+

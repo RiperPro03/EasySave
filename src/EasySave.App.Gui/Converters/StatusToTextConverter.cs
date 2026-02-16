@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
+using Avalonia;
 using Avalonia.Data.Converters;
 using EasySave.Core.Resources;
 using EasySave.Core.Enums;
@@ -98,3 +101,76 @@ public sealed class LogFormatToTextConverter : IValueConverter
         return LogFormat.Json;
     }
 }
+
+public sealed class L10nFormatConverter : IMultiValueConverter
+{
+    public object Convert(IList<object?> values, Type targetType, object? parameter, CultureInfo culture)
+    {
+        if (values == null || values.Count == 0)
+            return string.Empty;
+
+        var resolvedValues = values
+            .Select(UnwrapUnsetValue)
+            .ToArray();
+
+        if (resolvedValues.Length == 1)
+            return resolvedValues[0]?.ToString() ?? string.Empty;
+
+        var format = resolvedValues[^1] as string;
+        var args = resolvedValues.Take(resolvedValues.Length - 1).ToArray();
+
+        if (args.Length == 1 && args[0] == null)
+            return string.Empty;
+
+        if (string.IsNullOrWhiteSpace(format))
+            return args.Length == 1 ? args[0]?.ToString() ?? string.Empty : string.Join(" ", args);
+
+        try
+        {
+            return string.Format(culture, format, args);
+        }
+        catch (FormatException)
+        {
+            return string.Empty;
+        }
+    }
+
+    private static object? UnwrapUnsetValue(object? value)
+    {
+        return value is Avalonia.UnsetValueType ? null : value;
+    }
+}
+
+public sealed class L10nNullableFormatConverter : IMultiValueConverter
+{
+    public object Convert(IList<object?> values, Type targetType, object? parameter, CultureInfo culture)
+    {
+        if (values == null || values.Count < 3)
+            return string.Empty;
+
+        var rawValue = UnwrapUnsetValue(values[0]);
+        var format = UnwrapUnsetValue(values[1]) as string;
+        var fallback = UnwrapUnsetValue(values[2]) as string ?? string.Empty;
+
+        if (rawValue == null || (rawValue is string text && string.IsNullOrWhiteSpace(text)))
+            return fallback;
+
+        if (string.IsNullOrWhiteSpace(format))
+            return rawValue.ToString() ?? fallback;
+
+        try
+        {
+            return string.Format(culture, format, rawValue);
+        }
+        catch (FormatException)
+        {
+            return fallback;
+        }
+    }
+
+    private static object? UnwrapUnsetValue(object? value)
+    {
+        return value is Avalonia.UnsetValueType ? null : value;
+    }
+}
+

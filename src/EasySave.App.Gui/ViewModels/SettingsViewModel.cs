@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using EasySave.App.Gui.Localization;
 using EasySave.App.Services;
 using EasySave.Core.Enums;
 using EasySave.EasyLog.Options;
@@ -62,6 +63,19 @@ public partial class SettingsViewModel : ViewModelBase
             logFormat: SelectedLogFormat,
             extensionsToEncrypt: list,
             businessSoftwareProcessName: BusinessSoftwareProcessName);
+
+        Loc.Instance.SetLanguage(SelectedLanguage);
+        OnPropertyChanged(nameof(Languages));
+        OnPropertyChanged(nameof(LogFormats));
+    }
+
+    public void SetFrench() => Loc.Instance.SetLanguage(Language.French);
+    public void SetEnglish() => Loc.Instance.SetLanguage(Language.English);
+
+    public void RefreshLocalization()
+    {
+        OnPropertyChanged(nameof(Languages));
+        OnPropertyChanged(nameof(LogFormats));
     }
 }
 

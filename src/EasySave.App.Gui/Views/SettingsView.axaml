@@ -2,9 +2,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:EasySave.App.Gui.ViewModels"
              xmlns:conv="using:EasySave.App.Gui.Converters"
-             xmlns:res="using:EasySave.Core.Resources"
              x:Class="EasySave.App.Gui.Views.SettingsView"
-             x:DataType="vm:SettingsViewModel">
+             x:DataType="vm:SettingsViewModel"
+             x:CompileBindings="False">
 
     <UserControl.Resources>
         <conv:LanguageToTextConverter x:Key="LanguageToTextConverter"/>
@@ -12,9 +12,9 @@
     </UserControl.Resources>
 
     <StackPanel Margin="100" Spacing="15">
-        <TextBlock Text="{x:Static res:Strings.Gui_Settings_Title}" FontSize="18" FontWeight="Bold"/>
+        <TextBlock Text="{Binding Source={StaticResource Loc}, Path=[Gui_Settings_Title]}" FontSize="18" FontWeight="Bold"/>
 
-        <TextBlock Text="{x:Static res:Strings.Gui_Settings_LanguageLabel}"/>
+        <TextBlock Text="{Binding Source={StaticResource Loc}, Path=[Gui_Settings_LanguageLabel]}"/>
         <ComboBox ItemsSource="{Binding Languages}"
                   SelectedItem="{Binding SelectedLanguage}"
                   HorizontalAlignment="Stretch">
@@ -25,7 +25,7 @@
             </ComboBox.ItemTemplate>
         </ComboBox>
 
-        <TextBlock Text="{x:Static res:Strings.Gui_Settings_LogFormatLabel}"/>
+        <TextBlock Text="{Binding Source={StaticResource Loc}, Path=[Gui_Settings_LogFormatLabel]}"/>
         <ComboBox ItemsSource="{Binding LogFormats}"
                   SelectedItem="{Binding SelectedLogFormat}"
                   HorizontalAlignment="Stretch">
@@ -38,39 +38,40 @@
 
         <Separator/>
 
-        <ToggleSwitch Content="{x:Static res:Strings.Gui_Settings_EnableXor}"
+        <ToggleSwitch Content="{Binding Source={StaticResource Loc}, Path=[Gui_Settings_EnableXor]}"
                       IsChecked="{Binding EncryptionEnabled}"/>
 
-        <TextBlock Text="{x:Static res:Strings.Gui_Settings_SecretKeyLabel}"/>
+        <TextBlock Text="{Binding Source={StaticResource Loc}, Path=[Gui_Settings_SecretKeyLabel]}"/>
         <TextBox Text="{Binding EncryptionKey}"
                  IsEnabled="{Binding EncryptionEnabled}"
                  PasswordChar="*"/>
 
-        <TextBlock Text="{x:Static res:Strings.Gui_Settings_ExtensionsLabel}"
+        <TextBlock Text="{Binding Source={StaticResource Loc}, Path=[Gui_Settings_ExtensionsLabel]}"
                    Margin="0,10,0,0"
                    IsEnabled="{Binding EncryptionEnabled}"/>
 
         <TextBox Text="{Binding ExtensionsToEncrypt}"
-                 Watermark="{x:Static res:Strings.Gui_Settings_ExtensionsWatermark}"
+                 Watermark="{Binding Source={StaticResource Loc}, Path=[Gui_Settings_ExtensionsWatermark]}"
                  IsEnabled="{Binding EncryptionEnabled}"
-                 ToolTip.Tip="{x:Static res:Strings.Gui_Settings_ExtensionsTooltip}"/>
+                 ToolTip.Tip="{Binding Source={StaticResource Loc}, Path=[Gui_Settings_ExtensionsTooltip]}"/>
 
-        <TextBlock Text="{x:Static res:Strings.Gui_Settings_ExtensionsNote}"
+        <TextBlock Text="{Binding Source={StaticResource Loc}, Path=[Gui_Settings_ExtensionsNote]}"
                    FontSize="10"
                    FontStyle="Italic"
                    Opacity="0.7"/>
 
         <Separator/>
 
-        <TextBlock Text="{x:Static res:Strings.Gui_Settings_BusinessProcessLabel}" />
+        <TextBlock Text="{Binding Source={StaticResource Loc}, Path=[Gui_Settings_BusinessProcessLabel]}" />
         <TextBox Text="{Binding BusinessSoftwareProcessName}"
-                 Watermark="{x:Static res:Strings.Gui_Settings_BusinessProcessWatermark}"
-                 ToolTip.Tip="{x:Static res:Strings.Gui_Settings_BusinessProcessTooltip}"/>
+                 Watermark="{Binding Source={StaticResource Loc}, Path=[Gui_Settings_BusinessProcessWatermark]}"
+                 ToolTip.Tip="{Binding Source={StaticResource Loc}, Path=[Gui_Settings_BusinessProcessTooltip]}"/>
 
-        <Button Content="{x:Static res:Strings.Gui_JobEditor_SaveChanges}"
+        <Button Content="{Binding Source={StaticResource Loc}, Path=[Gui_JobEditor_SaveChanges]}"
                 Command="{Binding SaveSettingsCommand}"
                 HorizontalAlignment="Center"
                 Padding="20,10"
                 Classes="accent"/>
     </StackPanel>
 </UserControl>
+
