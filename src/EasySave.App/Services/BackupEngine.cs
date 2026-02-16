@@ -305,6 +305,7 @@ internal sealed class BackupEngine : IBackupEngine
                 transferStopwatch.Start();
                 CopyFile(sourcePath, targetPath);
                 transferStopwatch.Stop();
+                var transferTimeMs = transferStopwatch.Elapsed.TotalMilliseconds;
                 result.CopiedCount++;
                 result.TotalBytesProcessed += fileSize;
                 WriteLogEntry(
@@ -312,7 +313,7 @@ internal sealed class BackupEngine : IBackupEngine
                     sourcePath,
                     targetPath,
                     fileSize,
-                    transferStopwatch.Elapsed.TotalMilliseconds,
+                    transferTimeMs,
                     LogEventAction.Transfer,
                     LogEventOutcome.Success,
                     traceId);
@@ -339,20 +340,20 @@ internal sealed class BackupEngine : IBackupEngine
                     try
                     {
                         encryptionTimeMs = _cryptoService
-                            .EncryptFileAsync(sourcePath, _config.EncryptionKey)
+                            .EncryptFileAsync(targetPath, _config.EncryptionKey)
                             .GetAwaiter()
                             .GetResult();
                         if (encryptionTimeMs < 0)
                         {
                             encryptionFailed = true;
-                            encryptionError = $"Encryption failed for {Path.GetFileName(sourcePath)} (code {encryptionTimeMs}).";
+                            encryptionError = $"Encryption failed for {Path.GetFileName(targetPath)} (code {encryptionTimeMs}).";
                         }
                     }
                     catch (Exception ex)
                     {
                         encryptionTimeMs = -1;
                         encryptionFailed = true;
-                        encryptionError = $"Encryption failed for {Path.GetFileName(sourcePath)}: {ex.Message}";
+                        encryptionError = $"Encryption failed for {Path.GetFileName(targetPath)}: {ex.Message}";
                     }
 
                     if (encryptionFailed && !string.IsNullOrWhiteSpace(encryptionError))
@@ -366,8 +367,8 @@ internal sealed class BackupEngine : IBackupEngine
                         var level = encryptionTimeMs < 0 ? LogLevel.Error : LogLevel.Info;
                         var outcome = encryptionTimeMs < 0 ? LogEventOutcome.Failure : LogEventOutcome.Success;
                         var message = encryptionTimeMs < 0
-                            ? $"Encryption failed for {Path.GetFileName(sourcePath)}"
-                            : $"File {Path.GetFileName(sourcePath)} encrypted";
+                            ? $"Encryption failed for {Path.GetFileName(targetPath)}"
+                            : $"File {Path.GetFileName(targetPath)} encrypted";
 
                         var cryptoDto = new LogCryptoDto
                         {
@@ -388,12 +389,12 @@ internal sealed class BackupEngine : IBackupEngine
                               sourcePath: sourcePath,
                               targetPath: targetPath,
                               sizeBytes: fileSize,
-                            transferTimeMs: encryptionTimeMs)
-                        .WithCrypto(
-                            tool: cryptoDto.Tool,
-                            extensionMatched: cryptoDto.ExtensionMatched,
-                            encryptionTimeMs: cryptoDto.EncryptionTimeMs,
-                            extension: cryptoDto.Extension)
+                              transferTimeMs: transferTimeMs)
+                          .WithCrypto(
+                              tool: cryptoDto.Tool,
+                              extensionMatched: cryptoDto.ExtensionMatched,
+                              encryptionTimeMs: cryptoDto.EncryptionTimeMs,
+                              extension: cryptoDto.Extension)
                         .Build();
 
                         _logService.Write(logEntry);

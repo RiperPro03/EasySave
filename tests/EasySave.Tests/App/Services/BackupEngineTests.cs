@@ -98,7 +98,7 @@ public class BackupEngineTests : IDisposable
 
         Assert.True(result.Success);
         Assert.Equal(1, crypto.CallCount);
-        Assert.Equal(sourceFile, crypto.LastFilePath);
+        Assert.Equal(Path.Combine(target, "file.txt"), crypto.LastFilePath);
         Assert.Equal("secret", crypto.LastKey);
     }
 

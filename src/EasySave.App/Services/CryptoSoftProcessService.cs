@@ -29,18 +29,13 @@ public class CryptoSoftProcessService : ICryptoService
 
         process.Start();
 
-        string output = await process.StandardOutput.ReadToEndAsync();
-        string error = await process.StandardError.ReadToEndAsync();
+        _ = await process.StandardOutput.ReadToEndAsync();
+        _ = await process.StandardError.ReadToEndAsync();
 
         await process.WaitForExitAsync();
 
-        if (process.ExitCode != 0)
-        {
-            throw new Exception($"CryptoSoft error: {error}");
-        }
-
-        return int.TryParse(output.Trim(), out int result)
-            ? result
-            : -1;
+        // CryptoSoft returns the encryption time in ms as the process exit code.
+        var exitCode = process.ExitCode;
+        return exitCode;
     }
 }
