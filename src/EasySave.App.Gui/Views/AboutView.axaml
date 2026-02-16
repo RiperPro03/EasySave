@@ -1,13 +1,52 @@
+
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:EasySave.App.Gui.ViewModels"
+             xmlns:p="clr-namespace:EasySave.Core.Resources;assembly=EasySave.Core"
              x:Class="EasySave.App.Gui.Views.AboutView"
              x:DataType="vm:AboutViewModel">
-    <StackPanel Spacing="8">
-        <TextBlock Text="About"
-                   FontSize="20"
-                   FontWeight="Bold"/>
-        <TextBlock Text="{Binding ProductName}"/>
-        <TextBlock Text="{Binding Version}"/>
+
+    <StackPanel Spacing="20">
+        
+        <Border Background="#18FFFFFF" BorderBrush="#28FFFFFF" BorderThickness="1" CornerRadius="12" Padding="20">
+            <StackPanel Spacing="10">
+                <TextBlock Text="{Binding ProductName}" FontSize="24" FontWeight="Bold" Foreground="White"/>
+                <TextBlock Text="{DynamicResource About_Intro}" />
+            </StackPanel>
+        </Border>
+
+        <TextBlock Text="{DynamicResource Guide_Title}" />
+        <Border Background="#12FFFFFF" BorderBrush="#20FFFFFF" BorderThickness="1" CornerRadius="12" Padding="20">
+            <StackPanel Spacing="20">
+                <StackPanel Spacing="5">
+                    <TextBlock Text="{DynamicResource Step1_Title}" /> 
+                    <TextBlock Text="{DynamicResource Step1_Desc}" />
+                </StackPanel>
+                
+                <StackPanel Spacing="5">
+                    <TextBlock Text="{DynamicResource Step2_Title}" /> 
+                    <TextBlock Text="{DynamicResource Step2_Desc}" />
+                </StackPanel>
+
+                <StackPanel Spacing="5">
+                    <TextBlock Text="{DynamicResource Step3_Title}" /> 
+                    <TextBlock Text="{DynamicResource Step3_Desc}" />
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <TextBlock Text="{DynamicResource Team_Title}" />
+        <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="10" RowSpacing="10">
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="👤 Christopher ASIN" Foreground="White" FontSize="13"/>
+            <TextBlock Grid.Row="0" Grid.Column="1" Text="👤 Shayna ROSIER" Foreground="White" FontSize="13"/>
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="👤 Mathis VOGEL" Foreground="White" FontSize="13"/>
+            <TextBlock Grid.Row="1" Grid.Column="1" Text="👤 Maxime LANDEAU" Foreground="White" FontSize="13"/>
+        </Grid>
+
+        <Separator Background="#20FFFFFF"/>
+        <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center">
+            <TextBlock Text="GitHub : https://github.com/RiperPro03/EasySave" FontWeight="Medium"/>
+        </StackPanel>
+
     </StackPanel>
 </UserControl>

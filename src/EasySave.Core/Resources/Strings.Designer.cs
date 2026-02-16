@@ -480,6 +480,12 @@ namespace EasySave.Core.Resources {
         /// <summary>
         ///   Recherche une chaîne localisée semblable à Update job.
         /// </summary>
+        public static string About_Intro {
+            get {
+                return ResourceManager.GetString("About_Intro", resourceCulture);
+            }
+        }
+        
         public static string UI_UpdateJob {
             get {
                 return ResourceManager.GetString("UI_UpdateJob", resourceCulture);

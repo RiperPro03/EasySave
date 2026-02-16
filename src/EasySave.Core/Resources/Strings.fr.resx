@@ -174,4 +174,35 @@ Nommage des ressources :
     <data name="Error_Generic" xml:space="preserve">
         <value>[ERREUR] {0}</value>
     </data>
+
+    <data name="About_Intro" xml:space="preserve">
+      <value>EasySave Pro est une solution de sauvegarde haute performance conçue pour sécuriser vos données via un chiffrement XOR et un suivi détaillé en temps réel.</value>
+    </data>
+      <data name="Guide_Title" xml:space="preserve">
+      <value>NOTICE DÉTAILLÉE</value>
+    </data>
+      <data name="Step1_Title" xml:space="preserve">
+      <value>1. Configuration des Travaux</value>
+    </data>
+      <data name="Step1_Desc" xml:space="preserve">
+      <value>Allez dans 'Backup Jobs'. Cliquez sur ajouter pour créer une tâche. Vous devez fournir un nom unique, un dossier source valide et une destination. Choisissez entre 'Complet' (copie totale) ou 'Différentiel' (fichiers modifiés uniquement).</value>
+    </data>
+      <data name="Step2_Title" xml:space="preserve">
+      <value>2. Sécurité et Liste d'Inclusion</value>
+    </data>
+      <data name="Step2_Desc" xml:space="preserve">
+      <value>Dans 'Settings', définissez votre clé secrète XOR. Utilisez la section 'Extensions à chiffrer' pour ajouter des formats (ex: .txt, .docx). Seuls les fichiers possédant ces extensions seront chiffrés durant la sauvegarde.</value>
+    </data>
+      <data name="Step3_Title" xml:space="preserve">
+      <value>3. Exécution et Logs</value>
+    </data>
+      <data name="Step3_Desc" xml:space="preserve">
+      <value>Rendez-vous dans 'Live Execution' pour lancer vos travaux. Vous pouvez suivre la progression en temps réel. Toutes les actions sont enregistrées dans le dossier 'Logs' (format JSON ou XML) pour archivage.</value>
+    </data>
+      <data name="Team_Title" xml:space="preserve">
+      <value>L'ÉQUIPE DE DÉVELOPPEMENT</value>
+    </data>
+      <data name="GitHub_Button" xml:space="preserve">
+      <value>Voir le projet sur GitHub</value>
+    </data>
 </root>

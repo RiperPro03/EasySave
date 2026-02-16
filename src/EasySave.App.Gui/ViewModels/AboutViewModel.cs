@@ -7,4 +7,5 @@ public sealed class AboutViewModel : ViewModelBase
 {
     public string ProductName => "EasySave";
     public string Version => "v2.0.0";
+    
 }
