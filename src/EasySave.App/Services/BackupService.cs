@@ -392,7 +392,7 @@ public sealed class BackupService : IBackupService
                 category: LogEventCategory.Job,
                 action: LogEventAction.Skip,
                 message: $"Backup start blocked because business software '{processName}' is running")
-            .WithLevel(LogLevel.Warning)
+            .WithLevel(LogLevel.Notice)
             .WithOutcome(LogEventOutcome.Failure);
 
         if (job != null)
