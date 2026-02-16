@@ -1,6 +1,7 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:EasySave.App.Gui.ViewModels"
+        xmlns:res="using:EasySave.Core.Resources"
         x:Class="EasySave.App.Gui.Views.JobEditorDialog"
         x:DataType="vm:JobEditorViewModel"
         Title="{Binding DialogTitle}"
@@ -135,10 +136,10 @@
                     
                     <!-- Nom du job -->
                     <StackPanel>
-                        <TextBlock Classes="label" Text="Job Name *"/>
+                        <TextBlock Classes="label" Text="{x:Static res:Strings.Gui_JobEditor_NameLabel}"/>
                         <TextBox Classes="input"
                                  Text="{Binding Name}"
-                                 Watermark="e.g., Documents Backup"
+                                 Watermark="{x:Static res:Strings.Gui_JobEditor_NameWatermark}"
                                  MaxLength="50"/>
                         <TextBlock Text="{Binding NameError}"
                                    FontSize="11"
@@ -149,16 +150,16 @@
                     
                     <!-- Chemin source -->
                     <StackPanel>
-                        <TextBlock Classes="label" Text="Source Path *"/>
+                        <TextBlock Classes="label" Text="{x:Static res:Strings.Gui_JobEditor_SourceLabel}"/>
                         <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
                             <TextBox Grid.Column="0"
                                      Classes="input"
                                      Text="{Binding SourcePath}"
-                                     Watermark="C:\Users\Documents"
+                                     Watermark="{x:Static res:Strings.Gui_JobEditor_SourceWatermark}"
                                      IsReadOnly="True"/>
                             <Button Grid.Column="1"
                                     Classes="browse-btn"
-                                    Content="Browse"
+                                    Content="{x:Static res:Strings.Gui_Common_Browse}"
                                     Click="OnBrowseSource"/>
                         </Grid>
                         <TextBlock Text="{Binding SourcePathError}"
@@ -170,16 +171,16 @@
                     
                     <!-- Chemin cible -->
                     <StackPanel>
-                        <TextBlock Classes="label" Text="Target Path *"/>
+                        <TextBlock Classes="label" Text="{x:Static res:Strings.Gui_JobEditor_TargetLabel}"/>
                         <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
                             <TextBox Grid.Column="0"
                                      Classes="input"
                                      Text="{Binding TargetPath}"
-                                     Watermark="D:\Backups\Documents"
+                                     Watermark="{x:Static res:Strings.Gui_JobEditor_TargetWatermark}"
                                      IsReadOnly="True"/>
                             <Button Grid.Column="1"
                                     Classes="browse-btn"
-                                    Content="Browse"
+                                    Content="{x:Static res:Strings.Gui_Common_Browse}"
                                     Click="OnBrowseTarget"/>
                         </Grid>
                         <TextBlock Text="{Binding TargetPathError}"
@@ -191,12 +192,12 @@
                     
                     <!-- Type de sauvegarde -->
                     <StackPanel>
-                        <TextBlock Classes="label" Text="Backup Type *"/>
+                        <TextBlock Classes="label" Text="{x:Static res:Strings.Gui_JobEditor_BackupTypeLabel}"/>
                         <ComboBox Classes="input"
                                   ItemsSource="{Binding AvailableTypes}"
                                   SelectedItem="{Binding SelectedType}"
                                   HorizontalAlignment="Stretch"/>
-                        <TextBlock Text="Complete: backs up all files | Differential: backs up only modified files"
+                        <TextBlock Text="{x:Static res:Strings.Gui_JobEditor_BackupTypeHelp}"
                                    FontSize="11"
                                    Foreground="#80FFFFFF"
                                    Margin="4,8,0,0"
@@ -206,10 +207,10 @@
                     <!-- Statut actif -->
                     <StackPanel>
                         <CheckBox IsChecked="{Binding IsActive}"
-                                  Content="Active Job"
+                                  Content="{x:Static res:Strings.Gui_JobEditor_ActiveJob}"
                                   FontSize="14"
                                   Margin="0,8,0,0"/>
-                        <TextBlock Text="Only active jobs can be executed"
+                        <TextBlock Text="{x:Static res:Strings.Gui_JobEditor_ActiveJob_Hint}"
                                    FontSize="11"
                                    Foreground="#80FFFFFF"
                                    Margin="28,4,0,0"/>
@@ -223,14 +224,14 @@
                             Padding="12"
                             IsVisible="{Binding IsEditMode}">
                         <StackPanel Spacing="4">
-                            <TextBlock Text="Job Information"
+                            <TextBlock Text="{x:Static res:Strings.Gui_JobEditor_InfoTitle}"
                                        FontSize="12"
                                        FontWeight="Medium"
                                        Foreground="#E5E5E7"/>
-                            <TextBlock Text="{Binding CreatedAt, StringFormat='Created: {0:dd/MM/yyyy HH:mm}'}"
+                            <TextBlock Text="{Binding CreatedAt, StringFormat={x:Static res:Strings.Gui_JobEditor_CreatedFormat}}"
                                        FontSize="11"
                                        Foreground="#80FFFFFF"/>
-                            <TextBlock Text="{Binding LastRun, StringFormat='Last run: {0:dd/MM/yyyy HH:mm}', TargetNullValue='Last run: Never'}"
+                            <TextBlock Text="{Binding LastRun, StringFormat={x:Static res:Strings.Gui_JobEditor_LastRunFormat}, TargetNullValue={x:Static res:Strings.Gui_JobEditor_LastRunNever}}"
                                        FontSize="11"
                                        Foreground="#80FFFFFF"/>
                         </StackPanel>
@@ -245,14 +246,14 @@
                   Margin="0,24,0,0">
                 
                 <TextBlock Grid.Column="0"
-                           Text="* Required fields"
+                           Text="{x:Static res:Strings.Gui_JobEditor_RequiredFields}"
                            FontSize="11"
                            Foreground="#80FFFFFF"
                            VerticalAlignment="Center"/>
                 
                 <Button Grid.Column="1"
                         Classes="dialog-btn secondary"
-                        Content="Cancel"
+                        Content="{x:Static res:Strings.Gui_Common_Cancel}"
                         Click="OnCancel"
                         Margin="0,0,12,0"/>
                 

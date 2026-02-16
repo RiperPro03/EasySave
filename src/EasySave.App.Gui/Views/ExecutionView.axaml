@@ -1,6 +1,7 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:EasySave.App.Gui.ViewModels"
+             xmlns:res="using:EasySave.Core.Resources"
              x:Class="EasySave.App.Gui.Views.ExecutionView"
              x:DataType="vm:ExecutionViewModel">
 
@@ -99,7 +100,7 @@
         <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,16">
             <Button Grid.Column="1"
                     Classes="exec-runall"
-                    Content="Run All"
+                    Content="{x:Static res:Strings.Gui_Execution_RunAll}"
                     VerticalAlignment="Center"
                     Command="{Binding RunAllCommand}"/>
         </Grid>
@@ -114,10 +115,10 @@
                 HorizontalAlignment="Center"
                 Margin="0,40,0,0">
             <StackPanel Spacing="12" HorizontalAlignment="Center">
-                <TextBlock Text="No jobs"
+                <TextBlock Text="{x:Static res:Strings.Gui_Execution_NoJobs_Title}"
                            FontSize="36"
                            HorizontalAlignment="Center"/>
-                <TextBlock Text="Create a backup job to start monitoring"
+                <TextBlock Text="{x:Static res:Strings.Gui_Execution_NoJobs_Subtitle}"
                            FontSize="14"
                            Foreground="#80FFFFFF"
                            HorizontalAlignment="Center"/>
@@ -151,10 +152,10 @@
                                                        FontWeight="Medium"/>
                                         </Border>
                                     </Grid>
-                                    <TextBlock Text="{Binding BackupTypeLabel, StringFormat='{}Type: {0}'}"
+                                    <TextBlock Text="{Binding BackupTypeLabel, StringFormat={x:Static res:Strings.Gui_Execution_TypeFormat}}"
                                                FontSize="12"
                                                Foreground="#80FFFFFF"/>
-                                    <TextBlock Text="{Binding ProgressLabel, StringFormat='{}Progress: {0}'}"
+                                    <TextBlock Text="{Binding ProgressLabel, StringFormat={x:Static res:Strings.Gui_Execution_ProgressFormat}}"
                                                FontSize="12"
                                                Foreground="#80FFFFFF"/>
                                 </StackPanel>
@@ -166,51 +167,51 @@
                                                  Value="{Binding ProgressPercentage}"/>
                                     <WrapPanel Orientation="Horizontal">
                                         <TextBlock Grid.Column="0"
-                                                   Text="{Binding FilesProcessed, StringFormat='Files: {0}'}"
+                                                   Text="{Binding FilesProcessed, StringFormat={x:Static res:Strings.Gui_Execution_FilesFormat}}"
                                                    FontSize="11"
                                                    Foreground="#80FFFFFF"
                                                    Margin="0,0,12,4"/>
                                         <TextBlock Grid.Column="1"
-                                                   Text="{Binding TotalFiles, StringFormat='Total: {0}'}"
+                                                   Text="{Binding TotalFiles, StringFormat={x:Static res:Strings.Gui_Execution_TotalFilesFormat}}"
                                                    FontSize="11"
                                                    Foreground="#80FFFFFF"
                                                    Margin="0,0,12,4"/>
                                         <TextBlock Grid.Column="2"
-                                                   Text="{Binding RemainingFiles, StringFormat='Remaining: {0}'}"
+                                                   Text="{Binding RemainingFiles, StringFormat={x:Static res:Strings.Gui_Execution_RemainingFilesFormat}}"
                                                    FontSize="11"
                                                    Foreground="#80FFFFFF"/>
                                     </WrapPanel>
                                     <WrapPanel Orientation="Horizontal">
-                                        <TextBlock Text="{Binding SizeProcessedBytes, StringFormat='Done: {0} bytes'}"
+                                        <TextBlock Text="{Binding SizeProcessedBytes, StringFormat={x:Static res:Strings.Gui_Execution_BytesDoneFormat}}"
                                                    FontSize="11"
                                                    Foreground="#80FFFFFF"
                                                    Margin="0,0,12,4"/>
-                                        <TextBlock Text="{Binding TotalSizeBytes, StringFormat='Total: {0} bytes'}"
+                                        <TextBlock Text="{Binding TotalSizeBytes, StringFormat={x:Static res:Strings.Gui_Execution_BytesTotalFormat}}"
                                                    FontSize="11"
                                                    Foreground="#80FFFFFF"
                                                    Margin="0,0,12,4"/>
-                                        <TextBlock Text="{Binding RemainingSizeBytes, StringFormat='Remaining: {0} bytes'}"
+                                        <TextBlock Text="{Binding RemainingSizeBytes, StringFormat={x:Static res:Strings.Gui_Execution_BytesRemainingFormat}}"
                                                    FontSize="11"
                                                    Foreground="#80FFFFFF"/>
                                     </WrapPanel>
                                 </StackPanel>
 
                                 <StackPanel Grid.Row="2" Grid.Column="0" Spacing="4" Margin="0,8,0,0">
-                                    <TextBlock Text="{Binding CurrentSourceFile, StringFormat='Source: {0}', TargetNullValue='Source: -'}"
+                                    <TextBlock Text="{Binding CurrentSourceFile, StringFormat={x:Static res:Strings.Gui_Execution_SourceFormat}, TargetNullValue={x:Static res:Strings.Gui_Execution_SourceEmpty}}"
                                                FontSize="11"
                                                Foreground="#70FFFFFF"
                                                TextWrapping="Wrap"/>
-                                    <TextBlock Text="{Binding CurrentTargetFile, StringFormat='Target: {0}', TargetNullValue='Target: -'}"
+                                    <TextBlock Text="{Binding CurrentTargetFile, StringFormat={x:Static res:Strings.Gui_Execution_TargetFormat}, TargetNullValue={x:Static res:Strings.Gui_Execution_TargetEmpty}}"
                                                FontSize="11"
                                                Foreground="#70FFFFFF"
                                                TextWrapping="Wrap"/>
-                                    <TextBlock Text="{Binding LastActionLabel, StringFormat='Last action: {0}'}"
+                                    <TextBlock Text="{Binding LastActionLabel, StringFormat={x:Static res:Strings.Gui_Execution_LastActionFormat}}"
                                                FontSize="11"
                                                Foreground="#70FFFFFF"/>
                                 </StackPanel>
 
                                 <TextBlock Grid.Row="3" Grid.Column="0"
-                                           Text="{Binding ErrorMessage, StringFormat='Error: {0}', TargetNullValue=''}"
+                                           Text="{Binding ErrorMessage, StringFormat={x:Static res:Strings.Gui_Execution_ErrorFormat}, TargetNullValue=''}"
                                            FontSize="11"
                                            Foreground="#FF3B30"
                                            TextWrapping="Wrap"
@@ -219,7 +220,7 @@
                                 <StackPanel Grid.Row="0" Grid.RowSpan="4" Grid.Column="1"
                                             VerticalAlignment="Center">
                                     <Button Classes="exec-play"
-                                            Content="Play"
+                                            Content="{Binding PlayPauseLabel}"
                                             IsEnabled="{Binding CanStart}"
                                             Command="{Binding $parent[ItemsControl].((vm:ExecutionViewModel)DataContext).TogglePlayPauseCommand}"
                                             CommandParameter="{Binding}"/>

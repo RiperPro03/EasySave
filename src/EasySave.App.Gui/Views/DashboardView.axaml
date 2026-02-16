@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="using:EasySave.App.Gui.ViewModels"
              xmlns:models="using:EasySave.App.Gui.Models"
+             xmlns:res="using:EasySave.Core.Resources"
              mc:Ignorable="d"
              d:DesignWidth="800"
              d:DesignHeight="600"
@@ -25,7 +26,7 @@
                 <StackPanel Spacing="8">
                     <TextBlock Text="📁"
                                FontSize="28"/>
-                    <TextBlock Text="TOTAL JOBS"
+                    <TextBlock Text="{x:Static res:Strings.Gui_Dashboard_TotalJobs_Title}"
                                FontSize="10"
                                FontWeight="Bold"
                                Foreground="#70FFFFFF"
@@ -34,7 +35,7 @@
                                FontSize="32"
                                FontWeight="Bold"
                                Foreground="#FFFFFF"/>
-                    <TextBlock Text="Configured backups"
+                    <TextBlock Text="{x:Static res:Strings.Gui_Dashboard_TotalJobs_Subtitle}"
                                FontSize="11"
                                Foreground="#80FFFFFF"/>
                 </StackPanel>
@@ -50,7 +51,7 @@
                 <StackPanel Spacing="8">
                     <TextBlock Text="✅"
                                FontSize="28"/>
-                    <TextBlock Text="ACTIVE"
+                    <TextBlock Text="{x:Static res:Strings.Gui_Dashboard_Active_Title}"
                                FontSize="10"
                                FontWeight="Bold"
                                Foreground="#70FFFFFF"
@@ -59,7 +60,7 @@
                                FontSize="32"
                                FontWeight="Bold"
                                Foreground="#30D158"/>
-                    <TextBlock Text="Ready to run"
+                    <TextBlock Text="{x:Static res:Strings.Gui_Dashboard_Active_Subtitle}"
                                FontSize="11"
                                Foreground="#80FFFFFF"/>
                 </StackPanel>
@@ -75,7 +76,7 @@
                 <StackPanel Spacing="8">
                     <TextBlock Text="⏸"
                                FontSize="28"/>
-                    <TextBlock Text="INACTIVE"
+                    <TextBlock Text="{x:Static res:Strings.Gui_Dashboard_Inactive_Title}"
                                FontSize="10"
                                FontWeight="Bold"
                                Foreground="#70FFFFFF"
@@ -84,7 +85,7 @@
                                FontSize="32"
                                FontWeight="Bold"
                                Foreground="#FF9F0A"/>
-                    <TextBlock Text="Jobs deactivated (not runnable)"
+                    <TextBlock Text="{x:Static res:Strings.Gui_Dashboard_Inactive_Subtitle}"
                                FontSize="11"
                                Foreground="#80FFFFFF"/>
                 </StackPanel>
@@ -94,7 +95,7 @@
 
         <!-- Recent Activity Section -->
         <StackPanel Spacing="16">
-            <TextBlock Text="Recent Activity"
+            <TextBlock Text="{x:Static res:Strings.Gui_Dashboard_Recent_Title}"
                        FontSize="18"
                        FontWeight="SemiBold"
                        Foreground="#FFFFFF"/>
@@ -150,11 +151,11 @@
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
                                 Spacing="6">
-                        <TextBlock Text="No recent activity yet"
+                        <TextBlock Text="{x:Static res:Strings.Gui_Dashboard_Recent_Empty_Title}"
                                    FontSize="14"
                                    Foreground="#80FFFFFF"
                                    HorizontalAlignment="Center"/>
-                        <TextBlock Text="Run a backup to see the latest events"
+                        <TextBlock Text="{x:Static res:Strings.Gui_Dashboard_Recent_Empty_Subtitle}"
                                    FontSize="12"
                                    Foreground="#60FFFFFF"
                                    HorizontalAlignment="Center"/>

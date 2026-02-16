@@ -22,11 +22,11 @@
 <!--    
 Nommage des ressources :
 
-    Menu_* → menus
-    Lang_* → langues
-    Error_* → erreurs
-    Info_* → messages d’info
-    UI_* → UI générique 
+    Menu_* ? menus
+    Lang_* ? langues
+    Error_* ? erreurs
+    Info_* ? messages d'info
+    UI_* ? UI générique 
 -->
 
     <data name="Menu_Title" xml:space="preserve">
@@ -205,4 +205,440 @@ Nommage des ressources :
     <data name="GitHub_Button" xml:space="preserve">
     <value>View Project on GitHub</value>
   </data>
+    <data name="Gui_Dashboard_Activity_Job" xml:space="preserve">
+        <value>Job</value>
+    </data>
+    <data name="Gui_Dashboard_Inactive_Title" xml:space="preserve">
+        <value>INACTIVE</value>
+    </data>
+    <data name="Gui_Execution_RunAll" xml:space="preserve">
+        <value>Run All</value>
+    </data>
+    <data name="Gui_Execution_ErrorFormat" xml:space="preserve">
+        <value>Error: {0}</value>
+    </data>
+    <data name="Gui_Execution_Error_Pause" xml:space="preserve">
+        <value>Unable to pause job.</value>
+    </data>
+    <data name="Gui_JobEditor_CreateTitle" xml:space="preserve">
+        <value>Create Job</value>
+    </data>
+    <data name="Gui_Jobs_DeleteTooltip" xml:space="preserve">
+        <value>Delete job</value>
+    </data>
+    <data name="Gui_JobStatus_Completed" xml:space="preserve">
+        <value>Completed</value>
+    </data>
+    <data name="Gui_App_Tagline" xml:space="preserve">
+        <value>Backup Manager Pro</value>
+    </data>
+    <data name="Gui_Common_Differential" xml:space="preserve">
+        <value>Differential</value>
+    </data>
+    <data name="Gui_Dashboard_Summary_Errors" xml:space="preserve">
+        <value>Errors {0}</value>
+    </data>
+    <data name="Gui_Jobs_Active" xml:space="preserve">
+        <value>Active</value>
+    </data>
+    <data name="Gui_Nav_Dashboard" xml:space="preserve">
+        <value>Dashboard</value>
+    </data>
+    <data name="Gui_Dashboard_FileCopy" xml:space="preserve">
+        <value>File copy</value>
+    </data>
+    <data name="Gui_Common_Backup" xml:space="preserve">
+        <value>Backup</value>
+    </data>
+    <data name="Gui_Jobs_NoJobs_Hint" xml:space="preserve">
+        <value>Create your first backup job to get started</value>
+    </data>
+    <data name="Gui_Execution_TargetFormat" xml:space="preserve">
+        <value>Target: {0}</value>
+    </data>
+    <data name="Gui_JobEditor_CreateButton" xml:space="preserve">
+        <value>Create Job</value>
+    </data>
+    <data name="Gui_Dashboard_Inactive_Subtitle" xml:space="preserve">
+        <value>Jobs deactivated (not runnable)</value>
+    </data>
+    <data name="Gui_JobEditor_EditTitle" xml:space="preserve">
+        <value>Edit Job</value>
+    </data>
+    <data name="Gui_Execution_BytesDoneFormat" xml:space="preserve">
+        <value>Done: {0} bytes</value>
+    </data>
+    <data name="Gui_Dashboard_Recent_Empty_Title" xml:space="preserve">
+        <value>No recent activity yet</value>
+    </data>
+    <data name="Gui_JobEditor_RequiredFields" xml:space="preserve">
+        <value>* Required fields</value>
+    </data>
+    <data name="Gui_JobStatus_Error" xml:space="preserve">
+        <value>Error</value>
+    </data>
+    <data name="Gui_Jobs_EditTooltip" xml:space="preserve">
+        <value>Edit job</value>
+    </data>
+    <data name="Gui_Status_ManageJobs" xml:space="preserve">
+        <value>Manage your backup jobs</value>
+    </data>
+    <data name="Gui_Dashboard_TotalJobs_Subtitle" xml:space="preserve">
+        <value>Configured backups</value>
+    </data>
+    <data name="Gui_Execution_SourceEmpty" xml:space="preserve">
+        <value>Source: -</value>
+    </data>
+    <data name="Gui_Jobs_Label_Type" xml:space="preserve">
+        <value>Type:</value>
+    </data>
+    <data name="Gui_Status_LiveMonitoring" xml:space="preserve">
+        <value>Real-time backup monitoring</value>
+    </data>
+    <data name="Gui_Status_ViewLogs" xml:space="preserve">
+        <value>View execution logs</value>
+    </data>
+    <data name="Gui_Nav_LiveExecution" xml:space="preserve">
+        <value>Live Execution</value>
+    </data>
+    <data name="Gui_LogFormat_Xml" xml:space="preserve">
+        <value>XML</value>
+    </data>
+    <data name="Gui_JobEditor_NameWatermark" xml:space="preserve">
+        <value>e.g., Documents Backup</value>
+    </data>
+    <data name="Gui_Dashboard_Job_Created" xml:space="preserve">
+        <value>Job created</value>
+    </data>
+    <data name="Gui_Status_AboutInfo" xml:space="preserve">
+        <value>Application information</value>
+    </data>
+    <data name="Gui_Jobs_Edit" xml:space="preserve">
+        <value>Edit</value>
+    </data>
+    <data name="Gui_Jobs_Delete" xml:space="preserve">
+        <value>Delete</value>
+    </data>
+    <data name="Gui_Settings_Info" xml:space="preserve">
+        <value>Configure global application settings</value>
+    </data>
+    <data name="Gui_JobEditor_Error_SourceRequired" xml:space="preserve">
+        <value>Source path is required.</value>
+    </data>
+    <data name="Gui_Dashboard_Job_Updated" xml:space="preserve">
+        <value>Job updated</value>
+    </data>
+    <data name="Gui_LogFormat_Json" xml:space="preserve">
+        <value>JSON</value>
+    </data>
+    <data name="Gui_Execution_NoJobs_Subtitle" xml:space="preserve">
+        <value>Create a backup job to start monitoring</value>
+    </data>
+    <data name="Gui_Sidebar_System" xml:space="preserve">
+        <value>SYSTEM</value>
+    </data>
+    <data name="Gui_Execution_BytesRemainingFormat" xml:space="preserve">
+        <value>Remaining: {0} bytes</value>
+    </data>
+    <data name="Gui_Execution_LastActionFormat" xml:space="preserve">
+        <value>Last action: {0}</value>
+    </data>
+    <data name="Gui_JobEditor_Error_NameLength" xml:space="preserve">
+        <value>Name must be under {0} characters.</value>
+    </data>
+    <data name="Gui_Dashboard_Settings_Updated" xml:space="preserve">
+        <value>Settings updated</value>
+    </data>
+    <data name="Gui_JobStatus_Idle" xml:space="preserve">
+        <value>Idle</value>
+    </data>
+    <data name="Gui_JobEditor_SourceWatermark" xml:space="preserve">
+        <value>C:\\Users\\Documents</value>
+    </data>
+    <data name="Gui_Dashboard_Summary_Transferred" xml:space="preserve">
+        <value>{0} transferred</value>
+    </data>
+    <data name="Gui_Dashboard_Active_Title" xml:space="preserve">
+        <value>ACTIVE</value>
+    </data>
+    <data name="Gui_Common_Inactive" xml:space="preserve">
+        <value>Inactive</value>
+    </data>
+    <data name="Gui_Common_Active" xml:space="preserve">
+        <value>Active</value>
+    </data>
+    <data name="Gui_Common_Unknown" xml:space="preserve">
+        <value>Unknown</value>
+    </data>
+    <data name="Gui_Execution_NoJobs_Title" xml:space="preserve">
+        <value>No jobs</value>
+    </data>
+    <data name="Gui_Status_JobFormat" xml:space="preserve">
+        <value>{0}: {1}</value>
+    </data>
+    <data name="Gui_Execution_Pause" xml:space="preserve">
+        <value>Pause</value>
+    </data>
+    <data name="Gui_Dashboard_Error_Format" xml:space="preserve">
+        <value>Error | {0}</value>
+    </data>
+    <data name="Gui_Dashboard_TotalJobs_Title" xml:space="preserve">
+        <value>TOTAL JOBS</value>
+    </data>
+    <data name="Gui_JobEditor_EditSubtitle" xml:space="preserve">
+        <value>Update the backup job settings</value>
+    </data>
+    <data name="Gui_JobEditor_NameLabel" xml:space="preserve">
+        <value>Job Name *</value>
+    </data>
+    <data name="Gui_Jobs_ActiveJobsFormat" xml:space="preserve">
+        <value>{0} active job(s)</value>
+    </data>
+    <data name="Gui_Dashboard_Job_Changed" xml:space="preserve">
+        <value>Job changed</value>
+    </data>
+    <data name="Gui_JobEditor_LastRunFormat" xml:space="preserve">
+        <value>Last run: {0:dd/MM/yyyy HH:mm}</value>
+    </data>
+    <data name="Gui_Execution_RemainingFilesFormat" xml:space="preserve">
+        <value>Remaining: {0}</value>
+    </data>
+    <data name="Gui_JobEditor_BackupTypeLabel" xml:space="preserve">
+        <value>Backup Type *</value>
+    </data>
+    <data name="Gui_Execution_ProgressFormat" xml:space="preserve">
+        <value>Progress: {0}</value>
+    </data>
+    <data name="Gui_JobEditor_LastRunNever" xml:space="preserve">
+        <value>Last run: Never</value>
+    </data>
+    <data name="Gui_Jobs_NoJobs_Subtitle" xml:space="preserve">
+        <value>No backup jobs yet</value>
+    </data>
+    <data name="Gui_Dashboard_Backup_Full" xml:space="preserve">
+        <value>Full backup</value>
+    </data>
+    <data name="Gui_JobEditor_CreateSubtitle" xml:space="preserve">
+        <value>Define a new backup job</value>
+    </data>
+    <data name="Gui_Dashboard_Active_Subtitle" xml:space="preserve">
+        <value>Ready to run</value>
+    </data>
+    <data name="Gui_Dashboard_Summary_Skipped" xml:space="preserve">
+        <value>Skipped {0}</value>
+    </data>
+    <data name="Gui_Dashboard_Settings_Saved" xml:space="preserve">
+        <value>Settings saved</value>
+    </data>
+    <data name="Gui_Dashboard_Summary_Copied" xml:space="preserve">
+        <value>Copied {0}</value>
+    </data>
+    <data name="Gui_Dashboard_Backup_Differential" xml:space="preserve">
+        <value>Differential backup</value>
+    </data>
+    <data name="Gui_Dashboard_Settings_Title" xml:space="preserve">
+        <value>Settings</value>
+    </data>
+    <data name="Gui_Execution_TypeFormat" xml:space="preserve">
+        <value>Type: {0}</value>
+    </data>
+    <data name="Gui_Execution_Error_Stop" xml:space="preserve">
+        <value>Unable to stop job.</value>
+    </data>
+    <data name="Gui_Sidebar_Workspace" xml:space="preserve">
+        <value>WORKSPACE</value>
+    </data>
+    <data name="Gui_JobEditor_SourceLabel" xml:space="preserve">
+        <value>Source Path *</value>
+    </data>
+    <data name="Gui_Status_Overview" xml:space="preserve">
+        <value>Overview of all backup operations</value>
+    </data>
+    <data name="Gui_About_GitHubLabel" xml:space="preserve">
+        <value>GitHub :</value>
+    </data>
+    <data name="Gui_Execution_TargetEmpty" xml:space="preserve">
+        <value>Target: -</value>
+    </data>
+    <data name="Gui_Common_Browse" xml:space="preserve">
+        <value>Browse</value>
+    </data>
+    <data name="Gui_Execution_BytesTotalFormat" xml:space="preserve">
+        <value>Total: {0} bytes</value>
+    </data>
+    <data name="Gui_Nav_About" xml:space="preserve">
+        <value>About</value>
+    </data>
+    <data name="Gui_Dashboard_DirectoryCreated_Format" xml:space="preserve">
+        <value>Directory created | {0}</value>
+    </data>
+    <data name="Gui_JobEditor_ActiveJob" xml:space="preserve">
+        <value>Active Job</value>
+    </data>
+    <data name="Gui_Common_Never" xml:space="preserve">
+        <value>Never</value>
+    </data>
+    <data name="Gui_Dashboard_Job_Deleted" xml:space="preserve">
+        <value>Job deleted</value>
+    </data>
+    <data name="Gui_JobEditor_SaveChanges" xml:space="preserve">
+        <value>Save Changes</value>
+    </data>
+    <data name="Gui_JobEditor_BackupTypeHelp" xml:space="preserve">
+        <value>Complete: backs up all files | Differential: backs up only modified files</value>
+    </data>
+    <data name="Gui_Execution_TotalFilesFormat" xml:space="preserve">
+        <value>Total: {0}</value>
+    </data>
+    <data name="Gui_Dashboard_Backup_Generic" xml:space="preserve">
+        <value>Backup</value>
+    </data>
+    <data name="Gui_Common_Cancel" xml:space="preserve">
+        <value>Cancel</value>
+    </data>
+    <data name="Gui_Jobs_CreateFirst" xml:space="preserve">
+        <value>+ Create First Job</value>
+    </data>
+    <data name="Gui_Execution_SourceFormat" xml:space="preserve">
+        <value>Source: {0}</value>
+    </data>
+    <data name="Gui_JobEditor_TargetWatermark" xml:space="preserve">
+        <value>D:\\Backups\\Documents</value>
+    </data>
+    <data name="Gui_Execution_Error_Resume" xml:space="preserve">
+        <value>Unable to resume job.</value>
+    </data>
+    <data name="Gui_Status_Ready" xml:space="preserve">
+        <value>Ready</value>
+    </data>
+    <data name="Gui_Common_Full" xml:space="preserve">
+        <value>Full</value>
+    </data>
+    <data name="Gui_JobStatus_Paused" xml:space="preserve">
+        <value>Paused</value>
+    </data>
+    <data name="Gui_Status_SettingsInfo" xml:space="preserve">
+        <value>Configure application settings</value>
+    </data>
+    <data name="Gui_JobEditor_Error_TargetRequired" xml:space="preserve">
+        <value>Target path is required.</value>
+    </data>
+    <data name="Gui_Jobs_NoJobs_Title" xml:space="preserve">
+        <value>No jobs</value>
+    </data>
+    <data name="Gui_Jobs_LastRunNever" xml:space="preserve">
+        <value>Never executed</value>
+    </data>
+    <data name="Gui_Execution_Error_NoRunnable" xml:space="preserve">
+        <value>No runnable jobs.</value>
+    </data>
+    <data name="Gui_JobEditor_ActiveJob_Hint" xml:space="preserve">
+        <value>Only active jobs can be executed</value>
+    </data>
+    <data name="Gui_JobStatus_Running" xml:space="preserve">
+        <value>Running</value>
+    </data>
+    <data name="Gui_Jobs_Label_Target" xml:space="preserve">
+        <value>Target:</value>
+    </data>
+    <data name="Gui_JobEditor_Error_NameRequired" xml:space="preserve">
+        <value>Name is required.</value>
+    </data>
+    <data name="Gui_Nav_Settings" xml:space="preserve">
+        <value>Settings</value>
+    </data>
+    <data name="Gui_JobEditor_InfoTitle" xml:space="preserve">
+        <value>Job Information</value>
+    </data>
+    <data name="Gui_Jobs_LastRunFormat" xml:space="preserve">
+        <value>Last run: {0:dd/MM/yyyy HH:mm}</value>
+    </data>
+    <data name="Gui_Nav_Logs" xml:space="preserve">
+        <value>Logs</value>
+    </data>
+    <data name="Gui_Dashboard_Activity_Backup" xml:space="preserve">
+        <value>Backup activity</value>
+    </data>
+    <data name="Gui_Dashboard_Recent_Title" xml:space="preserve">
+        <value>Recent Activity</value>
+    </data>
+    <data name="Gui_Execution_Error_NotFound" xml:space="preserve">
+        <value>Job with ID {0} not found.</value>
+    </data>
+    <data name="Gui_Jobs_Label_Source" xml:space="preserve">
+        <value>Source:</value>
+    </data>
+    <data name="Gui_Dashboard_Recent_Empty_Subtitle" xml:space="preserve">
+        <value>Run a backup to see the latest events</value>
+    </data>
+    <data name="Gui_JobEditor_TargetLabel" xml:space="preserve">
+        <value>Target Path *</value>
+    </data>
+    <data name="Gui_Nav_BackupJobs" xml:space="preserve">
+        <value>Backup Jobs</value>
+    </data>
+    <data name="Gui_Execution_FilesFormat" xml:space="preserve">
+        <value>Files: {0}</value>
+    </data>
+    <data name="Gui_JobEditor_CreatedFormat" xml:space="preserve">
+        <value>Created: {0:dd/MM/yyyy HH:mm}</value>
+    </data>
+    <data name="Gui_Jobs_New" xml:space="preserve">
+        <value>+ New Job</value>
+    </data>
+    <data name="Gui_Execution_Resume" xml:space="preserve">
+        <value>Resume</value>
+    </data>
+    <data name="Gui_Dashboard_Skipped" xml:space="preserve">
+        <value>Skipped</value>
+    </data>
+    <data name="Gui_Execution_Play" xml:space="preserve">
+        <value>Play</value>
+    </data>
+    <data name="Gui_Jobs_Inactive" xml:space="preserve">
+        <value>Inactive</value>
+    </data>
+    <data name="Gui_Common_NotAvailable" xml:space="preserve">
+        <value>-</value>
+    </data>
+    <data name="Gui_Settings_Title" xml:space="preserve">
+        <value>SETTINGS</value>
+    </data>
+    <data name="Gui_Settings_LanguageLabel" xml:space="preserve">
+        <value>Language:</value>
+    </data>
+    <data name="Gui_Settings_LogFormatLabel" xml:space="preserve">
+        <value>Log format:</value>
+    </data>
+    <data name="Gui_Settings_EnableXor" xml:space="preserve">
+        <value>Enable XOR encryption</value>
+    </data>
+    <data name="Gui_Settings_SecretKeyLabel" xml:space="preserve">
+        <value>Secret key:</value>
+    </data>
+    <data name="Gui_Settings_ExtensionsLabel" xml:space="preserve">
+        <value>Extensions to encrypt (e.g., .pdf, .txt):</value>
+    </data>
+    <data name="Gui_Settings_ExtensionsWatermark" xml:space="preserve">
+        <value>Enter comma-separated extensions...</value>
+    </data>
+    <data name="Gui_Settings_ExtensionsTooltip" xml:space="preserve">
+        <value>Files with these extensions will be encrypted</value>
+    </data>
+    <data name="Gui_Settings_ExtensionsNote" xml:space="preserve">
+        <value>Note: Separate extensions with a comma.</value>
+    </data>
+    <data name="Gui_Settings_BusinessProcessLabel" xml:space="preserve">
+        <value>Business software process name (e.g., CalculatorApp):</value>
+    </data>
+    <data name="Gui_Settings_BusinessProcessWatermark" xml:space="preserve">
+        <value>Leave empty to disable</value>
+    </data>
+    <data name="Gui_Settings_BusinessProcessTooltip" xml:space="preserve">
+        <value>Process name used to block backups when running</value>
+    </data>
+    <data name="Gui_Execution_Error_BusinessSoftware" xml:space="preserve">
+        <value>Business software is running. Cannot start sequence.</value>
+    </data>
 </root>
+

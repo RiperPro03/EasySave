@@ -1,8 +1,10 @@
 using System;
+using System.Globalization;
 using CommunityToolkit.Mvvm.ComponentModel;
 using EasySave.Core.DTO;
 using EasySave.Core.Enums;
 using EasySave.Core.Models;
+using EasySave.Core.Resources;
 
 namespace EasySave.App.Gui.Models;
 
@@ -94,33 +96,41 @@ public sealed partial class ExecutionJobItem : ObservableObject
     public bool IsCompleted => Status == JobStatus.Completed;
     public bool IsError => Status == JobStatus.Error;
 
-    public string StatusLabel => Status.ToString();
+    public string StatusLabel => Status switch
+    {
+        JobStatus.Idle => Strings.Gui_JobStatus_Idle,
+        JobStatus.Running => Strings.Gui_JobStatus_Running,
+        JobStatus.Paused => Strings.Gui_JobStatus_Paused,
+        JobStatus.Completed => Strings.Gui_JobStatus_Completed,
+        JobStatus.Error => Strings.Gui_JobStatus_Error,
+        _ => Strings.Gui_Common_Unknown
+    };
 
     public string BackupTypeLabel => BackupTypeValue switch
     {
-        BackupType.Full => "Full",
-        BackupType.Differential => "Differential",
-        _ => "-"
+        BackupType.Full => Strings.Gui_Common_Full,
+        BackupType.Differential => Strings.Gui_Common_Differential,
+        _ => Strings.Gui_Common_NotAvailable
     };
 
     public string PlayPauseLabel => Status switch
     {
-        JobStatus.Running => "Pause",
-        JobStatus.Paused => "Resume",
-        _ => "Play"
+        JobStatus.Running => Strings.Gui_Execution_Pause,
+        JobStatus.Paused => Strings.Gui_Execution_Resume,
+        _ => Strings.Gui_Execution_Play
     };
 
     public bool CanPlayPause => IsRunning || IsPaused || IsActive;
     public bool CanStop => IsRunning || IsPaused;
     public bool CanStart => IsActive && (IsIdle || IsCompleted || IsError);
 
-    public string ProgressLabel => $"{ProgressPercentage}%";
+    public string ProgressLabel => string.Format(CultureInfo.CurrentCulture, "{0}%", ProgressPercentage);
 
     public bool HasErrorMessage => !string.IsNullOrWhiteSpace(ErrorMessage);
 
     public string LastActionLabel
         => LastActionTimestampUtc == default
-            ? "-"
+            ? Strings.Gui_Common_NotAvailable
             : LastActionTimestampUtc.ToLocalTime().ToString("dd/MM/yyyy HH:mm:ss");
 
     public void UpdateDefinition(BackupJob job)

@@ -1,6 +1,7 @@
 ﻿<Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:EasySave.App.Gui.ViewModels"
+        xmlns:res="using:EasySave.Core.Resources"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
@@ -134,7 +135,7 @@
                                        FontWeight="Bold"
                                        Foreground="#FFFFFF"
                                        LetterSpacing="0.5"/>
-                            <TextBlock Text="Backup Manager Pro"
+                            <TextBlock Text="{x:Static res:Strings.Gui_App_Tagline}"
                                        FontSize="11"
                                        Foreground="#90FFFFFF"
                                        LetterSpacing="0.8"/>
@@ -173,7 +174,7 @@
                         
                         <!-- Section Navigation -->
                         <StackPanel Spacing="6" Margin="0,0,0,16">
-                            <TextBlock Text="WORKSPACE"
+                            <TextBlock Text="{x:Static res:Strings.Gui_Sidebar_Workspace}"
                                        FontSize="11"
                                        FontWeight="Bold"
                                        Foreground="#70FFFFFF"
@@ -190,7 +191,7 @@
                                                    HorizontalAlignment="Center"
                                                    VerticalAlignment="Center"/>
                                     </Border>
-                                    <TextBlock Text="Dashboard" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{x:Static res:Strings.Gui_Nav_Dashboard}" VerticalAlignment="Center"/>
                                 </StackPanel>
                             </Button>
 
@@ -204,7 +205,7 @@
                                                    HorizontalAlignment="Center"
                                                    VerticalAlignment="Center"/>
                                     </Border>
-                                    <TextBlock Text="Backup Jobs" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{x:Static res:Strings.Gui_Nav_BackupJobs}" VerticalAlignment="Center"/>
                                 </StackPanel>
                             </Button>
 
@@ -218,7 +219,7 @@
                                                    HorizontalAlignment="Center"
                                                    VerticalAlignment="Center"/>
                                     </Border>
-                                    <TextBlock Text="Live Execution" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{x:Static res:Strings.Gui_Nav_LiveExecution}" VerticalAlignment="Center"/>
                                 </StackPanel>
                             </Button>
 
@@ -232,7 +233,7 @@
                                                    HorizontalAlignment="Center"
                                                    VerticalAlignment="Center"/>
                                     </Border>
-                                    <TextBlock Text="Logs" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{x:Static res:Strings.Gui_Nav_Logs}" VerticalAlignment="Center"/>
                                 </StackPanel>
                             </Button>
                         </StackPanel>
@@ -250,7 +251,7 @@
 
                         <!-- Section System -->
                         <StackPanel Spacing="6" Margin="0,16,0,0">
-                            <TextBlock Text="SYSTEM"
+                            <TextBlock Text="{x:Static res:Strings.Gui_Sidebar_System}"
                                        FontSize="11"
                                        FontWeight="Bold"
                                        Foreground="#70FFFFFF"
@@ -267,7 +268,7 @@
                                                    HorizontalAlignment="Center"
                                                    VerticalAlignment="Center"/>
                                     </Border>
-                                    <TextBlock Text="Settings" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{x:Static res:Strings.Gui_Nav_Settings}" VerticalAlignment="Center"/>
                                 </StackPanel>
                             </Button>
 
@@ -281,7 +282,7 @@
                                                    HorizontalAlignment="Center"
                                                    VerticalAlignment="Center"/>
                                     </Border>
-                                    <TextBlock Text="About" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{x:Static res:Strings.Gui_Nav_About}" VerticalAlignment="Center"/>
                                 </StackPanel>
                             </Button>
                         </StackPanel>

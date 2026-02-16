@@ -2,11 +2,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:EasySave.App.Gui.ViewModels"
              xmlns:conv="using:EasySave.App.Gui.Converters"
+             xmlns:res="using:EasySave.Core.Resources"
              x:Class="EasySave.App.Gui.Views.JobsView"
              x:DataType="vm:JobsViewModel">
 
     <UserControl.Resources>
-        <conv:TypeToTextConverter x:Key="TypeToEmojiConverter"/>
+        <conv:TypeToEmojiConverter x:Key="TypeToEmojiConverter"/>
+        <conv:TypeToTextConverter x:Key="TypeToTextConverter"/>
         <conv:StatusToTextConverter x:Key="StatusToTextConverter"/>
     </UserControl.Resources>
 
@@ -93,7 +95,7 @@
                         Orientation="Horizontal" 
                         Spacing="12"
                         VerticalAlignment="Center">
-                <Button Content="+ New Job"
+                <Button Content="{x:Static res:Strings.Gui_Jobs_New}"
                         Classes="action-btn primary"
                         Command="{Binding CreateJobCommand}"/>
             </StackPanel>
@@ -116,19 +118,19 @@
                         HorizontalAlignment="Center"
                         Margin="0,60,0,0">
                     <StackPanel Spacing="16" HorizontalAlignment="Center">
-                        <TextBlock Text="No jobs"
+                        <TextBlock Text="{x:Static res:Strings.Gui_Jobs_NoJobs_Title}"
                                    FontSize="48"
                                    HorizontalAlignment="Center"/>
-                        <TextBlock Text="No backup jobs yet"
+                        <TextBlock Text="{x:Static res:Strings.Gui_Jobs_NoJobs_Subtitle}"
                                    FontSize="18"
                                    FontWeight="SemiBold"
                                    Foreground="#FFFFFF"
                                    HorizontalAlignment="Center"/>
-                        <TextBlock Text="Create your first backup job to get started"
+                        <TextBlock Text="{x:Static res:Strings.Gui_Jobs_NoJobs_Hint}"
                                    FontSize="14"
                                    Foreground="#80FFFFFF"
                                    HorizontalAlignment="Center"/>
-                        <Button Content="+ Create First Job"
+                        <Button Content="{x:Static res:Strings.Gui_Jobs_CreateFirst}"
                                 Classes="action-btn primary"
                                 Command="{Binding CreateJobCommand}"
                                 HorizontalAlignment="Center"
@@ -182,10 +184,10 @@
                                         
                                         <!-- Type de sauvegarde -->
                                         <StackPanel Orientation="Horizontal" Spacing="8">
-                                            <TextBlock Text="Type:"
+                                            <TextBlock Text="{x:Static res:Strings.Gui_Jobs_Label_Type}"
                                                        FontSize="12"
                                                        Foreground="#80FFFFFF"/>
-                                            <TextBlock Text="{Binding Type}"
+                                            <TextBlock Text="{Binding Type, Converter={StaticResource TypeToTextConverter}}"
                                                        FontSize="12"
                                                        FontWeight="Medium"
                                                        Foreground="#FFFFFF"/>
@@ -194,7 +196,7 @@
                                         <!-- Chemins -->
                                         <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto" ColumnSpacing="12" RowSpacing="4">
                                             <TextBlock Grid.Row="0" Grid.Column="0"
-                                                       Text="Source:"
+                                                       Text="{x:Static res:Strings.Gui_Jobs_Label_Source}"
                                                        FontSize="12"
                                                        Foreground="#80FFFFFF"/>
                                             <TextBlock Grid.Row="0" Grid.Column="1"
@@ -204,7 +206,7 @@
                                                        TextTrimming="CharacterEllipsis"/>
                                             
                                             <TextBlock Grid.Row="1" Grid.Column="0"
-                                                       Text="Target:"
+                                                       Text="{x:Static res:Strings.Gui_Jobs_Label_Target}"
                                                        FontSize="12"
                                                        Foreground="#80FFFFFF"/>
                                             <TextBlock Grid.Row="1" Grid.Column="1"
@@ -215,7 +217,7 @@
                                         </Grid>
                                         
                                         <!-- Derniere execution -->
-                                        <TextBlock Text="{Binding LastRun, StringFormat='Last run: {0:dd/MM/yyyy HH:mm}', TargetNullValue='Never executed'}"
+                                        <TextBlock Text="{Binding LastRun, StringFormat={x:Static res:Strings.Gui_Jobs_LastRunFormat}, TargetNullValue={x:Static res:Strings.Gui_Jobs_LastRunNever}}"
                                                    FontSize="11"
                                                    FontStyle="Italic"
                                                    Foreground="#60FFFFFF"
@@ -226,18 +228,18 @@
                                     <StackPanel Grid.Column="2" 
                                                 Spacing="8"
                                                 VerticalAlignment="Center">
-                                        <Button Content="Edit"
+                                        <Button Content="{x:Static res:Strings.Gui_Jobs_Edit}"
                                                 Classes="action-btn secondary"
                                                 Command="{Binding $parent[ItemsControl].((vm:JobsViewModel)DataContext).EditJobCommand}"
                                                 CommandParameter="{Binding}"
-                                                ToolTip.Tip="Edit job"
+                                                ToolTip.Tip="{x:Static res:Strings.Gui_Jobs_EditTooltip}"
                                                 Padding="12,8"
                                                 Width="72"/>
-                                        <Button Content="Delete"
+                                        <Button Content="{x:Static res:Strings.Gui_Jobs_Delete}"
                                                 Classes="action-btn danger"
                                                 Command="{Binding $parent[ItemsControl].((vm:JobsViewModel)DataContext).DeleteJobCommand}"
                                                 CommandParameter="{Binding}"
-                                                ToolTip.Tip="Delete job"
+                                                ToolTip.Tip="{x:Static res:Strings.Gui_Jobs_DeleteTooltip}"
                                                 Padding="12,8"
                                                 Width="72"/>
                                     </StackPanel>
@@ -261,7 +263,7 @@
                 Margin="0,0,0,100">
             <Grid ColumnDefinitions="*,Auto,Auto">
                 <TextBlock Grid.Column="0"
-                           Text="{Binding ActiveJobsCount, StringFormat='{}{0} active job(s)'}"
+                           Text="{Binding ActiveJobsCount, StringFormat={x:Static res:Strings.Gui_Jobs_ActiveJobsFormat}}"
                            FontSize="12"
                            Foreground="#80FFFFFF"
                            VerticalAlignment="Center"/>
@@ -272,7 +274,7 @@
                             VerticalAlignment="Center"
                             Margin="0,0,16,0">
                     <Ellipse Width="8" Height="8" Fill="#30D158"/>
-                    <TextBlock Text="Active"
+                    <TextBlock Text="{x:Static res:Strings.Gui_Jobs_Active}"
                                FontSize="11"
                                Foreground="#80FFFFFF"/>
                 </StackPanel>
@@ -282,7 +284,7 @@
                             Spacing="4"
                             VerticalAlignment="Center">
                     <Ellipse Width="8" Height="8" Fill="#FF9F0A"/>
-                    <TextBlock Text="Inactive"
+                    <TextBlock Text="{x:Static res:Strings.Gui_Jobs_Inactive}"
                                FontSize="11"
                                Foreground="#80FFFFFF"/>
                 </StackPanel>
