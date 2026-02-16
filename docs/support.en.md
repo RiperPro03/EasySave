@@ -136,7 +136,7 @@ These parameters are configurable via **Settings**.
 -> retrieves the return code 
 ```
 - The **encryption time** is retrieved and added to the logs (`encryptionTime`)
-- >0 → encryption time in ms
+- `>0` → encryption time in ms
 - 0 → no encryption
 - <0 → error code
 

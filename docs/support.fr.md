@@ -139,7 +139,7 @@ EasySave
 -> récupère le code retour  
 ```
 - Le **temps de chiffrement** est récupéré et ajouté aux logs (`encryptionTime`)
-- >0 → temps de chiffrement en ms
+- `>0` → temps de chiffrement en ms
 - 0 → pas de cryptage
 - <0 → code erreur
 

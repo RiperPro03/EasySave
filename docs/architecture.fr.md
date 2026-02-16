@@ -155,7 +155,7 @@ Composants :
 - Récupère le code retour (temps de chiffrement en ms)
 - Temps retourné dans les logs :  
   - 0 si pas de chiffrement  
-  - >0 temps de chiffrement en ms  
+  - `>0` temps de chiffrement en ms  
   - <0 erreur de chiffrement  
 ---
 

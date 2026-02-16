@@ -153,7 +153,7 @@ Components:
 - Retrieves return code (encryption time in ms)
 - Time returned in logs :  
   - 0 if no encryption  
-  - >0 encryption time in ms  
+  - `>0` encryption time in ms  
   - <0 encryption error  
 ---
 
