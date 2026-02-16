@@ -87,6 +87,15 @@ namespace EasySave.Core.Resources {
                 return ResourceManager.GetString("Error_BackupTypeNotSupported", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Backup stopped by user..
+        /// </summary>
+        public static string Error_BackupStoppedByUser {
+            get {
+                return ResourceManager.GetString("Error_BackupStoppedByUser", resourceCulture);
+            }
+        }
         
         /// <summary>
         ///   Looks up a localized string similar to [ERROR] {0}.

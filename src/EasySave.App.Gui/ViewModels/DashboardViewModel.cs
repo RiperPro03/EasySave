@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using EasySave.App.Services;
@@ -21,11 +22,13 @@ namespace EasySave.App.Gui.ViewModels;
 public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
 {
     private static readonly TimeSpan LogRefreshCooldown = TimeSpan.FromSeconds(2);
+    private static readonly TimeSpan LogRefreshDelay = TimeSpan.FromMilliseconds(300);
     private readonly IJobService? _jobService;
     private readonly IBackupService? _backupService;
     private readonly LogReaderService? _logReader;
     private readonly SynchronizationContext? _uiContext;
     private DateTime _lastLogRefreshUtc;
+    private CancellationTokenSource? _logRefreshCts;
     private bool _disposed;
 
     [ObservableProperty]
@@ -137,6 +140,7 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
         {
             RefreshFromJobs();
             LoadRecentActivities();
+            ScheduleLogRefresh(LogRefreshDelay);
         }
     }
 
@@ -155,6 +159,40 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
 
         _lastLogRefreshUtc = nowUtc;
         LoadRecentActivities();
+    }
+
+    private void ScheduleLogRefresh(TimeSpan delay)
+    {
+        if (_logReader is null)
+            return;
+
+        _logRefreshCts?.Cancel();
+        var cts = new CancellationTokenSource();
+        _logRefreshCts = cts;
+
+        _ = Task.Run(async () =>
+        {
+            try
+            {
+                await Task.Delay(delay, cts.Token);
+            }
+            catch (TaskCanceledException)
+            {
+                return;
+            }
+
+            if (cts.IsCancellationRequested)
+                return;
+
+            if (_uiContext != null)
+            {
+                _uiContext.Post(_ => LoadRecentActivities(), null);
+            }
+            else
+            {
+                LoadRecentActivities();
+            }
+        });
     }
 
     /// <summary>
@@ -214,7 +252,7 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
 
         return activities
             .OrderByDescending(item => item.TimestampUtc)
-            .Take(5)
+            .Take(7)
             .Select(item => item.Item)
             .ToList();
     }
@@ -533,6 +571,9 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
             return;
 
         _disposed = true;
+        _logRefreshCts?.Cancel();
+        _logRefreshCts?.Dispose();
+        _logRefreshCts = null;
         if (_backupService != null)
         {
             _backupService.StateChanged -= OnStateChanged;

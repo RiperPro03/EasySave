@@ -30,12 +30,77 @@ public class BackupServiceTests
         Directory.Delete(target, true);
     }
 
+    [Fact]
+    public void Run_ShouldSkipInactiveJob_AndNotMarkExecuted()
+    {
+        var jobService = new FakeJobService();
+        var service = new BackupService(jobService, stateWriter: new NoOpStateWriter());
+        var job = new BackupJob("1", "Job", @"C:\source", @"C:\target", BackupType.Full, isActive: false);
+
+        var result = service.Run(job);
+
+        Assert.False(result.Success);
+        Assert.Equal("Job is inactive and was skipped.", result.Message);
+        Assert.False(jobService.MarkExecutedCalled);
+    }
+
+    [Fact]
+    public void Run_ShouldReturnFailure_WhenJobAlreadyRunning()
+    {
+        var source = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
+        var target = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(source);
+        var job = new BackupJob("10", "Job", source, target, BackupType.Full);
+        var jobService = new FakeJobService(new[] { job });
+        var service = new BackupService(jobService, stateWriter: new NoOpStateWriter());
+
+        var statesField = typeof(BackupService)
+            .GetField("_jobStates", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        var states = (Dictionary<string, JobStateDto>)statesField!.GetValue(service)!;
+        states[job.Id].Status = JobStatus.Running;
+
+        var result = service.Run(job);
+
+        Assert.False(result.Success);
+        Assert.Equal("Job is already running or paused.", result.Message);
+        Assert.False(jobService.MarkExecutedCalled);
+
+        Directory.Delete(source, true);
+        if (Directory.Exists(target))
+            Directory.Delete(target, true);
+    }
+
+    [Fact]
+    public void Run_ShouldWriteRunningSnapshot_BeforeEngineCompletes()
+    {
+        var source = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
+        var target = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
+        var job = new BackupJob("42", "Job", source, target, BackupType.Full);
+        var jobService = new FakeJobService(new[] { job });
+        var writer = new CapturingStateWriter();
+        var service = new BackupService(jobService, stateWriter: writer);
+
+        var result = service.Run(job);
+
+        Assert.False(result.Success);
+        Assert.Contains(writer.Snapshots, snapshot =>
+            snapshot.Jobs.Any(state => state.JobId == job.Id && state.Status == JobStatus.Running));
+        Assert.Contains(writer.Snapshots, snapshot =>
+            snapshot.Jobs.Any(state => state.JobId == job.Id && state.Status == JobStatus.Error));
+    }
+
     private sealed class FakeJobService : IJobService
     {
         public bool MarkExecutedCalled { get; private set; }
+        private readonly List<BackupJob> _jobs;
 
-        public IReadOnlyList<BackupJob> GetAll() => Array.Empty<BackupJob>();
-        public BackupJob? GetById(string id) => null;
+        public FakeJobService(IEnumerable<BackupJob>? jobs = null)
+        {
+            _jobs = jobs?.ToList() ?? new List<BackupJob>();
+        }
+
+        public IReadOnlyList<BackupJob> GetAll() => _jobs;
+        public BackupJob? GetById(string id) => _jobs.FirstOrDefault(job => job.Id == id);
         public void Create(string id, string name, string sourcePath, string targetPath, BackupType type, bool isActive = true) { }
         public void Update(string id, string name, string sourcePath, string targetPath, BackupType type, bool isActive) { }
         public void MarkExecuted(string id, DateTime? nowUtc = null) => MarkExecutedCalled = true;
@@ -45,6 +110,16 @@ public class BackupServiceTests
     private sealed class NoOpStateWriter : IStateWriter
     {
         public void Write(AppStateDto state) { }
+    }
+
+    private sealed class CapturingStateWriter : IStateWriter
+    {
+        public List<AppStateDto> Snapshots { get; } = new();
+
+        public void Write(AppStateDto state)
+        {
+            Snapshots.Add(state);
+        }
     }
 }
 

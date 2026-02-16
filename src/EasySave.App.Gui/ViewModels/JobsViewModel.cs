@@ -14,7 +14,6 @@ namespace EasySave.App.Gui.ViewModels;
 /// </summary>
 public sealed partial class JobsViewModel : ViewModelBase
 {
-    private const int MaxJobs = 5;
     private readonly IJobService? _jobService;
 
     public ObservableCollection<BackupJob> Jobs { get; } = new();
@@ -27,9 +26,6 @@ public sealed partial class JobsViewModel : ViewModelBase
 
     [ObservableProperty]
     private bool _hasJobs;
-
-    [ObservableProperty]
-    private bool _canCreateJob;
 
     [ObservableProperty]
     private string? _lastError;
@@ -99,7 +95,6 @@ public sealed partial class JobsViewModel : ViewModelBase
         }
     }
 
-    [RelayCommand]
     private void Refresh()
     {
         if (_jobService == null)
@@ -139,7 +134,7 @@ public sealed partial class JobsViewModel : ViewModelBase
             else
             {
                 var id = GenerateNextId();
-                Jobs.Add(new BackupJob(id, editor.Name, editor.SourcePath, editor.TargetPath, editor.SelectedType, editor.IsActive));
+                Jobs.Add(new BackupJob(id, editor.Name, editor.SourcePath, editor.TargetPath, editor.SelectedType, null, editor.IsActive));
                 LastError = null;
                 NotifyJobsChanged();
             }
@@ -191,7 +186,6 @@ public sealed partial class JobsViewModel : ViewModelBase
         JobsCount = Jobs.Count;
         ActiveJobsCount = Jobs.Count(job => job.IsActive);
         HasJobs = JobsCount > 0;
-        CanCreateJob = JobsCount < MaxJobs;
     }
 
     private string GenerateNextId()
@@ -216,7 +210,7 @@ public sealed partial class JobsViewModel : ViewModelBase
 
     private void SeedSampleJobs()
     {
-        Jobs.Add(new BackupJob("1", "Documents", "C:\\Users\\Demo\\Documents", "D:\\Backups\\Docs", BackupType.Full, true));
-        Jobs.Add(new BackupJob("2", "Photos", "C:\\Users\\Demo\\Pictures", "D:\\Backups\\Photos", BackupType.Differential, false));
+        Jobs.Add(new BackupJob("1", "Documents", "C:\\Users\\Demo\\Documents", "D:\\Backups\\Docs", BackupType.Full, null, true));
+        Jobs.Add(new BackupJob("2", "Photos", "C:\\Users\\Demo\\Pictures", "D:\\Backups\\Photos", BackupType.Differential, null, false));
     }
 }
