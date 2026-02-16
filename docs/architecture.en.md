@@ -11,7 +11,7 @@ and the main flows. It aims to provide a clear and up-to-date view of the actual
 ---
 
 ## Overview
-The solution is organized into 5 projects:
+The solution is organized into 5 projects and an external program for encryption:
 ```
 EasySave.Core        -> domain, DTO, contracts
 EasySave.App         -> services and persistence

@@ -11,7 +11,7 @@ et les flux principaux. Il vise a garder une vision claire et a jour du code ree
 ---
 
 ## Vue d ensemble
-La solution est organisee en 5 projets :
+La solution est organisee en 5 projets et un programme externe pour le chiffrement:
 ```
 EasySave.Core        -> domaine, DTO, contrats
 EasySave.App         -> services et persistance

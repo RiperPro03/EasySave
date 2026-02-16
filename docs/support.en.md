@@ -136,9 +136,9 @@ These parameters are configurable via **Settings**.
 -> retrieves the return code 
 ```
 - The **encryption time** is retrieved and added to the logs (`encryptionTime`)
-- 0 → not encrypted
-- 0 → encryption time in ms
-- <0 → encryption error
+- >0 → encryption time in ms
+- 0 → no encryption
+- <0 → error code
 
 **Note**: Only files whose extension appears in the user-defined list will be encrypted.
 

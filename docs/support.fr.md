@@ -139,11 +139,11 @@ EasySave
 -> récupère le code retour  
 ```
 - Le **temps de chiffrement** est récupéré et ajouté aux logs (`encryptionTime`)
-- 0 → pas chiffré
-- 0 → temps de chiffrement en ms
-- <0 → erreur de chiffrement
+- >0 → temps de chiffrement en ms
+- 0 → pas de cryptage
+- <0 → code erreur
 
-**Remarque** : Seuls les fichiers dont l’extension figure dans la liste définie par l’utilisateur seront chiffrés.
+**Remarque** : Seuls les fichiers dont l’extension et le logiciel métier correspondent aux valeurs définies par l’utilisateur dans les paramètres seront chiffrés.
 
 ## 3. Gestion du logiciel métier
 
