@@ -2,20 +2,32 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:EasySave.App.Gui.ViewModels"
              x:Class="EasySave.App.Gui.Views.AboutView"
-             x:DataType="vm:AboutViewModel">
+             x:DataType="vm:AboutViewModel"
+             HorizontalAlignment="Stretch">
 
-    <ScrollViewer VerticalScrollBarVisibility="Auto">
-        <StackPanel Spacing="20" >
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Spacing="20" 
+                    HorizontalAlignment="Left" 
+                    MaxWidth="800">
             
-            <Border Background="#18FFFFFF" BorderBrush="#28FFFFFF" BorderThickness="1" CornerRadius="12" Padding="20">
+            <Border Background="#18FFFFFF" 
+                    BorderBrush="#28FFFFFF" 
+                    BorderThickness="1" 
+                    CornerRadius="12" 
+                    Padding="20"
+                    HorizontalAlignment="Left">
                 <StackPanel Spacing="10">
                     <TextBlock Text="{Binding ProductName}" FontSize="24" FontWeight="Bold" Foreground="White"/>
-                    <TextBlock Text="{Binding strings.About_Intro}" FontSize="13" Foreground="#B0FFFFFF" TextWrapping="Wrap"/>
-                </StackPanel>
+                    <TextBlock Text="{Binding strings.About_Intro}" 
+                               FontSize="13" 
+                               Foreground="#B0FFFFFF" 
+                               TextWrapping="Wrap"
+                               MaxWidth="600"/> </StackPanel>
             </Border>
 
             <TextBlock Text="{Binding strings.Guide_Title}" FontSize="12" FontWeight="Bold" Foreground="#70FFFFFF" LetterSpacing="1"/>
-            <Border Background="#12FFFFFF" BorderBrush="#20FFFFFF" BorderThickness="1" CornerRadius="12" Padding="20">
+            
+            <Border Background="#12FFFFFF" BorderBrush="#20FFFFFF" BorderThickness="1" CornerRadius="12" Padding="20" HorizontalAlignment="Left">
                 <StackPanel Spacing="20">
                     <StackPanel Spacing="5">
                         <TextBlock Text="{Binding strings.Step1_Title}" FontWeight="Bold" Foreground="#0A84FF"/>
@@ -35,16 +47,17 @@
             </Border>
 
             <TextBlock Text="{Binding strings.Team_Title}" FontSize="12" FontWeight="Bold" Foreground="#70FFFFFF" LetterSpacing="1"/>
-            <WrapPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                <TextBlock Text="👤 Christopher ASIN  " Margin="0,0,20,5" Foreground="White" FontSize="13"/>
-                <TextBlock Text="👤 Shayna ROSIER  " Margin="0,0,20,5" Foreground="White" FontSize="13"/>
-                <TextBlock Text="👤 Mathis VOGEL  " Margin="0,0,20,5" Foreground="White" FontSize="13"/>
+            
+            <WrapPanel Orientation="Horizontal">
+                <TextBlock Text="👤 Christopher ASIN" Margin="0,0,20,5" Foreground="White" FontSize="13"/>
+                <TextBlock Text="👤 Shayna ROSIER" Margin="0,0,20,5" Foreground="White" FontSize="13"/>
+                <TextBlock Text="👤 Mathis VOGEL" Margin="0,0,20,5" Foreground="White" FontSize="13"/>
                 <TextBlock Text="👤 Maxime LANDEAU" Margin="0,0,20,5" Foreground="White" FontSize="13"/>
             </WrapPanel>
 
-            <Separator Background="#20FFFFFF"/>
+            <Separator Background="#20FFFFFF" HorizontalAlignment="Stretch"/>
             
-            <StackPanel Spacing="5">
+            <StackPanel Spacing="5" HorizontalAlignment="Left">
                 <TextBlock Text="GitHub :" FontWeight="Medium" Foreground="#70FFFFFF" FontSize="12"/>
                 <TextBlock Text="https://github.com/RiperPro03/EasySave" 
                            Foreground="#0A84FF" 
