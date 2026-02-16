@@ -4,7 +4,7 @@
              x:Class="EasySave.App.Gui.Views.SettingsView"
              x:DataType="vm:SettingsViewModel">
 
-    <StackPanel Margin="20" Spacing="15">
+    <StackPanel Margin="100" Spacing="15">
         <TextBlock Text="PARAMÈTRES" FontSize="18" FontWeight="Bold"/>
 
         <TextBlock Text="Langue :"/>
@@ -43,7 +43,7 @@
 
         <Separator/>
 
-        <TextBlock Text="Business software process name (ex: calc.exe):" />
+        <TextBlock Text="Business software process name (ex: CalculatorApp):" />
         <TextBox Text="{Binding BusinessSoftwareProcessName}"
                  Watermark="Leave empty to disable"
                  ToolTip.Tip="Process name used to block backups when running"/>
