@@ -97,9 +97,20 @@ public sealed class BackupController
             return;
         }
 
+        if (!_backupService.CanStartSequence(out var sequenceReason))
+        {
+            _consoleView.ShowError(sequenceReason ?? "Business software is running. Cannot start sequence.");
+            return;
+        }
+
         var results = new List<BackupResultDto>();
         foreach (var id in ids)
         {
+            if (!_backupService.CanStartSequence(out var stepReason))
+            {
+                _consoleView.ShowError(stepReason ?? "Business software is running. Cannot start sequence.");
+                break;
+            }
             // Ne pas bloquer en mode batch.
             // On lance chaque job trouvé un par un.
             var result = RunJobById(id, waitForKey: false);
@@ -152,9 +163,21 @@ public sealed class BackupController
             return;
         }
 
+        if (!_backupService.CanStartSequence(out var sequenceReason))
+        {
+            _consoleView.ShowError(sequenceReason ?? "Business software is running. Cannot start sequence.");
+            _consoleView.WaitForKey();
+            return;
+        }
+
         var results = new List<BackupResultDto>();
         foreach (var job in jobs)
         {
+            if (!_backupService.CanStartSequence(out var stepReason))
+            {
+                _consoleView.ShowError(stepReason ?? "Business software is running. Cannot start sequence.");
+                break;
+            }
             // Executer en serie pour chaque job.
             _backupView.ShowRunStart(job);
             var result = _backupService.Run(job);

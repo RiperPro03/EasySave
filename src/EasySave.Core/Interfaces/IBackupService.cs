@@ -42,4 +42,19 @@ public interface IBackupService
     /// <param name="jobId">The job identifier.</param>
     /// <returns><c>true</c> if the stop was requested; otherwise <c>false</c>.</returns>
     bool Stop(string jobId);
+
+    /// <summary>
+    /// Checks whether the configured business software is running.
+    /// </summary>
+    /// <param name="processName">The configured process name, if any.</param>
+    /// <returns><c>true</c> when the process is running.</returns>
+    bool IsBusinessSoftwareRunning(out string? processName);
+
+    /// <summary>
+    /// Validates whether a batch/sequence can start (global business software rule).
+    /// Logs the block when it cannot start.
+    /// </summary>
+    /// <param name="reason">Reason when the sequence cannot start.</param>
+    /// <returns><c>true</c> if the sequence can start.</returns>
+    bool CanStartSequence(out string? reason);
 }

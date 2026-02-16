@@ -84,6 +84,20 @@ public sealed class BackupService : IBackupService
             };
         }
 
+        if (IsBusinessSoftwareRunning(out var processName))
+        {
+            var message = $"Business software '{processName}' is currently running. Cannot start work.";
+            LogBusinessSoftwareBlocked(processName, job);
+            return new BackupResultDto
+            {
+                Success = false,
+                Message = message,
+                Duration = TimeSpan.Zero,
+                ErrorCount = 1,
+                Errors = new List<string> { message }
+            };
+        }
+
         JobStateDto? startedState = null;
         lock (_stateLock)
         {
@@ -160,6 +174,28 @@ public sealed class BackupService : IBackupService
             return false;
 
         return _backupEngine.Stop(jobId);
+    }
+
+    public bool IsBusinessSoftwareRunning(out string? processName)
+    {
+        processName = _config.BusinessSoftwareProcessName;
+        if (string.IsNullOrWhiteSpace(processName))
+            return false;
+
+        return BusinessSoftwareDetector.IsRunning(processName);
+    }
+
+    public bool CanStartSequence(out string? reason)
+    {
+        if (!IsBusinessSoftwareRunning(out var processName))
+        {
+            reason = null;
+            return true;
+        }
+
+        reason = $"Business software '{processName}' is currently running. Cannot start sequence.";
+        LogBusinessSoftwareBlocked(processName, job: null);
+        return false;
     }
 
     /// <summary>
@@ -331,6 +367,7 @@ public sealed class BackupService : IBackupService
                 category: LogEventCategory.Job,
                 action: LogEventAction.Skip,
                 message: "Job is inactive and was skipped")
+            .WithLevel(LogLevel.Notice)
             .WithOutcome(LogEventOutcome.Success)
             .WithJob(
                 id: job.Id,
@@ -343,6 +380,34 @@ public sealed class BackupService : IBackupService
             .Build();
 
         _logService.Write(entry);
+    }
+
+    private void LogBusinessSoftwareBlocked(string? processName, BackupJob? job)
+    {
+        if (_logService is null)
+            return;
+
+        var entryBuilder = LogEntryBuilder.Create(
+                eventName: "job.start.blocked.businesssoftware",
+                category: LogEventCategory.Job,
+                action: LogEventAction.Skip,
+                message: $"Backup start blocked because business software '{processName}' is running")
+            .WithLevel(LogLevel.Warning)
+            .WithOutcome(LogEventOutcome.Failure);
+
+        if (job != null)
+        {
+            entryBuilder = entryBuilder.WithJob(
+                id: job.Id,
+                name: job.Name,
+                type: job.Type,
+                sourcePath: ToUncOrEmpty(job.SourcePath),
+                targetPath: ToUncOrEmpty(job.TargetPath),
+                status: JobStatus.Idle,
+                isActive: job.IsActive);
+        }
+
+        _logService.Write(entryBuilder.Build());
     }
 
     /// <summary>

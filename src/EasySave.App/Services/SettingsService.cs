@@ -21,6 +21,7 @@ public class SettingsService
     public string EncryptionKey => _config.EncryptionKey;
     public Language Language => _config.Language;
     public LogFormat LogFormat => _config.LogFormat;
+    public string? BusinessSoftwareProcessName => _config.BusinessSoftwareProcessName;
     
     public IReadOnlyList<string> ExtensionsToEncrypt => _config.ExtensionsToEncrypt;
 
@@ -45,6 +46,31 @@ public class SettingsService
     public void UpdateLogFormat(LogFormat format)
     {
         _config.ChangeLogFormat(format);
+        _repository.Save(_config);
+    }
+
+    public void UpdateBusinessSoftwareProcessName(string? name)
+    {
+        _config.ChangeBussinessSoftware(string.IsNullOrWhiteSpace(name) ? null : name.Trim());
+        _repository.Save(_config);
+    }
+
+    public void ApplySettings(
+        bool encryptionEnabled,
+        string? encryptionKey,
+        Language language,
+        LogFormat logFormat,
+        IEnumerable<string> extensionsToEncrypt,
+        string? businessSoftwareProcessName)
+    {
+        _config.SetEncryptionEnabled(encryptionEnabled);
+        _config.UpdateEncryptionKey(encryptionKey);
+        _config.ChangeLanguage(language);
+        _config.ChangeLogFormat(logFormat);
+        _config.UpdateExtensionsToEncrypt(extensionsToEncrypt);
+        _config.ChangeBussinessSoftware(string.IsNullOrWhiteSpace(businessSoftwareProcessName)
+            ? null
+            : businessSoftwareProcessName.Trim());
         _repository.Save(_config);
     }
     

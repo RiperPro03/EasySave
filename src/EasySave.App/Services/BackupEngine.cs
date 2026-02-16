@@ -18,6 +18,7 @@ internal sealed class BackupEngine : IBackupEngine
 {
     private readonly IAppLogService? _logService;
     private readonly AppConfig _config;
+    private readonly ICryptoService _cryptoService;
     private readonly ConcurrentDictionary<string, JobExecutionControl> _jobControls = new(StringComparer.Ordinal);
 
     /// <summary>
@@ -31,10 +32,11 @@ internal sealed class BackupEngine : IBackupEngine
     /// <param name="logDirectory">Optional log directory; when null, logging is disabled.</param>
     /// <param name="logFormat">Log serialization format.</param>
     /// <param name="logService">Optional log service.</param>
-    public BackupEngine(AppConfig config, IAppLogService? logService = null)
+    public BackupEngine(AppConfig config, IAppLogService? logService = null, ICryptoService? cryptoService = null)
     {
         _config = config ?? throw new ArgumentNullException(nameof(config));
         _logService = logService;
+        _cryptoService = cryptoService ?? CreateDefaultCryptoService();
     }
 
     /// <summary>
@@ -72,6 +74,26 @@ internal sealed class BackupEngine : IBackupEngine
                 result.Duration = TimeSpan.Zero;
                 result.Errors.Add(ex.Message);
                 result.ErrorCount = result.Errors.Count;
+                if (_logService != null)
+                {
+                    var blockedEntry = LogEntryBuilder.Create(
+                            eventName: "job.start.blocked.businesssoftware",
+                            category: LogEventCategory.Job,
+                            action: LogEventAction.Skip,
+                            message: ex.Message)
+                        .WithLevel(LogLevel.Warning)
+                        .WithOutcome(LogEventOutcome.Failure)
+                        .WithJob(
+                            id: job.Id,
+                            name: job.Name,
+                            type: job.Type,
+                            sourcePath: ToUncOrEmpty(job.SourcePath),
+                            targetPath: ToUncOrEmpty(job.TargetPath),
+                            status: JobStatus.Idle,
+                            isActive: job.IsActive)
+                        .Build();
+                    _logService.Write(blockedEntry);
+                }
                 WriteSummaryLog(job, result, traceId);
                 UpdateTerminalState(control, state, JobStatus.Error, ex.Message);
                 return result;
@@ -297,15 +319,56 @@ internal sealed class BackupEngine : IBackupEngine
 
                 if (ShouldEncrypt(sourcePath))
                 {
-                    var swEncrypt = Stopwatch.StartNew();
+                    var cryptoMissing = !File.Exists(GetDefaultCryptoSoftPath());
+                    if (cryptoMissing && _logService != null)
+                    {
+                        var logEntry = LogEntryBuilder.Create(
+                                eventName: "crypto.fallback",
+                                category: LogEventCategory.Settings,
+                                action: LogEventAction.Unknown,
+                                message: "CryptoSoft.exe not found. Encryption skipped.")
+                            .WithLevel(LogLevel.Warning)
+                            .WithOutcome(LogEventOutcome.Failure)
+                            .Build();
+                        _logService.Write(logEntry);
+                    }
 
-                    // TODO Issue 99 : appel CryptoSoft ici 
+                    int encryptionTimeMs;
+                    bool encryptionFailed = false;
+                    string? encryptionError = null;
+                    try
+                    {
+                        encryptionTimeMs = _cryptoService
+                            .EncryptFileAsync(sourcePath, _config.EncryptionKey)
+                            .GetAwaiter()
+                            .GetResult();
+                        if (encryptionTimeMs < 0)
+                        {
+                            encryptionFailed = true;
+                            encryptionError = $"Encryption failed for {Path.GetFileName(sourcePath)} (code {encryptionTimeMs}).";
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        encryptionTimeMs = -1;
+                        encryptionFailed = true;
+                        encryptionError = $"Encryption failed for {Path.GetFileName(sourcePath)}: {ex.Message}";
+                    }
 
-                    swEncrypt.Stop();
-                    var encryptionTimeMs = swEncrypt.ElapsedMilliseconds;
+                    if (encryptionFailed && !string.IsNullOrWhiteSpace(encryptionError))
+                    {
+                        result.Errors.Add(encryptionError);
+                        result.ErrorCount = result.Errors.Count;
+                    }
 
                     if (_logService != null)
                     {
+                        var level = encryptionTimeMs < 0 ? LogLevel.Error : LogLevel.Info;
+                        var outcome = encryptionTimeMs < 0 ? LogEventOutcome.Failure : LogEventOutcome.Success;
+                        var message = encryptionTimeMs < 0
+                            ? $"Encryption failed for {Path.GetFileName(sourcePath)}"
+                            : $"File {Path.GetFileName(sourcePath)} encrypted";
+
                         var cryptoDto = new LogCryptoDto
                         {
                             Tool = "CryptoSoft",
@@ -315,14 +378,16 @@ internal sealed class BackupEngine : IBackupEngine
                             InstanceLock = null
                         };
                         var logEntry = LogEntryBuilder.Create(
-                            eventName: "file.encrypted",
-                            category: LogEventCategory.File,
-                            action: LogEventAction.Unknown,
-                            message: $"File {Path.GetFileName(sourcePath)} encrypted")
-                        .WithFile(
-                            sourcePath: sourcePath,
-                            targetPath: targetPath,
-                            sizeBytes: fileSize,
+                              eventName: "file.encrypted",
+                              category: LogEventCategory.File,
+                              action: LogEventAction.Unknown,
+                              message: message)
+                          .WithLevel(level)
+                          .WithOutcome(outcome)
+                          .WithFile(
+                              sourcePath: sourcePath,
+                              targetPath: targetPath,
+                              sizeBytes: fileSize,
                             transferTimeMs: encryptionTimeMs)
                         .WithCrypto(
                             tool: cryptoDto.Tool,
@@ -378,6 +443,8 @@ internal sealed class BackupEngine : IBackupEngine
                             category: LogEventCategory.Job,
                             action: LogEventAction.Summary,
                             message: "Backup stopped because business software detected")
+                        .WithLevel(LogLevel.Warning)
+                        .WithOutcome(LogEventOutcome.Failure)
                         .WithJob(
                             id: job.Id,
                             name: job.Name,
@@ -532,7 +599,7 @@ internal sealed class BackupEngine : IBackupEngine
 
         var (eventName, message, level) = action switch
         {
-            LogEventAction.Skip => ("file.skipped", "File skipped", LogLevel.Info),
+            LogEventAction.Skip => ("file.skipped", "File skipped", LogLevel.Notice),
             LogEventAction.DirectoryCreated => ("directory.created", "Directory created", LogLevel.Info),
             LogEventAction.Transfer when outcome == LogEventOutcome.Failure
                 => ("file.transfer.failed", "File transfer failed", LogLevel.Error),
@@ -813,5 +880,16 @@ internal sealed class BackupEngine : IBackupEngine
 
         return _config.ExtensionsToEncrypt
             .Any(ext => string.Equals(ext, extension, StringComparison.OrdinalIgnoreCase));
+    }
+
+    private static string GetDefaultCryptoSoftPath()
+        => Path.Combine(AppContext.BaseDirectory, "CryptoSoft.exe");
+
+    private static ICryptoService CreateDefaultCryptoService()
+    {
+        var path = GetDefaultCryptoSoftPath();
+        if (File.Exists(path))
+            return new CryptoSoftProcessService(path);
+        return new NoEncryptionService();
     }
 }

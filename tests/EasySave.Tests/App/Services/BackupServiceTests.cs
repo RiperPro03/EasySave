@@ -3,6 +3,7 @@ using EasySave.Core.DTO;
 using EasySave.Core.Enums;
 using EasySave.Core.Interfaces;
 using EasySave.Core.Models;
+using System.Diagnostics;
 
 namespace EasySave.Tests.App.Services;
 
@@ -87,6 +88,35 @@ public class BackupServiceTests
             snapshot.Jobs.Any(state => state.JobId == job.Id && state.Status == JobStatus.Running));
         Assert.Contains(writer.Snapshots, snapshot =>
             snapshot.Jobs.Any(state => state.JobId == job.Id && state.Status == JobStatus.Error));
+    }
+
+    [Fact]
+    public void CanStartSequence_ShouldReturnFalse_WhenBusinessSoftwareRunning()
+    {
+        var jobService = new FakeJobService();
+        var config = AppConfig.LoadDefaults();
+        var processName = Process.GetCurrentProcess().ProcessName;
+        config.ChangeBussinessSoftware(processName);
+        var service = new BackupService(jobService, config, stateWriter: new NoOpStateWriter());
+
+        var canStart = service.CanStartSequence(out var reason);
+
+        Assert.False(canStart);
+        Assert.NotNull(reason);
+        Assert.Contains(processName, reason);
+    }
+
+    [Fact]
+    public void CanStartSequence_ShouldReturnTrue_WhenBusinessSoftwareNotConfigured()
+    {
+        var jobService = new FakeJobService();
+        var config = AppConfig.LoadDefaults();
+        var service = new BackupService(jobService, config, stateWriter: new NoOpStateWriter());
+
+        var canStart = service.CanStartSequence(out var reason);
+
+        Assert.True(canStart);
+        Assert.Null(reason);
     }
 
     private sealed class FakeJobService : IJobService

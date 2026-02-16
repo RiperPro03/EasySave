@@ -18,6 +18,7 @@ public partial class SettingsViewModel : ViewModelBase
     [ObservableProperty] private Language _selectedLanguage;
     [ObservableProperty] private LogFormat _selectedLogFormat;
     [ObservableProperty] private string _extensionsToEncrypt = string.Empty;
+    [ObservableProperty] private string _businessSoftwareProcessName = string.Empty;
     
     // Listes pour remplir les menus déroulants (ComboBox)
     public Language[] Languages => Enum.GetValues<Language>();
@@ -39,42 +40,30 @@ public partial class SettingsViewModel : ViewModelBase
         // On transforme la liste d'extensions en une chaîne de caractères séparée par des virgules
         // Si ton service possède une propriété ExtensionsToEncrypt (List<string>)
         ExtensionsToEncrypt = string.Join(", ", settings.ExtensionsToEncrypt);
+        BusinessSoftwareProcessName = settings.BusinessSoftwareProcessName ?? string.Empty;
     }
-    // Sauvegarde auto quand on change d'option
-    partial void OnSelectedLanguageChanged(Language value)
-    {
-        if (_settings == null)
-            return;
-        _settings.UpdateLanguage(value);
-    }
+    // Changes are applied on save to avoid log spam.
 
-    partial void OnSelectedLogFormatChanged(LogFormat value)
-    {
-        if (_settings == null)
-            return;
-        _settings.UpdateLogFormat(value);
-    }
-
-    // Cette méthode est appelée automatiquement quand l'utilisateur change le texte
-    partial void OnExtensionsToEncryptChanged(string value)
-    {
-        if (_settings == null)
-            return;
-        // On transforme la chaîne en liste : on sépare par virgule, on enlève les espaces et les vides
-        var list = value.Split(',')
-            .Select(x => x.Trim())
-            .Where(x => !string.IsNullOrWhiteSpace(x))
-            .ToList();
-        
-        _settings.UpdateExtensionsToEncrypt(list);
-    }
-    
     [RelayCommand]
     private void SaveSettings()
     {
         if (_settings == null)
             return;
-        _settings.UpdateEncryptionKey(EncryptionKey);
-        if (EncryptionEnabled != _settings.EncryptionEnabled) _settings.ToggleEncryption();
+
+        var list = ExtensionsToEncrypt.Split(',')
+            .Select(x => x.Trim())
+            .Where(x => !string.IsNullOrWhiteSpace(x))
+            .ToList();
+
+        _settings.ApplySettings(
+            encryptionEnabled: EncryptionEnabled,
+            encryptionKey: EncryptionKey,
+            language: SelectedLanguage,
+            logFormat: SelectedLogFormat,
+            extensionsToEncrypt: list,
+            businessSoftwareProcessName: BusinessSoftwareProcessName);
     }
 }
+
+
+

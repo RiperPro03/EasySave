@@ -131,6 +131,11 @@ public sealed partial class ExecutionViewModel : ViewModelBase, IDisposable
             return;
 
         LastError = null;
+        if (!_backupService.CanStartSequence(out var reason))
+        {
+            LastError = reason ?? "Business software is running. Cannot start sequence.";
+            return;
+        }
         RefreshJobs();
 
         var runnableIds = Jobs
@@ -154,6 +159,8 @@ public sealed partial class ExecutionViewModel : ViewModelBase, IDisposable
             {
                 foreach (var job in jobsToRun)
                 {
+                    if (!_backupService.CanStartSequence(out _))
+                        break;
                     _backupService.Run(job);
                 }
             });

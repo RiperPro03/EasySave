@@ -41,11 +41,19 @@
                    FontStyle="Italic"
                    Opacity="0.7"/>
 
-        <Button Content="Enregistrer les modifications" 
+        <Separator/>
+
+        <TextBlock Text="Business software process name (ex: calc.exe):" />
+        <TextBox Text="{Binding BusinessSoftwareProcessName}"
+                 Watermark="Leave empty to disable"
+                 ToolTip.Tip="Process name used to block backups when running"/>
+
+        <Button Content="Save changes" 
                 Command="{Binding SaveSettingsCommand}"
                 HorizontalAlignment="Center"
                 Padding="20,10"
                 Classes="accent"/>
     </StackPanel>
 </UserControl>
+
 
