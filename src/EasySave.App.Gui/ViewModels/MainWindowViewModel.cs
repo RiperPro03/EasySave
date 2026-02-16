@@ -35,6 +35,15 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
     private bool _disposed;
 
     public string AppVersion { get; } = "v2.0.0";
+    public string AppTagline => Strings.Gui_App_Tagline;
+    public string SidebarWorkspaceLabel => Strings.Gui_Sidebar_Workspace;
+    public string SidebarSystemLabel => Strings.Gui_Sidebar_System;
+    public string NavDashboardLabel => Strings.Gui_Nav_Dashboard;
+    public string NavBackupJobsLabel => Strings.Gui_Nav_BackupJobs;
+    public string NavLiveExecutionLabel => Strings.Gui_Nav_LiveExecution;
+    public string NavLogsLabel => Strings.Gui_Nav_Logs;
+    public string NavSettingsLabel => Strings.Gui_Nav_Settings;
+    public string NavAboutLabel => Strings.Gui_Nav_About;
 
     [ObservableProperty]
     private string _statusMessage = Strings.Gui_Status_Ready;
@@ -248,6 +257,15 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
     private void RefreshLocalization()
     {
         CurrentState = ResolveJobStatusLabel(_lastJobStatus);
+        OnPropertyChanged(nameof(AppTagline));
+        OnPropertyChanged(nameof(SidebarWorkspaceLabel));
+        OnPropertyChanged(nameof(SidebarSystemLabel));
+        OnPropertyChanged(nameof(NavDashboardLabel));
+        OnPropertyChanged(nameof(NavBackupJobsLabel));
+        OnPropertyChanged(nameof(NavLiveExecutionLabel));
+        OnPropertyChanged(nameof(NavLogsLabel));
+        OnPropertyChanged(nameof(NavSettingsLabel));
+        OnPropertyChanged(nameof(NavAboutLabel));
         CurrentPageTitle = ActiveTab switch
         {
             NavigationTab.Dashboard => Strings.Gui_Nav_Dashboard,

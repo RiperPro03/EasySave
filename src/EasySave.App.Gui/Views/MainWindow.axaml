@@ -135,7 +135,7 @@
                                        FontWeight="Bold"
                                        Foreground="#FFFFFF"
                                        LetterSpacing="0.5"/>
-                            <TextBlock Text="{Binding Source={StaticResource Loc}, Path=[Gui_App_Tagline]}"
+                            <TextBlock Text="{Binding AppTagline}"
                                        FontSize="11"
                                        Foreground="#90FFFFFF"
                                        LetterSpacing="0.8"/>
@@ -174,7 +174,7 @@
                         
                         <!-- Section Navigation -->
                         <StackPanel Spacing="6" Margin="0,0,0,16">
-                            <TextBlock Text="{Binding Source={StaticResource Loc}, Path=[Gui_Sidebar_Workspace]}"
+                            <TextBlock Text="{Binding SidebarWorkspaceLabel}"
                                        FontSize="11"
                                        FontWeight="Bold"
                                        Foreground="#70FFFFFF"
@@ -191,7 +191,7 @@
                                                    HorizontalAlignment="Center"
                                                    VerticalAlignment="Center"/>
                                     </Border>
-                                    <TextBlock Text="{Binding Source={StaticResource Loc}, Path=[Gui_Nav_Dashboard]}" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding NavDashboardLabel}" VerticalAlignment="Center"/>
                                 </StackPanel>
                             </Button>
 
@@ -205,7 +205,7 @@
                                                    HorizontalAlignment="Center"
                                                    VerticalAlignment="Center"/>
                                     </Border>
-                                    <TextBlock Text="{Binding Source={StaticResource Loc}, Path=[Gui_Nav_BackupJobs]}" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding NavBackupJobsLabel}" VerticalAlignment="Center"/>
                                 </StackPanel>
                             </Button>
 
@@ -219,7 +219,7 @@
                                                    HorizontalAlignment="Center"
                                                    VerticalAlignment="Center"/>
                                     </Border>
-                                    <TextBlock Text="{Binding Source={StaticResource Loc}, Path=[Gui_Nav_LiveExecution]}" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding NavLiveExecutionLabel}" VerticalAlignment="Center"/>
                                 </StackPanel>
                             </Button>
 
@@ -233,7 +233,7 @@
                                                    HorizontalAlignment="Center"
                                                    VerticalAlignment="Center"/>
                                     </Border>
-                                    <TextBlock Text="{Binding Source={StaticResource Loc}, Path=[Gui_Nav_Logs]}" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding NavLogsLabel}" VerticalAlignment="Center"/>
                                 </StackPanel>
                             </Button>
                         </StackPanel>
@@ -251,7 +251,7 @@
 
                         <!-- Section System -->
                         <StackPanel Spacing="6" Margin="0,16,0,0">
-                            <TextBlock Text="{Binding Source={StaticResource Loc}, Path=[Gui_Sidebar_System]}"
+                            <TextBlock Text="{Binding SidebarSystemLabel}"
                                        FontSize="11"
                                        FontWeight="Bold"
                                        Foreground="#70FFFFFF"
@@ -268,7 +268,7 @@
                                                    HorizontalAlignment="Center"
                                                    VerticalAlignment="Center"/>
                                     </Border>
-                                    <TextBlock Text="{Binding Source={StaticResource Loc}, Path=[Gui_Nav_Settings]}" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding NavSettingsLabel}" VerticalAlignment="Center"/>
                                 </StackPanel>
                             </Button>
 
@@ -282,7 +282,7 @@
                                                    HorizontalAlignment="Center"
                                                    VerticalAlignment="Center"/>
                                     </Border>
-                                    <TextBlock Text="{Binding Source={StaticResource Loc}, Path=[Gui_Nav_About]}" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding NavAboutLabel}" VerticalAlignment="Center"/>
                                 </StackPanel>
                             </Button>
                         </StackPanel>
