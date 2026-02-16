@@ -334,68 +334,102 @@ internal sealed class BackupEngine : IBackupEngine
                         _logService.Write(logEntry);
                     }
 
-                    int encryptionTimeMs;
-                    bool encryptionFailed = false;
-                    string? encryptionError = null;
-                    try
+                    if (!cryptoMissing)
                     {
-                        encryptionTimeMs = _cryptoService
-                            .EncryptFileAsync(targetPath, _config.EncryptionKey)
-                            .GetAwaiter()
-                            .GetResult();
-                        if (encryptionTimeMs < 0)
+                        int encryptionTimeMs;
+                        bool encryptionFailed = false;
+                        string? encryptionError = null;
+                        try
                         {
+                            encryptionTimeMs = _cryptoService
+                                .EncryptFileAsync(targetPath, _config.EncryptionKey)
+                                .GetAwaiter()
+                                .GetResult();
+                            if (encryptionTimeMs < 0)
+                            {
+                                encryptionFailed = true;
+                                encryptionError = $"Encryption failed for {Path.GetFileName(targetPath)} (code {encryptionTimeMs}).";
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            encryptionTimeMs = -1;
                             encryptionFailed = true;
-                            encryptionError = $"Encryption failed for {Path.GetFileName(targetPath)} (code {encryptionTimeMs}).";
+                            encryptionError = $"Encryption failed for {Path.GetFileName(targetPath)}: {ex.Message}";
+                        }
+
+                        if (encryptionFailed && !string.IsNullOrWhiteSpace(encryptionError))
+                        {
+                            result.Errors.Add(encryptionError);
+                            result.ErrorCount = result.Errors.Count;
+                        }
+
+                        if (_logService != null)
+                        {
+                            var level = encryptionTimeMs < 0 ? LogLevel.Error : LogLevel.Info;
+                            var outcome = encryptionTimeMs < 0 ? LogEventOutcome.Failure : LogEventOutcome.Success;
+                            var message = encryptionTimeMs < 0
+                                ? $"Encryption failed for {Path.GetFileName(targetPath)}"
+                                : $"File {Path.GetFileName(targetPath)} encrypted";
+
+                            var cryptoDto = new LogCryptoDto
+                            {
+                                Tool = "CryptoSoft",
+                                ExtensionMatched = true,
+                                EncryptionTimeMs = encryptionTimeMs,
+                                Extension = Path.GetExtension(sourcePath),
+                                InstanceLock = null
+                            };
+                            var logEntry = LogEntryBuilder.Create(
+                                  eventName: "file.encrypted",
+                                  category: LogEventCategory.File,
+                                  action: LogEventAction.Unknown,
+                                  message: message)
+                              .WithLevel(level)
+                              .WithOutcome(outcome)
+                              .WithFile(
+                                  sourcePath: sourcePath,
+                                  targetPath: targetPath,
+                                  sizeBytes: fileSize,
+                                  transferTimeMs: transferTimeMs)
+                              .WithCrypto(
+                                  tool: cryptoDto.Tool,
+                                  extensionMatched: cryptoDto.ExtensionMatched,
+                                  encryptionTimeMs: cryptoDto.EncryptionTimeMs,
+                                  extension: cryptoDto.Extension)
+                            .Build();
+
+                            _logService.Write(logEntry);
                         }
                     }
-                    catch (Exception ex)
+                    else if (_logService != null)
                     {
-                        encryptionTimeMs = -1;
-                        encryptionFailed = true;
-                        encryptionError = $"Encryption failed for {Path.GetFileName(targetPath)}: {ex.Message}";
-                    }
-
-                    if (encryptionFailed && !string.IsNullOrWhiteSpace(encryptionError))
-                    {
-                        result.Errors.Add(encryptionError);
-                        result.ErrorCount = result.Errors.Count;
-                    }
-
-                    if (_logService != null)
-                    {
-                        var level = encryptionTimeMs < 0 ? LogLevel.Error : LogLevel.Info;
-                        var outcome = encryptionTimeMs < 0 ? LogEventOutcome.Failure : LogEventOutcome.Success;
-                        var message = encryptionTimeMs < 0
-                            ? $"Encryption failed for {Path.GetFileName(targetPath)}"
-                            : $"File {Path.GetFileName(targetPath)} encrypted";
-
                         var cryptoDto = new LogCryptoDto
                         {
                             Tool = "CryptoSoft",
                             ExtensionMatched = true,
-                            EncryptionTimeMs = encryptionTimeMs,
+                            EncryptionTimeMs = 0,
                             Extension = Path.GetExtension(sourcePath),
                             InstanceLock = null
                         };
                         var logEntry = LogEntryBuilder.Create(
-                              eventName: "file.encrypted",
-                              category: LogEventCategory.File,
-                              action: LogEventAction.Unknown,
-                              message: message)
-                          .WithLevel(level)
-                          .WithOutcome(outcome)
-                          .WithFile(
-                              sourcePath: sourcePath,
-                              targetPath: targetPath,
-                              sizeBytes: fileSize,
-                              transferTimeMs: transferTimeMs)
-                          .WithCrypto(
-                              tool: cryptoDto.Tool,
-                              extensionMatched: cryptoDto.ExtensionMatched,
-                              encryptionTimeMs: cryptoDto.EncryptionTimeMs,
-                              extension: cryptoDto.Extension)
-                        .Build();
+                                eventName: "file.encryption.skipped",
+                                category: LogEventCategory.File,
+                                action: LogEventAction.Skip,
+                                message: "Encryption not possible: CryptoSoft.exe not found.")
+                            .WithLevel(LogLevel.Warning)
+                            .WithOutcome(LogEventOutcome.Failure)
+                            .WithFile(
+                                sourcePath: sourcePath,
+                                targetPath: targetPath,
+                                sizeBytes: fileSize,
+                                transferTimeMs: transferTimeMs)
+                            .WithCrypto(
+                                tool: cryptoDto.Tool,
+                                extensionMatched: cryptoDto.ExtensionMatched,
+                                encryptionTimeMs: cryptoDto.EncryptionTimeMs,
+                                extension: cryptoDto.Extension)
+                            .Build();
 
                         _logService.Write(logEntry);
                     }
