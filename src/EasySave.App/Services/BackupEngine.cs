@@ -320,7 +320,7 @@ internal sealed class BackupEngine : IBackupEngine
 
                 if (ShouldEncrypt(sourcePath))
                 {
-                    var cryptoMissing = !File.Exists(GetDefaultCryptoSoftPath());
+                    var cryptoMissing = _cryptoService is NoEncryptionService;
                     if (cryptoMissing && _logService != null)
                     {
                         var logEntry = LogEntryBuilder.Create(
