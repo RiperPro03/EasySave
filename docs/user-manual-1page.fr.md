@@ -129,3 +129,24 @@ Menu :
 	- Maximum 5 jobs 
 	- Exécution séquentielle 
 	- Interface graphique prévue en v2
+
+# Version 2.0 
+
+## Nouveaux paramètres
+
+- EncryptionEnabled
+- EncryptionKey
+- ExtensionsToEncrypt
+- BusinessSoftwareProcessName
+
+## Chiffrement 
+
+Les fichiers dont l'extension correspond sont chiffrés automatiquement. 
+
+## Logiciel métier 
+
+L'utilisateur peut définir un logiciel métier à surveiller dans les paramètres généraux.  
+Lorsque le logiciel métier est actif : 
+
+- Impossible de lancer un job 
+- Une sauvegarde en cours s'arrête proprement

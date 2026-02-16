@@ -18,6 +18,7 @@ EasySave.App         -> services and persistence
 EasySave.EasyLog     -> logging library
 EasySave.App.Console -> console interface
 EasySave.App.Gui     -> graphical interface (Avalonia)
+CryptoSoft           -> external program for encryption
 ```
 ---
 
@@ -34,7 +35,8 @@ EasySave.Core ---------> EasySave.EasyLog (LogFormat)
 Notes :
 - `EasySave.Core` reference `EasySave.EasyLog.Options.LogFormat` via `AppConfig`.
 - `EasySave.App.Console` instantiates `AppConfigRepository` (App) to load config.
-- `EasySave.App.Gui` is an Avalonia skeleton (no business logic connected).
+- `EasySave.App.Gui` is connected to EasySave.App services to manage unlimited jobs, user parameters (Settings) and backup execution via the graphical interface.
+- `CryptoSoft` is an external program; no direct dependency on EasySave.
 
 ---
 
@@ -68,15 +70,22 @@ Constraints :
 - `JobService`: CRUD operations on jobs.
 - `PathProvider`: application paths (AppData/ProSoft/EasySave).
 - `StateWriter`: global snapshot writing.
-
-**Strategies**
 - `FullCopyStrategy`: full copy.
 - `DifferentialCopyStrategy`: copy if different files (size, date, hash).
+- `SettingsService`: Management of `setting.json` (language, log format, extensions to be encrypted, key, business software)
+- `AppLogService` : Log centralization
+- `LogReaderService` : Reading / parsing of logs
+- `CryptoSoftProcessService` : Launch CryptoSoft to encrypt files
+- `NoEncryptionService`: Job processing without encryption (files not affected by encryption rules)
+- `JobExecutionControl`: Execution control / Play / Pause / Stop
 
 **Repositories**
 - `JobRepository`: persistence in `jobs.json` (limit to 5 jobs).
 - `AppConfigRepository` : persistence in `setting.json` (language, log format).
 
+**Tools :**
+- `BusinessSoftwareDetector` : business software detection 
+- `UncResolver` : UNC path management
 ---
 
 ### 3. EasySave.EasyLog
@@ -89,6 +98,7 @@ Components:
 - **Options**: `LogOptions`, `LogFormat`.
 - **Factory**: `LoggerFactory`.
 - **Tools**: `DailyFileHelper`.
+- **Writers** : `FileLogWriter`
 
 Features :
 - daily writing,
@@ -116,10 +126,35 @@ Components:
 ### 5. EasySave.App.Gui
 **Role:** Avalonia graphical interface.
 
-Current state:
-- `MainWindow` + minimal `MainWindowViewModel`.
-- no connection to `EasySave.App` services for now.
+**Structure:**
 
+- **ViewModels**: `MainWindowViewModel`, `DashboardViewModel`, `ExecutionViewModel`, `JobEditorViewModel`, `SettingsViewModel`.  
+- **Views**: `MainWindow.axaml`, `DashboardView.axaml`, `ExecutionView.axaml`, `JobEditorDialog.axaml`, `LogsView.axaml`, `SettingsView.axaml`, `AboutView.axaml`  
+- **Models**: `ExecutionJobItem.cs`, `LogEntryItem.cs`, `RecentActivityItem.cs`.  
+- **Converters**: `LogLevelToBrushConverter.cs`, `StatusToTextConverter.cs`, `TypeToTextConverter.cs`.  
+- **Assets**: logo, icons  
+- **App.axaml** + **Program.cs** + **ViewLocator.cs** 
+- Includes CryptoSoft call, unlimited job management, business software and encrypted extensions  
+
+---
+
+### 6. CryptoSoft
+**Role:** External program for encrypting files via XOR.
+
+**Files:**
+
+- **CryptoSoft.csproj** 
+- **Program.cs**: CLI execution  
+- **FileManager.cs**: read, encrypt, measure time (ms)  
+
+**Operation:**
+- EasySave.App launches CryptoSoft.exe via an external process
+- Passes file and key as arguments
+- Retrieves return code (encryption time in ms)
+- Time returned in logs :  
+  - 0 if no encryption  
+  - >0 encryption time in ms  
+  - <0 encryption error  
 ---
 
 ## Main flows
@@ -215,4 +250,8 @@ The latest diagrams are in `docs/uml` :
 
 ## Points of attention
 
-- `EasySave.App.Gui` is not yet connected to the app services.
+- Unlimited job management  
+- Automatic file encryption via CryptoSoft
+- Job detection and blocking if business software active (configurable)
+- GUI now fully connected to App services for execution and parameterization
+- Enhanced logging, with integrated encryption time

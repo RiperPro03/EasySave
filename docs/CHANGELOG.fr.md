@@ -66,3 +66,46 @@ Ce projet respecte le versionnement sémantique.
 - Application en ligne de commande uniquement
 - Maximum 5 travaux de sauvegarde
 - Sauvegarde séquentielle uniquement
+
+## [2.0.0]
+
+### Features
+
+- [FEAT] App GUI navigation minimale  
+  https://github.com/RiperPro03/EasySave/issues/85
+
+- [FEAT] Add Folder Pickers (Source/Target) with UI Validation  
+  https://github.com/RiperPro03/EasySave/issues/90
+
+- [FEAT] Backup Job View  
+  https://github.com/RiperPro03/EasySave/issues/91
+
+- [FEAT] Live Execution View  
+  https://github.com/RiperPro03/EasySave/issues/92
+
+- [FEAT] Setting View  
+  https://github.com/RiperPro03/EasySave/issues/95
+
+- [FEAT] Repository Jobs : passer à “illimité”  
+  https://github.com/RiperPro03/EasySave/issues/97
+
+- [FEAT] Integrate CryptoSoft  
+  https://github.com/RiperPro03/EasySave/issues/99
+
+- [FEAT] Log : ajouter "temps de crytage (ms)"  
+  https://github.com/RiperPro03/EasySave/issues/100
+
+- [FEAT] Détection logiciel métier (process) paramétrable  
+  https://github.com/RiperPro03/EasySave/issues/101
+
+- [FEAT] Interdire lancement job si logiciel métier actif (et loguer l'arrêt)  
+  https://github.com/RiperPro03/EasySave/issues/102
+
+- [FEAT] Séquentiel : si logiciel métier apparaît -> terminer fichier courant puis stopper  
+  https://github.com/RiperPro03/EasySave/issues/103
+
+
+### Documentation
+
+- Docs livrable v2.0 (user + support + changelog + UML)  
+  https://github.com/RiperPro03/EasySave/issues/98

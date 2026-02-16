@@ -18,6 +18,7 @@ EasySave.App         -> services et persistance
 EasySave.EasyLog     -> bibliotheque de logging
 EasySave.App.Console -> interface console
 EasySave.App.Gui     -> interface graphique (Avalonia)
+CryptoSoft           -> programme externe pour chiffrement
 ```
 
 ---
@@ -35,7 +36,8 @@ EasySave.Core ---------> EasySave.EasyLog (LogFormat)
 Notes :
 - `EasySave.Core` reference `EasySave.EasyLog.Options.LogFormat` via `AppConfig`.
 - `EasySave.App.Console` instancie `AppConfigRepository` (App) pour charger la config.
-- `EasySave.App.Gui` est un squelette Avalonia (pas de logique metier branchee).
+- `EasySave.App.Gui` est connecté aux services de EasySave.App pour gérer les jobs illimités, les paramètres utilisateur (Settings) et l’exécution des sauvegardes via l’interface graphique.
+- `CryptoSoft` est un programme externe; aucune dépendance directe avec EasySave.
 
 ---
 
@@ -69,14 +71,22 @@ Contraintes :
 - `JobService` : operations CRUD sur les jobs.
 - `PathProvider` : chemins applicatifs (AppData/ProSoft/EasySave).
 - `StateWriter` : ecriture du snapshot global.
-
-**Strategies**
 - `FullCopyStrategy` : copie totale.
 - `DifferentialCopyStrategy` : copie si fichiers differents (taille, date, hash).
+- `SettingsService` : Gestion de `setting.json` (langue, log format, extensions à chiffrer, clé, logiciel métier)
+- `AppLogService` : Centralisation des logs
+- `LogReaderService` : Lecture / parsing des logs
+- `CryptoSoftProcessService` : Lancement de CryptoSoft pour chiffrer fichiers
+- `NoEncryptionService` : Traitement des jobs sans chiffrement (fichiers non concernés par les règles de cryptage)
+- `JobExecutionControl` : Contrôle exécution / Play / Pause / Stop
 
 **Repositories**
 - `JobRepository` : persistance dans `jobs.json` (limite a 5 jobs).
 - `AppConfigRepository` : persistance `setting.json` (langue, format log).
+
+**Utils :**
+- `BusinessSoftwareDetector` : détection logiciel métier  
+- `UncResolver` : gestion chemins UNC  
 
 ---
 
@@ -90,6 +100,7 @@ Composants :
 - **Options** : `LogOptions`, `LogFormat`.
 - **Factory** : `LoggerFactory`.
 - **Utils** : `DailyFileHelper`.
+- **Writers** : `FileLogWriter`
 
 Caracteristiques :
 - ecriture journaliere,
@@ -117,10 +128,35 @@ Composants :
 ### 5. EasySave.App.Gui
 **Role :** interface graphique Avalonia.
 
-Etat actuel :
-- `MainWindow` + `MainWindowViewModel` minimal.
-- pas de branchement aux services `EasySave.App` pour le moment.
+**Structure :**
 
+- **ViewModels** : `MainWindowViewModel`, `DashboardViewModel`, `ExecutionViewModel`, `JobEditorViewModel`, `SettingsViewModel`  
+- **Views** : `MainWindow.axaml`, `DashboardView.axaml`, `ExecutionView.axaml`, `JobEditorDialog.axaml`, `LogsView.axaml`, `SettingsView.axaml`, `AboutView.axaml`  
+- **Models** : `ExecutionJobItem.cs`, `LogEntryItem.cs`, `RecentActivityItem.cs`  
+- **Converters** : `LogLevelToBrushConverter.cs`, `StatusToTextConverter.cs`, `TypeToTextConverter.cs`  
+- **Assets** : logo, icônes  
+- **App.axaml** + **Program.cs** + **ViewLocator.cs** 
+- Intègre l’appel à CryptoSoft, gestion jobs illimités, logiciels métier et extensions à chiffrer  
+
+---
+
+### 6. CryptoSoft
+**Rôle :** Programme externe chargé de chiffrer des fichiers via XOR.
+
+**Fichiers :**
+
+- **CryptoSoft.csproj** 
+- **Program.cs**: exécution CLI  
+- **FileManager.cs** : lecture, chiffrement, mesure temps (ms)  
+
+**Fonctionnement :**
+- EasySave.App lance CryptoSoft.exe via un process externe
+- Passe en argument le fichier et la clé
+- Récupère le code retour (temps de chiffrement en ms)
+- Temps retourné dans les logs :  
+  - 0 si pas de chiffrement  
+  - >0 temps de chiffrement en ms  
+  - <0 erreur de chiffrement  
 ---
 
 ## Flux principaux
@@ -217,4 +253,8 @@ Les diagrammes a jour sont dans `docs/uml` :
 
 ## Points d attention
 
-- `EasySave.App.Gui` n est pas encore branchee aux services de l app.
+- Gestion des jobs illimités  
+- Fichiers à chiffrer automatiquement via CryptoSoft
+- Détection et blocage des jobs si logiciel métier actif (configurable)
+- GUI maintenant pleinement connectée aux services App pour exécution et paramétrage
+- Logging enrichi, avec temps de cryptage intégré
