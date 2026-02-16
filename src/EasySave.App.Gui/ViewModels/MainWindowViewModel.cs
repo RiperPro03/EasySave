@@ -111,7 +111,7 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
         var logReader = new LogReaderService(logsPath);
         _dashboardViewModel = new DashboardViewModel(jobService, _backupService, logReader);
         _jobsViewModel = new JobsViewModel(jobService);
-        _executionViewModel = new ExecutionViewModel();
+        _executionViewModel = new ExecutionViewModel(jobService, _backupService);
         _logsViewModel = new LogsViewModel(logReader);
         _settingsViewModel = new SettingsViewModel();
         _aboutViewModel = new AboutViewModel();
@@ -188,13 +188,17 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
     private void OnBackupStateChanged(object? sender, JobStateChangedEventArgs e)
     {
         CurrentState = e.State.Status.ToString();
-        StatusMessage = $"{e.State.JobName}: {e.State.Status}";
+        if (ActiveTab == NavigationTab.Dashboard)
+        {
+            StatusMessage = $"{e.State.JobName}: {e.State.Status}";
+        }
         LastUpdateTime = DateTime.Now;
     }
 
     private void OnJobsChanged()
     {
         _dashboardViewModel.RefreshJobSummary();
+        _executionViewModel.RefreshJobs();
     }
 
     private void OnLogWritten(object? sender, EventArgs e)
@@ -235,6 +239,7 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
             _appLogService.LogWritten -= OnLogWritten;
         }
         _dashboardViewModel.Dispose();
+        _executionViewModel.Dispose();
         GC.SuppressFinalize(this);
     }
 }

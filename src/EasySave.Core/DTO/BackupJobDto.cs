@@ -23,6 +23,8 @@ public sealed class BackupJobDto
 
     public DateTime CreatedAt { get; set; }
     public DateTime? LastRun { get; set; }
+    public bool EncryptFiles { get; set; } = false;
+    public string? EncryptionKey { get; set; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="BackupJobDto"/> class.
@@ -67,7 +69,9 @@ public sealed class BackupJobDto
             type: backupType,
             isActive: IsActive,
             createdAtUtc: CreatedAt,
-            lastRunUtc: LastRun
+            lastRunUtc: LastRun,
+            encryptFiles: EncryptFiles,
+            encryptionKey: EncryptionKey
         );
     }
 
@@ -87,7 +91,9 @@ public sealed class BackupJobDto
             Type = job.Type.ToString(),
             IsActive = job.IsActive,
             CreatedAt = job.CreatedAt,
-            LastRun = job.LastRun
+            LastRun = job.LastRun,
+            EncryptFiles = job.EncryptFiles,
+            EncryptionKey = job.EncryptionKey
         };
     }
 }

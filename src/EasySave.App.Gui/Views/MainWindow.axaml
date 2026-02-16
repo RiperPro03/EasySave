@@ -10,8 +10,8 @@
         x:DataType="vm:MainWindowViewModel"
         Title="EasySave"
         Icon="avares://EasySave.App.Gui/Assets/easysave-logo.ico"
-        MinWidth="1100"
-        MinHeight="650"
+        MinWidth="1400"
+        MinHeight="800"
         Background="#000000"
         TransparencyLevelHint="Blur">
 
@@ -146,19 +146,6 @@
                                 Orientation="Horizontal" 
                                 Spacing="10"
                                 VerticalAlignment="Center">
-                        <Border Background="#20FFFFFF"
-                                BorderBrush="#30FFFFFF"
-                                BorderThickness="1"
-                                Padding="12,6"
-                                CornerRadius="8">
-                            <StackPanel Orientation="Horizontal" Spacing="6">
-                                <Ellipse Width="8" Height="8" Fill="#30D158"/>
-                                <TextBlock Text="Active"
-                                           Foreground="#FFFFFF"
-                                           FontSize="12"
-                                           FontWeight="Medium"/>
-                            </StackPanel>
-                        </Border>
                         <Border Background="#18FFFFFF"
                                 BorderBrush="#28FFFFFF"
                                 BorderThickness="1"

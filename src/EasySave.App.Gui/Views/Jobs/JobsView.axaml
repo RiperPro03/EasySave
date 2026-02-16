@@ -89,28 +89,13 @@
         <!-- Header avec actions -->
         <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,24">
             
-            <StackPanel Grid.Column="0" Spacing="8">
-                <TextBlock Text="Backup Jobs"
-                           FontSize="28"
-                           FontWeight="Bold"
-                           Foreground="#FFFFFF"/>
-                <TextBlock Text="{Binding JobsCount, StringFormat='Total: {0} job(s) - Max: 5 jobs - Use Live Execution to run backups'}"
-                           FontSize="14"
-                           Foreground="#80FFFFFF"/>
-            </StackPanel>
-            
             <StackPanel Grid.Column="1" 
                         Orientation="Horizontal" 
                         Spacing="12"
                         VerticalAlignment="Center">
                 <Button Content="+ New Job"
                         Classes="action-btn primary"
-                        Command="{Binding CreateJobCommand}"
-                        IsEnabled="{Binding CanCreateJob}"/>
-                <Button Content="Refresh"
-                        Classes="action-btn secondary"
-                        Command="{Binding RefreshCommand}"
-                        Padding="12,10"/>
+                        Command="{Binding CreateJobCommand}"/>
             </StackPanel>
         </Grid>
 
@@ -119,7 +104,7 @@
                       VerticalScrollBarVisibility="Auto"
                       HorizontalScrollBarVisibility="Disabled">
             
-            <StackPanel Spacing="0">
+            <StackPanel Spacing="0" Margin="0,0,0,80">
                 
                 <!-- Message si aucun job -->
                 <Border IsVisible="{Binding !HasJobs}"
@@ -273,7 +258,7 @@
                 BorderThickness="1,1,1,0"
                 CornerRadius="12,12,0,0"
                 Padding="20,12"
-                Margin="0,24,0,0">
+                Margin="0,0,0,100">
             <Grid ColumnDefinitions="*,Auto,Auto">
                 <TextBlock Grid.Column="0"
                            Text="{Binding ActiveJobsCount, StringFormat='{}{0} active job(s)'}"
