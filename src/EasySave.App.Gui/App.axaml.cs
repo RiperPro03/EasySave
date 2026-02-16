@@ -7,6 +7,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core;
 using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
+using EasySave.App.Gui.Localization;
 using EasySave.App.Gui.ViewModels;
 using EasySave.App.Gui.Views;
 using EasySave.App.Repositories;
@@ -53,9 +54,7 @@ public partial class App : Application
             var settingsService = new SettingsService(config, configRepository);
             // --- FIN DE TA PARTIE ---
 
-            var culture = Localization.GetCulture(config.Language);
-            CultureInfo.CurrentCulture = culture;
-            CultureInfo.CurrentUICulture = culture;
+            Loc.Instance.SetLanguage(config.Language);
 
             var jobService = new JobService(pathProvider, appLogService);
             var backupService = new BackupService(

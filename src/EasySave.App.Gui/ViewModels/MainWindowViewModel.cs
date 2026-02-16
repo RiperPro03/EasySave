@@ -1,11 +1,15 @@
 using System;
+using System.ComponentModel;
 using System.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using EasySave.App.Gui.Enums;
+using EasySave.App.Gui.Localization;
 using EasySave.App.Services;
 using EasySave.Core.Events;
 using EasySave.Core.Interfaces;
+using EasySave.Core.Enums;
+using EasySave.Core.Resources;
 
 namespace EasySave.App.Gui.ViewModels;
 
@@ -26,21 +30,32 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
     private readonly AboutViewModel _aboutViewModel;
     private readonly IAppLogService? _appLogService;
     private readonly SynchronizationContext? _uiContext;
+    private JobStatus _lastJobStatus = JobStatus.Idle;
+    private string? _lastJobName;
     private bool _disposed;
 
     public string AppVersion { get; } = "v2.0.0";
+    public string AppTagline => Strings.Gui_App_Tagline;
+    public string SidebarWorkspaceLabel => Strings.Gui_Sidebar_Workspace;
+    public string SidebarSystemLabel => Strings.Gui_Sidebar_System;
+    public string NavDashboardLabel => Strings.Gui_Nav_Dashboard;
+    public string NavBackupJobsLabel => Strings.Gui_Nav_BackupJobs;
+    public string NavLiveExecutionLabel => Strings.Gui_Nav_LiveExecution;
+    public string NavLogsLabel => Strings.Gui_Nav_Logs;
+    public string NavSettingsLabel => Strings.Gui_Nav_Settings;
+    public string NavAboutLabel => Strings.Gui_Nav_About;
 
     [ObservableProperty]
-    private string _statusMessage = "Ready";
+    private string _statusMessage = Strings.Gui_Status_Ready;
 
     [ObservableProperty]
-    private string _currentState = "Idle";
+    private string _currentState = Strings.Gui_JobStatus_Idle;
 
     [ObservableProperty]
     private DateTime _lastUpdateTime = DateTime.Now;
 
     [ObservableProperty]
-    private string _currentPageTitle = "Dashboard";
+    private string _currentPageTitle = Strings.Gui_Nav_Dashboard;
 
     [ObservableProperty]
     private object? _currentView;
@@ -87,6 +102,7 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
         _settingsViewModel = new SettingsViewModel();
         _aboutViewModel = new AboutViewModel();
         _jobsViewModel.JobsChanged += OnJobsChanged;
+        Loc.Instance.PropertyChanged += OnLocalizationChanged;
         ShowDashboard();
     }
 
@@ -121,6 +137,7 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
         _appLogService = appLogService;
         _jobsViewModel.JobsChanged += OnJobsChanged;
         _backupService.StateChanged += OnBackupStateChanged;
+        Loc.Instance.PropertyChanged += OnLocalizationChanged;
         if (_appLogService != null)
         {
             _appLogService.LogWritten += OnLogWritten;
@@ -131,8 +148,8 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
     [RelayCommand]
     private void ShowDashboard()
     {
-        CurrentPageTitle = "Dashboard";
-        StatusMessage = "Overview of all backup operations";
+        CurrentPageTitle = Strings.Gui_Nav_Dashboard;
+        StatusMessage = Strings.Gui_Status_Overview;
         CurrentView = _dashboardViewModel;
         ActiveTab = NavigationTab.Dashboard;
         LastUpdateTime = DateTime.Now;
@@ -141,8 +158,8 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
     [RelayCommand]
     private void ShowJobs()
     {
-        CurrentPageTitle = "Backup Jobs";
-        StatusMessage = "Manage your backup jobs";
+        CurrentPageTitle = Strings.Gui_Nav_BackupJobs;
+        StatusMessage = Strings.Gui_Status_ManageJobs;
         CurrentView = _jobsViewModel;
         ActiveTab = NavigationTab.Jobs;
         LastUpdateTime = DateTime.Now;
@@ -151,8 +168,8 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
     [RelayCommand]
     private void ShowExecution()
     {
-        CurrentPageTitle = "Live Execution";
-        StatusMessage = "Real-time backup monitoring";
+        CurrentPageTitle = Strings.Gui_Nav_LiveExecution;
+        StatusMessage = Strings.Gui_Status_LiveMonitoring;
         CurrentView = _executionViewModel;
         ActiveTab = NavigationTab.Execution;
         LastUpdateTime = DateTime.Now;
@@ -161,8 +178,8 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
     [RelayCommand]
     private void ShowLogs()
     {
-        CurrentPageTitle = "Logs";
-        StatusMessage = "View execution logs";
+        CurrentPageTitle = Strings.Gui_Nav_Logs;
+        StatusMessage = Strings.Gui_Status_ViewLogs;
         CurrentView = _logsViewModel;
         ActiveTab = NavigationTab.Logs;
         LastUpdateTime = DateTime.Now;
@@ -171,8 +188,8 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
     [RelayCommand]
     private void ShowSettings()
     {
-        CurrentPageTitle = "Settings";
-        StatusMessage = "Configure application settings";
+        CurrentPageTitle = Strings.Gui_Nav_Settings;
+        StatusMessage = Strings.Gui_Status_SettingsInfo;
         CurrentView = _settingsViewModel;
         ActiveTab = NavigationTab.Settings;
         LastUpdateTime = DateTime.Now;
@@ -181,8 +198,8 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
     [RelayCommand]
     private void ShowAbout()
     {
-        CurrentPageTitle = "About";
-        StatusMessage = "Application information";
+        CurrentPageTitle = Strings.Gui_Nav_About;
+        StatusMessage = Strings.Gui_Status_AboutInfo;
         CurrentView = _aboutViewModel;
         ActiveTab = NavigationTab.About;
         LastUpdateTime = DateTime.Now;
@@ -190,10 +207,12 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
     
     private void OnBackupStateChanged(object? sender, JobStateChangedEventArgs e)
     {
-        CurrentState = e.State.Status.ToString();
+        _lastJobStatus = e.State.Status;
+        _lastJobName = e.State.JobName;
+        CurrentState = ResolveJobStatusLabel(e.State.Status);
         if (ActiveTab == NavigationTab.Dashboard)
         {
-            StatusMessage = $"{e.State.JobName}: {e.State.Status}";
+            StatusMessage = string.Format(Strings.Gui_Status_JobFormat, e.State.JobName, ResolveJobStatusLabel(e.State.Status));
         }
         LastUpdateTime = DateTime.Now;
     }
@@ -221,6 +240,73 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
         _logsViewModel.RefreshLogs();
     }
 
+    private void OnLocalizationChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName != "Item[]")
+            return;
+
+        if (_uiContext != null)
+        {
+            _uiContext.Post(_ => RefreshLocalization(), null);
+            return;
+        }
+
+        RefreshLocalization();
+    }
+
+    private void RefreshLocalization()
+    {
+        CurrentState = ResolveJobStatusLabel(_lastJobStatus);
+        OnPropertyChanged(nameof(AppTagline));
+        OnPropertyChanged(nameof(SidebarWorkspaceLabel));
+        OnPropertyChanged(nameof(SidebarSystemLabel));
+        OnPropertyChanged(nameof(NavDashboardLabel));
+        OnPropertyChanged(nameof(NavBackupJobsLabel));
+        OnPropertyChanged(nameof(NavLiveExecutionLabel));
+        OnPropertyChanged(nameof(NavLogsLabel));
+        OnPropertyChanged(nameof(NavSettingsLabel));
+        OnPropertyChanged(nameof(NavAboutLabel));
+        CurrentPageTitle = ActiveTab switch
+        {
+            NavigationTab.Dashboard => Strings.Gui_Nav_Dashboard,
+            NavigationTab.Jobs => Strings.Gui_Nav_BackupJobs,
+            NavigationTab.Execution => Strings.Gui_Nav_LiveExecution,
+            NavigationTab.Logs => Strings.Gui_Nav_Logs,
+            NavigationTab.Settings => Strings.Gui_Nav_Settings,
+            NavigationTab.About => Strings.Gui_Nav_About,
+            _ => Strings.Gui_Nav_Dashboard
+        };
+
+        if (ActiveTab == NavigationTab.Dashboard && !string.IsNullOrWhiteSpace(_lastJobName))
+        {
+            StatusMessage = string.Format(Strings.Gui_Status_JobFormat, _lastJobName, ResolveJobStatusLabel(_lastJobStatus));
+        }
+        else
+        {
+            StatusMessage = ActiveTab switch
+            {
+                NavigationTab.Dashboard => Strings.Gui_Status_Overview,
+                NavigationTab.Jobs => Strings.Gui_Status_ManageJobs,
+                NavigationTab.Execution => Strings.Gui_Status_LiveMonitoring,
+                NavigationTab.Logs => Strings.Gui_Status_ViewLogs,
+                NavigationTab.Settings => Strings.Gui_Status_SettingsInfo,
+                NavigationTab.About => Strings.Gui_Status_AboutInfo,
+                _ => Strings.Gui_Status_Ready
+            };
+        }
+        
+        _settingsViewModel.RefreshLocalization();
+        ReloadCurrentView();
+        LastUpdateTime = DateTime.Now;
+    }
+
+    private void ReloadCurrentView()
+    {
+        var view = CurrentView;
+        CurrentView = null;
+        CurrentView = view;
+    }
+
     /// <summary>
     /// Unsubscribes from events and releases managed resources.
     /// </summary>
@@ -230,6 +316,7 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
             return;
 
         _disposed = true;
+        Loc.Instance.PropertyChanged -= OnLocalizationChanged;
 
         if (_backupService != null)
         {
@@ -244,5 +331,18 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
         _dashboardViewModel.Dispose();
         _executionViewModel.Dispose();
         GC.SuppressFinalize(this);
+    }
+
+    private static string ResolveJobStatusLabel(JobStatus status)
+    {
+        return status switch
+        {
+            JobStatus.Idle => Strings.Gui_JobStatus_Idle,
+            JobStatus.Running => Strings.Gui_JobStatus_Running,
+            JobStatus.Paused => Strings.Gui_JobStatus_Paused,
+            JobStatus.Completed => Strings.Gui_JobStatus_Completed,
+            JobStatus.Error => Strings.Gui_JobStatus_Error,
+            _ => Strings.Gui_Common_Unknown
+        };
     }
 }

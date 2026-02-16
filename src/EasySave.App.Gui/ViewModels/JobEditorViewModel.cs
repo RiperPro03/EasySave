@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using EasySave.Core.Enums;
 using EasySave.Core.Models;
+using EasySave.Core.Resources;
 
 namespace EasySave.App.Gui.ViewModels;
 
@@ -59,9 +60,9 @@ public sealed partial class JobEditorViewModel : ViewModelBase
     public DateTime CreatedAt { get; private set; }
     public DateTime? LastRun { get; private set; }
 
-    public string DialogTitle { get; private set; } = "Create Job";
-    public string DialogSubtitle { get; private set; } = "Define a new backup job";
-    public string SaveButtonText { get; private set; } = "Create Job";
+    public string DialogTitle { get; private set; } = Strings.Gui_JobEditor_CreateTitle;
+    public string DialogSubtitle { get; private set; } = Strings.Gui_JobEditor_CreateSubtitle;
+    public string SaveButtonText { get; private set; } = Strings.Gui_JobEditor_CreateButton;
 
     public bool CanSave =>
         !HasNameError &&
@@ -82,9 +83,9 @@ public sealed partial class JobEditorViewModel : ViewModelBase
         return new JobEditorViewModel
         {
             IsEditMode = false,
-            DialogTitle = "Create Job",
-            DialogSubtitle = "Define a new backup job",
-            SaveButtonText = "Create Job"
+            DialogTitle = Strings.Gui_JobEditor_CreateTitle,
+            DialogSubtitle = Strings.Gui_JobEditor_CreateSubtitle,
+            SaveButtonText = Strings.Gui_JobEditor_CreateButton
         };
     }
 
@@ -96,9 +97,9 @@ public sealed partial class JobEditorViewModel : ViewModelBase
         var vm = new JobEditorViewModel
         {
             IsEditMode = true,
-            DialogTitle = "Edit Job",
-            DialogSubtitle = "Update the backup job settings",
-            SaveButtonText = "Save Changes",
+            DialogTitle = Strings.Gui_JobEditor_EditTitle,
+            DialogSubtitle = Strings.Gui_JobEditor_EditSubtitle,
+            SaveButtonText = Strings.Gui_JobEditor_SaveChanges,
             JobId = job.Id,
             Name = job.Name,
             SourcePath = job.SourcePath,
@@ -135,13 +136,13 @@ public sealed partial class JobEditorViewModel : ViewModelBase
     {
         if (string.IsNullOrWhiteSpace(Name))
         {
-            NameError = "Name is required.";
+            NameError = Strings.Gui_JobEditor_Error_NameRequired;
             return;
         }
 
         if (Name.Length > NameMaxLength)
         {
-            NameError = $"Name must be under {NameMaxLength} characters.";
+            NameError = string.Format(Strings.Gui_JobEditor_Error_NameLength, NameMaxLength);
             return;
         }
 
@@ -151,14 +152,14 @@ public sealed partial class JobEditorViewModel : ViewModelBase
     private void ValidateSourcePath()
     {
         SourcePathError = string.IsNullOrWhiteSpace(SourcePath)
-            ? "Source path is required."
+            ? Strings.Gui_JobEditor_Error_SourceRequired
             : string.Empty;
     }
 
     private void ValidateTargetPath()
     {
         TargetPathError = string.IsNullOrWhiteSpace(TargetPath)
-            ? "Target path is required."
+            ? Strings.Gui_JobEditor_Error_TargetRequired
             : string.Empty;
     }
 
