@@ -491,5 +491,54 @@ namespace EasySave.Core.Resources {
                 return ResourceManager.GetString("UI_UpdateJob", resourceCulture);
             }
         }
+        
+        public static string Guide_Title {
+            get {
+                return ResourceManager.GetString("Guide_Title", resourceCulture);
+            }
+        }
+        
+        public static string Step1_Title {
+            get {
+                return ResourceManager.GetString("Step1_Title", resourceCulture);
+            }
+        }
+        
+        public static string Step1_Desc {
+            get {
+                return ResourceManager.GetString("Step1_Desc", resourceCulture);
+            }
+        }
+        
+        public static string Step2_Title {
+            get {
+                return ResourceManager.GetString("Step2_Title", resourceCulture);
+            }
+        }
+        
+        public static string Step2_Desc {
+            get {
+                return ResourceManager.GetString("Step2_Desc", resourceCulture);
+            }
+        }
+        
+        public static string Step3_Title {
+            get {
+                return ResourceManager.GetString("Step3_Title", resourceCulture);
+            }
+        }
+        
+        public static string Step3_Desc {
+            get {
+                return ResourceManager.GetString("Step3_Desc", resourceCulture);
+            }
+        }
+        
+        public static string Team_Title {
+            get {
+                return ResourceManager.GetString("Team_Title", resourceCulture);
+            }
+        }
+        
     }
 }

@@ -9,9 +9,6 @@
         <local:ViewLocator/>
     </Application.DataTemplates>
              
-     <Application.Resources>
-         <ResourceInclude Source="avares://EasySave.Core/Resources/Strings.resx"/>
-     </Application.Resources>
 
   
     <Application.Styles>
