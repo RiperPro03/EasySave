@@ -141,8 +141,7 @@ Menu :
 
 ## Chiffrement 
 
-Les fichiers dont l'extension correspond sont chiffrés automatiquement. 
-
+Les fichiers dont l'extension et le logiciel métier correspondent aux valeurs définies par l’utilisateur dans les paramètres seront chiffrés.
 ## Logiciel métier 
 
 L'utilisateur peut définir un logiciel métier à surveiller dans les paramètres généraux.  

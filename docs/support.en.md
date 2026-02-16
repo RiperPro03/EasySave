@@ -140,7 +140,7 @@ These parameters are configurable via **Settings**.
 - 0 → no encryption
 - <0 → error code
 
-**Note**: Only files whose extension appears in the user-defined list will be encrypted.
+**Note**: Only files whose extension and business software correspond to the values defined by the user in the parameters will be encrypted.
 
 ## 3. Business software management
 

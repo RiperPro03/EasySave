@@ -133,7 +133,7 @@ Menu :
 
 # Version 2.0 
 
-## Additional settings
+## New parameters
 
 - EncryptionEnabled
 - EncryptionKey
@@ -142,7 +142,7 @@ Menu :
 
 ## Encryption 
 
-Files with a matching extension are automatically encrypted. 
+Files whose extension and business software correspond to the values defined by the user in the parameters will be encrypted.
 
 ## Business software 
 
