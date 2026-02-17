@@ -245,16 +245,16 @@ cd EasySave
 powershell -ExecutionPolicy Bypass -File .\scripts\publish-flat.ps1
 ```
 
-### 2.Bis Ou directement lancer l'application Gui
-
-```bash
-dotnet run --project src/EasySave.App.Gui
-```
-
 ### 3. Exécuter les tests unitaires
 
 ```bash
 dotnet test
+```
+
+### À noter, vous pouvez lancer directement l'application Gui
+
+```bash
+dotnet run --project src/EasySave.App.Gui
 ```
 
 
