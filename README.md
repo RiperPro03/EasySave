@@ -89,7 +89,7 @@ Le projet est conçu pour évoluer par versions successives (v1 → v3) en respe
   </tr>
   <tr>
     <td><strong>Types de sauvegarde</strong></td>
-    <td>Complète • Différentielle</td>
+    <td>Complète & Différentielle</td>
   </tr>
   <tr>
     <td><strong>Modes d'exécution</strong></td>
@@ -97,7 +97,7 @@ Le projet est conçu pour évoluer par versions successives (v1 → v3) en respe
   </tr>
   <tr>
     <td><strong>Langues</strong></td>
-    <td>Français • Anglais</td>
+    <td>Français & Anglais</td>
   </tr>
   <tr>
     <td><strong>Logs</strong></td>
@@ -148,14 +148,11 @@ EasySave/
 │   ├── EasySave.App            # Services, infrastructure, persistance
 │   ├── EasySave.EasyLog        # DLL de logging
 │   ├── EasySave.App.Console    # Interface console
-│   └── EasySave.App.Gui        # Interface graphique (v2)
+│   ├── EasySave.App.Gui        # Interface graphique
+│   └── CryptoSoft              # Chiffrement XOR
 │
 └── tests/
-│   └── EasySave.Tests          # Tests unitaires
-│
-└── CryptoSoft/
-│   └── EasySave.Tests          # Tests unitaires
-└── CryptoSoft.exe              # Chiffrement XOR
+    └── EasySave.Tests          # Tests unitaires
 ```
 ---
 
@@ -206,13 +203,13 @@ git clone https://github.com/RiperPro03/EasySave.git
 cd EasySave
 ```
 
-### 2. Générer le .exe pour l'interface graphique
+### 2. Générer l'executable dans 'EasySave\out\EasySave'
 
 ```bash
 powershell -ExecutionPolicy Bypass -File .\scripts\publish-flat.ps1
 ```
 
-### 2.Bis Ou Lancer l'application Gui
+### 2.Bis Ou directement lancer l'application Gui
 
 ```bash
 dotnet run --project src/EasySave.App.Gui
@@ -247,6 +244,10 @@ dotnet test
 ## Licence
 
 Ce projet est développé dans le cadre d'un projet académique **CESI**.
+
+MIT License
+
+Copyright (c) 2026 — Projet académique CESI
 
 ## Diagrammes UML
 
