@@ -76,16 +76,16 @@ Le projet est conçu pour évoluer par versions successives (v1 → v3) en respe
 
 ---
 
-## Fonctionnalités (Version 1.0)
+## Fonctionnalités (Version 2.0)
 
 <table>
   <tr>
     <td><strong>Interface</strong></td>
-    <td>Application console en .NET</td>
+    <td>Application graphique (WPF ou framework équivalent)</td>
   </tr>
   <tr>
     <td><strong>Travaux de sauvegarde</strong></td>
-    <td>Jusqu'à 5 travaux configurables</td>
+    <td>Nombre illimité de travaux configurables</td>
   </tr>
   <tr>
     <td><strong>Types de sauvegarde</strong></td>
@@ -93,7 +93,7 @@ Le projet est conçu pour évoluer par versions successives (v1 → v3) en respe
   </tr>
   <tr>
     <td><strong>Modes d'exécution</strong></td>
-    <td>Unitaire • Séquentielle • Ligne de commande (<code>1-3</code>, <code>1;3</code>)</td>
+    <td>Unitaire • Séquentielle • Ligne de commande (identique à la version 1.0)</td>
   </tr>
   <tr>
     <td><strong>Langues</strong></td>
@@ -101,14 +101,40 @@ Le projet est conçu pour évoluer par versions successives (v1 → v3) en respe
   </tr>
   <tr>
     <td><strong>Logs</strong></td>
-    <td>Fichier log journalier (JSON) • Fichier d'état (<code>state.json</code>)</td>
+    <td>
+    Fichier log journalier (JSON ou XML)<br>
+    • Temps de cryptage ajouté (ms)<br>
+    • 0 = pas de cryptage<br>
+    • &gt;0 = durée du cryptage<br>
+    • &lt;0 = code erreur
+    </td>
+  </tr>
+  <tr>
+    <td><strong>Format du fichier log</strong></td>
+    <td>Choix utilisateur : JSON ou XML (hérité de la version 1.1)</td>
+  </tr>
+  <tr>
+    <td><strong>Fichier d'état</strong></td>
+    <td><code>state.json</code></td>
+  </tr>
+  <tr>
+    <td><strong>Cryptage</strong></td>
+    <td>Intégration du logiciel externe <strong>CryptoSoft</strong> (cryptage conditionnel selon extensions définies)</td>
+  </tr>
+  <tr>
+    <td><strong>Logiciel métier</strong></td>
+    <td>
+    Détection d’un logiciel métier<br>
+    • Interdiction de lancer un travail<br>
+    • En mode séquentiel : termine le fichier en cours puis stoppe<br>
+    • Arrêt consigné dans le log
+    </td>
   </tr>
   <tr>
     <td><strong>DLL dédiée</strong></td>
     <td><code>EasyLog.dll</code> pour la gestion des logs</td>
   </tr>
 </table>
-
 ---
 
 ## Architecture
@@ -125,7 +151,9 @@ EasySave/
 │   └── EasySave.App.Gui        # Interface graphique (v2)
 │
 └── tests/
-    └── EasySave.Tests          # Tests unitaires
+│   └── EasySave.Tests          # Tests unitaires
+│
+└── CryptoSoft.exe              # Chiffrement XOR
 ```
 ---
 
