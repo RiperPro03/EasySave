@@ -113,3 +113,48 @@ The tests cover :
 	- Complete backup logic 
 	- Differential backup logic
 	- JSON file generation 
+
+# Version 2.0
+
+## 1. New parameters in `setting.json`.
+
+- Extensions to encrypt
+- Encryption key
+- Name of business software
+
+These parameters are configurable via **Settings**.
+
+## 2. Encryption via CryptoSoft
+
+**CryptoSoft** is an external program for encrypting files.
+
+**How it works**:
+```
+ EasySave  
+-> launches CryptoSoft.exe  
+-> passes it the file and key  
+-> retrieves the return code 
+```
+- The **encryption time** is retrieved and added to the logs (`encryptionTime`)
+- `>0` → encryption time in ms
+- 0 → no encryption
+- <0 → error code
+
+**Note**: Only files whose extension and business software correspond to the values defined by the user in the parameters will be encrypted.
+
+## 3. Business software management
+
+The user can define a **business software to be monitored**.
+
+**Behavior** :
+
+- Impossible to start a job if the business software is active.  
+- A backup in progress stops after the current file.
+- A log is generated indicating the stop
+
+## 4. Other v2.0 evolutions
+
+- Graphical interface (Avalonia)
+- Unlimited number of jobs
+- Integrated encryption parameters and business software
+- Logs enriched with encryption time
