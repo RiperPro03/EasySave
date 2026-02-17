@@ -18,9 +18,13 @@ skinparam class {
     BorderColor<<Interface>> #2E7D32
     BackgroundColor<<Event>> #FFF3E0
     BorderColor<<Event>> #EF6C00
+    BackgroundColor<<Logging>> #ECEFF1
+    BorderColor<<Logging>> #455A64
+    BackgroundColor<<Resource>> #F5F5F5
+    BorderColor<<Resource>> #616161
 }
 
-title Diagramme de classes - EasySave.Core (Domain + DTO + Interfaces + Events)
+title Diagramme de classes - EasySave.Core (Domain + DTO + Interfaces + Events + Logging + Resources)
 left to right direction
 skinparam packageStyle rectangle
 
@@ -47,15 +51,55 @@ package "EasySave.Core" {
       English
       French
     }
+
+    class LanguageExtensions <<Model>> {
+      +{static} Language[] GetValues()
+    }
+
+    enum LogLevel <<Model>> {
+      Emergency
+      Alert
+      Critical
+      Error
+      Warning
+      Notice
+      Info
+      Debug
+    }
+
+    enum LogEventCategory <<Model>> {
+      System
+      Job
+      File
+      Settings
+    }
+
+    enum LogEventAction <<Model>> {
+      Unknown
+      Create
+      Update
+      Delete
+      Save
+      Transfer
+      Skip
+      DirectoryCreated
+      Summary
+    }
+
+    enum LogEventOutcome <<Model>> {
+      Success
+      Failure
+      Unknown
+    }
   }
 
   package "Common" {
     class Guard <<Model>> {
-      {static} +string NotNullOrWhiteSpace(string? value, string paramName)
+      {static} +string NotNullOrWhiteSpace(value: string?, paramName: string)
     }
 
     class Localization <<Model>> {
-      {static} +CultureInfo GetCulture(Language language)
+      {static} +CultureInfo GetCulture(language: Language)
     }
   }
 
@@ -82,12 +126,21 @@ package "EasySave.Core" {
       +Language Language
       +string LogDirectory
       +LogFormat LogFormat
+      +string? BusinessSoftwareProcessName
+      +bool EncryptionEnabled
+      +string EncryptionKey
+      +IReadOnlyList<string> ExtensionsToEncrypt
       __
       -AppConfig(language: Language, logDirectory: string, logFormat: LogFormat)
       +{static} AppConfig LoadDefaults()
-      +void ChangeLanguage(Language language)
-      +void UpdateLogDirectory(string logDirectory)
-      +void ChangeLogFormat(LogFormat logFormat)
+      +void ChangeLanguage(language: Language)
+      +void UpdateLogDirectory(logDirectory: string)
+      +void ChangeLogFormat(logFormat: LogFormat)
+      +void SetEncryptionEnabled(enabled: bool)
+      +void ToggleEncryption()
+      +void UpdateEncryptionKey(newKey: string?)
+      +void UpdateExtensionsToEncrypt(extensions: IEnumerable<string>)
+      +void ChangeBussinessSoftware(name: string?)
       -{static} string GetDefaultLogDirectory()
     }
   }
@@ -99,8 +152,6 @@ package "EasySave.Core" {
       +JobStatus GlobalStatus
       +List<string> ActiveJobIds
       +List<JobStateDto> Jobs
-      __
-      +AppStateDto()
     }
 
     class BackupJobDto <<DTO>> {
@@ -113,7 +164,6 @@ package "EasySave.Core" {
       +DateTime CreatedAt
       +DateTime? LastRun
       __
-      +BackupJobDto()
       +bool IsValid()
       +BackupJob ToModel()
       +{static} BackupJobDto FromModel(job: BackupJob)
@@ -129,8 +179,6 @@ package "EasySave.Core" {
       +int ErrorCount
       +TimeSpan Duration
       +List<string> Errors
-      __
-      +BackupResultDto()
     }
 
     class JobStateDto <<DTO>> {
@@ -148,21 +196,6 @@ package "EasySave.Core" {
       +long RemainingSizeBytes
       +DateTime LastActionTimestampUtc
       +string? ErrorMessage
-      __
-      +JobStateDto()
-    }
-
-    class LogEntryDto <<DTO>> {
-      +DateTime TimestampUtc
-      +string JobName
-      +string SourcePath
-      +string TargetPath
-      +long FileSizeBytes
-      +double TransferTimeMs
-      +string Status
-      +string? ErrorMessage
-      __
-      +LogEntryDto()
     }
 
     class ResultDto <<DTO>> {
@@ -170,8 +203,99 @@ package "EasySave.Core" {
       +string Message
       +string? ErrorCode
       __
-      +{static} ResultDto Ok(message: string)
+      +{static} ResultDto Ok(message: string = "")
       +{static} ResultDto Fail(message: string, errorCode: string? = null)
+    }
+
+    class LogEntryDto <<DTO>> {
+      +DateTime TimestampUtc
+      +LogLevel Level
+      +string Message
+      +int SchemaVersion
+      +LogEventDto Event
+      +LogAppDto? App
+      +LogTraceDto? Trace
+      +LogHostDto? Host
+      +LogJobDto? Job
+      +LogFileDto? File
+      +LogCryptoDto? Crypto
+      +LogSettingsDto? Settings
+      +LogSummaryDto? Summary
+      +LogErrorDto? Error
+    }
+
+    class LogEventDto <<DTO>> {
+      +string Name
+      +LogEventCategory Category
+      +LogEventAction Action
+      +LogEventOutcome Outcome
+    }
+
+    class LogAppDto <<DTO>> {
+      +string Name
+      +string Version
+    }
+
+    class LogTraceDto <<DTO>> {
+      +string Id
+    }
+
+    class LogHostDto <<DTO>> {
+      +string Name
+      +string User
+      +int? Pid
+    }
+
+    class LogJobDto <<DTO>> {
+      +string Id
+      +string Name
+      +BackupType? Type
+      +JobStatus? Status
+      +bool? IsActive
+      +string? SourcePath
+      +string? TargetPath
+    }
+
+    class LogFileDto <<DTO>> {
+      +string? SourcePath
+      +string? TargetPath
+      +long? SizeBytes
+      +double? TransferTimeMs
+      +bool? IsDirectory
+    }
+
+    class LogCryptoDto <<DTO>> {
+      +string Tool
+      +bool ExtensionMatched
+      +long EncryptionTimeMs
+      +string? Extension
+      +string? InstanceLock
+    }
+
+    class LogSettingsDto <<DTO>> {
+      +Language? Language
+      +LogFormat? LogFormat
+      +string? LogDirectory
+      +string? ConfigPath
+      +bool? EncryptionEnabled
+      +List<string>? ExtensionsToEncrypt
+      +string? BusinessSoftwareProcessName
+    }
+
+    class LogSummaryDto <<DTO>> {
+      +int CopiedCount
+      +int SkippedCount
+      +int ErrorCount
+      +long TotalBytes
+      +double DurationMs
+      +string? Details
+    }
+
+    class LogErrorDto <<DTO>> {
+      +string? Type
+      +string? Code
+      +string? Message
+      +string? Stack
     }
   }
 
@@ -184,45 +308,52 @@ package "EasySave.Core" {
   }
 
   package "Interfaces" {
-    interface IBackupEngine <<Interface>> {
-      +event EventHandler<JobStateChangedEventArgs>? StateChanged
-      +BackupResultDto Run(BackupJob job)
+    interface IBackupCopyStrategy <<Interface>> {
+      +bool ShouldCopy(sourcePath: string, targetPath: string)
     }
 
-    interface IBackupCopyStrategy <<Interface>> {
-      +bool ShouldCopy(string sourcePath, string targetPath)
+    interface IBackupEngine <<Interface>> {
+      +event EventHandler<JobStateChangedEventArgs>? StateChanged
+      +BackupResultDto Run(job: BackupJob)
+      +bool Pause(jobId: string)
+      +bool Resume(jobId: string)
+      +bool Stop(jobId: string)
     }
 
     interface IBackupService <<Interface>> {
       +event EventHandler<JobStateChangedEventArgs>? StateChanged
-      +BackupResultDto Run(BackupJob job)
+      +BackupResultDto Run(job: BackupJob)
+      +bool Pause(jobId: string)
+      +bool Resume(jobId: string)
+      +bool Stop(jobId: string)
+      +bool IsBusinessSoftwareRunning(out processName: string?)
+      +bool CanStartSequence(out reason: string?)
     }
 
-    interface IFileSystem <<Interface>> {
-      +bool DirectoryExists(string path)
-      +void CreateDirectory(string path)
-      +IEnumerable<string> EnumerateFiles(string path, bool recursive)
-      +bool FileExists(string path)
-      +long GetFileSize(string path)
-      +DateTime GetLastWriteTimeUtc(string path)
-      +void CopyFile(string sourcePath, string targetPath, bool overwrite)
+    interface IAppLogService <<Interface>> {
+      +event EventHandler? LogWritten
+      +void Write(entry: LogEntryDto)
+    }
+
+    interface ICryptoService <<Interface>> {
+      +Task<int> EncryptFileAsync(filePath: string, key: string)
     }
 
     interface IJobRepository <<Interface>> {
       +IReadOnlyList<BackupJob> GetAll()
-      +BackupJob? GetById(string id)
-      +void Add(BackupJob job)
-      +void Update(BackupJob job)
-      +void Remove(string id)
+      +BackupJob? GetById(id: string)
+      +void Add(job: BackupJob)
+      +void Update(job: BackupJob)
+      +void Remove(id: string)
     }
 
     interface IJobService <<Interface>> {
       +IReadOnlyList<BackupJob> GetAll()
-      +BackupJob? GetById(string id)
-      +void Create(string id, string name, string sourcePath, string targetPath, BackupType type, bool isActive = true)
-      +void Update(string id, string name, string sourcePath, string targetPath, BackupType type, bool isActive)
-      +void MarkExecuted(string id, DateTime? nowUtc = null)
-      +void Delete(string id)
+      +BackupJob? GetById(id: string)
+      +void Create(id: string, name: string, sourcePath: string, targetPath: string, type: BackupType, isActive: bool = true)
+      +void Update(id: string, name: string, sourcePath: string, targetPath: string, type: BackupType, isActive: bool)
+      +void MarkExecuted(id: string, nowUtc: DateTime? = null)
+      +void Delete(id: string)
     }
 
     interface IPathProvider <<Interface>> {
@@ -233,7 +364,44 @@ package "EasySave.Core" {
     }
 
     interface IStateWriter <<Interface>> {
-      +void Write(AppStateDto state)
+      +void Write(state: AppStateDto)
+    }
+  }
+
+  package "Logging" {
+    class LogContext <<Logging>> {
+      +string AppName
+      +string AppVersion
+      +string HostName
+      +string UserName
+      +int? ProcessId
+    }
+
+    class LogEntryBuilder <<Logging>> {
+      -LogEntryDto _entry
+      __
+      -LogEntryBuilder(eventName: string, category: LogEventCategory, action: LogEventAction, message: string)
+      +{static} LogEntryBuilder Create(eventName: string, category: LogEventCategory, action: LogEventAction, message: string = "")
+      +LogEntryBuilder WithTraceIfPresent(traceId: string?)
+      +LogEntryBuilder WithJob(id: string, name: string, type: BackupType, sourcePath: string, targetPath: string, status: JobStatus? = null, isActive: bool? = null)
+      +LogEntryBuilder WithFile(sourcePath: string, targetPath: string, sizeBytes: long, transferTimeMs: double, isDirectory: bool = false)
+      +LogEntryBuilder WithCrypto(tool: string, extensionMatched: bool, encryptionTimeMs: long, extension: string? = null, instanceLock: string? = null)
+      +LogEntryBuilder WithSettings(language: Language, logFormat: LogFormat, logDirectory: string? = null, configPath: string? = null, encryptionEnabled: bool? = null, extensionsToEncrypt: IEnumerable<string>? = null, businessSoftwareProcessName: string? = null)
+      +LogEntryBuilder WithSummary(copiedCount: int, skippedCount: int, errorCount: int, totalBytes: long, durationMs: double, details: string? = null)
+      +LogEntryBuilder WithOutcome(outcome: LogEventOutcome)
+      +LogEntryBuilder WithLevel(level: LogLevel)
+      +LogEntryBuilder Fail(errorType: string, errorMessage: string, errorCode: string? = null, errorStack: string? = null)
+      +LogEntryDto Build()
+    }
+  }
+
+  package "Resources" {
+    class Strings <<Resource>> {
+      -{static} ResourceManager resourceMan
+      -{static} CultureInfo resourceCulture
+      __
+      +{static} ResourceManager ResourceManager
+      +{static} CultureInfo Culture
     }
   }
 }
@@ -244,17 +412,60 @@ package "EasySave.Core" {
 EasySave.Core.Models.BackupJob --> EasySave.Core.Enums.BackupType : uses
 EasySave.Core.Models.AppConfig --> EasySave.Core.Enums.Language : uses
 EasySave.Core.Models.AppConfig --> EasySave.EasyLog.Options.LogFormat : uses
+EasySave.Core.Models.BackupJob ..> EasySave.Core.Common.Guard : validates
+EasySave.Core.Models.AppConfig ..> EasySave.Core.Common.Guard : validates
+
+EasySave.Core.Common.Localization --> EasySave.Core.Enums.Language : uses
+EasySave.Core.Enums.LanguageExtensions ..> EasySave.Core.Enums.Language : returns values
+
 EasySave.Core.DTO.BackupJobDto ..> EasySave.Core.Models.BackupJob : ToModel()/FromModel()
 EasySave.Core.DTO.BackupJobDto ..> EasySave.Core.Enums.BackupType : parse(Type)
 EasySave.Core.DTO.AppStateDto --> EasySave.Core.Enums.JobStatus : uses
 EasySave.Core.DTO.AppStateDto --> EasySave.Core.DTO.JobStateDto : contains
-EasySave.Core.Models.BackupJob ..> EasySave.Core.Common.Guard : validates
-EasySave.Core.Models.AppConfig ..> EasySave.Core.Common.Guard : validates
-EasySave.Core.Common.Localization --> EasySave.Core.Enums.Language : uses
 EasySave.Core.DTO.JobStateDto --> EasySave.Core.Enums.JobStatus : uses
+
+EasySave.Core.DTO.LogEntryDto --> EasySave.Core.Enums.LogLevel : uses
+EasySave.Core.DTO.LogEntryDto --> EasySave.Core.DTO.LogEventDto : contains
+EasySave.Core.DTO.LogEntryDto --> EasySave.Core.DTO.LogAppDto : contains
+EasySave.Core.DTO.LogEntryDto --> EasySave.Core.DTO.LogTraceDto : contains
+EasySave.Core.DTO.LogEntryDto --> EasySave.Core.DTO.LogHostDto : contains
+EasySave.Core.DTO.LogEntryDto --> EasySave.Core.DTO.LogJobDto : contains
+EasySave.Core.DTO.LogEntryDto --> EasySave.Core.DTO.LogFileDto : contains
+EasySave.Core.DTO.LogEntryDto --> EasySave.Core.DTO.LogCryptoDto : contains
+EasySave.Core.DTO.LogEntryDto --> EasySave.Core.DTO.LogSettingsDto : contains
+EasySave.Core.DTO.LogEntryDto --> EasySave.Core.DTO.LogSummaryDto : contains
+EasySave.Core.DTO.LogEntryDto --> EasySave.Core.DTO.LogErrorDto : contains
+
+EasySave.Core.DTO.LogEventDto --> EasySave.Core.Enums.LogEventCategory : uses
+EasySave.Core.DTO.LogEventDto --> EasySave.Core.Enums.LogEventAction : uses
+EasySave.Core.DTO.LogEventDto --> EasySave.Core.Enums.LogEventOutcome : uses
+EasySave.Core.DTO.LogJobDto --> EasySave.Core.Enums.BackupType : uses
+EasySave.Core.DTO.LogJobDto --> EasySave.Core.Enums.JobStatus : uses
+EasySave.Core.DTO.LogSettingsDto --> EasySave.Core.Enums.Language : uses
+EasySave.Core.DTO.LogSettingsDto --> EasySave.EasyLog.Options.LogFormat : uses
+
 EasySave.Core.Events.JobStateChangedEventArgs --> EasySave.Core.DTO.JobStateDto : carries
+
 EasySave.Core.Interfaces.IBackupEngine ..> EasySave.Core.Events.JobStateChangedEventArgs : event
 EasySave.Core.Interfaces.IBackupService ..> EasySave.Core.Events.JobStateChangedEventArgs : event
+EasySave.Core.Interfaces.IBackupEngine ..> EasySave.Core.Models.BackupJob : runs
+EasySave.Core.Interfaces.IBackupService ..> EasySave.Core.Models.BackupJob : runs
+EasySave.Core.Interfaces.IBackupEngine ..> EasySave.Core.DTO.BackupResultDto : returns
+EasySave.Core.Interfaces.IBackupService ..> EasySave.Core.DTO.BackupResultDto : returns
+EasySave.Core.Interfaces.IAppLogService ..> EasySave.Core.DTO.LogEntryDto : writes
+EasySave.Core.Interfaces.IJobRepository ..> EasySave.Core.Models.BackupJob : persists
+EasySave.Core.Interfaces.IJobService ..> EasySave.Core.Models.BackupJob : manages
+EasySave.Core.Interfaces.IJobService ..> EasySave.Core.Enums.BackupType : uses
 EasySave.Core.Interfaces.IStateWriter ..> EasySave.Core.DTO.AppStateDto : writes
+
+EasySave.Core.Logging.LogEntryBuilder ..> EasySave.Core.DTO.LogEntryDto : builds
+EasySave.Core.Logging.LogEntryBuilder ..> EasySave.Core.Enums.LogEventCategory : uses
+EasySave.Core.Logging.LogEntryBuilder ..> EasySave.Core.Enums.LogEventAction : uses
+EasySave.Core.Logging.LogEntryBuilder ..> EasySave.Core.Enums.LogEventOutcome : uses
+EasySave.Core.Logging.LogEntryBuilder ..> EasySave.Core.Enums.LogLevel : uses
+EasySave.Core.Logging.LogEntryBuilder ..> EasySave.Core.Enums.BackupType : uses
+EasySave.Core.Logging.LogEntryBuilder ..> EasySave.Core.Enums.JobStatus : uses
+EasySave.Core.Logging.LogEntryBuilder ..> EasySave.Core.Enums.Language : uses
+EasySave.Core.Logging.LogEntryBuilder ..> EasySave.EasyLog.Options.LogFormat : uses
 
 @enduml
