@@ -31,6 +31,7 @@ skinparam sequence {
 ' -------------------- ACTEURS / PARTICIPANTS --------------------
 actor Client #FFF4E5
 
+participant "<b>LogEntryBuilder</b>" as Builder #FFF7E6
 participant "<b>LoggerFactory</b>" as Factory #EEF3FF
 participant "<b>DailyLogger<T></b>" as DailyLogger #E9F7EF
 participant "<b>SafeLogger<T></b>" as SafeLogger #F3E8FF
@@ -38,6 +39,27 @@ participant "<b>ILogSerializer</b>" as Serializer #E6F4FF
 participant "<b>ILogWriter</b>" as Writer #FFE9EC
 
 ' -------------------- FLUX --------------------
+== Construction de l'entree ==
+Client -> Builder : Initialise une nouvelle entree avec l'evenement et le message
+
+loop Champs optionnels
+  Client -> Builder : Ajoute les informations disponibles\n(trace, job, fichier, crypto, parametres, resume)
+end
+
+alt <b>Erreur pendant l'operation</b>
+  Client -> Builder : Marque l'entree en echec et renseigne l'erreur
+else <b>Execution nominale</b>
+  opt <b>Outcome non standard</b>
+    Client -> Builder : Ajuste le resultat final de l'evenement
+  end
+  opt <b>Niveau non standard</b>
+    Client -> Builder : Ajuste le niveau de severite
+  end
+end
+
+Client -> Builder : Finalise l'entree de log
+Builder --> Client : Retourne un LogEntryDto pret a ecrire
+
 == Configuration ==
 Client -> Client : Prepare les options de journalisation
 
@@ -67,10 +89,10 @@ end note
 
 == Ecriture ==
 opt <b>UseSafeLogger = true</b>
-  Client -> SafeLogger : Envoie une entree de log
+  Client -> SafeLogger : Envoie l'entree construite
   SafeLogger -> DailyLogger : Transmet l'entree
 else <b>UseSafeLogger = false</b>
-  Client -> DailyLogger : Envoie une entree de log
+  Client -> DailyLogger : Envoie l'entree construite
 end
 
 DailyLogger -> Serializer : Serialize l'entree
