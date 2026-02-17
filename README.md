@@ -24,6 +24,10 @@ Le projet est conçu pour évoluer par versions successives (v1 → v3) en respe
 - Maintenabilité
 - Architecture propre
 
+<div align="center">
+  <img src="docs/app-gui.png" alt="Aperçu de l'interface GUI EasySave" width="900" />
+</div>
+
 ---
 
 ## Documentation
