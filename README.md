@@ -346,111 +346,29 @@ L'interface **Gui** permet un affichage graphique
 ![Diagramme de classes Console](docs/uml/Gui/DiagrammeClass_Gui_v2.svg)
 
 <details>
-<summary><strong>>Voir les détails du module Gui</strong></summary>
-
-Composants :
-
-Program : Point d'entrée, initialise le builder Avalonia.
-
-App : Gère le cycle de vie, l'injection des services (Log, Job, Backup) et la configuration initiale.
-
-ViewLocator : Mécanisme de résolution automatique pour lier les ViewModels aux Views correspondantes.
+<summary><strong>Voir les détails du module GUI</strong></summary>
 
 Responsabilités :
 
-Initialisation du framework Avalonia.
+ViewModels : MainWindowViewModel, DashboardViewModel, JobsViewModel, ExecutionViewModel, SettingsViewModel
 
-Injection de dépendances (DI) manuelle des services globaux.
+Views : MainWindow, DashboardView, JobsView, JobEditorDialog, ExecutionView
 
-Configuration du contexte de logging et chargement des paramètres.
+Modèles UI : ExecutionJobItem, LogEntryItem, RecentActivityItem
 
-</details>
+Bootstrap : Program, App, ViewLocator
 
-<details>
-<summary><strong>ViewModels (Logique de présentation)</strong></summary>
+Converters : LogLevelToBrushConverter, StatusToTextConverter, L10nFormatConverter
 
-Composants :
+Localisation : Loc (Gestionnaire dynamique FR/EN)
 
-MainWindowViewModel : Orchestrateur principal, gère la navigation et le statut global.
+Contraintes :
 
-DashboardViewModel : Gère le résumé des activités, les statistiques de jobs et le statut système.
+Respect strict du pattern MVVM (pas de logique métier dans le code-behind)
 
-JobsViewModel & JobEditorViewModel : Gestion CRUD des travaux de sauvegarde et interface d'édition.
+Navigation pilotée par les ViewModels
 
-ExecutionViewModel : Pilotage en temps réel des sauvegardes (Play, Pause, Stop, Progress).
-
-LogsViewModel : Visualisation et filtrage de l'historique des opérations.
-
-SettingsViewModel : Gestion des préférences (Langue, Chiffrement, Processus métier).
-
-Responsabilités :
-
-Liaison de données (Data Binding) avec les vues.
-
-Appel des services métier (IJobService, IBackupService).
-
-Transformation des données brutes en données affichables.
-
-</details>
-
-<details>
-<summary><strong>Views & Converters (Interface Utilisateur)</strong></summary>
-
-Composants :
-
-Windows/UserControls : MainWindow, DashboardView, JobsView, ExecutionView, etc.
-
-Dialogs : JobEditorDialog pour la création/modification.
-
-Converters : LogLevelToBrush, StatusToText, TypeToEmoji, L10nFormat.
-
-Responsabilités :
-
-Rendu visuel en XAML.
-
-Conversion de types complexes en ressources graphiques (Couleurs, Icônes, Libellés traduits).
-
-Capture des interactions utilisateur.
-
-</details>
-
-<details>
-<summary><strong>Models & Localization</strong></summary>
-
-Composants :
-
-Models : ExecutionJobItem, LogEntryItem, RecentActivityItem (Wrappers UI).
-
-Loc (Localization) : Gestionnaire de ressources multilingues (FR/EN).
-
-Enums : NavigationTab pour le routage interne.
-
-Responsabilités :
-
-Fournir des structures de données optimisées pour la vue.
-
-Gérer le changement de langue à la volée sans redémarrage.
-
-Formater les entrées de log pour une lecture humaine (LogSection/LogField).
-
-</details>
-
-<details>
-<summary><strong>Dépendances Externes</strong></summary>
-
-Services injectés :
-
-IJobService / IBackupService : Cœur métier de l'application.
-
-SettingsService : Persistance des configurations.
-
-LogReaderService : Accès aux fichiers de logs physiques.
-
-Responsabilités :
-
-Découpler l'interface utilisateur de la logique métier.
-
-Permettre la testabilité des ViewModels via des mocks.
+Support du multi-langues à la volée
 
 </details>
 </div>
@@ -500,18 +418,27 @@ Le module **Core** définit le domaine métier, les DTOs et les contrats de l'ap
 <details>
 <summary><strong>Voir les détails du module Core</strong></summary>
 
-**Responsabilités :**
-- **Modèles métier** : `BackupJob`, `AppConfig`
-- **DTOs** : `BackupJobDto`, `BackupResultDto`, `JobStateDto`, `LogEntryDto`, `ResultDto`, `AppStateDto`
-- **Énumérations** : `BackupType`, `JobStatus`, `Language`
-- **Interfaces** : `IBackupEngine`, `IBackupService`, `IJobService`, `IJobRepository`, `IBackupCopyStrategy`, `IPathProvider`, `IStateWriter`, `IFileSystem`
-- **Événements** : `JobStateChangedEventArgs`
-- **Utilitaires** : `Guard`, `Localization`
+Responsabilités :
 
-**Contraintes :**
-- Aucune dépendance UI
-- Pas de code d'infrastructure
-- Interfaces testables uniquement
+Modèles métier : BackupJob, AppConfig
+
+DTOs : BackupJobDto, BackupResultDto, JobStateDto, LogEntryDto, ResultDto, AppStateDto (et sous-structures de log)
+
+Énumérations : BackupType, JobStatus, Language, LogLevel, LogEventCategory
+
+Interfaces : IBackupEngine, IBackupService, IJobService, IJobRepository, ICryptoService, IAppLogService, IPathProvider, IStateWriter
+
+Événements : JobStateChangedEventArgs
+
+Utilitaires : Guard, Localization, LogEntryBuilder
+
+Contraintes :
+
+Aucune dépendance vers les frameworks UI (Avalonia)
+
+Logique métier pure et agnostique du stockage
+
+Totalement testable via l'injection des interfaces
 
 </details>
 
