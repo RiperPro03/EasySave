@@ -170,6 +170,7 @@ Le projet est conçu pour évoluer par versions successives (v1 → v3) en respe
     <td><code>EasyLog.dll</code> pour la gestion des logs</td>
   </tr>
 </table>
+
 ---
 
 ## Architecture
@@ -220,12 +221,12 @@ EasySave/
 
 ## Prérequis
 
-| Composant | Version | Vérification |
+| Composant | Version | / |
 |-----------|---------|--------------|
 | **Windows** | 10+ | Obligatoire |
 | **.NET SDK** | 10.0+ | `dotnet --version` |
 | **IDE** | Visual Studio 2026+ ou Rider | Recommandé |
-| **Git** | Dernière version | `git --version` |
+| **Git** | 2.49.0 | `git --version` |
 
 ---
 
@@ -275,7 +276,7 @@ Ce projet est développé dans le cadre d'un projet académique **CESI**.
 
 MIT License
 
-Copyright (c) 2026 — Projet académique CESI
+Copyright &copy; 2026 — Projet académique CESI
 
 ## Diagrammes UML
 
@@ -283,7 +284,7 @@ Copyright (c) 2026 — Projet académique CESI
 
 <div align="center">
 
-Le module **EasyLog** est une DLL dédiée au logging indépendant et réutilisable.
+Le module **EasyLog** est une DLL dédiée au logging indépendant et réutilisable, il est de fait inchangé pour cette v2.
 
 ![Diagramme de classes EasyLog](docs/uml/EasyLog/DiagrammeClass_EasyLog.svg)
 
@@ -310,16 +311,42 @@ Le module **EasyLog** est une DLL dédiée au logging indépendant et réutilisa
 
 ---
 
-### Console - Interface Utilisateur
+### Gui - Interface Utilisateur
 
 <div align="center">
 
-L'interface **Console** offre une expérience utilisateur en ligne de commande (CLI).
+L'interface **Console** offre une expérience utilisateur en ligne de commande (CLI), elle aussi est inchangé depuis la v1, cette dernière étant "abandonné" au profit de l'interface Gui
 
 ![Diagramme de classes Console](docs/uml/Console/DiagrammeClass_Console_(ConsoleUi).svg)
 
 <details>
 <summary><strong>Voir les détails du module Console</strong></summary>
+
+**Composants :**
+- **Controllers** : `MenuController`, `JobController`, `BackupController`, `SettingsController`
+- **Views** : `ConsoleView`, `JobView`, `BackupView`
+- **Input** : `ConsoleInput`, `ArgsParser`
+- **Bootstrap** : `Program`
+
+**Responsabilités :**
+- Affichage des menus interactifs
+- Gestion des commandes utilisateur
+- Lancement d'un job ou d'un batch
+- Internationalisation FR/EN
+- Affichage des résultats en temps réel
+
+</details>
+
+</div>
+
+---
+
+L'interface **Gui** permet un affichage graphique
+
+![Diagramme de classes Console](docs/uml/Gui/DiagrammeClass_Gui_v2.svg)
+
+<details>
+<summary><strong>Voir les détails du module Gui</strong></summary>
 
 **Composants :**
 - **Controllers** : `MenuController`, `JobController`, `BackupController`, `SettingsController`
@@ -346,7 +373,7 @@ L'interface **Console** offre une expérience utilisateur en ligne de commande (
 
 Le module **App** contient les implémentations concrètes des services métier.
 
-![Diagramme de classes App](docs/uml/App/DiagrammeClass_App_Implementation.svg)
+![Diagramme de classes App](docs/uml/App/DiagrammeClass_App_Implementation_v2.svg)
 
 <details>
 <summary><strong>Voir les détails du module App</strong></summary>
@@ -378,7 +405,7 @@ Le module **App** contient les implémentations concrètes des services métier.
 
 Le module **Core** définit le domaine métier, les DTOs et les contrats de l'application.
 
-![Diagramme de classes Core](docs/uml/Core/DiagrammeClass_Core.svg)
+![Diagramme de classes Core](docs/uml/Core/DiagrammeClass_Core_v2.svg)
 
 <details>
 <summary><strong>Voir les détails du module Core</strong></summary>
@@ -410,7 +437,7 @@ Le module **Core** définit le domaine métier, les DTOs et les contrats de l'ap
 
 Vue d'ensemble du flux d'exécution des sauvegardes dans l'application.
 
-![Diagramme d'activité général](docs/uml/DiagrammeActivite_General.svg)
+![Diagramme d'activité général](docs/uml/DiagrammeActivite_General_v2.svg)
 
 <details>
 <summary><strong>Voir les détails du diagramme d'activité</strong></summary>
@@ -429,7 +456,7 @@ Vue d'ensemble du flux d'exécution des sauvegardes dans l'application.
 
 <div align="center">
 
-![Diagramme d'activité général - Mermaid](docs/uml/DiagrammeActivite_General_mermaid.svg)
+![Diagramme d'activité général - Mermaid](docs/uml/DiagrammeActivite_General_mermaid_v2.svg)
 
 </div>
 
@@ -441,7 +468,7 @@ Vue d'ensemble du flux d'exécution des sauvegardes dans l'application.
 
 Interactions entre les acteurs (utilisateurs) et le système EasySave.
 
-![Diagramme de cas d'utilisation](docs/uml/DiagrammeUseCase_General.svg)
+![Diagramme de cas d'utilisation](docs/uml/DiagrammeUseCase_General_v2.svg)
 
 <details>
 <summary><strong>Voir les détails du diagramme de cas d'utilisation</strong></summary>
@@ -465,7 +492,7 @@ Interactions entre les acteurs (utilisateurs) et le système EasySave.
 
 Séquence d'exécution complète d'un travail de sauvegarde.
 
-![Diagramme de séquence - Lancement d'un job](docs/uml/DiagrammeSequence_de_lancement_d_un_job.svg)
+![Diagramme de séquence - Lancement d'un job](docs/uml/DiagrammeSequence_de_lancement_d_un_job_v2.svg)
 
 <details>
 <summary><strong>Voir les détails du diagramme</strong></summary>
@@ -489,7 +516,7 @@ Séquence d'exécution complète d'un travail de sauvegarde.
 
 Processus détaillé d'une sauvegarde différentielle.
 
-![Diagramme de séquence - Sauvegarde différentielle](docs/uml/DiagrammeSequence_sauvegarde_differentielle.svg)
+![Diagramme de séquence - Sauvegarde différentielle](docs/uml/DiagrammeSequence_sauvegarde_differentielle_v2.svg)
 
 <details>
 <summary><strong>Voir les détails du diagramme</strong></summary>
@@ -513,7 +540,7 @@ Processus détaillé d'une sauvegarde différentielle.
 
 Exécution de plusieurs sauvegardes en mode batch via ligne de commande.
 
-![Diagramme de séquence - Batch via arguments](docs/uml/DiagrammeSequence_lancement_d_un_batch_via_arguments.svg)
+![Diagramme de séquence - Batch via arguments](docs/uml/DiagrammeSequence_lancement_d_un_batch_via_arguments_v2.svg)
 
 <details>
 <summary><strong>Voir les détails du diagramme</strong></summary>
@@ -537,7 +564,7 @@ Exécution de plusieurs sauvegardes en mode batch via ligne de commande.
 
 Mécanisme de création et mise à jour des logs en temps réel.
 
-![Diagramme de séquence - Journalisation](docs/uml/DiagrammeSequence_de_journalisation.svg)
+![Diagramme de séquence - Journalisation](docs/uml/DiagrammeSequence_de_journalisation_v2.svg)
 
 <details>
 <summary><strong>Voir les détails du diagramme</strong></summary>
