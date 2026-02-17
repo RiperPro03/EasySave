@@ -153,6 +153,8 @@ EasySave/
 └── tests/
 │   └── EasySave.Tests          # Tests unitaires
 │
+└── CryptoSoft/
+│   └── EasySave.Tests          # Tests unitaires
 └── CryptoSoft.exe              # Chiffrement XOR
 ```
 ---
@@ -204,10 +206,16 @@ git clone https://github.com/RiperPro03/EasySave.git
 cd EasySave
 ```
 
-### 2. Lancer l'application Console
+### 2. Générer le .exe pour l'interface graphique
 
 ```bash
-dotnet run --project src/EasySave.App.Console
+powershell -ExecutionPolicy Bypass -File .\scripts\publish-flat.ps1
+```
+
+### 2.Bis Ou Lancer l'application Gui
+
+```bash
+dotnet run --project src/EasySave.App.Gui
 ```
 
 ### 3. Exécuter les tests unitaires
@@ -215,6 +223,7 @@ dotnet run --project src/EasySave.App.Console
 ```bash
 dotnet test
 ```
+
 
 ---
 
