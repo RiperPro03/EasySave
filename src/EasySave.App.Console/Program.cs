@@ -10,6 +10,8 @@ using EasySave.Core.Common;
 using EasySave.Core.Logging;
 using EasySave.Core.Models;
 
+
+
 namespace EasySave.App.Console;
 
 /// <summary>
@@ -21,6 +23,7 @@ internal static class Program
     /// Configures services and starts the console workflow.
     /// </summary>
     /// <param name="args">Command-line arguments.</param>
+
     private static void Main(string[] args)
     {
         var pathProvider = new PathProvider();
@@ -39,6 +42,7 @@ internal static class Program
         var jobService = new JobService(pathProvider, appLogService);
         var backupService = new BackupService(
             jobService,
+            config,
             logDirectory: pathProvider.LogsPath,
             logFormatProvider: () => config.LogFormat,
             logService: appLogService);

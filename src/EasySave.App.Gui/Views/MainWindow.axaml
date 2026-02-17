@@ -1,4 +1,4 @@
-﻿<Window xmlns="https://github.com/avaloniaui"
+<Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:EasySave.App.Gui.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -8,10 +8,11 @@
         d:DesignHeight="800"
         x:Class="EasySave.App.Gui.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
+        x:CompileBindings="False"
         Title="EasySave"
         Icon="avares://EasySave.App.Gui/Assets/easysave-logo.ico"
-        MinWidth="1400"
-        MinHeight="800"
+        MinWidth="1024"
+        MinHeight="700"
         Background="#000000"
         TransparencyLevelHint="Blur">
 
@@ -134,7 +135,7 @@
                                        FontWeight="Bold"
                                        Foreground="#FFFFFF"
                                        LetterSpacing="0.5"/>
-                            <TextBlock Text="Backup Manager Pro"
+                            <TextBlock Text="{Binding AppTagline}"
                                        FontSize="11"
                                        Foreground="#90FFFFFF"
                                        LetterSpacing="0.8"/>
@@ -173,7 +174,7 @@
                         
                         <!-- Section Navigation -->
                         <StackPanel Spacing="6" Margin="0,0,0,16">
-                            <TextBlock Text="WORKSPACE"
+                            <TextBlock Text="{Binding SidebarWorkspaceLabel}"
                                        FontSize="11"
                                        FontWeight="Bold"
                                        Foreground="#70FFFFFF"
@@ -190,7 +191,7 @@
                                                    HorizontalAlignment="Center"
                                                    VerticalAlignment="Center"/>
                                     </Border>
-                                    <TextBlock Text="Dashboard" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding NavDashboardLabel}" VerticalAlignment="Center"/>
                                 </StackPanel>
                             </Button>
 
@@ -204,7 +205,7 @@
                                                    HorizontalAlignment="Center"
                                                    VerticalAlignment="Center"/>
                                     </Border>
-                                    <TextBlock Text="Backup Jobs" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding NavBackupJobsLabel}" VerticalAlignment="Center"/>
                                 </StackPanel>
                             </Button>
 
@@ -218,7 +219,7 @@
                                                    HorizontalAlignment="Center"
                                                    VerticalAlignment="Center"/>
                                     </Border>
-                                    <TextBlock Text="Live Execution" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding NavLiveExecutionLabel}" VerticalAlignment="Center"/>
                                 </StackPanel>
                             </Button>
 
@@ -232,7 +233,7 @@
                                                    HorizontalAlignment="Center"
                                                    VerticalAlignment="Center"/>
                                     </Border>
-                                    <TextBlock Text="Logs" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding NavLogsLabel}" VerticalAlignment="Center"/>
                                 </StackPanel>
                             </Button>
                         </StackPanel>
@@ -250,7 +251,7 @@
 
                         <!-- Section System -->
                         <StackPanel Spacing="6" Margin="0,16,0,0">
-                            <TextBlock Text="SYSTEM"
+                            <TextBlock Text="{Binding SidebarSystemLabel}"
                                        FontSize="11"
                                        FontWeight="Bold"
                                        Foreground="#70FFFFFF"
@@ -267,7 +268,7 @@
                                                    HorizontalAlignment="Center"
                                                    VerticalAlignment="Center"/>
                                     </Border>
-                                    <TextBlock Text="Settings" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding NavSettingsLabel}" VerticalAlignment="Center"/>
                                 </StackPanel>
                             </Button>
 
@@ -281,7 +282,7 @@
                                                    HorizontalAlignment="Center"
                                                    VerticalAlignment="Center"/>
                                     </Border>
-                                    <TextBlock Text="About" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding NavAboutLabel}" VerticalAlignment="Center"/>
                                 </StackPanel>
                             </Button>
                         </StackPanel>
@@ -368,3 +369,4 @@
         </Grid>
     </Border>
 </Window>
+

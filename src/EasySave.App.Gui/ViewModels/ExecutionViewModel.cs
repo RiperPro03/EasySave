@@ -8,6 +8,7 @@ using CommunityToolkit.Mvvm.Input;
 using EasySave.App.Gui.Models;
 using EasySave.Core.Events;
 using EasySave.Core.Interfaces;
+using EasySave.Core.Resources;
 
 namespace EasySave.App.Gui.ViewModels;
 
@@ -96,21 +97,21 @@ public sealed partial class ExecutionViewModel : ViewModelBase, IDisposable
         if (item.IsRunning)
         {
             if (!_backupService.Pause(item.JobId))
-                LastError = "Unable to pause job.";
+                LastError = Strings.Gui_Execution_Error_Pause;
             return;
         }
 
         if (item.IsPaused)
         {
             if (!_backupService.Resume(item.JobId))
-                LastError = "Unable to resume job.";
+                LastError = Strings.Gui_Execution_Error_Resume;
             return;
         }
 
         var job = _jobService.GetById(item.JobId);
         if (job is null)
         {
-            LastError = $"Job with ID {item.JobId} not found.";
+            LastError = string.Format(Strings.Gui_Execution_Error_NotFound, item.JobId);
             return;
         }
 
@@ -131,6 +132,13 @@ public sealed partial class ExecutionViewModel : ViewModelBase, IDisposable
             return;
 
         LastError = null;
+        if (!_backupService.CanStartSequence(out var reason))
+        {
+            LastError = string.IsNullOrWhiteSpace(reason)
+                ? Strings.Gui_Execution_Error_BusinessSoftware
+                : reason;
+            return;
+        }
         RefreshJobs();
 
         var runnableIds = Jobs
@@ -144,7 +152,7 @@ public sealed partial class ExecutionViewModel : ViewModelBase, IDisposable
 
         if (jobsToRun.Count == 0)
         {
-            LastError = "No runnable jobs.";
+            LastError = Strings.Gui_Execution_Error_NoRunnable;
             return;
         }
 
@@ -154,6 +162,8 @@ public sealed partial class ExecutionViewModel : ViewModelBase, IDisposable
             {
                 foreach (var job in jobsToRun)
                 {
+                    if (!_backupService.CanStartSequence(out _))
+                        break;
                     _backupService.Run(job);
                 }
             });
@@ -176,7 +186,7 @@ public sealed partial class ExecutionViewModel : ViewModelBase, IDisposable
 
         if (!_backupService.Stop(item.JobId))
         {
-            LastError = "Unable to stop job.";
+            LastError = Strings.Gui_Execution_Error_Stop;
         }
     }
 

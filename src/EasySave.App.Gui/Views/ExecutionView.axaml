@@ -2,7 +2,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:EasySave.App.Gui.ViewModels"
              x:Class="EasySave.App.Gui.Views.ExecutionView"
-             x:DataType="vm:ExecutionViewModel">
+             x:DataType="vm:ExecutionViewModel"
+             x:CompileBindings="False">
 
     <UserControl.Styles>
         <Style Selector="Border.exec-card">
@@ -99,7 +100,7 @@
         <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,16">
             <Button Grid.Column="1"
                     Classes="exec-runall"
-                    Content="Run All"
+                    Content="{Binding Source={StaticResource Loc}, Path=[Gui_Execution_RunAll]}"
                     VerticalAlignment="Center"
                     Command="{Binding RunAllCommand}"/>
         </Grid>
@@ -114,10 +115,10 @@
                 HorizontalAlignment="Center"
                 Margin="0,40,0,0">
             <StackPanel Spacing="12" HorizontalAlignment="Center">
-                <TextBlock Text="No jobs"
+                <TextBlock Text="{Binding Source={StaticResource Loc}, Path=[Gui_Execution_NoJobs_Title]}"
                            FontSize="36"
                            HorizontalAlignment="Center"/>
-                <TextBlock Text="Create a backup job to start monitoring"
+                <TextBlock Text="{Binding Source={StaticResource Loc}, Path=[Gui_Execution_NoJobs_Subtitle]}"
                            FontSize="14"
                            Foreground="#80FFFFFF"
                            HorizontalAlignment="Center"/>
@@ -151,12 +152,24 @@
                                                        FontWeight="Medium"/>
                                         </Border>
                                     </Grid>
-                                    <TextBlock Text="{Binding BackupTypeLabel, StringFormat='{}Type: {0}'}"
-                                               FontSize="12"
-                                               Foreground="#80FFFFFF"/>
-                                    <TextBlock Text="{Binding ProgressLabel, StringFormat='{}Progress: {0}'}"
-                                               FontSize="12"
-                                               Foreground="#80FFFFFF"/>
+                                    <TextBlock FontSize="12"
+                                               Foreground="#80FFFFFF">
+                                        <TextBlock.Text>
+                                            <MultiBinding Converter="{StaticResource L10nFormatConverter}">
+                                                <Binding Path="BackupTypeLabel"/>
+                                                <Binding Path="[Gui_Execution_TypeFormat]" Source="{StaticResource Loc}"/>
+                                            </MultiBinding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
+                                    <TextBlock FontSize="12"
+                                               Foreground="#80FFFFFF">
+                                        <TextBlock.Text>
+                                            <MultiBinding Converter="{StaticResource L10nFormatConverter}">
+                                                <Binding Path="ProgressLabel"/>
+                                                <Binding Path="[Gui_Execution_ProgressFormat]" Source="{StaticResource Loc}"/>
+                                            </MultiBinding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
                                 </StackPanel>
 
                                 <StackPanel Grid.Row="1" Grid.Column="0" Spacing="8" Margin="0,8,0,0">
@@ -166,62 +179,124 @@
                                                  Value="{Binding ProgressPercentage}"/>
                                     <WrapPanel Orientation="Horizontal">
                                         <TextBlock Grid.Column="0"
-                                                   Text="{Binding FilesProcessed, StringFormat='Files: {0}'}"
                                                    FontSize="11"
                                                    Foreground="#80FFFFFF"
-                                                   Margin="0,0,12,4"/>
+                                                   Margin="0,0,12,4">
+                                            <TextBlock.Text>
+                                                <MultiBinding Converter="{StaticResource L10nFormatConverter}">
+                                                    <Binding Path="FilesProcessed"/>
+                                                    <Binding Path="[Gui_Execution_FilesFormat]" Source="{StaticResource Loc}"/>
+                                                </MultiBinding>
+                                            </TextBlock.Text>
+                                        </TextBlock>
                                         <TextBlock Grid.Column="1"
-                                                   Text="{Binding TotalFiles, StringFormat='Total: {0}'}"
                                                    FontSize="11"
                                                    Foreground="#80FFFFFF"
-                                                   Margin="0,0,12,4"/>
+                                                   Margin="0,0,12,4">
+                                            <TextBlock.Text>
+                                                <MultiBinding Converter="{StaticResource L10nFormatConverter}">
+                                                    <Binding Path="TotalFiles"/>
+                                                    <Binding Path="[Gui_Execution_TotalFilesFormat]" Source="{StaticResource Loc}"/>
+                                                </MultiBinding>
+                                            </TextBlock.Text>
+                                        </TextBlock>
                                         <TextBlock Grid.Column="2"
-                                                   Text="{Binding RemainingFiles, StringFormat='Remaining: {0}'}"
                                                    FontSize="11"
-                                                   Foreground="#80FFFFFF"/>
+                                                   Foreground="#80FFFFFF">
+                                            <TextBlock.Text>
+                                                <MultiBinding Converter="{StaticResource L10nFormatConverter}">
+                                                    <Binding Path="RemainingFiles"/>
+                                                    <Binding Path="[Gui_Execution_RemainingFilesFormat]" Source="{StaticResource Loc}"/>
+                                                </MultiBinding>
+                                            </TextBlock.Text>
+                                        </TextBlock>
                                     </WrapPanel>
                                     <WrapPanel Orientation="Horizontal">
-                                        <TextBlock Text="{Binding SizeProcessedBytes, StringFormat='Done: {0} bytes'}"
-                                                   FontSize="11"
+                                        <TextBlock FontSize="11"
                                                    Foreground="#80FFFFFF"
-                                                   Margin="0,0,12,4"/>
-                                        <TextBlock Text="{Binding TotalSizeBytes, StringFormat='Total: {0} bytes'}"
-                                                   FontSize="11"
+                                                   Margin="0,0,12,4">
+                                            <TextBlock.Text>
+                                                <MultiBinding Converter="{StaticResource L10nFormatConverter}">
+                                                    <Binding Path="SizeProcessedBytes"/>
+                                                    <Binding Path="[Gui_Execution_BytesDoneFormat]" Source="{StaticResource Loc}"/>
+                                                </MultiBinding>
+                                            </TextBlock.Text>
+                                        </TextBlock>
+                                        <TextBlock FontSize="11"
                                                    Foreground="#80FFFFFF"
-                                                   Margin="0,0,12,4"/>
-                                        <TextBlock Text="{Binding RemainingSizeBytes, StringFormat='Remaining: {0} bytes'}"
-                                                   FontSize="11"
-                                                   Foreground="#80FFFFFF"/>
+                                                   Margin="0,0,12,4">
+                                            <TextBlock.Text>
+                                                <MultiBinding Converter="{StaticResource L10nFormatConverter}">
+                                                    <Binding Path="TotalSizeBytes"/>
+                                                    <Binding Path="[Gui_Execution_BytesTotalFormat]" Source="{StaticResource Loc}"/>
+                                                </MultiBinding>
+                                            </TextBlock.Text>
+                                        </TextBlock>
+                                        <TextBlock FontSize="11"
+                                                   Foreground="#80FFFFFF">
+                                            <TextBlock.Text>
+                                                <MultiBinding Converter="{StaticResource L10nFormatConverter}">
+                                                    <Binding Path="RemainingSizeBytes"/>
+                                                    <Binding Path="[Gui_Execution_BytesRemainingFormat]" Source="{StaticResource Loc}"/>
+                                                </MultiBinding>
+                                            </TextBlock.Text>
+                                        </TextBlock>
                                     </WrapPanel>
                                 </StackPanel>
 
                                 <StackPanel Grid.Row="2" Grid.Column="0" Spacing="4" Margin="0,8,0,0">
-                                    <TextBlock Text="{Binding CurrentSourceFile, StringFormat='Source: {0}', TargetNullValue='Source: -'}"
-                                               FontSize="11"
+                                    <TextBlock FontSize="11"
                                                Foreground="#70FFFFFF"
-                                               TextWrapping="Wrap"/>
-                                    <TextBlock Text="{Binding CurrentTargetFile, StringFormat='Target: {0}', TargetNullValue='Target: -'}"
-                                               FontSize="11"
+                                               TextWrapping="Wrap">
+                                        <TextBlock.Text>
+                                            <MultiBinding Converter="{StaticResource L10nNullableFormatConverter}">
+                                                <Binding Path="CurrentSourceFile"/>
+                                                <Binding Path="[Gui_Execution_SourceFormat]" Source="{StaticResource Loc}"/>
+                                                <Binding Path="[Gui_Execution_SourceEmpty]" Source="{StaticResource Loc}"/>
+                                            </MultiBinding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
+                                    <TextBlock FontSize="11"
                                                Foreground="#70FFFFFF"
-                                               TextWrapping="Wrap"/>
-                                    <TextBlock Text="{Binding LastActionLabel, StringFormat='Last action: {0}'}"
-                                               FontSize="11"
-                                               Foreground="#70FFFFFF"/>
+                                               TextWrapping="Wrap">
+                                        <TextBlock.Text>
+                                            <MultiBinding Converter="{StaticResource L10nNullableFormatConverter}">
+                                                <Binding Path="CurrentTargetFile"/>
+                                                <Binding Path="[Gui_Execution_TargetFormat]" Source="{StaticResource Loc}"/>
+                                                <Binding Path="[Gui_Execution_TargetEmpty]" Source="{StaticResource Loc}"/>
+                                            </MultiBinding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
+                                    <TextBlock FontSize="11"
+                                               Foreground="#70FFFFFF">
+                                        <TextBlock.Text>
+                                            <MultiBinding Converter="{StaticResource L10nFormatConverter}">
+                                                <Binding Path="LastActionLabel"/>
+                                                <Binding Path="[Gui_Execution_LastActionFormat]" Source="{StaticResource Loc}"/>
+                                            </MultiBinding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
                                 </StackPanel>
 
                                 <TextBlock Grid.Row="3" Grid.Column="0"
-                                           Text="{Binding ErrorMessage, StringFormat='Error: {0}', TargetNullValue=''}"
                                            FontSize="11"
                                            Foreground="#FF3B30"
                                            TextWrapping="Wrap"
-                                           IsVisible="{Binding HasErrorMessage}"/>
+                                           IsVisible="{Binding HasErrorMessage}">
+                                    <TextBlock.Text>
+                                        <MultiBinding Converter="{StaticResource L10nFormatConverter}">
+                                            <Binding Path="ErrorMessage"/>
+                                            <Binding Path="[Gui_Execution_ErrorFormat]" Source="{StaticResource Loc}"/>
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
 
                                 <StackPanel Grid.Row="0" Grid.RowSpan="4" Grid.Column="1"
                                             VerticalAlignment="Center">
                                     <Button Classes="exec-play"
-                                            Content="Play"
+                                            Content="{Binding PlayPauseLabel}"
                                             IsEnabled="{Binding CanStart}"
-                                            Command="{Binding $parent[ItemsControl].((vm:ExecutionViewModel)DataContext).TogglePlayPauseCommand}"
+                                            Command="{Binding $parent[ItemsControl].DataContext.TogglePlayPauseCommand}"
                                             CommandParameter="{Binding}"/>
                                 </StackPanel>
 
@@ -246,3 +321,4 @@
         </Border>
     </Grid>
 </UserControl>
+

@@ -13,6 +13,8 @@ using EasySave.Core.DTO;
 using EasySave.Core.Enums;
 using EasySave.Core.Events;
 using EasySave.Core.Interfaces;
+using EasySave.Core.Resources;
+using EasySave.EasyLog.Options;
 
 namespace EasySave.App.Gui.ViewModels;
 
@@ -41,10 +43,10 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
     private int _inactiveJobs;
 
     [ObservableProperty]
-    private string _lastBackup = "Never";
+    private string _lastBackup = Strings.Gui_Common_Never;
 
     [ObservableProperty]
-    private string _systemStatus = "Idle";
+    private string _systemStatus = Strings.Gui_JobStatus_Idle;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsRecentActivityEmpty))]
@@ -93,7 +95,7 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
             .OrderByDescending(job => job.LastRun)
             .FirstOrDefault();
 
-        LastBackup = lastJob?.LastRun?.ToLocalTime().ToString("g", CultureInfo.CurrentCulture) ?? "Never";
+        LastBackup = lastJob?.LastRun?.ToLocalTime().ToString("g", CultureInfo.CurrentCulture) ?? Strings.Gui_Common_Never;
     }
 
     /// <summary>
@@ -133,7 +135,7 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
     /// </summary>
     private void HandleStateChanged(JobStateChangedEventArgs e)
     {
-        SystemStatus = e.State.Status.ToString();
+        SystemStatus = ResolveJobStatusLabel(e.State.Status);
         RefreshLogsIfNeeded();
 
         if (e.State.Status is JobStatus.Completed or JobStatus.Error)
@@ -313,7 +315,7 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
     {
         var timestamp = entry.TimestampUtc.ToLocalTime().ToString("g", CultureInfo.CurrentCulture);
         var (glyph, color) = MapStatusGlyph(entry.Event.Action, entry.Event.Outcome);
-        var title = string.IsNullOrWhiteSpace(entry.Job?.Name) ? "Backup activity" : entry.Job.Name;
+        var title = string.IsNullOrWhiteSpace(entry.Job?.Name) ? Strings.Gui_Dashboard_Activity_Backup : entry.Job.Name;
         var subtitle = IsSummaryEntry(entry)
             ? BuildSummarySubtitle(entry)
             : BuildNonSummarySubtitle(entry);
@@ -330,21 +332,21 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
     private RecentActivityItem CreateJobActivityItem(LogEntryDto entry)
     {
         var timestamp = entry.TimestampUtc.ToLocalTime().ToString("g", CultureInfo.CurrentCulture);
-        var title = string.IsNullOrWhiteSpace(entry.Job?.Name) ? "Job" : entry.Job.Name;
+        var title = string.IsNullOrWhiteSpace(entry.Job?.Name) ? Strings.Gui_Dashboard_Activity_Job : entry.Job.Name;
         var actionLabel = entry.Event.Action switch
         {
-            LogEventAction.Create => "Job created",
-            LogEventAction.Update => "Job updated",
-            LogEventAction.Delete => "Job deleted",
-            _ => "Job changed"
+            LogEventAction.Create => Strings.Gui_Dashboard_Job_Created,
+            LogEventAction.Update => Strings.Gui_Dashboard_Job_Updated,
+            LogEventAction.Delete => Strings.Gui_Dashboard_Job_Deleted,
+            _ => Strings.Gui_Dashboard_Job_Changed
         };
 
-        var statusLabel = entry.Job?.IsActive == true ? "Active" : "Inactive";
+        var statusLabel = entry.Job?.IsActive == true ? Strings.Gui_Common_Active : Strings.Gui_Common_Inactive;
         var typeLabel = entry.Job?.Type switch
         {
-            BackupType.Full => "Full",
-            BackupType.Differential => "Differential",
-            _ => "Backup"
+            BackupType.Full => Strings.Gui_Common_Full,
+            BackupType.Differential => Strings.Gui_Common_Differential,
+            _ => Strings.Gui_Common_Backup
         };
         var subtitle = Truncate($"{actionLabel} | {typeLabel} | {statusLabel}", 140);
         var (glyph, color) = entry.Event.Action switch
@@ -361,15 +363,25 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
     private RecentActivityItem CreateSettingsActivityItem(LogEntryDto entry)
     {
         var timestamp = entry.TimestampUtc.ToLocalTime().ToString("g", CultureInfo.CurrentCulture);
-        var title = "Settings";
+        var title = Strings.Gui_Dashboard_Settings_Title;
         var actionLabel = entry.Event.Action switch
         {
-            LogEventAction.Update => "Settings updated",
-            _ => "Settings saved"
+            LogEventAction.Update => Strings.Gui_Dashboard_Settings_Updated,
+            _ => Strings.Gui_Dashboard_Settings_Saved
         };
 
-        var languageLabel = entry.Settings?.Language?.ToString() ?? "Unknown";
-        var formatLabel = entry.Settings?.LogFormat?.ToString() ?? "Unknown";
+        var languageLabel = entry.Settings?.Language switch
+        {
+            Language.English => Strings.Lang_English,
+            Language.French => Strings.Lang_French,
+            _ => Strings.Gui_Common_Unknown
+        };
+        var formatLabel = entry.Settings?.LogFormat switch
+        {
+            LogFormat.Json => Strings.Gui_LogFormat_Json,
+            LogFormat.Xml => Strings.Gui_LogFormat_Xml,
+            _ => Strings.Gui_Common_Unknown
+        };
         var subtitle = Truncate($"{actionLabel} | {languageLabel} | {formatLabel}", 140);
         return new RecentActivityItem(title, subtitle, timestamp, "S", "#20FFFFFF", "#FF9F0A");
     }
@@ -393,7 +405,8 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
             ? FormatDuration(TimeSpan.FromMilliseconds(entry.Summary.DurationMs))
             : string.Empty;
 
-        var parts = new List<string> { typeLabel, $"{sizeLabel} transferred" };
+        var transferredLabel = string.Format(Strings.Gui_Dashboard_Summary_Transferred, sizeLabel);
+        var parts = new List<string> { typeLabel, transferredLabel };
         if (!string.IsNullOrWhiteSpace(countsLabel))
             parts.Add(countsLabel);
         if (!string.IsNullOrWhiteSpace(durationLabel))
@@ -413,7 +426,7 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
         {
             var errorText = entry.Error?.Message ?? entry.Message;
             if (!string.IsNullOrWhiteSpace(errorText))
-                return Truncate($"Error | {errorText}", 140);
+                return Truncate(string.Format(Strings.Gui_Dashboard_Error_Format, errorText), 140);
         }
 
         if (entry.Event.Action == LogEventAction.DirectoryCreated)
@@ -421,7 +434,7 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
             var targetName = Path.GetFileName(entry.File?.TargetPath);
             if (string.IsNullOrWhiteSpace(targetName))
                 targetName = entry.File?.TargetPath ?? string.Empty;
-            return Truncate($"Directory created | {targetName}", 140);
+            return Truncate(string.Format(Strings.Gui_Dashboard_DirectoryCreated_Format, targetName), 140);
         }
 
         var sourceName = Path.GetFileName(entry.File?.SourcePath);
@@ -433,7 +446,9 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
 
         var sizeBytes = entry.File?.SizeBytes ?? 0;
         var sizeLabel = sizeBytes > 0 ? FormatBytes(sizeBytes) : "0 B";
-        var action = entry.Event.Action == LogEventAction.Skip ? "Skipped" : "File copy";
+        var action = entry.Event.Action == LogEventAction.Skip
+            ? Strings.Gui_Dashboard_Skipped
+            : Strings.Gui_Dashboard_FileCopy;
 
         if (string.IsNullOrWhiteSpace(sourceName) && string.IsNullOrWhiteSpace(targetNameFallback))
             return Truncate(entry.Message, 140);
@@ -452,23 +467,36 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
         {
             return type.Value switch
             {
-                BackupType.Full => "Full backup",
-                BackupType.Differential => "Differential backup",
-                _ => "Backup"
+                BackupType.Full => Strings.Gui_Dashboard_Backup_Full,
+                BackupType.Differential => Strings.Gui_Dashboard_Backup_Differential,
+                _ => Strings.Gui_Dashboard_Backup_Generic
             };
         }
 
         if (_jobService is null || string.IsNullOrWhiteSpace(jobName))
-            return "Backup";
+            return Strings.Gui_Dashboard_Backup_Generic;
 
         var job = _jobService.GetAll()
             .FirstOrDefault(candidate => string.Equals(candidate.Name, jobName, StringComparison.Ordinal));
 
         return job?.Type switch
         {
-            BackupType.Full => "Full backup",
-            BackupType.Differential => "Differential backup",
-            _ => "Backup"
+            BackupType.Full => Strings.Gui_Dashboard_Backup_Full,
+            BackupType.Differential => Strings.Gui_Dashboard_Backup_Differential,
+            _ => Strings.Gui_Dashboard_Backup_Generic
+        };
+    }
+
+    private static string ResolveJobStatusLabel(JobStatus status)
+    {
+        return status switch
+        {
+            JobStatus.Idle => Strings.Gui_JobStatus_Idle,
+            JobStatus.Running => Strings.Gui_JobStatus_Running,
+            JobStatus.Paused => Strings.Gui_JobStatus_Paused,
+            JobStatus.Completed => Strings.Gui_JobStatus_Completed,
+            JobStatus.Error => Strings.Gui_JobStatus_Error,
+            _ => Strings.Gui_Common_Unknown
         };
     }
 
@@ -481,9 +509,9 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
     {
         var parts = new List<string>
         {
-            $"Copied {summary.CopiedCount}",
-            $"Skipped {summary.SkippedCount}",
-            $"Errors {summary.ErrorCount}"
+            string.Format(CultureInfo.CurrentCulture, Strings.Gui_Dashboard_Summary_Copied, summary.CopiedCount),
+            string.Format(CultureInfo.CurrentCulture, Strings.Gui_Dashboard_Summary_Skipped, summary.SkippedCount),
+            string.Format(CultureInfo.CurrentCulture, Strings.Gui_Dashboard_Summary_Errors, summary.ErrorCount)
         };
 
         return string.Join(" | ", parts);

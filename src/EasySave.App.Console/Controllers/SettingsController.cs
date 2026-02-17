@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Linq;
 using EasySave.App.Console.Input;
 using EasySave.App.Console.Views;
 using EasySave.App.Repositories;
@@ -52,9 +53,16 @@ public sealed class SettingsController
         _consoleView.ShowInfo($"2 - {Strings.Lang_French}");
         _consoleView.ShowInfo($"3 - {Strings.UI_LogFormatJson}");
         _consoleView.ShowInfo($"4 - {Strings.UI_LogFormatXml}");
+        _consoleView.ShowInfo($"5 - Encryption: {(_config.EncryptionEnabled ? "Disable" : "Enable")}");
+        _consoleView.ShowInfo("6 - Update encryption key");
+        _consoleView.ShowInfo("7 - Update extensions to encrypt");
+        _consoleView.ShowInfo($"8 - Update business software process name (current: {_config.BusinessSoftwareProcessName ?? "-"})");
+        
+
         _consoleView.ShowInfo($"0 - {Strings.UI_Back}");
 
-        var choice = _input.ReadChoice("> ", new[] { 0, 1, 2, 3, 4 });
+        // Lecture du choix utilisateur.
+        var choice = _input.ReadChoice("> ", new[] { 0, 1, 2, 3, 4, 5, 6, 7, 8 });
 
         switch (choice)
         {
@@ -63,7 +71,7 @@ public sealed class SettingsController
                 UpdateLanguage(Language.English);
                 break;
             case 2:
-                // Change la langue en francais.
+                // Change la langue en français.
                 UpdateLanguage(Language.French);
                 break;
             case 3:
@@ -74,11 +82,23 @@ public sealed class SettingsController
                 // Change le format de log en XML.
                 UpdateLogFormat(LogFormat.Xml);
                 break;
+            case 5:
+                ToggleEncryption();
+                break;
+            case 6:
+                UpdateEncryptionKey();
+                break;
+            case 7:
+                UpdateExtensionsToEncrypt();
+                break;
+            case 8:
+                UpdateBusinessSoftwareProcessName();
+                break;
             case 0:
                 return;
         }
 
-        // Persiste la configuration apres modification.
+        // Persiste la configuration après modification.
         _configRepository.Save(_config);
         _consoleView.WaitForKey();
     }
@@ -91,7 +111,7 @@ public sealed class SettingsController
     {
         _config.ChangeLanguage(language);
 
-        // Met a jour la culture courante pour l'UI.
+        // Met à jour la culture courante pour l'UI.
         var culture = Localization.GetCulture(_config.Language);
         CultureInfo.CurrentCulture = culture;
         CultureInfo.CurrentUICulture = culture;
@@ -99,9 +119,68 @@ public sealed class SettingsController
         _consoleView.ShowSuccess(Strings.Info_LanguageChanged);
     }
 
+    /// <summary>
+    /// Updates the log format used by the application.
+    /// </summary>
     private void UpdateLogFormat(LogFormat logFormat)
     {
         _config.ChangeLogFormat(logFormat);
         _consoleView.ShowSuccess(Strings.Info_LogFormatChanged);
+    }
+
+    private void ToggleEncryption()
+    {
+        _config.ToggleEncryption();
+        _consoleView.ShowSuccess($"Encryption {(_config.EncryptionEnabled ? "enabled" : "disabled")}.");
+    }
+
+    private void UpdateEncryptionKey()
+    {
+        var key = ReadOptionalString("Enter encryption key (empty to clear): ");
+        _config.UpdateEncryptionKey(key);
+        _consoleView.ShowSuccess("Encryption key updated.");
+    }
+
+    private void UpdateExtensionsToEncrypt()
+    {
+        var raw = ReadOptionalString("Extensions to encrypt (comma separated, empty to clear): ");
+        if (string.IsNullOrWhiteSpace(raw))
+        {
+            _config.UpdateExtensionsToEncrypt(Array.Empty<string>());
+            _consoleView.ShowSuccess("Extensions cleared.");
+            return;
+        }
+
+        var list = raw.Split(',')
+            .Select(x => x.Trim())
+            .Where(x => !string.IsNullOrWhiteSpace(x))
+            .Select(NormalizeExtension)
+            .ToList();
+
+        _config.UpdateExtensionsToEncrypt(list);
+        _consoleView.ShowSuccess("Extensions updated.");
+    }
+
+    private void UpdateBusinessSoftwareProcessName()
+    {
+        var name = ReadOptionalString("Business software process name (empty to clear): ");
+        _config.ChangeBussinessSoftware(string.IsNullOrWhiteSpace(name) ? null : name);
+        _consoleView.ShowSuccess("Business software process name updated.");
+    }
+
+    private string? ReadOptionalString(string prompt)
+    {
+        System.Console.Write(prompt);
+        return System.Console.ReadLine();
+    }
+
+    private static string NormalizeExtension(string extension)
+    {
+        var normalized = extension.Trim();
+        if (normalized.Length == 0)
+            return normalized;
+        if (!normalized.StartsWith(".", StringComparison.Ordinal))
+            normalized = "." + normalized;
+        return normalized.ToLowerInvariant();
     }
 }

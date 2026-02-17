@@ -159,23 +159,32 @@ public sealed class LogEntryBuilder
     /// <param name="language">Selected language.</param>
     /// <param name="logFormat">Selected log format.</param>
     /// <param name="logDirectory">Optional log directory.</param>
-    /// <param name="configPath">Optional config path.</param>
-    /// <returns>The current builder.</returns>
-    public LogEntryBuilder WithSettings(
-        Language language,
-        LogFormat logFormat,
-        string? logDirectory = null,
-        string? configPath = null)
-    {
-        _entry.Settings = new LogSettingsDto
-        {
-            Language = language,
-            LogFormat = logFormat,
-            LogDirectory = logDirectory,
-            ConfigPath = configPath
-        };
-        return this;
-    }
+      /// <param name="configPath">Optional config path.</param>
+      /// <param name="encryptionEnabled">Optional encryption flag.</param>
+      /// <param name="extensionsToEncrypt">Optional encryption extension list.</param>
+      /// <param name="businessSoftwareProcessName">Optional business software process name.</param>
+      /// <returns>The current builder.</returns>
+      public LogEntryBuilder WithSettings(
+          Language language,
+          LogFormat logFormat,
+          string? logDirectory = null,
+          string? configPath = null,
+          bool? encryptionEnabled = null,
+          IEnumerable<string>? extensionsToEncrypt = null,
+          string? businessSoftwareProcessName = null)
+      {
+          _entry.Settings = new LogSettingsDto
+          {
+              Language = language,
+              LogFormat = logFormat,
+              LogDirectory = logDirectory,
+              ConfigPath = configPath,
+              EncryptionEnabled = encryptionEnabled,
+              ExtensionsToEncrypt = extensionsToEncrypt?.ToList(),
+              BusinessSoftwareProcessName = businessSoftwareProcessName
+          };
+          return this;
+      }
 
     /// <summary>
     /// Adds execution summary counters to the entry.
