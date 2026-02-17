@@ -1,53 +1,65 @@
 @startuml
 left to right direction
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+skinparam actor {
+  BackgroundColor #E8F5E9
+  BorderColor #2F3A4A
+}
 
 skinparam usecase {
-    BackgroundColor #FFE4C4
-    BorderColor black
-    ArrowColor black
+  BackgroundColor #FFF3E0
+  BorderColor #2F3A4A
+  FontStyle bold
 }
 
-title EasySave - Use case (V1.1)
+title EasySave – Use Case v2.0
 
-actor Utilisateur
+actor Utilisateur as User
+actor "Logiciel Metier" as BusinessApp
+actor "CryptoSoft (Externe)" as CryptoSoft
 
-package "EasySave" {
-    usecase "Sauvegarder la configuration" as UC_Config
-    usecase "Choisir le format du log (JSON/XML)" as UC_LogFormat
-    usecase "Changer la langue (FR/EN)" as UC_Langue
-    usecase "Valider les données du job" as UC_Valider
-    usecase "Sauvegarder la liste des jobs" as UC_SauvegarderJobs
-    usecase "Gérer les jobs (CRUD)" as UC_Gerer
-    usecase "Consulter le résultat" as UC_Consulter
-    usecase "Configurer l'application" as UC_ConfigApp
-    usecase "Journaliser l'exécution (log)" as UC_Journal
-    usecase "Mettre à jour l'état global (state.json)" as UC_State
-    usecase "Exécuter un job" as UC_Executer
-    usecase "Valider les arguments" as UC_Args
-    usecase "Exécuter des jobs par arguments (CLI)" as UC_ExecArgs
-    usecase "Exécuter tous les jobs" as UC_ExecTous
+rectangle "EasySave (V2)" {
+
+  (Gerer les jobs) as UC_JOBS
+  (Changer la langue\nFR / EN) as UC_LANG
+  (Choisir format logs\nJSON / XML) as UC_LOG_FMT
+
+  (Lancer sauvegarde) as UC_RUN
+
+  (Suivre la progression) as UC_PROGRESS
+  (Consulter l'etat des jobs\nstate.json) as UC_STATE
+  (Consulter les logs) as UC_LOGS
+
+  (Bloquer si logiciel metier actif) as UC_BLOCK
+  (Chiffrer certains fichiers) as UC_CRYPTO
+  (Configurer extensions a chiffrer) as UC_CFG_EXT
+  (Configurer logiciel metier surveille) as UC_CFG_APP
 }
 
-' Relations principales
-Utilisateur --> UC_Gerer
-Utilisateur --> UC_Consulter
-Utilisateur --> UC_ConfigApp
-Utilisateur --> UC_Executer
-Utilisateur --> UC_Langue
+' --- Liens utilisateur
+User --> UC_JOBS
+User --> UC_LANG
+User --> UC_LOG_FMT
+User --> UC_RUN
+User --> UC_PROGRESS
+User --> UC_STATE
+User --> UC_LOGS
+User --> UC_CFG_EXT
+User --> UC_CFG_APP
 
-' Include systématique
-UC_Gerer --> UC_Valider : <<include>>
-UC_Gerer --> UC_SauvegarderJobs : <<include>>
-UC_Executer --> UC_State : <<include>>
-UC_Executer --> UC_Args : <<include>>
+' --- INCLUDE (vert)
+UC_RUN .[#008000]> UC_PROGRESS : <<include>>
+UC_RUN .[#008000]> UC_STATE    : <<include>>
+UC_RUN .[#008000]> UC_LOGS     : <<include>>
 
-' Extend pour actions secondaires/log
-UC_Executer ..> UC_Journal : <<extend>>
-UC_Langue ..> UC_Config : <<extend>>
-UC_ConfigApp ..> UC_Config : <<include>>
-UC_Executer --> UC_ExecArgs : <<include>>
-UC_Executer --> UC_ExecTous : <<include>>
+' --- EXTEND (rouge)
+UC_RUN ..[#FF0000]> UC_BLOCK  : <<extend>>
+UC_RUN ..[#FF0000]> UC_CRYPTO : <<extend>>
 
-' Include optionnel pour logs
-UC_SauvegarderJobs --> UC_LogFormat : <<include>>
+' --- Acteurs externes
+UC_BLOCK --> BusinessApp
+UC_CRYPTO --> CryptoSoft
+
 @enduml

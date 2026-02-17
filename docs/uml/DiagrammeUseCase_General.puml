@@ -1,74 +1,97 @@
-@startuml EasySave_UseCase_V1_1_CRUD_Grouped
+@startuml EasySave_UseCase_V2
 
+left to right direction
 skinparam backgroundColor white
 skinparam shadowing false
 skinparam linetype ortho
-left to right direction
 
 skinparam actor {
   BackgroundColor #E8F5E9
   BorderColor #2F3A4A
 }
+
 skinparam usecase {
   BackgroundColor #FFF3E0
   BorderColor #2F3A4A
   FontStyle bold
 }
 
-title EasySave – Use case (V1.1)
+title EasySave – Use case (V2.0)
 
+' =========================
+' ACTEURS
+' =========================
 actor "Utilisateur" as User
+actor "Logiciel Métier\n(Externe)" as BusinessApp
+actor "CryptoSoft\n(Externe)" as CryptoSoft
 
-rectangle "EasySave" {
+' =========================
+' SYSTEME
+' =========================
+rectangle "EasySave v2.0" {
 
-  ' --- Jobs (CRUD regroupé)
-  usecase "Gérer les jobs (CRUD)" as UC_CRUD
-  usecase "Valider les données du job" as UC_ValidateJob
-  usecase "Sauvegarder la liste des jobs" as UC_SaveJobs
+  package "Gestion des travaux" {
+    (Gérer les jobs\nCRUD illimités) as UC_CRUD
+    (Valider les données) as UC_ValidateJob
+    (Sauvegarder les jobs) as UC_SaveJobs
+  }
 
-  ' --- Exécution
-  usecase "Exécuter un job" as UC_RunOne
-  usecase "Exécuter tous les jobs" as UC_RunAll
-  usecase "Exécuter des jobs par arguments (CLI)" as UC_RunArgs
-  usecase "Valider les arguments" as UC_ValidateArgs
-  usecase "Journaliser l'exécution (log)" as UC_Log
-  usecase "Mettre à jour l'état global (state.json)" as UC_State
-  usecase "Consulter le résultat" as UC_Result
+  package "Exécution des sauvegardes" {
+    (Exécuter un job) as UC_RunOne
+    (Exécuter tous les jobs) as UC_RunAll
+    (Mettre à jour state.json) as UC_State
+    (Journaliser dans log) as UC_Log
+    (Détecter logiciel métier) as UC_BusinessCheck
+    (Chiffrer via CryptoSoft) as UC_Crypto
+    (Consulter résultat) as UC_Result
+  }
 
-  ' --- Configuration (V1.1)
-  usecase "Configurer l'application" as UC_Config
-  usecase "Changer la langue (FR/EN)" as UC_Lang
-  usecase "Choisir le format du log (JSON/XML)" as UC_LogFormat
-  usecase "Sauvegarder la configuration" as UC_SaveConfig
+  package "Configuration" {
+    (Changer langue FR/EN) as UC_Lang
+    (Choisir format log\nJSON/XML) as UC_LogFormat
+    (Définir extensions à chiffrer\net logiciel métier) as UC_DefineCrypto
+    (Sauvegarder configuration) as UC_SaveConfig
+  }
 }
 
-' --- Acteur
+' =========================
+' LIENS UTILISATEUR
+' =========================
 User --> UC_CRUD
 User --> UC_RunOne
 User --> UC_RunAll
-User --> UC_RunArgs
-User --> UC_Config
 User --> UC_Result
 
-' --- CRUD : validation + persistance (systématiques)
-UC_CRUD .> UC_ValidateJob : <<include>>
-UC_CRUD .> UC_SaveJobs    : <<include>>
+User --> UC_Lang
+User --> UC_LogFormat
+User --> UC_DefineCrypto
 
-' --- Exécution : log + state (systématiques)
-UC_RunAll  .> UC_RunOne : <<include>>
-UC_RunArgs .> UC_RunOne : <<include>>
-UC_RunArgs .> UC_ValidateArgs : <<include>>
+' =========================
+' ACTEURS EXTERNES
+' =========================
+UC_BusinessCheck --> BusinessApp
+UC_Crypto --> CryptoSoft
 
-UC_RunOne .> UC_Log   : <<include>>
-UC_RunOne .> UC_State : <<include>>
+' =========================
+' RELATIONS UML
+' =========================
 
-' --- Résultat : optionnel après exécution
+' ---- INCLUDE
+UC_CRUD ..> UC_ValidateJob : <<include>>
+UC_CRUD ..> UC_SaveJobs    : <<include>>
+
+UC_RunAll ..> UC_RunOne : <<include>>
+
+UC_RunOne ..> UC_State         : <<include>>
+UC_RunOne ..> UC_Log           : <<include>>
+UC_RunOne ..> UC_BusinessCheck : <<include>>
+UC_RunOne ..> UC_Crypto        : <<extend>>
+
+UC_Lang ..> UC_SaveConfig : <<include>>
+UC_LogFormat ..> UC_SaveConfig : <<include>>
+UC_DefineCrypto ..> UC_SaveConfig : <<include>>
+
+' ---- EXTEND
 UC_Result ..> UC_RunOne : <<extend>>
-
-' --- Config : V1.1 (format log) + langue
-UC_Config .> UC_Lang      : <<include>>
-UC_Config .> UC_LogFormat : <<include>>
-UC_Lang      .> UC_SaveConfig : <<include>>
-UC_LogFormat .> UC_SaveConfig : <<include>>
 
 @enduml
