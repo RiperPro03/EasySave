@@ -282,7 +282,7 @@ Copyright &copy; 2026 — Projet académique CESI
 
 ### EasyLog - Système de Logging
 
-<div align="center">
+<div align="left">
 
 Le module **EasyLog** est une DLL dédiée au logging indépendant et réutilisable, il est de fait inchangé pour cette v2.
 
@@ -313,7 +313,7 @@ Le module **EasyLog** est une DLL dédiée au logging indépendant et réutilisa
 
 ### Interface Utilisateur
 
-<div align="center">
+<div align="left">
 
 L'interface **Console** offre une expérience utilisateur en ligne de commande (CLI), elle aussi est inchangé depuis la v1, cette dernière étant "abandonné" au profit de l'interface Gui
 
@@ -418,7 +418,7 @@ Le module **Core** porte le domaine métier et les contrats partagés par toute 
 
 ### Diagramme d'Activité
 
-<div align="center">
+<div align="left">
 
 Vue d'ensemble du flux d'exécution des sauvegardes dans l'application.
 
@@ -473,7 +473,7 @@ Pilotage interactif : Pause, Reprise ou Stop à tout moment depuis l'interface.
 
 ### Diagramme de Cas d'Utilisation
 
-<div align="center">
+<div align="left">
 
 Ce diagramme formalise les interactions entre l'utilisateur, les services externes et les fonctionnalités métier d'EasySave v2.0.
 
@@ -507,7 +507,7 @@ Ce diagramme formalise les interactions entre l'utilisateur, les services extern
 
 ### Lancement d'un Job de Sauvegarde
 
-<div align="center">
+<div align="left">
 
 Ce diagramme illustre le cycle complet d'un job, de la sélection par l'utilisateur jusqu'au résultat final affiché.
 
@@ -532,7 +532,7 @@ Ce diagramme illustre le cycle complet d'un job, de la sélection par l'utilisat
 
 ### Sauvegarde Différentielle
 
-<div align="center">
+<div align="left">
 
 Ce diagramme décrit la logique de copie sélective en mode différentiel.
 
@@ -556,7 +556,7 @@ Ce diagramme décrit la logique de copie sélective en mode différentiel.
 
 ### Lancement d'un Batch via Arguments
 
-<div align="center">
+<div align="left">
 
 Ce diagramme montre l'exécution séquentielle de plusieurs jobs depuis la ligne de commande.
 
@@ -580,7 +580,7 @@ Ce diagramme montre l'exécution séquentielle de plusieurs jobs depuis la ligne
 
 ### Processus de Journalisation
 
-<div align="center">
+<div align="left">
 
 Ce diagramme présente la chaîne de journalisation, de la construction de l'entrée jusqu'à l'écriture disque.
 
