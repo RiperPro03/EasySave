@@ -12,7 +12,8 @@ using EasySave.Core.DTO;
 namespace EasySave.App.Services;
 
 /// <summary>
-/// Reads log files and exposes parsed entries or formatted content.
+/// Service responsable de la lecture, de l'analyse et du formatage des fichiers de logs.
+/// Supporte les formats JSON et XML.
 /// </summary>
 public sealed class LogReaderService
 {
@@ -30,6 +31,11 @@ public sealed class LogReaderService
 
     private readonly string _logDirectory;
 
+    /// <summary>
+    /// Initialise une nouvelle instance du service. 
+    /// Si aucun chemin n'est fourni, utilise le dossier AppData par défaut.
+    /// </summary>
+    /// <param name="logDirectory">Chemin optionnel vers le dossier des logs.</param>
     public LogReaderService(string? logDirectory = null)
     {
         _logDirectory = string.IsNullOrWhiteSpace(logDirectory)
@@ -41,11 +47,16 @@ public sealed class LogReaderService
             : logDirectory;
     }
 
+    /// <summary>
+    /// Retourne le chemin du dossier de logs actuel.
+    /// </summary>
     public string LogDirectory => _logDirectory;
 
     /// <summary>
-    /// Reads all entries across recent log files.
+    /// Lit les entrées des fichiers de logs les plus récents.
     /// </summary>
+    /// <param name="maxFiles">Nombre maximum de fichiers à analyser.</param>
+    /// <returns>Une liste d'objets LogEntryDto.</returns>
     public IReadOnlyList<LogEntryDto> ReadEntries(int maxFiles = 7)
     {
         if (string.IsNullOrWhiteSpace(_logDirectory) || !Directory.Exists(_logDirectory))
@@ -61,7 +72,7 @@ public sealed class LogReaderService
     }
 
     /// <summary>
-    /// Reads all entries across all available log files.
+    /// Lit l'intégralité des logs présents dans le dossier.
     /// </summary>
     public IReadOnlyList<LogEntryDto> ReadAllEntries()
     {
@@ -78,33 +89,22 @@ public sealed class LogReaderService
     }
 
     /// <summary>
-    /// Reads log files and returns formatted content for the log view.
+    /// Prépare le contenu textuel formaté pour l'interface graphique.
+    /// Gère les cas d'erreur .
     /// </summary>
+    /// <param name="maxFiles">Limite de fichiers à lire.</param>
+    /// <returns>Une liste d'objets LogFileEntry </returns>
     public IReadOnlyList<LogFileEntry> ReadLogFiles(int? maxFiles = null)
     {
         if (!Directory.Exists(_logDirectory))
         {
-            return new[]
-            {
-                new LogFileEntry
-                {
-                    FileName = "Erreur",
-                    Content = "Le dossier de logs n'existe pas."
-                }
-            };
+            return new[] { new LogFileEntry { FileName = "Erreur", Content = "Le dossier de logs n'existe pas." } };
         }
 
         var files = EnumerateLogFiles(maxFiles).ToList();
         if (!files.Any())
         {
-            return new[]
-            {
-                new LogFileEntry
-                {
-                    FileName = "Aucun log",
-                    Content = "Aucun fichier de log trouvé."
-                }
-            };
+            return new[] { new LogFileEntry { FileName = "Aucun log", Content = "Aucun fichier de log trouvé." } };
         }
 
         var results = new List<LogFileEntry>();
@@ -125,6 +125,9 @@ public sealed class LogReaderService
         return results;
     }
 
+    /// <summary>
+    /// Liste les fichiers .json et .xml triés par nom décroissant (le plus récent d'abord).
+    /// </summary>
     private IEnumerable<string> EnumerateLogFiles(int? maxFiles)
     {
         var files = Directory
@@ -135,6 +138,9 @@ public sealed class LogReaderService
         return maxFiles.HasValue ? files.Take(maxFiles.Value) : files;
     }
 
+    /// <summary>
+    /// Identifie l'extension du fichier et appelle la méthode de lecture appropriée.
+    /// </summary>
     private static IEnumerable<LogEntryDto> ReadEntriesFromFile(string filePath)
     {
         var extension = Path.GetExtension(filePath);
@@ -151,59 +157,42 @@ public sealed class LogReaderService
         return Array.Empty<LogEntryDto>();
     }
 
+    /// <summary>
+    /// Lit un fichier JSON ligne par ligne et désérialise chaque ligne en LogEntryDto.
+    /// Gère les balises racine optionnelles <logs>.
+    /// </summary>
     private static IEnumerable<LogEntryDto> ReadJsonEntries(string filePath)
     {
         IEnumerable<string> lines;
-        try
-        {
-            lines = File.ReadLines(filePath);
-        }
-        catch (IOException)
-        {
-            yield break;
-        }
+        try { lines = File.ReadLines(filePath); }
+        catch (IOException) { yield break; }
 
         foreach (var line in lines)
         {
             var trimmed = line.Trim();
-            if (trimmed.Length == 0)
-                continue;
-            if (string.Equals(trimmed, "<logs>", StringComparison.OrdinalIgnoreCase))
-                continue;
-            if (string.Equals(trimmed, "</logs>", StringComparison.OrdinalIgnoreCase))
+            if (trimmed.Length == 0 || trimmed.Equals("<logs>", StringComparison.OrdinalIgnoreCase) || trimmed.Equals("</logs>", StringComparison.OrdinalIgnoreCase))
                 continue;
 
             LogEntryDto? entry;
-            try
-            {
-                entry = JsonSerializer.Deserialize<LogEntryDto>(trimmed, LogJsonOptions);
-            }
-            catch (JsonException)
-            {
-                continue;
-            }
+            try { entry = JsonSerializer.Deserialize<LogEntryDto>(trimmed, LogJsonOptions); }
+            catch (JsonException) { continue; }
 
-            if (entry != null)
-                yield return entry;
+            if (entry != null) yield return entry;
         }
     }
 
+    /// <summary>
+    /// Charge un document XML et désérialise chaque élément enfant de la racine en LogEntryDto.
+    /// </summary>
     private static IEnumerable<LogEntryDto> ReadXmlEntries(string filePath)
     {
         XDocument document;
-        try
-        {
-            document = XDocument.Load(filePath);
-        }
-        catch (Exception)
-        {
-            yield break;
-        }
+        try { document = XDocument.Load(filePath); }
+        catch (Exception) { yield break; }
 
         var serializer = new XmlSerializer(typeof(LogEntryDto));
         var root = document.Root;
-        if (root is null)
-            yield break;
+        if (root is null) yield break;
 
         foreach (var element in root.Elements())
         {
@@ -213,37 +202,32 @@ public sealed class LogReaderService
                 using var reader = element.CreateReader();
                 entry = serializer.Deserialize(reader) as LogEntryDto;
             }
-            catch (InvalidOperationException)
-            {
-                entry = null;
-            }
+            catch (InvalidOperationException) { entry = null; }
 
-            if (entry != null)
-                yield return entry;
+            if (entry != null) yield return entry;
         }
     }
 
+    /// <summary>
+    /// Formate une liste d'entrées en une chaîne de caractères lisible .
+    /// </summary>
     private static string FormatEntries(IEnumerable<LogEntryDto> entries, string extension, string filePath)
     {
         var entryList = entries.ToList();
         if (entryList.Count == 0)
         {
-            try
-            {
-                return File.ReadAllText(filePath);
-            }
-            catch (IOException)
-            {
-                return string.Empty;
-            }
+            try { return File.ReadAllText(filePath); }
+            catch (IOException) { return string.Empty; }
         }
 
-        if (string.Equals(extension, ".xml", StringComparison.OrdinalIgnoreCase))
-            return FormatXml(entryList);
-
-        return FormatJson(entryList);
+        return string.Equals(extension, ".xml", StringComparison.OrdinalIgnoreCase)
+            ? FormatXml(entryList)
+            : FormatJson(entryList);
     }
 
+    /// <summary>
+    /// Transforme les entrées en un bloc de texte JSON indenté.
+    /// </summary>
     private static string FormatJson(IEnumerable<LogEntryDto> entries)
     {
         var blocks = entries
@@ -253,6 +237,9 @@ public sealed class LogReaderService
         return string.Join(Environment.NewLine + Environment.NewLine, blocks);
     }
 
+    /// <summary>
+    /// Reconstruit un document XML complet avec une racine <logs> à partir des entrées.
+    /// </summary>
     private static string FormatXml(IEnumerable<LogEntryDto> entries)
     {
         var serializer = new XmlSerializer(typeof(LogEntryDto));
@@ -261,16 +248,11 @@ public sealed class LogReaderService
         foreach (var entry in entries)
         {
             var entryXml = SerializeXml(serializer, entry);
-            if (entryXml is not null)
-                root.Add(entryXml);
+            if (entryXml is not null) root.Add(entryXml);
         }
 
         var doc = new XDocument(root);
-        var settings = new XmlWriterSettings
-        {
-            OmitXmlDeclaration = true,
-            Indent = true
-        };
+        var settings = new XmlWriterSettings { OmitXmlDeclaration = true, Indent = true };
 
         using var writer = new StringWriter();
         using var xmlWriter = XmlWriter.Create(writer, settings);
@@ -279,6 +261,9 @@ public sealed class LogReaderService
         return writer.ToString();
     }
 
+    /// <summary>
+    /// Sérialise un objet LogEntryDto unique en XElement pour manipulation XML.
+    /// </summary>
     private static XElement? SerializeXml(XmlSerializer serializer, LogEntryDto entry)
     {
         try
@@ -289,15 +274,12 @@ public sealed class LogReaderService
             serializer.Serialize(xmlWriter, entry);
             return XElement.Parse(stringWriter.ToString());
         }
-        catch (InvalidOperationException)
-        {
-            return null;
-        }
+        catch (InvalidOperationException) { return null; }
     }
 }
 
 /// <summary>
-/// Represents a formatted log file entry for the log view.
+/// Modèle de données représentant un fichier de log prêt à être affiché dans la vue.
 /// </summary>
 public sealed class LogFileEntry
 {
