@@ -81,7 +81,7 @@ Le projet est conçu pour évoluer par versions successives (v1 → v3) en respe
 <table>
   <tr>
     <td><strong>Interface</strong></td>
-    <td>Application graphique (WPF ou framework équivalent)</td>
+    <td>Application graphique Avalonia</td>
   </tr>
   <tr>
     <td><strong>Travaux de sauvegarde</strong></td>
