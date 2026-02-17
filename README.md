@@ -76,6 +76,41 @@ Le projet est conçu pour évoluer par versions successives (v1 → v3) en respe
 
 ---
 
+## Fonctionnalités (Version 1.0)
+
+<table>
+  <tr>
+    <td><strong>Interface</strong></td>
+    <td>Application console en .NET</td>
+  </tr>
+  <tr>
+    <td><strong>Travaux de sauvegarde</strong></td>
+    <td>Jusqu'à 5 travaux configurables</td>
+  </tr>
+  <tr>
+    <td><strong>Types de sauvegarde</strong></td>
+    <td>Complète • Différentielle</td>
+  </tr>
+  <tr>
+    <td><strong>Modes d'exécution</strong></td>
+    <td>Unitaire • Séquentielle • Ligne de commande (<code>1-3</code>, <code>1;3</code>)</td>
+  </tr>
+  <tr>
+    <td><strong>Langues</strong></td>
+    <td>Français • Anglais</td>
+  </tr>
+  <tr>
+    <td><strong>Logs</strong></td>
+    <td>Fichier log journalier (JSON) • Fichier d'état (<code>state.json</code>)</td>
+  </tr>
+  <tr>
+    <td><strong>DLL dédiée</strong></td>
+    <td><code>EasyLog.dll</code> pour la gestion des logs</td>
+  </tr>
+</table>
+
+---
+
 ## Fonctionnalités (Version 2.0)
 
 <table>
@@ -97,7 +132,7 @@ Le projet est conçu pour évoluer par versions successives (v1 → v3) en respe
   </tr>
   <tr>
     <td><strong>Langues</strong></td>
-    <td>Français & Anglais</td>
+    <td>Français & Anglais, aucune chaîne en dur dans le code</td>
   </tr>
   <tr>
     <td><strong>Logs</strong></td>
@@ -231,13 +266,6 @@ dotnet test
 | **Logs journaliers** | `%APPDATA%\ProSoft\EasySave\Logs` | Fichiers JSON/XML avec l'historique des opérations |
 | **Fichier d'état** | `%APPDATA%\ProSoft\EasySave\State\state.json` | Snapshot en temps réel de l'état global |
 | **Configuration** | Dossier utilisateur système | Paramètres persistants |
-
----
-
-## Internationalisation
-
-- **Langues supportées :** Français • Anglais
-- **Architecture :** Textes centralisés, aucune chaîne en dur dans le code
 
 ---
 
