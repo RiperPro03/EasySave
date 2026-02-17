@@ -566,7 +566,7 @@ Séquence d'exécution complète d'un travail de sauvegarde.
 
 Processus détaillé d'une sauvegarde différentielle.
 
-![Diagramme de séquence - Sauvegarde différentielle](docs/uml/DiagrammeSequence_sauvegarde_differentielle_v2.png)
+![Diagramme de séquence - Sauvegarde différentielle](docs/uml/DiagrammeSequence_Backup_Differential_v2.png)
 
 <details>
 <summary><strong>Voir les détails du diagramme</strong></summary>
