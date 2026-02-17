@@ -566,7 +566,7 @@ Séquence d'exécution complète d'un travail de sauvegarde.
 
 Processus détaillé d'une sauvegarde différentielle.
 
-![Diagramme de séquence - Sauvegarde différentielle](docs/uml/DiagrammeSequence_Backup_Differential_v2.png)
+![Diagramme de séquence - Sauvegarde différentielle](docs/uml/DiagrammeSequence_sauvegarde_differentielle_v2.svg)
 
 <details>
 <summary><strong>Voir les détails du diagramme</strong></summary>
@@ -590,7 +590,7 @@ Processus détaillé d'une sauvegarde différentielle.
 
 Exécution de plusieurs sauvegardes en mode batch via ligne de commande.
 
-![Diagramme de séquence - Batch via arguments](docs/uml/DiagrammeSequence_lancement_d_un_batch_via_arguments_v2.png)
+![Diagramme de séquence - Batch via arguments](docs/uml/DiagrammeSequence_lancement_d_un_batch_via_arguments_v2.svg)
 
 <details>
 <summary><strong>Voir les détails du diagramme</strong></summary>
@@ -614,7 +614,7 @@ Exécution de plusieurs sauvegardes en mode batch via ligne de commande.
 
 Mécanisme de création et mise à jour des logs en temps réel.
 
-![Diagramme de séquence - Journalisation](docs/uml/DiagrammeSequence_de_journalisation_v2.png)
+![Diagramme de séquence - Journalisation](docs/uml/DiagrammeSequence_de_journalisation_v2.svg)
 
 <details>
 <summary><strong>Voir les détails du diagramme</strong></summary>
