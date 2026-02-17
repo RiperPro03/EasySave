@@ -384,22 +384,31 @@ Le module **App** contient les implémentations concrètes des services métier.
 ![Diagramme de classes App](docs/uml/App/DiagrammeClass_App_Implementation_v2.svg)
 
 <details>
-<summary><strong>Voir les détails du module App</strong></summary>
+<summary><strong>Voir les détails du module App (Implementations)</strong></summary>
 
-**Services :**
-- `BackupEngine` : Exécution d'un job, progression, logs
-- `BackupService` : Orchestration et snapshot global `state.json`
-- `JobService` : Opérations CRUD sur les jobs
-- `PathProvider` : Gestion des chemins applicatifs (AppData/ProSoft/EasySave)
-- `StateWriter` : Écriture du snapshot d'état global
+Responsabilités :
 
-**Stratégies de copie :**
-- `FullCopyStrategy` : Copie totale des fichiers
-- `DifferentialCopyStrategy` : Copie sélective (taille, date, hash)
+Services d'exécution : BackupService (Orchestrateur), BackupEngine (Moteur de copie), JobService, SettingsService
 
-**Repositories :**
-- `JobRepository` : Persistance dans `jobs.json` (limite 5 jobs)
-- `AppConfigRepository` : Persistance `setting.json` (langue, format log)
+Stratégies de copie : FullCopyStrategy, DifferentialCopyStrategy (avec calcul de Hash)
+
+Persistance (Repositories) : JobRepository, AppConfigRepository, StateWriter (écriture de l'état temps réel)
+
+Logging & Diagnostic : AppLogService (Logger multi-format), LogReaderService, PathProvider
+
+Chiffrement & Contrôle : CryptoSoftProcessService (via process externe), NoEncryptionService, JobExecutionControl (Pause/Resume/Stop)
+
+Utilitaires : BusinessSoftwareDetector, UncResolver (gestion des chemins réseau/mappés)
+
+Contraintes :
+
+Implémentation stricte des interfaces du Core
+
+Gestion thread-safe des opérations (via ConcurrentDictionary et ManualResetEventSlim)
+
+Blocage des sauvegardes si un logiciel métier spécifique est détecté en cours d'exécution
+
+Résolution automatique des chemins UNC pour la traçabilité des logs
 
 </details>
 
@@ -457,13 +466,37 @@ Vue d'ensemble du flux d'exécution des sauvegardes dans l'application.
 ![Diagramme d'activité général](docs/uml/DiagrammeActivite_General_v2.svg)
 
 <details>
-<summary><strong>Voir les détails du diagramme d'activité</strong></summary>
+<summary><strong> Flux d'activité & Processus d'exécution</strong></summary>
 
-**Représente :**
-- Flux de création d'un travail de sauvegarde
-- Processus d'exécution (complète/différentielle)
-- Gestion des erreurs et des logs
-- Mise à jour de l'état en temps réel
+Étapes principales :
+
+Initialisation : Chargement de la configuration, application de la langue et injection des services au démarrage.
+
+Gestion des travaux : CRUD complet des jobs de sauvegarde avec persistance immédiate.
+
+Cycle d'exécution :
+
+Vérification préventive du logiciel métier (blocage si le processus est détecté).
+
+Sélection intelligente de la stratégie (Complet vs Différentiel via Hash).
+
+File d'attente séquentielle pour les lancements groupés.
+
+Moteur de copie & Sécurité :
+
+Boucle de copie de fichiers avec mise à jour en temps réel de l'état (Progression, Débit).
+
+Interfaçage avec CryptoSoft pour le chiffrement à la volée selon les extensions définies.
+
+Finalisation : Génération automatique des rapports de fin (Success/Error) et mise à jour des logs.
+
+Contraintes de flux :
+
+Interruption immédiate ou mise en pause si le logiciel métier est lancé en cours de backup.
+
+Gestion des erreurs bloquantes (source indisponible) vs erreurs mineures (échec de chiffrement sur un fichier).
+
+Pilotage interactif : Pause, Reprise ou Stop à tout moment depuis l'interface.
 
 </details>
 
