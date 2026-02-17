@@ -89,7 +89,7 @@ Le projet est conçu pour évoluer par versions successives (v1 → v3) en respe
   </tr>
   <tr>
     <td><strong>Types de sauvegarde</strong></td>
-    <td>Complète • Différentielle</td>
+    <td>Complète & Différentielle</td>
   </tr>
   <tr>
     <td><strong>Modes d'exécution</strong></td>
@@ -97,7 +97,7 @@ Le projet est conçu pour évoluer par versions successives (v1 → v3) en respe
   </tr>
   <tr>
     <td><strong>Langues</strong></td>
-    <td>Français • Anglais</td>
+    <td>Français & Anglais</td>
   </tr>
   <tr>
     <td><strong>Logs</strong></td>
@@ -346,23 +346,113 @@ L'interface **Gui** permet un affichage graphique
 ![Diagramme de classes Console](docs/uml/Gui/DiagrammeClass_Gui_v2.svg)
 
 <details>
-<summary><strong>Voir les détails du module Gui</strong></summary>
+<summary><strong>>Voir les détails du module Gui</strong></summary>
 
-**Composants :**
-- **Controllers** : `MenuController`, `JobController`, `BackupController`, `SettingsController`
-- **Views** : `ConsoleView`, `JobView`, `BackupView`
-- **Input** : `ConsoleInput`, `ArgsParser`
-- **Bootstrap** : `Program`
+Composants :
 
-**Responsabilités :**
-- Affichage des menus interactifs
-- Gestion des commandes utilisateur
-- Lancement d'un job ou d'un batch
-- Internationalisation FR/EN
-- Affichage des résultats en temps réel
+Program : Point d'entrée, initialise le builder Avalonia.
+
+App : Gère le cycle de vie, l'injection des services (Log, Job, Backup) et la configuration initiale.
+
+ViewLocator : Mécanisme de résolution automatique pour lier les ViewModels aux Views correspondantes.
+
+Responsabilités :
+
+Initialisation du framework Avalonia.
+
+Injection de dépendances (DI) manuelle des services globaux.
+
+Configuration du contexte de logging et chargement des paramètres.
 
 </details>
 
+<details>
+<summary><strong>ViewModels (Logique de présentation)</strong></summary>
+
+Composants :
+
+MainWindowViewModel : Orchestrateur principal, gère la navigation et le statut global.
+
+DashboardViewModel : Gère le résumé des activités, les statistiques de jobs et le statut système.
+
+JobsViewModel & JobEditorViewModel : Gestion CRUD des travaux de sauvegarde et interface d'édition.
+
+ExecutionViewModel : Pilotage en temps réel des sauvegardes (Play, Pause, Stop, Progress).
+
+LogsViewModel : Visualisation et filtrage de l'historique des opérations.
+
+SettingsViewModel : Gestion des préférences (Langue, Chiffrement, Processus métier).
+
+Responsabilités :
+
+Liaison de données (Data Binding) avec les vues.
+
+Appel des services métier (IJobService, IBackupService).
+
+Transformation des données brutes en données affichables.
+
+</details>
+
+<details>
+<summary><strong>Views & Converters (Interface Utilisateur)</strong></summary>
+
+Composants :
+
+Windows/UserControls : MainWindow, DashboardView, JobsView, ExecutionView, etc.
+
+Dialogs : JobEditorDialog pour la création/modification.
+
+Converters : LogLevelToBrush, StatusToText, TypeToEmoji, L10nFormat.
+
+Responsabilités :
+
+Rendu visuel en XAML.
+
+Conversion de types complexes en ressources graphiques (Couleurs, Icônes, Libellés traduits).
+
+Capture des interactions utilisateur.
+
+</details>
+
+<details>
+<summary><strong>Models & Localization</strong></summary>
+
+Composants :
+
+Models : ExecutionJobItem, LogEntryItem, RecentActivityItem (Wrappers UI).
+
+Loc (Localization) : Gestionnaire de ressources multilingues (FR/EN).
+
+Enums : NavigationTab pour le routage interne.
+
+Responsabilités :
+
+Fournir des structures de données optimisées pour la vue.
+
+Gérer le changement de langue à la volée sans redémarrage.
+
+Formater les entrées de log pour une lecture humaine (LogSection/LogField).
+
+</details>
+
+<details>
+<summary><strong>Dépendances Externes</strong></summary>
+
+Services injectés :
+
+IJobService / IBackupService : Cœur métier de l'application.
+
+SettingsService : Persistance des configurations.
+
+LogReaderService : Accès aux fichiers de logs physiques.
+
+Responsabilités :
+
+Découpler l'interface utilisateur de la logique métier.
+
+Permettre la testabilité des ViewModels via des mocks.
+
+</details>
 </div>
 
 ---
