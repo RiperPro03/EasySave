@@ -518,7 +518,7 @@ Pilotage interactif : Pause, Reprise ou Stop à tout moment depuis l'interface.
 
 Interactions entre les acteurs (utilisateurs) et le système EasySave.
 
-![Diagramme de cas d'utilisation](docs/uml/DiagrammeUseCase_General.img)
+![Diagramme de cas d'utilisation](docs/uml/DiagrammeUseCase_General.png)
 
 <details>
 <summary><strong>Voir les détails du diagramme de cas d'utilisation</strong></summary>
