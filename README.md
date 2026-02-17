@@ -542,7 +542,7 @@ Interactions entre les acteurs (utilisateurs) et le système EasySave.
 
 Séquence d'exécution complète d'un travail de sauvegarde.
 
-![Diagramme de séquence - Lancement d'un job](docs/uml/DiagrammeSequence_de_lancement_d_un_job_v2.png)
+![Diagramme de séquence - Lancement d'un job](docs/uml/DiagrammeSequence_de_lancement_d_un_job_v2.svg)
 
 <details>
 <summary><strong>Voir les détails du diagramme</strong></summary>
