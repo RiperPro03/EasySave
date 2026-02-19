@@ -11,7 +11,8 @@
              x:DataType="vm:DashboardViewModel"
              x:CompileBindings="False">
 
-    <StackPanel Spacing="24">
+    <StackPanel Spacing="24"
+                Margin="0,0,0,200">
 
         <!-- Status Cards Grid -->
         <Grid ColumnDefinitions="*,*,*" ColumnSpacing="16">

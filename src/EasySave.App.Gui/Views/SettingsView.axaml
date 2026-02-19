@@ -11,7 +11,7 @@
         <conv:LogFormatToTextConverter x:Key="LogFormatToTextConverter"/>
     </UserControl.Resources>
 
-    <StackPanel Margin="100" Spacing="15">
+    <StackPanel Margin="0,0,0,120" Spacing="15">
         <TextBlock Text="{Binding Source={StaticResource Loc}, Path=[Gui_Settings_Title]}" FontSize="18" FontWeight="Bold"/>
 
         <TextBlock Text="{Binding Source={StaticResource Loc}, Path=[Gui_Settings_LanguageLabel]}"/>
