@@ -63,6 +63,11 @@ public sealed class BackupService : IBackupService
         InitializeSnapshot();
     }
 
+    /// <summary>
+    /// Launches the execution of a backup job in parallel without blocking the caller.
+    /// </summary>
+    /// <param name="job">The job to execute</param>
+    /// <returns>A Task representing the asynchronous execution of the job.</returns>
     public Task<BackupResultDto> RunAsync(BackupJob job)
     {
         return Task.Run(() => Run(job));
