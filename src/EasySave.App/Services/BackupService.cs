@@ -21,6 +21,7 @@ public sealed class BackupService : IBackupService
     private readonly Dictionary<string, JobStateDto> _jobStates = new();
     private readonly object _stateLock = new();
     private readonly IAppLogService? _logService;
+    private readonly LargeFileTransferLimiter _largeFileLimiter = new();
 
     /// <summary>
     /// Raised when job state changes during execution.
@@ -354,7 +355,7 @@ public sealed class BackupService : IBackupService
     /// <returns>A configured backup engine.</returns>
     private IBackupEngine CreateEngine()
     {
-        return new BackupEngine(_config, _logService);
+        return new BackupEngine(_config, _logService, cryptoService:null, largeFileLimiter :_largeFileLimiter);
     }
 
     private void WriteInactiveJobLog(BackupJob job)
