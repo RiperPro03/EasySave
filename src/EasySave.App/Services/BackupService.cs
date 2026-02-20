@@ -63,6 +63,11 @@ public sealed class BackupService : IBackupService
         InitializeSnapshot();
     }
 
+    public Task<BackupResultDto> RunAsync(BackupJob job)
+    {
+        return Task.Run(() => Run(job));
+    }
+
     /// <summary>
     /// Executes a backup job and records its last run time.
     /// </summary>
