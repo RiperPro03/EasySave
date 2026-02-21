@@ -20,6 +20,7 @@ internal sealed class BackupEngine : IBackupEngine
     private readonly AppConfig _config;
     private readonly ICryptoService _cryptoService;
     private readonly ConcurrentDictionary<string, JobExecutionControl> _jobControls = new(StringComparer.Ordinal);
+    private readonly LargeFileTransferLimiter _largeFileLimiter;
 
     /// <summary>
     /// Raised when job state changes during execution. (update state.json)
@@ -32,11 +33,12 @@ internal sealed class BackupEngine : IBackupEngine
     /// <param name="logDirectory">Optional log directory; when null, logging is disabled.</param>
     /// <param name="logFormat">Log serialization format.</param>
     /// <param name="logService">Optional log service.</param>
-    public BackupEngine(AppConfig config, IAppLogService? logService = null, ICryptoService? cryptoService = null)
+    public BackupEngine(AppConfig config, IAppLogService? logService = null, ICryptoService? cryptoService = null, LargeFileTransferLimiter? largeFileLimiter = null)
     {
         _config = config ?? throw new ArgumentNullException(nameof(config));
         _logService = logService;
         _cryptoService = cryptoService ?? CreateDefaultCryptoService();
+        _largeFileLimiter = largeFileLimiter ?? new LargeFileTransferLimiter();
     }
 
     /// <summary>
@@ -302,9 +304,16 @@ internal sealed class BackupEngine : IBackupEngine
 
                 // Cree le dossier cible si necessaire.
                 EnsureTargetDirectory(job, sourcePath, targetPath, traceId);
-                transferStopwatch.Start();
-                CopyFile(sourcePath, targetPath);
-                transferStopwatch.Stop();
+
+                // Convert threshold from KB to bytes
+                var thresholdBytes = (long)_config.LargeFileThresholdKb * 1024;
+                using (_largeFileLimiter.AcquireAsync(fileSize, thresholdBytes).GetAwaiter().GetResult())
+                {
+                    transferStopwatch.Start();
+                    CopyFile(sourcePath, targetPath);
+                    transferStopwatch.Stop();
+                }
+
                 var transferTimeMs = transferStopwatch.Elapsed.TotalMilliseconds;
                 result.CopiedCount++;
                 result.TotalBytesProcessed += fileSize;

@@ -18,6 +18,7 @@ public class AppConfig
     public string EncryptionKey { get; private set; } = string.Empty;
     private List<string> _extensionsToEncrypt = new();
     public IReadOnlyList<string> ExtensionsToEncrypt => _extensionsToEncrypt;
+    public int LargeFileThresholdKb { get; private set; } = 2000; 
 
     /// <summary>
     /// Initializes a new instance of the <see cref="AppConfig"/> class.
@@ -132,5 +133,17 @@ public class AppConfig
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
             "EasySave",
             "Logs");
+    }
+    /// <summary>
+    /// Updates the threshold for large file detection
+    /// </summary>
+    /// <param name="thresholdkb">Threshold in kilobytes</param>
+    /// <exception cref="ArgumentOutOfRangeException"></exception>
+    public void UpdateLargeFileThresholdKb(int thresholdkb)
+    {
+        if (thresholdkb <= 0)
+            throw new ArgumentOutOfRangeException(nameof(thresholdkb), "Threshold must be positive");
+
+        LargeFileThresholdKb = thresholdkb;
     }
 }
