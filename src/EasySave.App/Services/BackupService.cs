@@ -102,18 +102,7 @@ public sealed class BackupService : IBackupService
         JobStateDto? startedState = null;
         lock (_stateLock)
         {
-            // Bloque le lancement si le job est deja en cours ou en pause.
             SyncJobs();
-            if (_jobStates.TryGetValue(job.Id, out var existing) &&
-                existing.Status is JobStatus.Running or JobStatus.Paused)
-            {
-                return new BackupResultDto
-                {
-                    Success = false,
-                    Message = "Job is already running or paused.",
-                    Duration = TimeSpan.Zero
-                };
-            }
 
             // Publie un etat "Running" immediat pour eviter les doubles lancements.
             _jobStates[job.Id] = new JobStateDto
@@ -131,11 +120,17 @@ public sealed class BackupService : IBackupService
         {
             StateChanged?.Invoke(this, new JobStateChangedEventArgs(startedState));
         }
-
-        var result = _backupEngine.Run(job);
-        // Marque le job comme execute pour conserver l'horodatage.
-        _jobService.MarkExecuted(job.Id);
-        return result;
+        // --- asynchronous job launch ---
+        _ = Task.Run(() => { 
+            var result = _backupEngine.Run(job); 
+            _jobService.MarkExecuted(job.Id); 
+            return result; 
+        });
+        return new BackupResultDto { 
+            Success = true, 
+            Message = "Job started asynchronously.", 
+            Duration = TimeSpan.Zero 
+        };
     }
 
     /// <summary>
