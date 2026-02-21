@@ -18,7 +18,7 @@ public class AppConfig
     public string EncryptionKey { get; private set; } = string.Empty;
     private List<string> _extensionsToEncrypt = new();
     public IReadOnlyList<string> ExtensionsToEncrypt => _extensionsToEncrypt;
-    public int LargeFileThresholdKb { get; private set; } = 40; 
+    public int LargeFileThresholdKb { get; private set; } = 2000; 
 
     /// <summary>
     /// Initializes a new instance of the <see cref="AppConfig"/> class.
