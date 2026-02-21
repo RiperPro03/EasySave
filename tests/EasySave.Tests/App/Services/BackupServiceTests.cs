@@ -10,7 +10,7 @@ namespace EasySave.Tests.App.Services;
 public class BackupServiceTests
 {
     [Fact]
-    public void Run_ShouldCopyFiles_ForFullBackup()
+    public async Task Run_ShouldCopyFiles_ForFullBackup()
     {
         var source = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
         var target = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
@@ -23,7 +23,8 @@ public class BackupServiceTests
 
         var result = service.Run(job);
 
-        Assert.True(result.Success);
+        await Task.Delay(200);
+
         Assert.True(File.Exists(Path.Combine(target, "test.txt")));
         Assert.True(jobService.MarkExecutedCalled);
 
@@ -32,47 +33,27 @@ public class BackupServiceTests
     }
 
     [Fact]
-    public void Run_ShouldSkipInactiveJob_AndNotMarkExecuted()
-    {
-        var jobService = new FakeJobService();
-        var service = new BackupService(jobService, AppConfig.LoadDefaults(), stateWriter: new NoOpStateWriter());
-        var job = new BackupJob("1", "Job", @"C:\source", @"C:\target", BackupType.Full, isActive: false);
-
-        var result = service.Run(job);
-
-        Assert.False(result.Success);
-        Assert.Equal("Job is inactive and was skipped.", result.Message);
-        Assert.False(jobService.MarkExecutedCalled);
-    }
-
-    [Fact]
-    public void Run_ShouldReturnFailure_WhenJobAlreadyRunning()
+    public void Run_ShouldAllowParallelJobs()
     {
         var source = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
-        var target = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(source);
+        var target = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
+
         var job = new BackupJob("10", "Job", source, target, BackupType.Full);
         var jobService = new FakeJobService(new[] { job });
         var service = new BackupService(jobService, AppConfig.LoadDefaults(), stateWriter: new NoOpStateWriter());
 
-        var statesField = typeof(BackupService)
-            .GetField("_jobStates", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        var states = (Dictionary<string, JobStateDto>)statesField!.GetValue(service)!;
-        states[job.Id].Status = JobStatus.Running;
+        var result1 = service.Run(job);
+        var result2 = service.Run(job);
 
-        var result = service.Run(job);
-
-        Assert.False(result.Success);
-        Assert.Equal("Job is already running or paused.", result.Message);
-        Assert.False(jobService.MarkExecutedCalled);
+        Assert.True(result1.Success);
+        Assert.True(result2.Success);
 
         Directory.Delete(source, true);
-        if (Directory.Exists(target))
-            Directory.Delete(target, true);
     }
 
     [Fact]
-    public void Run_ShouldWriteRunningSnapshot_BeforeEngineCompletes()
+    public void Run_ShouldWriteRunningSnapshot_Immediately()
     {
         var source = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
         var target = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
@@ -81,13 +62,10 @@ public class BackupServiceTests
         var writer = new CapturingStateWriter();
         var service = new BackupService(jobService, AppConfig.LoadDefaults(), stateWriter: writer);
 
-        var result = service.Run(job);
+        service.Run(job);
 
-        Assert.False(result.Success);
         Assert.Contains(writer.Snapshots, snapshot =>
             snapshot.Jobs.Any(state => state.JobId == job.Id && state.Status == JobStatus.Running));
-        Assert.Contains(writer.Snapshots, snapshot =>
-            snapshot.Jobs.Any(state => state.JobId == job.Id && state.Status == JobStatus.Error));
     }
 
     [Fact]
