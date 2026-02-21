@@ -64,16 +64,6 @@ public sealed class BackupService : IBackupService
     }
 
     /// <summary>
-    /// Launches the execution of a backup job in parallel without blocking the caller.
-    /// </summary>
-    /// <param name="job">The job to execute</param>
-    /// <returns>A Task representing the asynchronous execution of the job.</returns>
-    public Task<BackupResultDto> RunAsync(BackupJob job)
-    {
-        return Task.Run(() => Run(job));
-    }
-
-    /// <summary>
     /// Executes a backup job and records its last run time.
     /// </summary>
     /// <param name="job">The job to execute.</param>
@@ -111,18 +101,7 @@ public sealed class BackupService : IBackupService
         JobStateDto? startedState = null;
         lock (_stateLock)
         {
-            // Bloque le lancement si le job est deja en cours ou en pause.
             SyncJobs();
-            if (_jobStates.TryGetValue(job.Id, out var existing) &&
-                existing.Status is JobStatus.Running or JobStatus.Paused)
-            {
-                return new BackupResultDto
-                {
-                    Success = false,
-                    Message = "Job is already running or paused.",
-                    Duration = TimeSpan.Zero
-                };
-            }
 
             // Publie un etat "Running" immediat pour eviter les doubles lancements.
             _jobStates[job.Id] = new JobStateDto
@@ -140,11 +119,17 @@ public sealed class BackupService : IBackupService
         {
             StateChanged?.Invoke(this, new JobStateChangedEventArgs(startedState));
         }
-
-        var result = _backupEngine.Run(job);
-        // Marque le job comme execute pour conserver l'horodatage.
-        _jobService.MarkExecuted(job.Id);
-        return result;
+        // --- asynchronous job launch ---
+        _ = Task.Run(() => { 
+            var result = _backupEngine.Run(job); 
+            _jobService.MarkExecuted(job.Id); 
+            return result; 
+        });
+        return new BackupResultDto { 
+            Success = true, 
+            Message = "Job started asynchronously.", 
+            Duration = TimeSpan.Zero 
+        };
     }
 
     /// <summary>
