@@ -16,6 +16,7 @@ public sealed class AppLogService : IAppLogService
     private readonly string? _logDirectory;
     private readonly Func<LogFormat> _logFormatProvider;
     private readonly LogContext? _context;
+    private readonly object _logWriteLock = new();
     
     public event EventHandler? LogWritten;
     
@@ -45,18 +46,23 @@ public sealed class AppLogService : IAppLogService
         if (entry is null)
             return;
 
-        EnsureLoggers();
-
-        if (logger is null)
+        var notifyWritten = false;
+        lock (_logWriteLock)
         {
-            LogWritten?.Invoke(this, EventArgs.Empty);
-            return;
+            EnsureLoggers();
+
+            if (logger is null)
+            {
+                notifyWritten = true;
+            }
+            else
+            {
+                notifyWritten = logger.Write(entry);
+            }
         }
 
-        if (logger.Write(entry))
-        {
+        if (notifyWritten)
             LogWritten?.Invoke(this, EventArgs.Empty);
-        }
     }
 
     private void EnsureLoggers()
