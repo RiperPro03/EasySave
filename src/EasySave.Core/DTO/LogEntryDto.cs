@@ -27,7 +27,7 @@ public sealed class LogEntryDto
     /// <summary>
     /// Schema version for backward compatibility.
     /// </summary>
-    public int SchemaVersion { get; set; } = 1;
+    public int SchemaVersion { get; set; } = 2;
 
     /// <summary>
     /// Event metadata (name/category/action/outcome).
