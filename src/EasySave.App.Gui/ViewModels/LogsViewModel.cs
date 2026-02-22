@@ -96,10 +96,9 @@ namespace EasySave.App.Gui.ViewModels
                     EventTypes.RemoveAt(i);
             }
 
-            foreach (var name in namesFound)
+            foreach (var name in namesFound.Where(name => !EventTypes.Contains(name)))
             {
-                if (!EventTypes.Contains(name))
-                    EventTypes.Add(name);
+                EventTypes.Add(name);
             }
 
             OnPropertyChanged(nameof(SelectedEventType));
