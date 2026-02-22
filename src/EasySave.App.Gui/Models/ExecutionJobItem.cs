@@ -70,9 +70,11 @@ public sealed partial class ExecutionJobItem : ObservableObject
     private long _filesProcessed;
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(TotalSizeMbLabel))]
     private long _totalSizeBytes;
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(SizeProcessedMbLabel))]
     private long _sizeProcessedBytes;
 
     [ObservableProperty]
@@ -83,6 +85,7 @@ public sealed partial class ExecutionJobItem : ObservableObject
     private long _remainingFiles;
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(RemainingSizeMbLabel))]
     private long _remainingSizeBytes;
 
     [ObservableProperty]
@@ -130,6 +133,9 @@ public sealed partial class ExecutionJobItem : ObservableObject
     public bool CanStart => IsActive && (IsIdle || IsCompleted || IsError);
 
     public string ProgressLabel => string.Format(CultureInfo.CurrentCulture, "{0}%", ProgressPercentage);
+    public string SizeProcessedMbLabel => FormatMegabytes(SizeProcessedBytes);
+    public string TotalSizeMbLabel => FormatMegabytes(TotalSizeBytes);
+    public string RemainingSizeMbLabel => FormatMegabytes(RemainingSizeBytes);
 
     public bool HasErrorMessage => !string.IsNullOrWhiteSpace(ErrorMessage);
 
@@ -160,5 +166,17 @@ public sealed partial class ExecutionJobItem : ObservableObject
         RemainingSizeBytes = state.RemainingSizeBytes;
         LastActionTimestampUtc = state.LastActionTimestampUtc;
         ErrorMessage = state.ErrorMessage;
+    }
+
+    /// <summary>
+    /// Formate une taille en Mo pour l'affichage de la vue d'execution.
+    /// </summary>
+    private static string FormatMegabytes(long bytes)
+    {
+        if (bytes <= 0)
+            return "0 MB";
+
+        var megabytes = bytes / (1024d * 1024d);
+        return string.Format(CultureInfo.CurrentCulture, "{0:0.##} MB", megabytes);
     }
 }

@@ -270,7 +270,7 @@
                                                    Margin="0,0,12,4">
                                             <TextBlock.Text>
                                                 <MultiBinding Converter="{StaticResource L10nFormatConverter}">
-                                                    <Binding Path="SizeProcessedBytes"/>
+                                                    <Binding Path="SizeProcessedMbLabel"/>
                                                     <Binding Path="[Gui_Execution_BytesDoneFormat]" Source="{StaticResource Loc}"/>
                                                 </MultiBinding>
                                             </TextBlock.Text>
@@ -280,7 +280,7 @@
                                                    Margin="0,0,12,4">
                                             <TextBlock.Text>
                                                 <MultiBinding Converter="{StaticResource L10nFormatConverter}">
-                                                    <Binding Path="TotalSizeBytes"/>
+                                                    <Binding Path="TotalSizeMbLabel"/>
                                                     <Binding Path="[Gui_Execution_BytesTotalFormat]" Source="{StaticResource Loc}"/>
                                                 </MultiBinding>
                                             </TextBlock.Text>
@@ -289,7 +289,7 @@
                                                    Foreground="#80FFFFFF">
                                             <TextBlock.Text>
                                                 <MultiBinding Converter="{StaticResource L10nFormatConverter}">
-                                                    <Binding Path="RemainingSizeBytes"/>
+                                                    <Binding Path="RemainingSizeMbLabel"/>
                                                     <Binding Path="[Gui_Execution_BytesRemainingFormat]" Source="{StaticResource Loc}"/>
                                                 </MultiBinding>
                                             </TextBlock.Text>

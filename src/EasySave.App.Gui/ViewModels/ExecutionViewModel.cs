@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
@@ -139,63 +140,15 @@ public sealed partial class ExecutionViewModel : ViewModelBase, IDisposable
             return;
 
         LastError = null;
-        if (!_backupService.CanStartSequence(out var reason))
-        {
-            LastError = string.IsNullOrWhiteSpace(reason)
-                ? Strings.Gui_Execution_Error_BusinessSoftware
-                : reason;
+        if (!TryPrepareRunAll(out var pausedItems, out var jobsToRun))
             return;
-        }
-        RefreshJobs();
-
-        var pausedItems = Jobs
-            .Where(item => item.IsPaused)
-            .ToList();
-
-        var runnableIds = Jobs
-            .Where(item => item.CanStart)
-            .Select(item => item.JobId)
-            .ToHashSet(StringComparer.Ordinal);
-
-        var jobsToRun = _jobService.GetAll()
-            .Where(job => runnableIds.Contains(job.Id))
-            .ToList();
-
-        if (pausedItems.Count == 0 && jobsToRun.Count == 0)
-        {
-            LastError = Strings.Gui_Execution_Error_NoRunnable;
-            return;
-        }
 
         try
         {
-            string? backgroundError = null;
-            await Task.Run(() =>
-            {
-                foreach (var item in pausedItems)
-                {
-                    _backupService.Resume(item.JobId);
-                }
+            var backgroundError = await Task.Run(() => RunAllInBackground(pausedItems, jobsToRun));
 
-                foreach (var job in jobsToRun)
-                {
-                    if (!_backupService.CanStartSequence(out _))
-                        break;
-
-                    var result = _backupService.Run(job);
-                    if (!result.Success
-                        && string.IsNullOrWhiteSpace(backgroundError)
-                        && !string.IsNullOrWhiteSpace(result.Message))
-                    {
-                        backgroundError = result.Message;
-                    }
-                }
-            });
-
-            if (!string.IsNullOrWhiteSpace(backgroundError))
-            {
+            if (backgroundError is not null)
                 LastError = backgroundError;
-            }
         }
         catch (Exception ex)
         {
@@ -216,6 +169,111 @@ public sealed partial class ExecutionViewModel : ViewModelBase, IDisposable
         {
             LastError = Strings.Gui_Execution_Error_Pause;
         }
+    }
+
+    /// <summary>
+    /// Validates the global run request and prepares paused/runnable job lists.
+    /// </summary>
+    /// <param name="pausedItems">Paused jobs to resume first.</param>
+    /// <param name="jobsToRun">Jobs that can be started now.</param>
+    /// <returns><c>true</c> when there is at least one action to perform.</returns>
+    private bool TryPrepareRunAll(out List<ExecutionJobItem> pausedItems, out List<EasySave.Core.Models.BackupJob> jobsToRun)
+    {
+        pausedItems = new List<ExecutionJobItem>();
+        jobsToRun = new List<EasySave.Core.Models.BackupJob>();
+
+        if (_backupService is null || _jobService is null)
+            return false;
+
+        if (!_backupService.CanStartSequence(out var reason))
+        {
+            // Blocage global (ex: business software detecte) avant toute reprise/lancement.
+            LastError = string.IsNullOrWhiteSpace(reason)
+                ? Strings.Gui_Execution_Error_BusinessSoftware
+                : reason;
+            return false;
+        }
+
+        RefreshJobs();
+
+        pausedItems = Jobs
+            .Where(item => item.IsPaused)
+            .ToList();
+
+        // On capture les IDs de la vue pour rester aligne avec l'etat UI courant (active/inactive, status).
+        var runnableIds = Jobs
+            .Where(item => item.CanStart)
+            .Select(item => item.JobId)
+            .ToHashSet(StringComparer.Ordinal);
+
+        jobsToRun = _jobService.GetAll()
+            .Where(job => runnableIds.Contains(job.Id))
+            .ToList();
+
+        if (pausedItems.Count != 0 || jobsToRun.Count != 0)
+            return true;
+
+        // Rien a faire: aucun job en pause a reprendre et aucun job demarrable.
+        LastError = Strings.Gui_Execution_Error_NoRunnable;
+        return false;
+    }
+
+    /// <summary>
+    /// Executes the \"run all\" workflow on a background thread and returns the first user-facing error message, if any.
+    /// </summary>
+    private string? RunAllInBackground(
+        IReadOnlyList<ExecutionJobItem> pausedItems,
+        IReadOnlyList<EasySave.Core.Models.BackupJob> jobsToRun)
+    {
+        if (_backupService is null)
+            return null;
+
+        // L'ordre est intentionnel: on reprend d'abord les pauses, puis on lance les nouveaux jobs.
+        ResumePausedJobs(pausedItems);
+        return StartRunnableJobs(jobsToRun);
+    }
+
+    /// <summary>
+    /// Resumes all paused jobs selected for a global run.
+    /// </summary>
+    /// <param name="pausedItems">Paused jobs to resume.</param>
+    private void ResumePausedJobs(IReadOnlyList<ExecutionJobItem> pausedItems)
+    {
+        if (_backupService is null)
+            return;
+
+        foreach (var item in pausedItems)
+        {
+            _backupService.Resume(item.JobId);
+        }
+    }
+
+    /// <summary>
+    /// Starts all runnable jobs and returns the first non-empty error message produced by the service.
+    /// </summary>
+    /// <param name="jobsToRun">Jobs to start.</param>
+    /// <returns>The first error message, or <c>null</c> when none was reported.</returns>
+    private string? StartRunnableJobs(IReadOnlyList<EasySave.Core.Models.BackupJob> jobsToRun)
+    {
+        if (_backupService is null)
+            return null;
+
+        string? firstError = null;
+        foreach (var job in jobsToRun)
+        {
+            // Revalide avant chaque lancement: le blocage global peut apparaitre pendant la sequence.
+            if (!_backupService.CanStartSequence(out _))
+                break;
+
+            var result = _backupService.Run(job);
+            // On conserve uniquement le premier message utile pour l'affichage UI.
+            if (result.Success || firstError is not null || string.IsNullOrWhiteSpace(result.Message))
+                continue;
+
+            firstError = result.Message;
+        }
+
+        return firstError;
     }
 
     [RelayCommand]
@@ -335,9 +393,14 @@ public sealed partial class ExecutionViewModel : ViewModelBase, IDisposable
 
     public bool HasError => !string.IsNullOrWhiteSpace(LastError);
 
+    /// <summary>
+    /// Refreshes the enabled state of global pause/stop buttons based on live job statuses.
+    /// </summary>
     private void RefreshGlobalControls()
     {
+        // "Pause all" n'a de sens que s'il existe au moins un job en cours.
         CanPauseAll = Jobs.Any(job => job.IsRunning);
+        // "Stop all" s'applique aussi aux jobs deja en pause.
         CanStopAll = Jobs.Any(job => job.IsRunning || job.IsPaused);
     }
 }
