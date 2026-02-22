@@ -6,6 +6,7 @@ using EasySave.Core.Interfaces;
 using EasySave.Core.Logging;
 using EasySave.Core.Models;
 using EasySave.EasyLog.Options;
+using System.Threading;
 
 namespace EasySave.App.Services;
 
@@ -19,6 +20,7 @@ public sealed class BackupService : IBackupService
     private readonly IStateWriter _stateWriter;
     private readonly AppConfig _config;
     private readonly Dictionary<string, JobStateDto> _jobStates = new();
+    private readonly HashSet<string> _executingJobIds = new(StringComparer.Ordinal);
     private readonly object _stateLock = new();
     private readonly IAppLogService? _logService;
     private readonly LargeFileTransferLimiter _largeFileLimiter = new();
@@ -104,6 +106,16 @@ public sealed class BackupService : IBackupService
         {
             SyncJobs();
 
+            if (_executingJobIds.Contains(job.Id))
+            {
+                return new BackupResultDto
+                {
+                    Success = false,
+                    Message = "Job is already running or stopping.",
+                    Duration = TimeSpan.Zero
+                };
+            }
+
             // Publie un etat "Running" immediat pour eviter les doubles lancements.
             _jobStates[job.Id] = new JobStateDto
             {
@@ -112,6 +124,7 @@ public sealed class BackupService : IBackupService
                 Status = JobStatus.Running,
                 LastActionTimestampUtc = DateTime.UtcNow
             };
+            _executingJobIds.Add(job.Id);
             WriteSnapshot();
             startedState = CopyState(_jobStates[job.Id]);
         }
@@ -121,10 +134,20 @@ public sealed class BackupService : IBackupService
             StateChanged?.Invoke(this, new JobStateChangedEventArgs(startedState));
         }
         // --- asynchronous job launch ---
-        _ = Task.Run(() => { 
-            var result = _backupEngine.Run(job); 
-            _jobService.MarkExecuted(job.Id); 
-            return result; 
+        _ = Task.Run(() => {
+            try
+            {
+                var result = _backupEngine.Run(job);
+                _jobService.MarkExecuted(job.Id);
+                return result;
+            }
+            finally
+            {
+                lock (_stateLock)
+                {
+                    _executingJobIds.Remove(job.Id);
+                }
+            }
         });
         return new BackupResultDto { 
             Success = true, 
@@ -143,7 +166,7 @@ public sealed class BackupService : IBackupService
         if (string.IsNullOrWhiteSpace(jobId))
             return false;
 
-        return _backupEngine.Pause(jobId);
+        return TryControlRequest(jobId, _backupEngine.Pause);
     }
 
     /// <summary>
@@ -156,7 +179,7 @@ public sealed class BackupService : IBackupService
         if (string.IsNullOrWhiteSpace(jobId))
             return false;
 
-        return _backupEngine.Resume(jobId);
+        return TryControlRequest(jobId, _backupEngine.Resume);
     }
 
     /// <summary>
@@ -169,7 +192,7 @@ public sealed class BackupService : IBackupService
         if (string.IsNullOrWhiteSpace(jobId))
             return false;
 
-        return _backupEngine.Stop(jobId);
+        return TryControlRequest(jobId, _backupEngine.Stop);
     }
 
     public bool IsBusinessSoftwareRunning(out string? processName)
@@ -201,15 +224,20 @@ public sealed class BackupService : IBackupService
     /// <param name="e">State change event arguments.</param>
     private void OnEngineStateChanged(object? sender, JobStateChangedEventArgs e)
     {
+        JobStateDto? stateCopy = null;
         lock (_stateLock)
         {
             // Synchronise les jobs avant d'enregistrer le nouvel etat.
             SyncJobs();
             _jobStates[e.State.JobId] = CopyState(e.State);
+            stateCopy = CopyState(_jobStates[e.State.JobId]);
             WriteSnapshot();
         }
 
-        StateChanged?.Invoke(this, e);
+        if (stateCopy != null)
+        {
+            StateChanged?.Invoke(this, new JobStateChangedEventArgs(stateCopy));
+        }
     }
 
     /// <summary>
@@ -351,6 +379,39 @@ public sealed class BackupService : IBackupService
     private IBackupEngine CreateEngine()
     {
         return new BackupEngine(_config, _logService, cryptoService:null, largeFileLimiter :_largeFileLimiter);
+    }
+
+    private bool TryControlRequest(string jobId, Func<string, bool> request)
+    {
+        if (request(jobId))
+            return true;
+
+        if (!ShouldRetryControlRequest(jobId))
+            return false;
+
+        var timeoutAt = DateTime.UtcNow.AddMilliseconds(300);
+        while (DateTime.UtcNow < timeoutAt)
+        {
+            Thread.Sleep(15);
+
+            if (request(jobId))
+                return true;
+
+            if (!ShouldRetryControlRequest(jobId))
+                break;
+        }
+
+        return false;
+    }
+
+    private bool ShouldRetryControlRequest(string jobId)
+    {
+        lock (_stateLock)
+        {
+            return _executingJobIds.Contains(jobId)
+                && _jobStates.TryGetValue(jobId, out var state)
+                && state.Status is JobStatus.Running or JobStatus.Paused;
+        }
     }
 
     private void WriteInactiveJobLog(BackupJob job)

@@ -353,7 +353,7 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
         {
             LogEventAction.Create => ("+", "#30D158"),
             LogEventAction.Update => ("~", "#0A84FF"),
-            LogEventAction.Delete => ("x", "#FF3B30"),
+            LogEventAction.Delete => ("-", "#A0A7B4"),
             _ => ("J", "#80FFFFFF")
         };
 
@@ -533,7 +533,7 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
             LogEventAction.Skip => ("-", "#FF9F0A"),
             LogEventAction.DirectoryCreated => ("+", "#0A84FF"),
             LogEventAction.Update => ("~", "#0A84FF"),
-            LogEventAction.Delete => ("x", "#FF3B30"),
+            LogEventAction.Delete => ("-", "#A0A7B4"),
             LogEventAction.Create => ("+", "#30D158"),
             _ => ("✓", "#30D158")
         };

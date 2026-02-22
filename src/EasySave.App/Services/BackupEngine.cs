@@ -310,7 +310,7 @@ internal sealed class BackupEngine : IBackupEngine
                 using (_largeFileLimiter.AcquireAsync(fileSize, thresholdBytes).GetAwaiter().GetResult())
                 {
                     transferStopwatch.Start();
-                    CopyFile(sourcePath, targetPath);
+                    CopyFile(control, sourcePath, targetPath);
                     transferStopwatch.Stop();
                 }
 
@@ -444,6 +444,15 @@ internal sealed class BackupEngine : IBackupEngine
                     }
                 }
             }
+            catch (OperationCanceledException) when (control.IsStopRequested)
+            {
+                if (transferStopwatch.IsRunning)
+                    transferStopwatch.Stop();
+
+                TryDeletePartialFile(targetPath);
+                result.FilesProcessed = Math.Max(0, result.FilesProcessed - 1);
+                return true;
+            }
             catch (Exception ex)
             {
                 if (transferStopwatch.IsRunning)
@@ -515,8 +524,42 @@ internal sealed class BackupEngine : IBackupEngine
     /// </summary>
     /// <param name="sourcePath">Source file path.</param>
     /// <param name="targetPath">Target file path.</param>
-    private static void CopyFile(string sourcePath, string targetPath)
-        => File.Copy(sourcePath, targetPath, true);
+    private static void CopyFile(JobExecutionControl control, string sourcePath, string targetPath)
+    {
+        const int bufferSize = 256 * 1024;
+
+        using var sourceStream = new FileStream(
+            sourcePath,
+            FileMode.Open,
+            FileAccess.Read,
+            FileShare.Read,
+            bufferSize,
+            FileOptions.SequentialScan);
+
+        using var targetStream = new FileStream(
+            targetPath,
+            FileMode.Create,
+            FileAccess.Write,
+            FileShare.None,
+            bufferSize,
+            FileOptions.SequentialScan);
+
+        var buffer = new byte[bufferSize];
+        while (true)
+        {
+            control.StopToken.ThrowIfCancellationRequested();
+
+            var bytesRead = sourceStream.Read(buffer, 0, buffer.Length);
+
+            if (bytesRead == 0)
+                break;
+
+            targetStream.Write(buffer, 0, bytesRead);
+            control.StopToken.ThrowIfCancellationRequested();
+        }
+
+        targetStream.Flush();
+    }
 
     /// <summary>
     /// Writes a summary log entry for the job.
@@ -935,5 +978,21 @@ internal sealed class BackupEngine : IBackupEngine
         if (File.Exists(path))
             return new CryptoSoftProcessService(path);
         return new NoEncryptionService();
+    }
+
+    private static void TryDeletePartialFile(string path)
+    {
+        if (string.IsNullOrWhiteSpace(path))
+            return;
+
+        try
+        {
+            if (File.Exists(path))
+                File.Delete(path);
+        }
+        catch
+        {
+            // Best-effort cleanup when a user stop interrupts a transfer.
+        }
     }
 }

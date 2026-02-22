@@ -31,6 +31,12 @@ public sealed partial class ExecutionViewModel : ViewModelBase, IDisposable
     [NotifyPropertyChangedFor(nameof(HasError))]
     private string? _lastError;
 
+    [ObservableProperty]
+    private bool _canPauseAll;
+
+    [ObservableProperty]
+    private bool _canStopAll;
+
     /// <summary>
     /// Design-time constructor.
     /// </summary>
@@ -82,10 +88,11 @@ public sealed partial class ExecutionViewModel : ViewModelBase, IDisposable
         }
 
         HasJobs = Jobs.Count > 0;
+        RefreshGlobalControls();
     }
 
     [RelayCommand(AllowConcurrentExecutions = true)]
-    private async Task TogglePlayPauseAsync(ExecutionJobItem? item)
+    private async Task PlayAsync(ExecutionJobItem? item)
     {
         if (item is null)
             return;
@@ -95,11 +102,7 @@ public sealed partial class ExecutionViewModel : ViewModelBase, IDisposable
         LastError = null;
 
         if (item.IsRunning)
-        {
-            if (!_backupService.Pause(item.JobId))
-                LastError = Strings.Gui_Execution_Error_Pause;
             return;
-        }
 
         if (item.IsPaused)
         {
@@ -117,7 +120,11 @@ public sealed partial class ExecutionViewModel : ViewModelBase, IDisposable
 
         try
         {
-            await Task.Run(() => _backupService.Run(job));
+            var result = await Task.Run(() => _backupService.Run(job));
+            if (!result.Success && !string.IsNullOrWhiteSpace(result.Message))
+            {
+                LastError = result.Message;
+            }
         }
         catch (Exception ex)
         {
@@ -141,6 +148,10 @@ public sealed partial class ExecutionViewModel : ViewModelBase, IDisposable
         }
         RefreshJobs();
 
+        var pausedItems = Jobs
+            .Where(item => item.IsPaused)
+            .ToList();
+
         var runnableIds = Jobs
             .Where(item => item.CanStart)
             .Select(item => item.JobId)
@@ -150,7 +161,7 @@ public sealed partial class ExecutionViewModel : ViewModelBase, IDisposable
             .Where(job => runnableIds.Contains(job.Id))
             .ToList();
 
-        if (jobsToRun.Count == 0)
+        if (pausedItems.Count == 0 && jobsToRun.Count == 0)
         {
             LastError = Strings.Gui_Execution_Error_NoRunnable;
             return;
@@ -158,19 +169,52 @@ public sealed partial class ExecutionViewModel : ViewModelBase, IDisposable
 
         try
         {
+            string? backgroundError = null;
             await Task.Run(() =>
             {
+                foreach (var item in pausedItems)
+                {
+                    _backupService.Resume(item.JobId);
+                }
+
                 foreach (var job in jobsToRun)
                 {
                     if (!_backupService.CanStartSequence(out _))
                         break;
-                    _backupService.Run(job);
+
+                    var result = _backupService.Run(job);
+                    if (!result.Success
+                        && string.IsNullOrWhiteSpace(backgroundError)
+                        && !string.IsNullOrWhiteSpace(result.Message))
+                    {
+                        backgroundError = result.Message;
+                    }
                 }
             });
+
+            if (!string.IsNullOrWhiteSpace(backgroundError))
+            {
+                LastError = backgroundError;
+            }
         }
         catch (Exception ex)
         {
             LastError = ex.Message;
+        }
+    }
+
+    [RelayCommand]
+    private void Pause(ExecutionJobItem? item)
+    {
+        if (item is null)
+            return;
+        if (_backupService is null)
+            return;
+
+        LastError = null;
+        if (!_backupService.Pause(item.JobId))
+        {
+            LastError = Strings.Gui_Execution_Error_Pause;
         }
     }
 
@@ -187,6 +231,32 @@ public sealed partial class ExecutionViewModel : ViewModelBase, IDisposable
         if (!_backupService.Stop(item.JobId))
         {
             LastError = Strings.Gui_Execution_Error_Stop;
+        }
+    }
+
+    [RelayCommand]
+    private void PauseAll()
+    {
+        if (_backupService is null)
+            return;
+
+        LastError = null;
+        foreach (var item in Jobs.Where(job => job.IsRunning).ToList())
+        {
+            _backupService.Pause(item.JobId);
+        }
+    }
+
+    [RelayCommand]
+    private void StopAll()
+    {
+        if (_backupService is null)
+            return;
+
+        LastError = null;
+        foreach (var item in Jobs.Where(job => job.IsRunning || job.IsPaused).ToList())
+        {
+            _backupService.Stop(item.JobId);
         }
     }
 
@@ -221,6 +291,7 @@ public sealed partial class ExecutionViewModel : ViewModelBase, IDisposable
 
         item.UpdateFromState(e.State);
         HasJobs = Jobs.Count > 0;
+        RefreshGlobalControls();
     }
 
     private void SeedSampleJobs()
@@ -245,6 +316,7 @@ public sealed partial class ExecutionViewModel : ViewModelBase, IDisposable
         Jobs.Add(running);
         Jobs.Add(idle);
         HasJobs = Jobs.Count > 0;
+        RefreshGlobalControls();
     }
 
     public void Dispose()
@@ -262,4 +334,10 @@ public sealed partial class ExecutionViewModel : ViewModelBase, IDisposable
     }
 
     public bool HasError => !string.IsNullOrWhiteSpace(LastError);
+
+    private void RefreshGlobalControls()
+    {
+        CanPauseAll = Jobs.Any(job => job.IsRunning);
+        CanStopAll = Jobs.Any(job => job.IsRunning || job.IsPaused);
+    }
 }

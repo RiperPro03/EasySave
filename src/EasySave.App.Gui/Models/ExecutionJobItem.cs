@@ -35,6 +35,7 @@ public sealed partial class ExecutionJobItem : ObservableObject
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(CanPlayPause))]
+    [NotifyPropertyChangedFor(nameof(CanPlay))]
     private bool _isActive;
 
     [ObservableProperty]
@@ -50,6 +51,8 @@ public sealed partial class ExecutionJobItem : ObservableObject
     [NotifyPropertyChangedFor(nameof(IsCompleted))]
     [NotifyPropertyChangedFor(nameof(IsError))]
     [NotifyPropertyChangedFor(nameof(CanPlayPause))]
+    [NotifyPropertyChangedFor(nameof(CanPlay))]
+    [NotifyPropertyChangedFor(nameof(CanPause))]
     [NotifyPropertyChangedFor(nameof(CanStop))]
     [NotifyPropertyChangedFor(nameof(CanStart))]
     private JobStatus _status;
@@ -121,6 +124,8 @@ public sealed partial class ExecutionJobItem : ObservableObject
     };
 
     public bool CanPlayPause => IsRunning || IsPaused || IsActive;
+    public bool CanPlay => IsPaused || CanStart;
+    public bool CanPause => IsRunning;
     public bool CanStop => IsRunning || IsPaused;
     public bool CanStart => IsActive && (IsIdle || IsCompleted || IsError);
 
