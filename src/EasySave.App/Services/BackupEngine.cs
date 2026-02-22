@@ -83,7 +83,7 @@ internal sealed class BackupEngine : IBackupEngine
                             category: LogEventCategory.Job,
                             action: LogEventAction.Skip,
                             message: ex.Message)
-                        .WithLevel(LogLevel.Warning)
+                        .WithLevel(LogLevel.Notice)
                         .WithOutcome(LogEventOutcome.Failure)
                         .WithJob(
                             id: job.Id,
@@ -271,6 +271,18 @@ internal sealed class BackupEngine : IBackupEngine
             WaitIfPaused(control, state);
             if (control.IsStopRequested)
                 return true;
+
+            // Si un logiciel metier est detecte avant de commencer un nouveau fichier,
+            // on met le job en pause automatique jusqu'a sa fermeture.
+            if (WaitForBusinessSoftwareToCloseIfRunning(control, job, state, traceId))
+                return true;
+
+            // Une pause manuelle peut arriver pendant la pause automatique.
+            // On revalide ici avant de lancer la copie du fichier suivant.
+            WaitIfPaused(control, state);
+            if (control.IsStopRequested)
+                return true;
+
             // Construit le chemin cible en preservant la structure relative.
             var relativePath = Path.GetRelativePath(sourceRoot, sourcePath);
             var targetPath = Path.Combine(targetRoot, relativePath);
@@ -486,34 +498,10 @@ internal sealed class BackupEngine : IBackupEngine
             // Publie l'etat apres traitement du fichier.
             UpdateProgressState(control, state, sourcePath, targetPath, fileSize, incrementProcessed: true);
 
-            if (!string.IsNullOrWhiteSpace(_config.BusinessSoftwareProcessName)
-                && BusinessSoftwareDetector.IsRunning(_config.BusinessSoftwareProcessName))
-            {
-                if (_logService != null)
-                {
-                    var logEntry = LogEntryBuilder.Create(
-                            eventName: "job.stopped.businesssoftware",
-                            category: LogEventCategory.Job,
-                            action: LogEventAction.Summary,
-                            message: "Backup stopped because business software detected")
-                        .WithLevel(LogLevel.Warning)
-                        .WithOutcome(LogEventOutcome.Failure)
-                        .WithJob(
-                            id: job.Id,
-                            name: job.Name,
-                            type: job.Type,
-                            sourcePath: ToUncOrEmpty(job.SourcePath),
-                            targetPath: ToUncOrEmpty(job.TargetPath),
-                            status: JobStatus.Error)
-                        .WithOutcome(LogEventOutcome.Failure)
-                        .Build();
-                    _logService.Write(logEntry);
-                }
-
-                result.Errors.Add($"Backup stopped because {_config.BusinessSoftwareProcessName} detected");
-                result.ErrorCount++;
-                break;
-            }
+            // Meme comportement qu'une pause utilisateur: on finit le fichier en cours,
+            // puis on se met en pause automatique si le logiciel metier apparait.
+            if (WaitForBusinessSoftwareToCloseIfRunning(control, job, state, traceId))
+                return true;
         }
 
         return control.IsStopRequested;
@@ -840,6 +828,61 @@ internal sealed class BackupEngine : IBackupEngine
     }
 
     /// <summary>
+    /// Pauses the current job automatically while configured business software is running, then resumes when it closes.
+    /// </summary>
+    /// <returns><c>true</c> if a stop was requested while waiting; otherwise <c>false</c>.</returns>
+    private bool WaitForBusinessSoftwareToCloseIfRunning(
+        JobExecutionControl control,
+        BackupJob job,
+        JobStateDto state,
+        string traceId)
+    {
+        var processName = _config.BusinessSoftwareProcessName;
+        if (string.IsNullOrWhiteSpace(processName))
+            return false;
+        if (!BusinessSoftwareDetector.IsRunning(processName))
+            return false;
+
+        SetAutoPausedState(control, state);
+        WriteBusinessSoftwareAutoPauseLog(job, processName, traceId);
+
+        while (true)
+        {
+            if (control.IsStopRequested)
+                return true;
+
+            var currentProcessName = _config.BusinessSoftwareProcessName;
+            if (string.IsNullOrWhiteSpace(currentProcessName))
+                break;
+            if (!BusinessSoftwareDetector.IsRunning(currentProcessName))
+                break;
+
+            Thread.Sleep(200);
+        }
+
+        if (control.IsStopRequested)
+            return true;
+
+        WriteBusinessSoftwareAutoResumeLog(job, processName, traceId);
+
+        lock (control.Sync)
+        {
+            // Ne pas ecraser une pause manuelle demandee pendant la pause automatique.
+            if (control.IsPaused)
+                return false;
+
+            if (state.Status != JobStatus.Running)
+            {
+                state.Status = JobStatus.Running;
+                state.LastActionTimestampUtc = DateTime.UtcNow;
+                PublishState(state);
+            }
+        }
+
+        return false;
+    }
+
+    /// <summary>
     /// Blocks the execution loop while paused and publishes Paused/Running transitions around the wait.
     /// </summary>
     private void WaitIfPaused(JobExecutionControl control, JobStateDto state)
@@ -878,6 +921,72 @@ internal sealed class BackupEngine : IBackupEngine
                 PublishState(state);
             }
         }
+    }
+
+    /// <summary>
+    /// Publishes a paused state for an automatic business-software pause without touching the manual pause gate.
+    /// </summary>
+    private void SetAutoPausedState(JobExecutionControl control, JobStateDto state)
+    {
+        lock (control.Sync)
+        {
+            if (state.Status == JobStatus.Paused)
+                return;
+
+            state.Status = JobStatus.Paused;
+            state.LastActionTimestampUtc = DateTime.UtcNow;
+            PublishState(state);
+        }
+    }
+
+    private void WriteBusinessSoftwareAutoPauseLog(BackupJob job, string processName, string traceId)
+    {
+        if (_logService is null)
+            return;
+
+        var logEntry = LogEntryBuilder.Create(
+                eventName: "job.paused",
+                category: LogEventCategory.Job,
+                action: LogEventAction.Pause,
+                message: $"Backup paused automatically because business software '{processName}' was detected")
+            .WithLevel(LogLevel.Warning)
+            .WithOutcome(LogEventOutcome.Success)
+            .WithTraceIfPresent(traceId)
+            .WithJob(
+                id: job.Id,
+                name: job.Name,
+                type: job.Type,
+                sourcePath: ToUncOrEmpty(job.SourcePath),
+                targetPath: ToUncOrEmpty(job.TargetPath),
+                status: JobStatus.Paused)
+            .Build();
+
+        _logService.Write(logEntry);
+    }
+
+    private void WriteBusinessSoftwareAutoResumeLog(BackupJob job, string processName, string traceId)
+    {
+        if (_logService is null)
+            return;
+
+        var logEntry = LogEntryBuilder.Create(
+                eventName: "job.resumed",
+                category: LogEventCategory.Job,
+                action: LogEventAction.Resume,
+                message: $"Backup resumed automatically after business software '{processName}' closed")
+            .WithLevel(LogLevel.Info)
+            .WithOutcome(LogEventOutcome.Success)
+            .WithTraceIfPresent(traceId)
+            .WithJob(
+                id: job.Id,
+                name: job.Name,
+                type: job.Type,
+                sourcePath: ToUncOrEmpty(job.SourcePath),
+                targetPath: ToUncOrEmpty(job.TargetPath),
+                status: JobStatus.Running)
+            .Build();
+
+        _logService.Write(logEntry);
     }
 
     /// <summary>

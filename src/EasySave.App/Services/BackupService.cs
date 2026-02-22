@@ -166,7 +166,11 @@ public sealed class BackupService : IBackupService
         if (string.IsNullOrWhiteSpace(jobId))
             return false;
 
-        return TryControlRequest(jobId, _backupEngine.Pause);
+        var accepted = TryControlRequest(jobId, _backupEngine.Pause);
+        if (accepted)
+            LogJobControlAction(jobId, "job.paused", LogEventAction.Pause, "Job paused by user", JobStatus.Paused);
+
+        return accepted;
     }
 
     /// <summary>
@@ -179,7 +183,11 @@ public sealed class BackupService : IBackupService
         if (string.IsNullOrWhiteSpace(jobId))
             return false;
 
-        return TryControlRequest(jobId, _backupEngine.Resume);
+        var accepted = TryControlRequest(jobId, _backupEngine.Resume);
+        if (accepted)
+            LogJobControlAction(jobId, "job.resumed", LogEventAction.Resume, "Job resumed by user", JobStatus.Running);
+
+        return accepted;
     }
 
     /// <summary>
@@ -192,7 +200,11 @@ public sealed class BackupService : IBackupService
         if (string.IsNullOrWhiteSpace(jobId))
             return false;
 
-        return TryControlRequest(jobId, _backupEngine.Stop);
+        var accepted = TryControlRequest(jobId, _backupEngine.Stop);
+        if (accepted)
+            LogJobControlAction(jobId, "job.stopped", LogEventAction.Stop, "Job stop requested by user", JobStatus.Error);
+
+        return accepted;
     }
 
     public bool IsBusinessSoftwareRunning(out string? processName)
@@ -467,6 +479,40 @@ public sealed class BackupService : IBackupService
                 sourcePath: ToUncOrEmpty(job.SourcePath),
                 targetPath: ToUncOrEmpty(job.TargetPath),
                 status: JobStatus.Idle,
+                isActive: job.IsActive);
+        }
+
+        _logService.Write(entryBuilder.Build());
+    }
+
+    private void LogJobControlAction(
+        string jobId,
+        string eventName,
+        LogEventAction action,
+        string message,
+        JobStatus status)
+    {
+        if (_logService is null)
+            return;
+
+        var entryBuilder = LogEntryBuilder.Create(
+                eventName: eventName,
+                category: LogEventCategory.Job,
+                action: action,
+                message: message)
+            .WithLevel(LogLevel.Notice)
+            .WithOutcome(LogEventOutcome.Success);
+
+        var job = _jobService.GetById(jobId);
+        if (job != null)
+        {
+            entryBuilder = entryBuilder.WithJob(
+                id: job.Id,
+                name: job.Name,
+                type: job.Type,
+                sourcePath: ToUncOrEmpty(job.SourcePath),
+                targetPath: ToUncOrEmpty(job.TargetPath),
+                status: status,
                 isActive: job.IsActive);
         }
 
