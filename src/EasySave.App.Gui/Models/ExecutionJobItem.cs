@@ -133,9 +133,9 @@ public sealed partial class ExecutionJobItem : ObservableObject
     public bool CanStart => IsActive && (IsIdle || IsCompleted || IsError);
 
     public string ProgressLabel => string.Format(CultureInfo.CurrentCulture, "{0}%", ProgressPercentage);
-    public string SizeProcessedMbLabel => FormatMegabytes(SizeProcessedBytes);
-    public string TotalSizeMbLabel => FormatMegabytes(TotalSizeBytes);
-    public string RemainingSizeMbLabel => FormatMegabytes(RemainingSizeBytes);
+    public string SizeProcessedMbLabel => FormatMegabytes(_sizeProcessedBytes);
+    public string TotalSizeMbLabel => FormatMegabytes(_totalSizeBytes);
+    public string RemainingSizeMbLabel => FormatMegabytes(_remainingSizeBytes);
 
     public bool HasErrorMessage => !string.IsNullOrWhiteSpace(ErrorMessage);
 
