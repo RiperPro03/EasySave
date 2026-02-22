@@ -12,7 +12,7 @@ using EasySave.Core.Resources;
 namespace EasySave.App.Services;
 
 /// <summary>
-/// Executes backup jobs and produces state updates and logs.
+/// Executes backup jobs, manages runtime control state (pause/resume/stop), and produces state updates and logs.
 /// </summary>
 internal sealed class BackupEngine : IBackupEngine
 {
@@ -42,7 +42,7 @@ internal sealed class BackupEngine : IBackupEngine
     }
 
     /// <summary>
-    /// Executes a backup job and returns the result.
+    /// Executes a backup job synchronously and supports runtime pause/resume/stop through a per-job execution control.
     /// </summary>
     /// <param name="job">The job to execute.</param>
     /// <returns>The execution result.</returns>
@@ -192,7 +192,7 @@ internal sealed class BackupEngine : IBackupEngine
     }
 
     /// <summary>
-    /// Requests a pause for a running job.
+    /// Requests a pause for a running job. The current file is allowed to finish before the loop blocks.
     /// </summary>
     /// <param name="jobId">The job identifier.</param>
     /// <returns><c>true</c> when the pause was requested.</returns>
@@ -225,7 +225,7 @@ internal sealed class BackupEngine : IBackupEngine
     }
 
     /// <summary>
-    /// Requests a stop for a running job.
+    /// Requests a stop for a running job. The stop token is observed between files and during chunked copy.
     /// </summary>
     /// <param name="jobId">The job identifier.</param>
     /// <returns><c>true</c> when the stop was requested.</returns>
@@ -242,7 +242,7 @@ internal sealed class BackupEngine : IBackupEngine
     }
 
     /// <summary>
-    /// Runs the copy loop for all files and updates state and results.
+    /// Runs the per-file copy loop, updates live state, and reacts to pause/resume/stop requests.
     /// </summary>
     /// <param name="job">The job being executed.</param>
     /// <param name="files">The list of files to process.</param>
@@ -520,8 +520,9 @@ internal sealed class BackupEngine : IBackupEngine
     }
 
     /// <summary>
-    /// Copies a file to a target path.
+    /// Copies a file to a target path using chunked I/O so stop requests can interrupt long transfers.
     /// </summary>
+    /// <param name="control">Execution control used to observe stop requests.</param>
     /// <param name="sourcePath">Source file path.</param>
     /// <param name="targetPath">Target file path.</param>
     private static void CopyFile(JobExecutionControl control, string sourcePath, string targetPath)
@@ -830,7 +831,7 @@ internal sealed class BackupEngine : IBackupEngine
     }
 
     /// <summary>
-    /// Raises the <see cref="StateChanged"/> event.
+    /// Raises the <see cref="StateChanged"/> event with the mutable engine state object (callers should clone if needed).
     /// </summary>
     /// <param name="state">The state snapshot to publish.</param>
     private void PublishState(JobStateDto state)
@@ -838,6 +839,9 @@ internal sealed class BackupEngine : IBackupEngine
         StateChanged?.Invoke(this, new JobStateChangedEventArgs(state));
     }
 
+    /// <summary>
+    /// Blocks the execution loop while paused and publishes Paused/Running transitions around the wait.
+    /// </summary>
     private void WaitIfPaused(JobExecutionControl control, JobStateDto state)
     {
         if (!control.IsPaused)
@@ -876,6 +880,9 @@ internal sealed class BackupEngine : IBackupEngine
         }
     }
 
+    /// <summary>
+    /// Applies a pause request and publishes an immediate paused state when possible.
+    /// </summary>
     private bool TrySetPaused(JobExecutionControl control)
     {
         lock (control.Sync)
@@ -896,6 +903,9 @@ internal sealed class BackupEngine : IBackupEngine
         }
     }
 
+    /// <summary>
+    /// Applies a resume request and publishes an immediate running state when resuming from paused.
+    /// </summary>
     private bool TrySetRunning(JobExecutionControl control)
     {
         lock (control.Sync)
@@ -912,6 +922,9 @@ internal sealed class BackupEngine : IBackupEngine
         }
     }
 
+    /// <summary>
+    /// Applies a stop request and publishes an immediate terminal error state for UI feedback.
+    /// </summary>
     private bool TrySetStopped(JobExecutionControl control)
     {
         lock (control.Sync)
@@ -980,6 +993,9 @@ internal sealed class BackupEngine : IBackupEngine
         return new NoEncryptionService();
     }
 
+    /// <summary>
+    /// Best-effort cleanup for a partially written file when a stop interrupts a transfer.
+    /// </summary>
     private static void TryDeletePartialFile(string path)
     {
         if (string.IsNullOrWhiteSpace(path))

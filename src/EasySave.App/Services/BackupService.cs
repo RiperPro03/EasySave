@@ -11,7 +11,7 @@ using System.Threading;
 namespace EasySave.App.Services;
 
 /// <summary>
-/// Coordinates backup execution and publishes state snapshots.
+/// Coordinates asynchronous backup execution, per-job control requests, and state snapshots.
 /// </summary>
 public sealed class BackupService : IBackupService
 {
@@ -67,7 +67,7 @@ public sealed class BackupService : IBackupService
     }
 
     /// <summary>
-    /// Executes a backup job and records its last run time.
+    /// Starts a backup job asynchronously, publishes an immediate running snapshot, and prevents duplicate launches for the same job.
     /// </summary>
     /// <param name="job">The job to execute.</param>
     /// <returns>The execution result.</returns>
@@ -133,7 +133,7 @@ public sealed class BackupService : IBackupService
         {
             StateChanged?.Invoke(this, new JobStateChangedEventArgs(startedState));
         }
-        // --- asynchronous job launch ---
+        // Lance le moteur sur un thread de fond pour garder l'appelant (GUI/CLI) reactif.
         _ = Task.Run(() => {
             try
             {
@@ -157,7 +157,7 @@ public sealed class BackupService : IBackupService
     }
 
     /// <summary>
-    /// Requests a pause for a running job.
+    /// Requests a pause for a running job, with a short retry window while the engine is still registering the job control.
     /// </summary>
     /// <param name="jobId">The job identifier.</param>
     /// <returns><c>true</c> when the pause request was accepted.</returns>
@@ -170,7 +170,7 @@ public sealed class BackupService : IBackupService
     }
 
     /// <summary>
-    /// Requests a resume for a paused job.
+    /// Requests a resume for a paused job, with a short retry window while the engine is still registering the job control.
     /// </summary>
     /// <param name="jobId">The job identifier.</param>
     /// <returns><c>true</c> when the resume request was accepted.</returns>
@@ -183,7 +183,7 @@ public sealed class BackupService : IBackupService
     }
 
     /// <summary>
-    /// Requests a stop for a running job.
+    /// Requests a stop for a running job, with a short retry window while the engine is still registering the job control.
     /// </summary>
     /// <param name="jobId">The job identifier.</param>
     /// <returns><c>true</c> when the stop request was accepted.</returns>
@@ -218,7 +218,7 @@ public sealed class BackupService : IBackupService
     }
 
     /// <summary>
-    /// Handles state updates from the engine and writes snapshots.
+    /// Handles state updates from the engine, persists snapshots, and republishes a defensive copy for UI consumers.
     /// </summary>
     /// <param name="sender">Event sender.</param>
     /// <param name="e">State change event arguments.</param>
@@ -381,6 +381,9 @@ public sealed class BackupService : IBackupService
         return new BackupEngine(_config, _logService, cryptoService:null, largeFileLimiter :_largeFileLimiter);
     }
 
+    /// <summary>
+    /// Retries a control request briefly to bridge the gap between async job launch and engine-side control registration.
+    /// </summary>
     private bool TryControlRequest(string jobId, Func<string, bool> request)
     {
         if (request(jobId))
@@ -404,6 +407,9 @@ public sealed class BackupService : IBackupService
         return false;
     }
 
+    /// <summary>
+    /// Indicates whether a failed control request should be retried based on the service snapshot and in-flight execution tracking.
+    /// </summary>
     private bool ShouldRetryControlRequest(string jobId)
     {
         lock (_stateLock)
