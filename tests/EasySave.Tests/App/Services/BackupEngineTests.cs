@@ -236,6 +236,59 @@ public class BackupEngineTests : IDisposable
                                      (s.ErrorMessage?.Contains(Strings.Error_BackupStoppedByUser, StringComparison.Ordinal) ?? false));
     }
 
+    [Fact]
+    public async Task Run_ShouldAutoPauseAndResume_WhenBusinessSoftwareDetectedDuringExecution()
+    {
+        var source = Path.Combine(_basePath, "AutoPauseSource");
+        var target = Path.Combine(_basePath, "AutoPauseTarget");
+        Directory.CreateDirectory(source);
+        File.WriteAllText(Path.Combine(source, "file1.txt"), "content1");
+        File.WriteAllText(Path.Combine(source, "file2.txt"), "content2");
+
+        var config = AppConfig.LoadDefaults();
+        config.SetEncryptionEnabled(true);
+        config.UpdateEncryptionKey("secret");
+        config.UpdateExtensionsToEncrypt(new[] { ".txt" });
+
+        using var crypto = new BlockingFirstCallCryptoService();
+        var engine = new BackupEngine(config, cryptoService: crypto);
+        var job = BackupJobBuilder.Valid()
+            .WithId("auto-pause-1")
+            .WithName("Auto pause job")
+            .WithSource(source)
+            .WithTarget(target)
+            .WithType(BackupType.Full)
+            .Build();
+
+        var states = new ConcurrentQueue<JobStateDto>();
+        engine.StateChanged += (_, e) => states.Enqueue(CloneState(e.State));
+
+        var runTask = Task.Run(() => engine.Run(job));
+
+        Assert.True(crypto.WaitForFirstCall(TimeSpan.FromSeconds(3)));
+
+        // Simule l'apparition du logiciel metier pendant le traitement du premier fichier.
+        var businessProcessName = Process.GetCurrentProcess().ProcessName;
+        config.ChangeBussinessSoftware(businessProcessName);
+
+        crypto.ReleaseFirstCall();
+
+        Assert.True(WaitForState(states, JobStatus.Paused, TimeSpan.FromSeconds(3)));
+
+        var runningCountBeforeResume = states.Count(s => s.Status == JobStatus.Running);
+        // Simule la fermeture (ou la desactivation de la surveillance) pour reprendre automatiquement.
+        config.ChangeBussinessSoftware(null);
+
+        Assert.True(WaitForState(states, JobStatus.Running, TimeSpan.FromSeconds(3), runningCountBeforeResume + 1));
+
+        var result = await runTask;
+
+        Assert.True(result.Success);
+        Assert.True(WaitForState(states, JobStatus.Completed, TimeSpan.FromSeconds(2)));
+        Assert.True(File.Exists(Path.Combine(target, "file1.txt")));
+        Assert.True(File.Exists(Path.Combine(target, "file2.txt")));
+    }
+
     public void Dispose()
     {
         if (Directory.Exists(_basePath))

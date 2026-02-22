@@ -397,6 +397,15 @@ Nommage des ressources :
     <data name="Gui_Dashboard_Job_Changed" xml:space="preserve">
         <value>Job changed</value>
     </data>
+    <data name="Gui_Dashboard_Job_Paused" xml:space="preserve">
+        <value>Job paused</value>
+    </data>
+    <data name="Gui_Dashboard_Job_Resumed" xml:space="preserve">
+        <value>Job resumed</value>
+    </data>
+    <data name="Gui_Dashboard_Job_Stopped" xml:space="preserve">
+        <value>Job stopped</value>
+    </data>
     <data name="Gui_JobEditor_LastRunFormat" xml:space="preserve">
         <value>Last run: {0:dd/MM/yyyy HH:mm}</value>
     </data>
