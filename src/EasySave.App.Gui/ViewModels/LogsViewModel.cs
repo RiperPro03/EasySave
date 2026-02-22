@@ -8,8 +8,8 @@ using EasySave.App.Services;
 namespace EasySave.App.Gui.ViewModels
 {
     /// <summary>
-    /// ViewModel gérant l'affichage et le filtrage des logs dans l'interface utilisateur.
-    /// Suit le pattern MVVM (Model-View-ViewModel).
+    /// Provides log data and filtering state for the logs view.
+    /// Maintains a cached list of all entries and exposes a filtered observable collection for the UI.
     /// </summary>
     public class LogsViewModel : ViewModelBase
     {
@@ -24,8 +24,8 @@ namespace EasySave.App.Gui.ViewModels
         private string _selectedEventType = "Tous";
 
         /// <summary>
-        /// Type d'événement actuellement sélectionné par l'utilisateur.
-        /// Déclenche automatiquement le filtrage lors de sa modification.
+        /// Gets or sets the event-type filter selected by the user.
+        /// Updating this value reapplies the filter to <see cref="Logs"/>.
         /// </summary>
         public string SelectedEventType
         {
@@ -43,9 +43,10 @@ namespace EasySave.App.Gui.ViewModels
         public LogsViewModel() : this(new LogReaderService()) { }
 
         /// <summary>
-        /// Constructeur principal avec injection du service de lecture de logs.
+        /// Initializes a new instance of the view model using the specified log reader service.
+        /// Loads the initial log data and available filter values.
         /// </summary>
-        /// <param name="logReader">Instance du service LogReaderService.</param>
+        /// <param name="logReader">Service used to read log entries from storage.</param>
         public LogsViewModel(LogReaderService logReader)
         {
             _logReader = logReader;
@@ -53,7 +54,7 @@ namespace EasySave.App.Gui.ViewModels
         }
 
         /// <summary>
-        /// Réinitialise les filtres et recharge les données depuis le disque.
+        /// Reloads log data from disk and resets the active event-type filter to "Tous".
         /// </summary>
         public void RefreshLogs()
         {
@@ -62,7 +63,8 @@ namespace EasySave.App.Gui.ViewModels
         }
 
         /// <summary>
-        /// Charge les logs, les trie par date décroissante et met à jour la liste des types d'événements disponibles.
+        /// Reads all log entries, rebuilds the cache sorted by descending timestamp,
+        /// updates the available event-type list, and reapplies the current filter.
         /// </summary>
         private void LoadLogs()
         {
@@ -105,7 +107,8 @@ namespace EasySave.App.Gui.ViewModels
         }
 
         /// <summary>
-        /// Filtre la collection de cache selon le type sélectionné et met à jour la collection observable.
+        /// Applies the current event-type filter to the cached entries
+        /// and refreshes the observable collection bound to the UI.
         /// </summary>
         private void ApplyFilter()
         {

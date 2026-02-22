@@ -12,8 +12,8 @@ using EasySave.Core.DTO;
 namespace EasySave.App.Services;
 
 /// <summary>
-/// Service responsable de la lecture, de l'analyse et du formatage des fichiers de logs.
-/// Supporte les formats JSON et XML.
+/// Reads, parses, and formats application log files for display and inspection.
+/// Supports JSON and XML log formats.
 /// </summary>
 public sealed class LogReaderService
 {
@@ -32,10 +32,10 @@ public sealed class LogReaderService
     private readonly string _logDirectory;
 
     /// <summary>
-    /// Initialise une nouvelle instance du service. 
-    /// Si aucun chemin n'est fourni, utilise le dossier AppData par défaut.
+    /// Initializes a new instance of the service.
+    /// Uses the default EasySave AppData log folder when no path is provided.
     /// </summary>
-    /// <param name="logDirectory">Chemin optionnel vers le dossier des logs.</param>
+    /// <param name="logDirectory">Optional path to the logs folder.</param>
     public LogReaderService(string? logDirectory = null)
     {
         _logDirectory = string.IsNullOrWhiteSpace(logDirectory)
@@ -48,15 +48,16 @@ public sealed class LogReaderService
     }
 
     /// <summary>
-    /// Retourne le chemin du dossier de logs actuel.
+    /// Gets the log directory path used by this service.
     /// </summary>
     public string LogDirectory => _logDirectory;
 
     /// <summary>
-    /// Lit les entrées des fichiers de logs les plus récents.
+    /// Reads log entries from a limited number of files in the log directory.
+    /// Files are selected using descending file-name order.
     /// </summary>
-    /// <param name="maxFiles">Nombre maximum de fichiers à analyser.</param>
-    /// <returns>Une liste d'objets LogEntryDto.</returns>
+    /// <param name="maxFiles">Maximum number of log files to parse.</param>
+    /// <returns>A read-only list of parsed <see cref="LogEntryDto"/> entries.</returns>
     public IReadOnlyList<LogEntryDto> ReadEntries(int maxFiles = 7)
     {
         if (string.IsNullOrWhiteSpace(_logDirectory) || !Directory.Exists(_logDirectory))
@@ -72,7 +73,7 @@ public sealed class LogReaderService
     }
 
     /// <summary>
-    /// Lit l'intégralité des logs présents dans le dossier.
+    /// Reads all parseable log entries from every supported file in the log directory.
     /// </summary>
     public IReadOnlyList<LogEntryDto> ReadAllEntries()
     {
@@ -89,11 +90,11 @@ public sealed class LogReaderService
     }
 
     /// <summary>
-    /// Prépare le contenu textuel formaté pour l'interface graphique.
-    /// Gère les cas d'erreur .
+    /// Builds formatted log-file payloads for the graphical interface.
+    /// Returns placeholder entries when the log directory is missing or contains no files.
     /// </summary>
-    /// <param name="maxFiles">Limite de fichiers à lire.</param>
-    /// <returns>Une liste d'objets LogFileEntry </returns>
+    /// <param name="maxFiles">Optional maximum number of log files to include.</param>
+    /// <returns>A read-only list of <see cref="LogFileEntry"/> objects ready for display.</returns>
     public IReadOnlyList<LogFileEntry> ReadLogFiles(int? maxFiles = null)
     {
         if (!Directory.Exists(_logDirectory))
@@ -126,7 +127,8 @@ public sealed class LogReaderService
     }
 
     /// <summary>
-    /// Liste les fichiers .json et .xml triés par nom décroissant (le plus récent d'abord).
+    /// Enumerates supported log files (.json and .xml) sorted by descending file name.
+    /// Applies an optional file-count limit.
     /// </summary>
     private IEnumerable<string> EnumerateLogFiles(int? maxFiles)
     {
@@ -139,7 +141,8 @@ public sealed class LogReaderService
     }
 
     /// <summary>
-    /// Identifie l'extension du fichier et appelle la méthode de lecture appropriée.
+    /// Dispatches file parsing to the reader that matches the file extension.
+    /// Returns an empty sequence for unsupported extensions.
     /// </summary>
     private static IEnumerable<LogEntryDto> ReadEntriesFromFile(string filePath)
     {
@@ -158,8 +161,8 @@ public sealed class LogReaderService
     }
 
     /// <summary>
-    /// Lit un fichier JSON ligne par ligne et désérialise chaque ligne en LogEntryDto.
-    /// Gère les balises racine optionnelles <logs>.
+    /// Reads a JSON log file line by line and deserializes each valid line into a <see cref="LogEntryDto"/>.
+    /// Ignores empty lines, optional wrapper tags such as &lt;logs&gt;, and malformed JSON lines.
     /// </summary>
     private static IEnumerable<LogEntryDto> ReadJsonEntries(string filePath)
     {
@@ -182,7 +185,8 @@ public sealed class LogReaderService
     }
 
     /// <summary>
-    /// Charge un document XML et désérialise chaque élément enfant de la racine en LogEntryDto.
+    /// Loads an XML document and deserializes each child element of the root into a <see cref="LogEntryDto"/>.
+    /// Invalid documents or invalid child elements are skipped.
     /// </summary>
     private static IEnumerable<LogEntryDto> ReadXmlEntries(string filePath)
     {
@@ -209,7 +213,8 @@ public sealed class LogReaderService
     }
 
     /// <summary>
-    /// Formate une liste d'entrées en une chaîne de caractères lisible .
+    /// Formats parsed log entries into a readable text representation.
+    /// If no entries were parsed, returns the raw file content when available.
     /// </summary>
     private static string FormatEntries(IEnumerable<LogEntryDto> entries, string extension, string filePath)
     {
@@ -226,7 +231,7 @@ public sealed class LogReaderService
     }
 
     /// <summary>
-    /// Transforme les entrées en un bloc de texte JSON indenté.
+    /// Serializes entries as indented JSON blocks separated by blank lines.
     /// </summary>
     private static string FormatJson(IEnumerable<LogEntryDto> entries)
     {
@@ -238,7 +243,7 @@ public sealed class LogReaderService
     }
 
     /// <summary>
-    /// Reconstruit un document XML complet avec une racine <logs> à partir des entrées.
+    /// Rebuilds a complete XML document with a &lt;logs&gt; root element from the parsed entries.
     /// </summary>
     private static string FormatXml(IEnumerable<LogEntryDto> entries)
     {
@@ -262,7 +267,8 @@ public sealed class LogReaderService
     }
 
     /// <summary>
-    /// Sérialise un objet LogEntryDto unique en XElement pour manipulation XML.
+    /// Serializes a single <see cref="LogEntryDto"/> into an <see cref="XElement"/> for XML document reconstruction.
+    /// Returns <see langword="null"/> when serialization fails.
     /// </summary>
     private static XElement? SerializeXml(XmlSerializer serializer, LogEntryDto entry)
     {
@@ -279,10 +285,17 @@ public sealed class LogReaderService
 }
 
 /// <summary>
-/// Modèle de données représentant un fichier de log prêt à être affiché dans la vue.
+/// Represents a formatted log file entry ready to be displayed in the UI.
 /// </summary>
 public sealed class LogFileEntry
 {
+    /// <summary>
+    /// Gets or sets the display label for the log file.
+    /// </summary>
     public string FileName { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Gets or sets the formatted file content to display.
+    /// </summary>
     public string Content { get; set; } = string.Empty;
 }
