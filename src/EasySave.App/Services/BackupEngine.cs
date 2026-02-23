@@ -35,11 +35,7 @@ internal sealed class BackupEngine : IBackupEngine
     /// <param name="logDirectory">Optional log directory; when null, logging is disabled.</param>
     /// <param name="logFormat">Log serialization format.</param>
     /// <param name="logService">Optional log service.</param>
-<<<<<<< merge-with-main
-    public BackupEngine(AppConfig config, IAppLogService? logService = null, ICryptoService? cryptoService = null, LargeFileTransferLimiter? largeFileLimiter = null)
-=======
-    public BackupEngine(AppConfig config, PriorityMonitor priorityMonitor, IAppLogService? logService = null, ICryptoService? cryptoService = null)
->>>>>>> 138-feat-gestion-des-fichiers-prioritaires
+    public BackupEngine(AppConfig config, PriorityMonitor priorityMonitor, IAppLogService? logService = null, ICryptoService? cryptoService = null, LargeFileTransferLimiter? largeFileLimiter = null)
     {
         _config = config ?? throw new ArgumentNullException(nameof(config));
         _priorityMonitor = priorityMonitor ?? throw new ArgumentNullException(nameof(priorityMonitor)); // Initialisation
@@ -285,9 +281,7 @@ internal sealed class BackupEngine : IBackupEngine
             if (control.IsStopRequested)
                 return true;
 
-<<<<<<< merge-with-main
-            // Si un logiciel metier est detecte avant de commencer un nouveau fichier,
-            // on met le job en pause automatique jusqu'a sa fermeture.
+            // Pause automatique si logiciel métier détecté
             if (WaitForBusinessSoftwareToCloseIfRunning(control, job, state, traceId))
                 return true;
 
@@ -297,9 +291,7 @@ internal sealed class BackupEngine : IBackupEngine
             if (control.IsStopRequested)
                 return true;
 
-            // Construit le chemin cible en preservant la structure relative.
-=======
-            // --- GESTION PRIORITÉ ---
+            //Gestion des fichiers prioritaires
             bool isPriorityFile = (job.PriorityExtensions ?? new List<string>())
                 .Any(ext => sourcePath.EndsWith(ext, StringComparison.OrdinalIgnoreCase));
 
@@ -311,14 +303,12 @@ internal sealed class BackupEngine : IBackupEngine
             {
                 while (_priorityMonitor.IsPriorityWorkActive)
                 {
-                    Thread.Sleep(50);
+                    Task.Delay(50).Wait();
                     if (control.IsStopRequested) return true;
                     WaitIfPaused(control, state);
                 }
             }
-            // -----------------------
 
->>>>>>> 138-feat-gestion-des-fichiers-prioritaires
             var relativePath = Path.GetRelativePath(sourceRoot, sourcePath);
             var targetPath = Path.Combine(targetRoot, relativePath);
             var fileSize = new FileInfo(sourcePath).Length;

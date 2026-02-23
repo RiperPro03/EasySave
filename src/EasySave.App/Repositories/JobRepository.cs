@@ -13,6 +13,8 @@ internal sealed class JobRepository : IJobRepository
     private readonly IPathProvider _pathProvider;
     private readonly List<BackupJob> _jobs;
     private readonly string _jobsFilePath;
+    private static readonly object _fileLock = new();
+
     /// <summary>
     /// Initializes a new instance of the <see cref="JobRepository"/> class.
     /// </summary>
@@ -154,10 +156,15 @@ internal sealed class JobRepository : IJobRepository
     /// </summary>
     private void SaveJobs()
     {
-        _pathProvider.EnsureDirectoriesCreated();
+        lock (_fileLock)
+        {
+            _pathProvider.EnsureDirectoriesCreated();
 
-        var dtos = _jobs.Select(BackupJobDto.FromModel).ToList();
-        var json = JsonSerializer.Serialize(dtos, new JsonSerializerOptions { WriteIndented = true });
-        File.WriteAllText(_jobsFilePath, json);
+            var dtos = _jobs.Select(BackupJobDto.FromModel).ToList();
+            var json = JsonSerializer.Serialize(dtos, new JsonSerializerOptions { WriteIndented = true });
+
+            File.WriteAllText(_jobsFilePath, json);
+        }
     }
+
 }

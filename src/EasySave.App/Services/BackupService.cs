@@ -392,7 +392,12 @@ public sealed class BackupService : IBackupService
     /// <returns>A configured backup engine.</returns>
     private IBackupEngine CreateEngine()
     {
-        return new BackupEngine(_config, _logService, cryptoService:null, largeFileLimiter :_largeFileLimiter);
+        return new BackupEngine(
+            _config,
+            _priorityMonitor,
+            _logService,
+            cryptoService: null,
+            largeFileLimiter: _largeFileLimiter);
     }
 
     /// <summary>
@@ -432,8 +437,6 @@ public sealed class BackupService : IBackupService
                 && _jobStates.TryGetValue(jobId, out var state)
                 && state.Status is JobStatus.Running or JobStatus.Paused;
         }
-        // Modifiez l'instanciation pour passer _priorityMonitor
-        return new BackupEngine(_config, _priorityMonitor, _logService);
     }
 
     private void WriteInactiveJobLog(BackupJob job)
