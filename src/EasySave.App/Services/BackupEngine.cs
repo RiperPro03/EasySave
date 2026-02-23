@@ -87,7 +87,7 @@ internal sealed class BackupEngine : IBackupEngine
 
         try
         {
-            // 1. VÃƒÂ©rification du logiciel mÃƒÂ©tier
+            // 1. Business software check
             try
             {
                 BusinessSoftwareDetector.ValidateNotRunning(_config.BusinessSoftwareProcessName);
@@ -126,7 +126,7 @@ internal sealed class BackupEngine : IBackupEngine
 
             stopwatch = Stopwatch.StartNew();
 
-            // 2. VÃƒÂ©rification de l'existence du dossier source
+            // 2. Check existence of source file
             if (!Directory.Exists(job.SourcePath))
             {
                 result.Success = false;
@@ -139,7 +139,7 @@ internal sealed class BackupEngine : IBackupEngine
                 return result;
             }
 
-            // 3. Choix de la stratÃƒÂ©gie de copie (Full/Diff)
+            // 3. Choice of copy strategy (Full/Diff)
             IBackupCopyStrategy? strategy = job.Type switch
             {
                 BackupType.Differential => new DifferentialCopyStrategy(),
@@ -159,7 +159,7 @@ internal sealed class BackupEngine : IBackupEngine
                 return result;
             }
 
-            // --- LOGIQUE DE PRIORISATION ABSOLUE ---
+            // --- ABSOLUTE PRIORITIZATION LOGIC ---
 
             var allFiles = Directory.EnumerateFiles(job.SourcePath, "*", SearchOption.AllDirectories).ToList();
 
@@ -304,18 +304,18 @@ internal sealed class BackupEngine : IBackupEngine
             if (control.IsStopRequested)
                 return true;
 
-            // Si un logiciel metier est detecte avant de commencer un nouveau fichier,
-            // on met le job en pause automatique jusqu'a sa fermeture.
+            // If software is detected before starting a new file,
+            // the job is automatically paused until it is closed.
             if (WaitForBusinessSoftwareToCloseIfRunning(control, job, state, traceId))
                 return true;
 
-            // Une pause manuelle peut arriver pendant la pause automatique.
-            // On revalide ici avant de lancer la copie du fichier suivant.
+            // A manual pause may occur during the automatic pause.
+            // This is where you revalidate before starting to copy the next file.
             WaitIfPaused(control, state);
             if (control.IsStopRequested)
                 return true;
 
-            // --- GESTION PRIORITE ---
+            // --- PRIORITY MANAGEMENT ---
             bool isPriorityFile = (job.PriorityExtensions ?? new List<string>())
                 .Any(ext => sourcePath.EndsWith(ext, StringComparison.OrdinalIgnoreCase));
 
@@ -549,8 +549,8 @@ internal sealed class BackupEngine : IBackupEngine
                 UpdateProgressState(control, state, sourcePath, targetPath, fileSize, incrementProcessed: true);
             }
 
-            // Meme comportement qu'une pause utilisateur: on finit le fichier en cours,
-            // puis on se met en pause automatique si le logiciel metier apparait.
+            // Same behavior as a user pause: finish the current file,
+            // then pause automatically if the business software appears.
             if (WaitForBusinessSoftwareToCloseIfRunning(control, job, state, traceId))
                 return true;
         }
@@ -840,7 +840,7 @@ internal sealed class BackupEngine : IBackupEngine
                 state.SizeProcessedBytes += fileSize;
             }
 
-            // Recalcule le reste et le pourcentage apres chaque fichier.
+            // Recalculates remainder and percentage after each file.
             state.RemainingFiles = Math.Max(0, state.TotalFiles - state.FilesProcessed);
             state.RemainingSizeBytes = Math.Max(0, state.TotalSizeBytes - state.SizeProcessedBytes);
             state.ProgressPercentage = CalculateProgress(state);
@@ -918,7 +918,7 @@ internal sealed class BackupEngine : IBackupEngine
 
         lock (control.Sync)
         {
-            // Ne pas ecraser une pause manuelle demandee pendant la pause automatique.
+            // Do not overwrite a manual pause requested during the automatic pause.
             if (control.IsPaused)
                 return false;
 
