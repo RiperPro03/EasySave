@@ -25,7 +25,7 @@ public sealed class ProcessSemaphoreLock : IDisposable
             _hasHandle = _semaphore.WaitOne(timeoutMs);
             if (!_hasHandle)
             {
-                throw new InvalidOperationException("Une autre instance de CryptoSoft est déjà en cours d'exécution.");
+                throw new InvalidOperationException("Une autre instance de CryptoSoft est déjà en cours d'exécution."); //TODO: Langue
             }
         }
         catch (AbandonedMutexException)
