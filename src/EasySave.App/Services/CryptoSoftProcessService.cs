@@ -6,17 +6,17 @@ namespace EasySave.App.Services;
 public class CryptoSoftProcessService : ICryptoService
 {
     private readonly string _exePath;
-    private readonly string _mutexName;
+    private readonly string _semaphoreName;
 
-    public CryptoSoftProcessService(string exePath, string mutexName = "Global\\CryptoSoftMutex")
+    public CryptoSoftProcessService(string exePath, string _semaphoreName = "Global\\CryptoSoftSemaphore")
     {
         _exePath = exePath;
-        _mutexName = mutexName;
+        _semaphoreName = _semaphoreName;
     }
 
     public async Task<int> EncryptFileAsync(string filePath, string key)
     {
-        using (var mutex = new ProcessSemaphoreLock(_mutexName))
+        using (var semaphore = new ProcessSemaphoreLock(_semaphoreName))
         {
             var startInfo = new ProcessStartInfo(_exePath)
             {
