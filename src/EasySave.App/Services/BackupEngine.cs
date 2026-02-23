@@ -32,13 +32,36 @@ internal sealed class BackupEngine : IBackupEngine
     /// <summary>
     /// Initializes a new instance of the <see cref="BackupEngine"/> class.
     /// </summary>
-    /// <param name="logDirectory">Optional log directory; when null, logging is disabled.</param>
-    /// <param name="logFormat">Log serialization format.</param>
+    /// <param name="config">Application configuration.</param>
     /// <param name="logService">Optional log service.</param>
-    public BackupEngine(AppConfig config, PriorityMonitor priorityMonitor, IAppLogService? logService = null, ICryptoService? cryptoService = null, LargeFileTransferLimiter? largeFileLimiter = null)
+    /// <param name="cryptoService">Optional crypto service override.</param>
+    /// <param name="largeFileLimiter">Optional shared large-file limiter.</param>
+    public BackupEngine(
+        AppConfig config,
+        IAppLogService? logService = null,
+        ICryptoService? cryptoService = null,
+        LargeFileTransferLimiter? largeFileLimiter = null)
+        : this(config, new PriorityMonitor(), logService, cryptoService, largeFileLimiter)
+    {
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="BackupEngine"/> class with a shared priority monitor.
+    /// </summary>
+    /// <param name="config">Application configuration.</param>
+    /// <param name="priorityMonitor">Shared priority file monitor across concurrent jobs.</param>
+    /// <param name="logService">Optional log service.</param>
+    /// <param name="cryptoService">Optional crypto service override.</param>
+    /// <param name="largeFileLimiter">Optional shared large-file limiter.</param>
+    public BackupEngine(
+        AppConfig config,
+        PriorityMonitor priorityMonitor,
+        IAppLogService? logService = null,
+        ICryptoService? cryptoService = null,
+        LargeFileTransferLimiter? largeFileLimiter = null)
     {
         _config = config ?? throw new ArgumentNullException(nameof(config));
-        _priorityMonitor = priorityMonitor ?? throw new ArgumentNullException(nameof(priorityMonitor)); // Initialisation
+        _priorityMonitor = priorityMonitor ?? throw new ArgumentNullException(nameof(priorityMonitor));
         _logService = logService;
         _cryptoService = cryptoService ?? CreateDefaultCryptoService();
         _largeFileLimiter = largeFileLimiter ?? new LargeFileTransferLimiter();
@@ -64,7 +87,7 @@ internal sealed class BackupEngine : IBackupEngine
 
         try
         {
-            // 1. Vérification du logiciel métier
+            // 1. VÃƒÂ©rification du logiciel mÃƒÂ©tier
             try
             {
                 BusinessSoftwareDetector.ValidateNotRunning(_config.BusinessSoftwareProcessName);
@@ -103,7 +126,7 @@ internal sealed class BackupEngine : IBackupEngine
 
             stopwatch = Stopwatch.StartNew();
 
-            // 2. Vérification de l'existence du dossier source
+            // 2. VÃƒÂ©rification de l'existence du dossier source
             if (!Directory.Exists(job.SourcePath))
             {
                 result.Success = false;
@@ -116,7 +139,7 @@ internal sealed class BackupEngine : IBackupEngine
                 return result;
             }
 
-            // 3. Choix de la stratégie de copie (Full/Diff)
+            // 3. Choix de la stratÃƒÂ©gie de copie (Full/Diff)
             IBackupCopyStrategy? strategy = job.Type switch
             {
                 BackupType.Differential => new DifferentialCopyStrategy(),
@@ -281,7 +304,8 @@ internal sealed class BackupEngine : IBackupEngine
             if (control.IsStopRequested)
                 return true;
 
-            // Pause automatique si logiciel métier détecté
+            // Si un logiciel metier est detecte avant de commencer un nouveau fichier,
+            // on met le job en pause automatique jusqu'a sa fermeture.
             if (WaitForBusinessSoftwareToCloseIfRunning(control, job, state, traceId))
                 return true;
 
@@ -291,7 +315,7 @@ internal sealed class BackupEngine : IBackupEngine
             if (control.IsStopRequested)
                 return true;
 
-            //Gestion des fichiers prioritaires
+            // --- GESTION PRIORITE ---
             bool isPriorityFile = (job.PriorityExtensions ?? new List<string>())
                 .Any(ext => sourcePath.EndsWith(ext, StringComparison.OrdinalIgnoreCase));
 
@@ -303,12 +327,16 @@ internal sealed class BackupEngine : IBackupEngine
             {
                 while (_priorityMonitor.IsPriorityWorkActive)
                 {
-                    Task.Delay(50).Wait();
-                    if (control.IsStopRequested) return true;
+                    Thread.Sleep(50);
+                    if (control.IsStopRequested)
+                        return true;
+
                     WaitIfPaused(control, state);
+                    if (control.IsStopRequested)
+                        return true;
                 }
             }
-
+            // -----------------------
             var relativePath = Path.GetRelativePath(sourceRoot, sourcePath);
             var targetPath = Path.Combine(targetRoot, relativePath);
             var fileSize = new FileInfo(sourcePath).Length;
