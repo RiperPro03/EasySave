@@ -23,7 +23,9 @@ public sealed class BackupService : IBackupService
     private readonly HashSet<string> _executingJobIds = new(StringComparer.Ordinal);
     private readonly object _stateLock = new();
     private readonly IAppLogService? _logService;
+
     private readonly LargeFileTransferLimiter _largeFileLimiter = new();
+    private readonly PriorityMonitor _priorityMonitor = new();
 
     /// <summary>
     /// Raised when job state changes during execution.
@@ -430,6 +432,8 @@ public sealed class BackupService : IBackupService
                 && _jobStates.TryGetValue(jobId, out var state)
                 && state.Status is JobStatus.Running or JobStatus.Paused;
         }
+        // Modifiez l'instanciation pour passer _priorityMonitor
+        return new BackupEngine(_config, _priorityMonitor, _logService);
     }
 
     private void WriteInactiveJobLog(BackupJob job)

@@ -25,6 +25,11 @@ public sealed class BackupJobDto
     public DateTime? LastRun { get; set; }
 
     /// <summary>
+    /// Gets or sets the priority extensions for this job.
+    /// </summary>
+    public List<string> PriorityExtensions { get; set; } = new();
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="BackupJobDto"/> class.
     /// </summary>
     /// <remarks>Required by some JSON/XML serializers.</remarks>
@@ -66,6 +71,7 @@ public sealed class BackupJobDto
             targetPath: TargetPath!,
             type: backupType,
             isActive: IsActive,
+            priorityExtensions: PriorityExtensions, // Ajout de la transmission de la liste
             createdAtUtc: CreatedAt,
             lastRunUtc: LastRun
         );
@@ -87,7 +93,8 @@ public sealed class BackupJobDto
             Type = job.Type.ToString(),
             IsActive = job.IsActive,
             CreatedAt = job.CreatedAt,
-            LastRun = job.LastRun
+            LastRun = job.LastRun,
+            PriorityExtensions = job.PriorityExtensions // Ajout de la récupération de la liste
         };
     }
 }

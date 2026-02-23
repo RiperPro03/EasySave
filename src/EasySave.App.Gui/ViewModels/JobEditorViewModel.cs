@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using EasySave.Core.Enums;
@@ -8,9 +9,6 @@ using EasySave.Core.Resources;
 
 namespace EasySave.App.Gui.ViewModels;
 
-/// <summary>
-/// View model for creating or editing a backup job.
-/// </summary>
 public sealed partial class JobEditorViewModel : ViewModelBase
 {
     private const int NameMaxLength = 50;
@@ -33,6 +31,29 @@ public sealed partial class JobEditorViewModel : ViewModelBase
 
     [ObservableProperty]
     private bool _isActive = true;
+
+    private string _priorityExtensionsRaw = string.Empty;
+    public string PriorityExtensionsRaw
+    {
+        get => _priorityExtensionsRaw;
+        set
+        {
+            if (SetProperty(ref _priorityExtensionsRaw, value))
+            {
+                OnPropertyChanged(nameof(CanSave));
+                OnPropertyChanged(nameof(PriorityExtensions));
+            }
+        }
+    }
+
+    /// <summary>
+    /// Transforme la chaîne brute en liste de strings pour le traitement Core.
+    /// Nettoie les espaces et ajoute le point si manquant.
+    /// </summary>
+    public List<string> PriorityExtensions => PriorityExtensionsRaw
+        .Split(new[] { ',', ';', ' ' }, StringSplitOptions.RemoveEmptyEntries)
+        .Select(ext => ext.Trim().StartsWith(".") ? ext.Trim() : "." + ext.Trim())
+        .ToList();
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(HasNameError))]
@@ -109,6 +130,11 @@ public sealed partial class JobEditorViewModel : ViewModelBase
             CreatedAt = job.CreatedAt.ToLocalTime(),
             LastRun = job.LastRun?.ToLocalTime()
         };
+
+        // --- CHARGEMENT DES EXTENSIONS PRIORITAIRES ---
+        vm.PriorityExtensionsRaw = job.PriorityExtensions != null
+            ? string.Join(", ", job.PriorityExtensions)
+            : string.Empty;
 
         vm.ValidateAll();
         return vm;

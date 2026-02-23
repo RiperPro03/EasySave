@@ -52,7 +52,7 @@ internal sealed class JobRepository : IJobRepository
     {
         if (job is null)
             throw new ArgumentNullException(nameof(job));
-        
+
         if (_jobs.Any(existing => existing.Id == job.Id))
             throw new InvalidOperationException($"Job with ID {job.Id} already exists.");
 
@@ -91,7 +91,9 @@ internal sealed class JobRepository : IJobRepository
         if (existingJob is null)
             throw new KeyNotFoundException($"Job with ID {updatedjob.Id} not found.");
 
-        existingJob.UpdateDefinition(updatedjob.Name, updatedjob.SourcePath, updatedjob.TargetPath, updatedjob.Type);
+
+        existingJob.UpdateDefinition(updatedjob.Name, updatedjob.SourcePath, updatedjob.TargetPath, updatedjob.Type, updatedjob.PriorityExtensions);
+
         if (updatedjob.IsActive)
             existingJob.Enable();
         else
@@ -158,6 +160,4 @@ internal sealed class JobRepository : IJobRepository
         var json = JsonSerializer.Serialize(dtos, new JsonSerializerOptions { WriteIndented = true });
         File.WriteAllText(_jobsFilePath, json);
     }
-
-
 }
