@@ -194,8 +194,8 @@ public class BackupServiceTests
 
         public IReadOnlyList<BackupJob> GetAll() => _jobs;
         public BackupJob? GetById(string id) => _jobs.FirstOrDefault(job => job.Id == id);
-        public void Create(string id, string name, string sourcePath, string targetPath, BackupType type, bool isActive = true) { }
-        public void Update(string id, string name, string sourcePath, string targetPath, BackupType type, bool isActive) { }
+        public void Create(string id, string name, string sourcePath, string targetPath, BackupType type, bool isActive = true, List<string>? priorityExtensions = null) { }
+        public void Update(string id, string name, string sourcePath, string targetPath, BackupType type, bool isActive, List<string>? priorityExtensions = null) { }
         public void MarkExecuted(string id, DateTime? nowUtc = null)
         {
             MarkExecutedCalled = true;

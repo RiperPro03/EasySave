@@ -162,7 +162,7 @@ public sealed class JobController
                     break;
             }
 
-            _jobService.Update(id, name, sourcePath, targetPath, type, isActive);
+            _jobService.Update(id, name, sourcePath, targetPath, type, isActive, new List<string>());
             _consoleView.ShowSuccess("Job updated.");
         }
         catch (Exception ex)

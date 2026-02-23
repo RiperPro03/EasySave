@@ -1,5 +1,7 @@
 <Solution>
-  <Project Path="src/CryptoSoft/CryptoSoft.csproj" />
+  <Project Path="src/CryptoSoft/CryptoSoft.csproj">
+    <Build Solution="Debug|*" Project="false" />
+  </Project>
   <Project Path="src/EasySave.App.Console/EasySave.App.Console.csproj" />
   <Project Path="src/EasySave.App.Gui/EasySave.App.Gui.csproj" />
   <Project Path="src/EasySave.App/EasySave.App.csproj" />

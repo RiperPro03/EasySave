@@ -23,7 +23,9 @@ public sealed class BackupService : IBackupService
     private readonly HashSet<string> _executingJobIds = new(StringComparer.Ordinal);
     private readonly object _stateLock = new();
     private readonly IAppLogService? _logService;
+
     private readonly LargeFileTransferLimiter _largeFileLimiter = new();
+    private readonly PriorityMonitor _priorityMonitor = new();
 
     /// <summary>
     /// Raised when job state changes during execution.
@@ -390,7 +392,12 @@ public sealed class BackupService : IBackupService
     /// <returns>A configured backup engine.</returns>
     private IBackupEngine CreateEngine()
     {
-        return new BackupEngine(_config, _logService, cryptoService:null, largeFileLimiter :_largeFileLimiter);
+        return new BackupEngine(
+            _config,
+            _priorityMonitor,
+            _logService,
+            cryptoService: null,
+            largeFileLimiter: _largeFileLimiter);
     }
 
     /// <summary>
