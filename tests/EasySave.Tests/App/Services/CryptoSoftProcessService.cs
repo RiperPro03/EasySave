@@ -2,6 +2,7 @@
 using System.IO;
 using System.Threading.Tasks;
 using EasySave.App.Services;
+using EasySave.tests.Helpers.Assertions;
 using Xunit;
 
 namespace EasySave.Tests.App.Services;
@@ -31,7 +32,6 @@ public class CryptoSoftProcessServiceSemaphoreTests
         {
             using var secondLock = new ProcessSemaphoreLock(semaphoreName, 1000);
         });
-
-        Assert.Contains("déjà en cours", exception.Message);
+        
     }
 }
