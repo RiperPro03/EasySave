@@ -93,4 +93,12 @@ public sealed class BackupJob
     /// <returns>A formatted job summary string.</returns>
     public override string ToString()
         => $"{Name} ({Type}) | {SourcePath} -> {TargetPath} | Active={IsActive}";
+
+ 
+    public List<string> PriorityExtensions { get; private set; } = new();
+
+    public void UpdatePriorities(List<string> extensions)
+    {
+        PriorityExtensions = extensions ?? new List<string>();
+    }
 }

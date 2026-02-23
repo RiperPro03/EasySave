@@ -26,15 +26,18 @@ internal sealed class BackupEngine : IBackupEngine
     /// </summary>
     public event EventHandler<JobStateChangedEventArgs>? StateChanged;
 
+    private readonly PriorityMonitor _priorityMonitor;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="BackupEngine"/> class.
     /// </summary>
     /// <param name="logDirectory">Optional log directory; when null, logging is disabled.</param>
     /// <param name="logFormat">Log serialization format.</param>
     /// <param name="logService">Optional log service.</param>
-    public BackupEngine(AppConfig config, IAppLogService? logService = null, ICryptoService? cryptoService = null)
+    public BackupEngine(AppConfig config, PriorityMonitor priorityMonitor, IAppLogService? logService = null, ICryptoService? cryptoService = null)
     {
         _config = config ?? throw new ArgumentNullException(nameof(config));
+        _priorityMonitor = priorityMonitor ?? throw new ArgumentNullException(nameof(priorityMonitor)); // Initialisation
         _logService = logService;
         _cryptoService = cryptoService ?? CreateDefaultCryptoService();
     }
@@ -49,11 +52,9 @@ internal sealed class BackupEngine : IBackupEngine
     {
         if (job is null)
             throw new ArgumentNullException(nameof(job));
-            
+
         var traceId = Guid.NewGuid().ToString("N");
-        // Resultat cumule pour l'appelant (CLI/GUI/tests).
         var result = new BackupResultDto();
-        // Etat initial publie des le debut de l'execution.
         var state = CreateInitialState(job);
         Stopwatch? stopwatch = null;
         var control = new JobExecutionControl(state);
@@ -61,14 +62,13 @@ internal sealed class BackupEngine : IBackupEngine
 
         try
         {
+            // 1. Vérification du logiciel métier
             try
             {
-                // Check that the configured business software is not currently running before starting the backup.
                 BusinessSoftwareDetector.ValidateNotRunning(_config.BusinessSoftwareProcessName);
             }
             catch (InvalidOperationException ex)
             {
-                // if the business software is running, create an explicit failure result for the job.
                 result.Success = false;
                 result.Message = ex.Message;
                 result.Duration = TimeSpan.Zero;
@@ -99,12 +99,11 @@ internal sealed class BackupEngine : IBackupEngine
                 return result;
             }
 
-            // Chronometre la duree totale de la sauvegarde.
             stopwatch = Stopwatch.StartNew();
 
+            // 2. Vérification de l'existence du dossier source
             if (!Directory.Exists(job.SourcePath))
             {
-                // Dossier source manquant: on termine avec une erreur explicite.
                 result.Success = false;
                 result.Message = string.Format(Strings.Error_SourceFolderMissing, job.SourcePath);
                 result.Errors.Add(result.Message);
@@ -115,7 +114,7 @@ internal sealed class BackupEngine : IBackupEngine
                 return result;
             }
 
-            // Choisit la strategie de copie selon le type de sauvegarde.
+            // 3. Choix de la stratégie de copie (Full/Diff)
             IBackupCopyStrategy? strategy = job.Type switch
             {
                 BackupType.Differential => new DifferentialCopyStrategy(),
@@ -125,7 +124,6 @@ internal sealed class BackupEngine : IBackupEngine
 
             if (strategy is null)
             {
-                // Type de sauvegarde inconnu: on ne sait pas copier correctement.
                 result.Success = false;
                 result.Message = string.Format(Strings.Error_BackupTypeNotSupported, job.Type);
                 result.Errors.Add(result.Message);
@@ -136,14 +134,35 @@ internal sealed class BackupEngine : IBackupEngine
                 return result;
             }
 
-            // Charge la liste des fichiers pour calculer les totaux avant execution.
-            var files = Directory.EnumerateFiles(job.SourcePath, "*", SearchOption.AllDirectories).ToList();
-            var totalSizeBytes = files.Sum(file => new FileInfo(file).Length);
-            InitializeTotals(control, state, files.Count, totalSizeBytes);
+            // --- LOGIQUE DE PRIORISATION ABSOLUE ---
+
+            // A. On récupère TOUS les fichiers de tous les sous-dossiers d'un coup
+            var allFiles = Directory.EnumerateFiles(job.SourcePath, "*", SearchOption.AllDirectories).ToList();
+
+            // B. On prépare les extensions pour qu'elles soient toujours comparables (.pdf)
+            var priorityExts = (job.PriorityExtensions ?? new List<string>())
+                .Select(ext => ext.StartsWith(".") ? ext.ToLower() : "." + ext.ToLower())
+                .ToList();
+
+            // C. LE TRI : On place tous les fichiers prioritaires en haut de la liste
+            var sortedFiles = allFiles
+                .OrderByDescending(f => {
+                    var extension = Path.GetExtension(f).ToLower();
+                    return priorityExts.Contains(extension);
+                })
+                .ThenBy(f => f)
+                .ToList();
+
+            // D. Initialisation des compteurs avec la liste triée
+            var totalSizeBytes = sortedFiles.Sum(file => new FileInfo(file).Length);
+            InitializeTotals(control, state, sortedFiles.Count, totalSizeBytes);
             PublishState(state);
 
-            // Execute la copie fichier par fichier.
-            var cancelled = ExecuteBackup(control, job, files, job.SourcePath, job.TargetPath, strategy, result, state, traceId);
+            // E. Lancement de la copie : ExecuteBackup traitera les fichiers dans l'ordre de sortedFiles
+            var cancelled = ExecuteBackup(control, job, sortedFiles, job.SourcePath, job.TargetPath, strategy, result, state, traceId);
+
+            // ----------------------------------------
+
             if (cancelled)
             {
                 result.Success = false;
@@ -156,16 +175,13 @@ internal sealed class BackupEngine : IBackupEngine
                 return result;
             }
 
-            // Le succes est determine par l'absence d'erreurs.
             result.Success = result.ErrorCount == 0;
             result.Message = result.Success ? Strings.Backup_Success : Strings.Info_BackupCompletedWithErrors;
             result.Duration = stopwatch?.Elapsed ?? TimeSpan.Zero;
-            
-            // Statut final dependant du succes global.
+
             var finalStatus = result.Success ? JobStatus.Completed : JobStatus.Error;
-            
-            // Concatene les erreurs pour l'etat final (utile pour la GUI).
             var finalError = result.Success ? null : string.Join(" | ", result.Errors);
+
             WriteSummaryLog(job, result, traceId);
             UpdateTerminalState(control, state, finalStatus, finalError);
             return result;
@@ -269,23 +285,38 @@ internal sealed class BackupEngine : IBackupEngine
             WaitIfPaused(control, state);
             if (control.IsStopRequested)
                 return true;
-            // Construit le chemin cible en preservant la structure relative.
+
+            // --- GESTION PRIORITÉ ---
+            bool isPriorityFile = (job.PriorityExtensions ?? new List<string>())
+                .Any(ext => sourcePath.EndsWith(ext, StringComparison.OrdinalIgnoreCase));
+
+            if (isPriorityFile)
+            {
+                _priorityMonitor.EnterPriorityZone();
+            }
+            else
+            {
+                while (_priorityMonitor.IsPriorityWorkActive)
+                {
+                    Thread.Sleep(50);
+                    if (control.IsStopRequested) return true;
+                    WaitIfPaused(control, state);
+                }
+            }
+            // -----------------------
+
             var relativePath = Path.GetRelativePath(sourceRoot, sourcePath);
             var targetPath = Path.Combine(targetRoot, relativePath);
             var fileSize = new FileInfo(sourcePath).Length;
             var transferStopwatch = new Stopwatch();
 
-            // Publie l'etat du fichier courant sans incrementer les compteurs.
             UpdateProgressState(control, state, sourcePath, targetPath, fileSize, incrementProcessed: false);
-
-            // Compte le fichier comme traite (meme s'il est saute ensuite).
             result.FilesProcessed++;
 
             try
             {
                 if (!strategy.ShouldCopy(sourcePath, targetPath))
                 {
-                    // Cas "skip": on journalise et on avance.
                     result.SkippedCount++;
                     WriteLogEntry(
                         job,
@@ -300,7 +331,6 @@ internal sealed class BackupEngine : IBackupEngine
                     continue;
                 }
 
-                // Cree le dossier cible si necessaire.
                 EnsureTargetDirectory(job, sourcePath, targetPath, traceId);
                 transferStopwatch.Start();
                 CopyFile(sourcePath, targetPath);
@@ -381,10 +411,10 @@ internal sealed class BackupEngine : IBackupEngine
                                 InstanceLock = null
                             };
                             var logEntry = LogEntryBuilder.Create(
-                                  eventName: "file.encrypted",
-                                  category: LogEventCategory.File,
-                                  action: LogEventAction.Unknown,
-                                  message: message)
+                                    eventName: "file.encrypted",
+                                    category: LogEventCategory.File,
+                                    action: LogEventAction.Unknown,
+                                    message: message)
                               .WithLevel(level)
                               .WithOutcome(outcome)
                               .WithFile(
@@ -440,11 +470,9 @@ internal sealed class BackupEngine : IBackupEngine
                 if (transferStopwatch.IsRunning)
                     transferStopwatch.Stop();
 
-                // Convertit en UNC pour des logs coherents.
                 var sourceUnc = UncResolver.ResolveToUncForLog(sourcePath);
                 var targetUnc = UncResolver.ResolveToUncForLog(targetPath);
 
-                // Temps de transfert negatif pour signaler un echec dans les logs.
                 var transferMs = -transferStopwatch.Elapsed.TotalMilliseconds;
                 if (transferMs >= 0)
                     transferMs = -1;
@@ -459,14 +487,21 @@ internal sealed class BackupEngine : IBackupEngine
                     LogEventOutcome.Failure,
                     traceId,
                     ex.Message);
-                // Stocke l'erreur detaillee pour le resume final.
                 result.Errors.Add(
                     $"{sourceUnc} -> {targetUnc}: {ex.Message}; SizeBytes={fileSize}; TransferMs={transferMs:0.###}");
                 result.ErrorCount++;
             }
+            finally
+            {
+                // --- LIBÉRATION PRIORITÉ ---
+                if (isPriorityFile)
+                {
+                    _priorityMonitor.ExitPriorityZone();
+                }
+                // ---------------------------
 
-            // Publie l'etat apres traitement du fichier.
-            UpdateProgressState(control, state, sourcePath, targetPath, fileSize, incrementProcessed: true);
+                UpdateProgressState(control, state, sourcePath, targetPath, fileSize, incrementProcessed: true);
+            }
 
             if (!string.IsNullOrWhiteSpace(_config.BusinessSoftwareProcessName)
                 && BusinessSoftwareDetector.IsRunning(_config.BusinessSoftwareProcessName))
@@ -868,7 +903,7 @@ internal sealed class BackupEngine : IBackupEngine
                 return false;
 
             control.State.Status = JobStatus.Error;
-            control.State.ErrorMessage = Strings.Error_BackupStoppedByUser;
+            control.State.ErrorMessage = Strings.Error_BackupStoppedByUser; 
             control.State.LastActionTimestampUtc = DateTime.UtcNow;
             PublishState(control.State);
             return true;
