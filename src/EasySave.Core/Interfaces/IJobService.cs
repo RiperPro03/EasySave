@@ -30,7 +30,8 @@ public interface IJobService
     /// <param name="targetPath">The target path.</param>
     /// <param name="type">The backup type.</param>
     /// <param name="isActive">Whether the job is active.</param>
-    void Create(string id, string name, string sourcePath, string targetPath, BackupType type, bool isActive = true);
+    /// <param name="priorityExtensions">The priority extensions list.</param>
+    void Create(string id, string name, string sourcePath, string targetPath, BackupType type, bool isActive = true, List<string>? priorityExtensions = null);
 
     /// <summary>
     /// Updates an existing job definition.
@@ -41,7 +42,8 @@ public interface IJobService
     /// <param name="targetPath">The target path.</param>
     /// <param name="type">The backup type.</param>
     /// <param name="isActive">Whether the job is active.</param>
-    void Update(string id, string name, string sourcePath, string targetPath, BackupType type, bool isActive);
+    /// <param name="priorityExtensions">The new priority extensions list.</param>
+    void Update(string id, string name, string sourcePath, string targetPath, BackupType type, bool isActive, List<string> priorityExtensions);
 
     /// <summary>
     /// Marks a job as executed at a given time.

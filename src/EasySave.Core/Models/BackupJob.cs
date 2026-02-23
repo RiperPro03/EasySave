@@ -18,6 +18,9 @@ public sealed class BackupJob
     public DateTime CreatedAt { get; }
     public DateTime? LastRun { get; private set; }
 
+    // Ajout de la propriété pour stocker les extensions
+    public List<string> PriorityExtensions { get; private set; } = new();
+
     /// <summary>
     /// Initializes a new instance of the <see cref="BackupJob"/> class.
     /// </summary>
@@ -27,11 +30,9 @@ public sealed class BackupJob
     /// <param name="targetPath">The target path.</param>
     /// <param name="type">The backup type.</param>
     /// <param name="isActive">Whether the job is active.</param>
+    /// <param name="priorityExtensions">The priority extensions list.</param>
     /// <param name="createdAtUtc">Optional creation time in UTC.</param>
     /// <param name="lastRunUtc">Optional last run time in UTC.</param>
-    /// <exception cref="ArgumentException">
-    /// Thrown when any required string is null, empty, or whitespace.
-    /// </exception>
     public BackupJob(
         string id,
         string name,
@@ -39,6 +40,7 @@ public sealed class BackupJob
         string targetPath,
         BackupType type,
         bool isActive = true,
+        List<string>? priorityExtensions = null, // Ajout du paramètre ici
         DateTime? createdAtUtc = null,
         DateTime? lastRunUtc = null)
     {
@@ -48,8 +50,11 @@ public sealed class BackupJob
         TargetPath = Guard.NotNullOrWhiteSpace(targetPath, nameof(targetPath));
 
         Type = type;
-
         IsActive = isActive;
+
+        // Initialisation de la priorité
+        PriorityExtensions = priorityExtensions ?? new List<string>();
+
         // Normalize timestamps to UTC for consistent persistence.
         CreatedAt = (createdAtUtc ?? DateTime.UtcNow).ToUniversalTime();
         LastRun = lastRunUtc?.ToUniversalTime();
@@ -79,14 +84,16 @@ public sealed class BackupJob
     /// <param name="sourcePath">The source path.</param>
     /// <param name="targetPath">The target path.</param>
     /// <param name="type">The backup type.</param>
-    public void UpdateDefinition(string name, string sourcePath, string targetPath, BackupType type)
+    /// <param name="priorityExtensions">The new priority extensions.</param>
+    public void UpdateDefinition(string name, string sourcePath, string targetPath, BackupType type, List<string> priorityExtensions)
     {
         Name = Guard.NotNullOrWhiteSpace(name, nameof(name));
         SourcePath = Guard.NotNullOrWhiteSpace(sourcePath, nameof(sourcePath));
         TargetPath = Guard.NotNullOrWhiteSpace(targetPath, nameof(targetPath));
         Type = type;
+        PriorityExtensions = priorityExtensions ?? new List<string>();
     }
-    
+
     /// <summary>
     /// Returns a human-readable representation of the job.
     /// </summary>
@@ -94,11 +101,5 @@ public sealed class BackupJob
     public override string ToString()
         => $"{Name} ({Type}) | {SourcePath} -> {TargetPath} | Active={IsActive}";
 
- 
-    public List<string> PriorityExtensions { get; private set; } = new();
-
-    public void UpdatePriorities(List<string> extensions)
-    {
-        PriorityExtensions = extensions ?? new List<string>();
-    }
+    // Suppression du bloc redondant en bas pour éviter l'erreur CS0102
 }

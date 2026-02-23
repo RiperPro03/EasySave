@@ -136,15 +136,12 @@ internal sealed class BackupEngine : IBackupEngine
 
             // --- LOGIQUE DE PRIORISATION ABSOLUE ---
 
-            // A. On récupère TOUS les fichiers de tous les sous-dossiers d'un coup
             var allFiles = Directory.EnumerateFiles(job.SourcePath, "*", SearchOption.AllDirectories).ToList();
 
-            // B. On prépare les extensions pour qu'elles soient toujours comparables (.pdf)
             var priorityExts = (job.PriorityExtensions ?? new List<string>())
                 .Select(ext => ext.StartsWith(".") ? ext.ToLower() : "." + ext.ToLower())
                 .ToList();
 
-            // C. LE TRI : On place tous les fichiers prioritaires en haut de la liste
             var sortedFiles = allFiles
                 .OrderByDescending(f => {
                     var extension = Path.GetExtension(f).ToLower();
@@ -153,15 +150,11 @@ internal sealed class BackupEngine : IBackupEngine
                 .ThenBy(f => f)
                 .ToList();
 
-            // D. Initialisation des compteurs avec la liste triée
             var totalSizeBytes = sortedFiles.Sum(file => new FileInfo(file).Length);
             InitializeTotals(control, state, sortedFiles.Count, totalSizeBytes);
             PublishState(state);
 
-            // E. Lancement de la copie : ExecuteBackup traitera les fichiers dans l'ordre de sortedFiles
             var cancelled = ExecuteBackup(control, job, sortedFiles, job.SourcePath, job.TargetPath, strategy, result, state, traceId);
-
-            // ----------------------------------------
 
             if (cancelled)
             {
@@ -493,12 +486,10 @@ internal sealed class BackupEngine : IBackupEngine
             }
             finally
             {
-                // --- LIBÉRATION PRIORITÉ ---
                 if (isPriorityFile)
                 {
                     _priorityMonitor.ExitPriorityZone();
                 }
-                // ---------------------------
 
                 UpdateProgressState(control, state, sourcePath, targetPath, fileSize, incrementProcessed: true);
             }

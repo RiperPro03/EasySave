@@ -41,9 +41,19 @@ public sealed partial class JobEditorViewModel : ViewModelBase
             if (SetProperty(ref _priorityExtensionsRaw, value))
             {
                 OnPropertyChanged(nameof(CanSave));
+                OnPropertyChanged(nameof(PriorityExtensions));
             }
         }
     }
+
+    /// <summary>
+    /// Transforme la chaîne brute en liste de strings pour le traitement Core.
+    /// Nettoie les espaces et ajoute le point si manquant.
+    /// </summary>
+    public List<string> PriorityExtensions => PriorityExtensionsRaw
+        .Split(new[] { ',', ';', ' ' }, StringSplitOptions.RemoveEmptyEntries)
+        .Select(ext => ext.Trim().StartsWith(".") ? ext.Trim() : "." + ext.Trim())
+        .ToList();
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(HasNameError))]
