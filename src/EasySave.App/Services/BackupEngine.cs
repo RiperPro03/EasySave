@@ -341,6 +341,7 @@ internal sealed class BackupEngine : IBackupEngine
             var targetPath = Path.Combine(targetRoot, relativePath);
             var fileSize = new FileInfo(sourcePath).Length;
             var transferStopwatch = new Stopwatch();
+            var shouldIncrementStateProgress = true;
 
             UpdateProgressState(control, state, sourcePath, targetPath, fileSize, incrementProcessed: false);
             result.FilesProcessed++;
@@ -359,7 +360,6 @@ internal sealed class BackupEngine : IBackupEngine
                         LogEventAction.Skip,
                         LogEventOutcome.Success,
                         traceId);
-                    UpdateProgressState(control, state, sourcePath, targetPath, fileSize, incrementProcessed: true);
                     continue;
                 }
 
@@ -511,6 +511,7 @@ internal sealed class BackupEngine : IBackupEngine
 
                 TryDeletePartialFile(targetPath);
                 result.FilesProcessed = Math.Max(0, result.FilesProcessed - 1);
+                shouldIncrementStateProgress = false;
                 return true;
             }
             catch (Exception ex)
@@ -546,7 +547,10 @@ internal sealed class BackupEngine : IBackupEngine
                     _priorityMonitor.ExitPriorityZone();
                 }
 
-                UpdateProgressState(control, state, sourcePath, targetPath, fileSize, incrementProcessed: true);
+                if (shouldIncrementStateProgress)
+                {
+                    UpdateProgressState(control, state, sourcePath, targetPath, fileSize, incrementProcessed: true);
+                }
             }
 
             // Meme comportement qu'une pause utilisateur: on finit le fichier en cours,
