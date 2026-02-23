@@ -40,6 +40,24 @@ namespace EasySave.App.Gui.ViewModels
             }
         }
 
+        private string _searchIdText = string.Empty;
+
+        /// <summary>
+        /// Gets or sets the ID search text (Job ID or Trace ID). 
+        /// Updates and reapplies filters to <see cref="Logs"/>.
+        /// </summary>
+        public string SearchIdText
+        {
+            get => _searchIdText;
+            set
+            {
+                if (SetProperty(ref _searchIdText, value))
+                {
+                    ApplyFilter();
+                }
+            }
+        }
+
         public LogsViewModel() : this(new LogReaderService()) { }
 
         /// <summary>
@@ -54,10 +72,12 @@ namespace EasySave.App.Gui.ViewModels
         }
 
         /// <summary>
-        /// Reloads log data from disk and resets the active event-type filter to "Tous".
+        /// Reloads log data from disk and resets the active filters.
         /// </summary>
         public void RefreshLogs()
         {
+            _searchIdText = string.Empty;
+            OnPropertyChanged(nameof(SearchIdText));
             SelectedEventType = "Tous";
             LoadLogs();
         }
@@ -71,7 +91,6 @@ namespace EasySave.App.Gui.ViewModels
             // Récupération des données brutes via le service
             var rawEntries = _logReader.ReadAllEntries();
 
-            
             _allLogsCache = rawEntries
                 .OrderByDescending(entry => entry.TimestampUtc)
                 .Select(entry => new LogEntryItem(entry))
@@ -90,15 +109,19 @@ namespace EasySave.App.Gui.ViewModels
                 EventTypes.Add("Tous");
             }
 
-            for (int i = EventTypes.Count - 1; i >= 1; i--)
+            // CORRECTION ERREUR INDEX : Utilisation d'une liste temporaire
+            var typesToRemove = EventTypes.Where(t => t != "Tous" && !namesFound.Contains(t)).ToList();
+            foreach (var type in typesToRemove)
             {
-                if (!namesFound.Contains(EventTypes[i]))
-                    EventTypes.RemoveAt(i);
+                EventTypes.Remove(type);
             }
 
-            foreach (var name in namesFound.Where(name => !EventTypes.Contains(name)))
+            foreach (var name in namesFound)
             {
-                EventTypes.Add(name);
+                if (name != null && !EventTypes.Contains(name))
+                {
+                    EventTypes.Add(name);
+                }
             }
 
             OnPropertyChanged(nameof(SelectedEventType));
@@ -106,17 +129,33 @@ namespace EasySave.App.Gui.ViewModels
         }
 
         /// <summary>
-        /// Applies the current event-type filter to the cached entries
-        /// and refreshes the observable collection bound to the UI.
+        /// Applies the current event-type filter and ID search to the cached entries.
         /// </summary>
         private void ApplyFilter()
         {
             Logs.Clear();
 
-            // Si "Tous" est sélectionné, on prend tout, sinon on filtre par nom d'événement
-            var filtered = (_selectedEventType == "Tous" || string.IsNullOrEmpty(_selectedEventType))
-                ? _allLogsCache
-                : _allLogsCache.Where(l => l.Entry.Event?.Name == _selectedEventType);
+            var filtered = _allLogsCache.AsEnumerable();
+
+            // Filtre par Type d'événement
+            if (!string.IsNullOrEmpty(_selectedEventType) && _selectedEventType != "Tous")
+            {
+                filtered = filtered.Where(l => l.Entry.Event?.Name == _selectedEventType);
+            }
+
+            // Filtre par ID (Vérifie si Job.Id ou Trace.Id COMMENCE par la saisie)
+            if (!string.IsNullOrWhiteSpace(_searchIdText))
+            {
+                filtered = filtered.Where(l =>
+                {
+                    var jobId = l.Entry.Job?.Id;
+                    var traceId = l.Entry.Trace?.Id;
+
+                    // Utilisation de StartsWith pour chercher uniquement le début de la chaîne
+                    return (jobId != null && jobId.StartsWith(_searchIdText, StringComparison.OrdinalIgnoreCase)) ||
+                           (traceId != null && traceId.StartsWith(_searchIdText, StringComparison.OrdinalIgnoreCase));
+                });
+            }
 
             foreach (var log in filtered)
             {

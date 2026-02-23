@@ -16,18 +16,33 @@
                 BorderThickness="1"
                 CornerRadius="14"
                 Padding="16,10">
-			<StackPanel Orientation="Horizontal" Spacing="15">
-				<TextBlock Text="Filtrer par opération :"
-                           VerticalAlignment="Center"
-                           Foreground="#B0FFFFFF"
-                           FontSize="13"/>
 
-				<ComboBox ItemsSource="{Binding EventTypes}"
-                          SelectedItem="{Binding SelectedEventType}"
-                          Width="220"
-                          Background="#12FFFFFF"
-                          BorderBrush="#24FFFFFF"
-                          CornerRadius="8"/>
+			<StackPanel Orientation="Horizontal" Spacing="20">
+				<StackPanel Orientation="Horizontal" Spacing="8">
+					<TextBlock Text="Opération :"
+                               VerticalAlignment="Center"
+                               Foreground="#B0FFFFFF"
+                               FontSize="13"/>
+					<ComboBox ItemsSource="{Binding EventTypes}"
+                              SelectedItem="{Binding SelectedEventType}"
+                              Width="180"
+                              Background="#12FFFFFF"
+                              BorderBrush="#24FFFFFF"
+                              CornerRadius="8"/>
+				</StackPanel>
+
+				<StackPanel Orientation="Horizontal" Spacing="8">
+					<TextBlock Text="ID :"
+                               VerticalAlignment="Center"
+                               Foreground="#B0FFFFFF"
+                               FontSize="13"/>
+					<TextBox Width="220"
+                             Text="{Binding SearchIdText, Mode=TwoWay}"
+                             Watermark="Rechercher Job ou Trace ID..."
+                             Background="#12FFFFFF"
+                             BorderBrush="#24FFFFFF"
+                             CornerRadius="8"/>
+				</StackPanel>
 
 				<Button Command="{Binding RefreshLogs}"
                         Background="Transparent"
