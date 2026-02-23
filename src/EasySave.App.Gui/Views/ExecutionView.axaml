@@ -94,15 +94,68 @@
             <Setter Property="Background" Value="#0066DD"/>
         </Style>
 
+        <Style Selector="Button.exec-pause">
+            <Setter Property="Padding" Value="14,8"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Background" Value="#FF9F0A"/>
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+
+        <Style Selector="Button.exec-pause:pointerover">
+            <Setter Property="Background" Value="#D88700"/>
+        </Style>
+
+        <Style Selector="Button.exec-pause:disabled">
+            <Setter Property="Background" Value="#665A2C"/>
+            <Setter Property="Foreground" Value="#80FFFFFF"/>
+            <Setter Property="Opacity" Value="0.7"/>
+        </Style>
+
+        <Style Selector="Button.exec-stop">
+            <Setter Property="Padding" Value="14,8"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Background" Value="#FF3B30"/>
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+
+        <Style Selector="Button.exec-stop:pointerover">
+            <Setter Property="Background" Value="#D92C23"/>
+        </Style>
+
+        <Style Selector="Button.exec-stop:disabled">
+            <Setter Property="Background" Value="#6E2A28"/>
+            <Setter Property="Foreground" Value="#80FFFFFF"/>
+            <Setter Property="Opacity" Value="0.7"/>
+        </Style>
+
     </UserControl.Styles>
 
     <Grid RowDefinitions="Auto,*,Auto">
         <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,16">
-            <Button Grid.Column="1"
-                    Classes="exec-runall"
-                    Content="{Binding Source={StaticResource Loc}, Path=[Gui_Execution_RunAll]}"
-                    VerticalAlignment="Center"
-                    Command="{Binding RunAllCommand}"/>
+            <StackPanel Grid.Column="1"
+                        Orientation="Horizontal"
+                        Spacing="8"
+                        VerticalAlignment="Center">
+                <Button Classes="exec-runall"
+                        Content="Play all"
+                        Command="{Binding RunAllCommand}"/>
+                <Button Classes="exec-pause"
+                        Content="Pause all"
+                        IsEnabled="{Binding CanPauseAll}"
+                        Command="{Binding PauseAllCommand}"/>
+                <Button Classes="exec-stop"
+                        Content="Stop all"
+                        IsEnabled="{Binding CanStopAll}"
+                        Command="{Binding StopAllCommand}"/>
+            </StackPanel>
         </Grid>
 
         <Border Grid.Row="1"
@@ -217,7 +270,7 @@
                                                    Margin="0,0,12,4">
                                             <TextBlock.Text>
                                                 <MultiBinding Converter="{StaticResource L10nFormatConverter}">
-                                                    <Binding Path="SizeProcessedBytes"/>
+                                                    <Binding Path="SizeProcessedMbLabel"/>
                                                     <Binding Path="[Gui_Execution_BytesDoneFormat]" Source="{StaticResource Loc}"/>
                                                 </MultiBinding>
                                             </TextBlock.Text>
@@ -227,7 +280,7 @@
                                                    Margin="0,0,12,4">
                                             <TextBlock.Text>
                                                 <MultiBinding Converter="{StaticResource L10nFormatConverter}">
-                                                    <Binding Path="TotalSizeBytes"/>
+                                                    <Binding Path="TotalSizeMbLabel"/>
                                                     <Binding Path="[Gui_Execution_BytesTotalFormat]" Source="{StaticResource Loc}"/>
                                                 </MultiBinding>
                                             </TextBlock.Text>
@@ -236,7 +289,7 @@
                                                    Foreground="#80FFFFFF">
                                             <TextBlock.Text>
                                                 <MultiBinding Converter="{StaticResource L10nFormatConverter}">
-                                                    <Binding Path="RemainingSizeBytes"/>
+                                                    <Binding Path="RemainingSizeMbLabel"/>
                                                     <Binding Path="[Gui_Execution_BytesRemainingFormat]" Source="{StaticResource Loc}"/>
                                                 </MultiBinding>
                                             </TextBlock.Text>
@@ -292,11 +345,22 @@
                                 </TextBlock>
 
                                 <StackPanel Grid.Row="0" Grid.RowSpan="4" Grid.Column="1"
-                                            VerticalAlignment="Center">
+                                            VerticalAlignment="Center"
+                                            Spacing="8">
                                     <Button Classes="exec-play"
-                                            Content="{Binding PlayPauseLabel}"
-                                            IsEnabled="{Binding CanStart}"
-                                            Command="{Binding $parent[ItemsControl].DataContext.TogglePlayPauseCommand}"
+                                            Content="{Binding Source={StaticResource Loc}, Path=[Gui_Execution_Play]}"
+                                            IsEnabled="{Binding CanPlay}"
+                                            Command="{Binding $parent[ItemsControl].DataContext.PlayCommand}"
+                                            CommandParameter="{Binding}"/>
+                                    <Button Classes="exec-pause"
+                                            Content="{Binding Source={StaticResource Loc}, Path=[Gui_Execution_Pause]}"
+                                            IsEnabled="{Binding CanPause}"
+                                            Command="{Binding $parent[ItemsControl].DataContext.PauseCommand}"
+                                            CommandParameter="{Binding}"/>
+                                    <Button Classes="exec-stop"
+                                            Content="Stop"
+                                            IsEnabled="{Binding CanStop}"
+                                            Command="{Binding $parent[ItemsControl].DataContext.StopCommand}"
                                             CommandParameter="{Binding}"/>
                                 </StackPanel>
 

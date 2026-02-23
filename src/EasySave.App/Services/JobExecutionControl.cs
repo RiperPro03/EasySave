@@ -19,6 +19,7 @@ internal sealed class JobExecutionControl : IDisposable
 
     internal JobStateDto State { get; }
     internal object Sync => _sync;
+    internal CancellationToken StopToken => _cancellation.Token;
     internal bool IsPaused => !_pauseGate.IsSet;
     internal bool IsStopRequested => _cancellation.IsCancellationRequested;
 

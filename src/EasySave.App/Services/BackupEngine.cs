@@ -12,7 +12,7 @@ using EasySave.Core.Resources;
 namespace EasySave.App.Services;
 
 /// <summary>
-/// Executes backup jobs and produces state updates and logs.
+/// Executes backup jobs, manages runtime control state (pause/resume/stop), and produces state updates and logs.
 /// </summary>
 internal sealed class BackupEngine : IBackupEngine
 {
@@ -20,6 +20,7 @@ internal sealed class BackupEngine : IBackupEngine
     private readonly AppConfig _config;
     private readonly ICryptoService _cryptoService;
     private readonly ConcurrentDictionary<string, JobExecutionControl> _jobControls = new(StringComparer.Ordinal);
+    private readonly LargeFileTransferLimiter _largeFileLimiter;
 
     /// <summary>
     /// Raised when job state changes during execution. (update state.json)
@@ -34,16 +35,21 @@ internal sealed class BackupEngine : IBackupEngine
     /// <param name="logDirectory">Optional log directory; when null, logging is disabled.</param>
     /// <param name="logFormat">Log serialization format.</param>
     /// <param name="logService">Optional log service.</param>
+<<<<<<< merge-with-main
+    public BackupEngine(AppConfig config, IAppLogService? logService = null, ICryptoService? cryptoService = null, LargeFileTransferLimiter? largeFileLimiter = null)
+=======
     public BackupEngine(AppConfig config, PriorityMonitor priorityMonitor, IAppLogService? logService = null, ICryptoService? cryptoService = null)
+>>>>>>> 138-feat-gestion-des-fichiers-prioritaires
     {
         _config = config ?? throw new ArgumentNullException(nameof(config));
         _priorityMonitor = priorityMonitor ?? throw new ArgumentNullException(nameof(priorityMonitor)); // Initialisation
         _logService = logService;
         _cryptoService = cryptoService ?? CreateDefaultCryptoService();
+        _largeFileLimiter = largeFileLimiter ?? new LargeFileTransferLimiter();
     }
 
     /// <summary>
-    /// Executes a backup job and returns the result.
+    /// Executes a backup job synchronously and supports runtime pause/resume/stop through a per-job execution control.
     /// </summary>
     /// <param name="job">The job to execute.</param>
     /// <returns>The execution result.</returns>
@@ -81,7 +87,7 @@ internal sealed class BackupEngine : IBackupEngine
                             category: LogEventCategory.Job,
                             action: LogEventAction.Skip,
                             message: ex.Message)
-                        .WithLevel(LogLevel.Warning)
+                        .WithLevel(LogLevel.Notice)
                         .WithOutcome(LogEventOutcome.Failure)
                         .WithJob(
                             id: job.Id,
@@ -199,7 +205,7 @@ internal sealed class BackupEngine : IBackupEngine
     }
 
     /// <summary>
-    /// Requests a pause for a running job.
+    /// Requests a pause for a running job. The current file is allowed to finish before the loop blocks.
     /// </summary>
     /// <param name="jobId">The job identifier.</param>
     /// <returns><c>true</c> when the pause was requested.</returns>
@@ -232,7 +238,7 @@ internal sealed class BackupEngine : IBackupEngine
     }
 
     /// <summary>
-    /// Requests a stop for a running job.
+    /// Requests a stop for a running job. The stop token is observed between files and during chunked copy.
     /// </summary>
     /// <param name="jobId">The job identifier.</param>
     /// <returns><c>true</c> when the stop was requested.</returns>
@@ -249,7 +255,7 @@ internal sealed class BackupEngine : IBackupEngine
     }
 
     /// <summary>
-    /// Runs the copy loop for all files and updates state and results.
+    /// Runs the per-file copy loop, updates live state, and reacts to pause/resume/stop requests.
     /// </summary>
     /// <param name="job">The job being executed.</param>
     /// <param name="files">The list of files to process.</param>
@@ -279,6 +285,20 @@ internal sealed class BackupEngine : IBackupEngine
             if (control.IsStopRequested)
                 return true;
 
+<<<<<<< merge-with-main
+            // Si un logiciel metier est detecte avant de commencer un nouveau fichier,
+            // on met le job en pause automatique jusqu'a sa fermeture.
+            if (WaitForBusinessSoftwareToCloseIfRunning(control, job, state, traceId))
+                return true;
+
+            // Une pause manuelle peut arriver pendant la pause automatique.
+            // On revalide ici avant de lancer la copie du fichier suivant.
+            WaitIfPaused(control, state);
+            if (control.IsStopRequested)
+                return true;
+
+            // Construit le chemin cible en preservant la structure relative.
+=======
             // --- GESTION PRIORITÉ ---
             bool isPriorityFile = (job.PriorityExtensions ?? new List<string>())
                 .Any(ext => sourcePath.EndsWith(ext, StringComparison.OrdinalIgnoreCase));
@@ -298,6 +318,7 @@ internal sealed class BackupEngine : IBackupEngine
             }
             // -----------------------
 
+>>>>>>> 138-feat-gestion-des-fichiers-prioritaires
             var relativePath = Path.GetRelativePath(sourceRoot, sourcePath);
             var targetPath = Path.Combine(targetRoot, relativePath);
             var fileSize = new FileInfo(sourcePath).Length;
@@ -325,9 +346,16 @@ internal sealed class BackupEngine : IBackupEngine
                 }
 
                 EnsureTargetDirectory(job, sourcePath, targetPath, traceId);
-                transferStopwatch.Start();
-                CopyFile(sourcePath, targetPath);
-                transferStopwatch.Stop();
+
+                // Convert threshold from KB to bytes
+                var thresholdBytes = (long)_config.LargeFileThresholdKb * 1024;
+                using (_largeFileLimiter.AcquireAsync(fileSize, thresholdBytes).GetAwaiter().GetResult())
+                {
+                    transferStopwatch.Start();
+                    CopyFile(control, sourcePath, targetPath);
+                    transferStopwatch.Stop();
+                }
+
                 var transferTimeMs = transferStopwatch.Elapsed.TotalMilliseconds;
                 result.CopiedCount++;
                 result.TotalBytesProcessed += fileSize;
@@ -458,6 +486,15 @@ internal sealed class BackupEngine : IBackupEngine
                     }
                 }
             }
+            catch (OperationCanceledException) when (control.IsStopRequested)
+            {
+                if (transferStopwatch.IsRunning)
+                    transferStopwatch.Stop();
+
+                TryDeletePartialFile(targetPath);
+                result.FilesProcessed = Math.Max(0, result.FilesProcessed - 1);
+                return true;
+            }
             catch (Exception ex)
             {
                 if (transferStopwatch.IsRunning)
@@ -494,46 +531,57 @@ internal sealed class BackupEngine : IBackupEngine
                 UpdateProgressState(control, state, sourcePath, targetPath, fileSize, incrementProcessed: true);
             }
 
-            if (!string.IsNullOrWhiteSpace(_config.BusinessSoftwareProcessName)
-                && BusinessSoftwareDetector.IsRunning(_config.BusinessSoftwareProcessName))
-            {
-                if (_logService != null)
-                {
-                    var logEntry = LogEntryBuilder.Create(
-                            eventName: "job.stopped.businesssoftware",
-                            category: LogEventCategory.Job,
-                            action: LogEventAction.Summary,
-                            message: "Backup stopped because business software detected")
-                        .WithLevel(LogLevel.Warning)
-                        .WithOutcome(LogEventOutcome.Failure)
-                        .WithJob(
-                            id: job.Id,
-                            name: job.Name,
-                            type: job.Type,
-                            sourcePath: ToUncOrEmpty(job.SourcePath),
-                            targetPath: ToUncOrEmpty(job.TargetPath),
-                            status: JobStatus.Error)
-                        .WithOutcome(LogEventOutcome.Failure)
-                        .Build();
-                    _logService.Write(logEntry);
-                }
-
-                result.Errors.Add($"Backup stopped because {_config.BusinessSoftwareProcessName} detected");
-                result.ErrorCount++;
-                break;
-            }
+            // Meme comportement qu'une pause utilisateur: on finit le fichier en cours,
+            // puis on se met en pause automatique si le logiciel metier apparait.
+            if (WaitForBusinessSoftwareToCloseIfRunning(control, job, state, traceId))
+                return true;
         }
 
         return control.IsStopRequested;
     }
 
     /// <summary>
-    /// Copies a file to a target path.
+    /// Copies a file to a target path using chunked I/O so stop requests can interrupt long transfers.
     /// </summary>
+    /// <param name="control">Execution control used to observe stop requests.</param>
     /// <param name="sourcePath">Source file path.</param>
     /// <param name="targetPath">Target file path.</param>
-    private static void CopyFile(string sourcePath, string targetPath)
-        => File.Copy(sourcePath, targetPath, true);
+    private static void CopyFile(JobExecutionControl control, string sourcePath, string targetPath)
+    {
+        const int bufferSize = 256 * 1024;
+
+        using var sourceStream = new FileStream(
+            sourcePath,
+            FileMode.Open,
+            FileAccess.Read,
+            FileShare.Read,
+            bufferSize,
+            FileOptions.SequentialScan);
+
+        using var targetStream = new FileStream(
+            targetPath,
+            FileMode.Create,
+            FileAccess.Write,
+            FileShare.None,
+            bufferSize,
+            FileOptions.SequentialScan);
+
+        var buffer = new byte[bufferSize];
+        while (true)
+        {
+            control.StopToken.ThrowIfCancellationRequested();
+
+            var bytesRead = sourceStream.Read(buffer, 0, buffer.Length);
+
+            if (bytesRead == 0)
+                break;
+
+            targetStream.Write(buffer, 0, bytesRead);
+            control.StopToken.ThrowIfCancellationRequested();
+        }
+
+        targetStream.Flush();
+    }
 
     /// <summary>
     /// Writes a summary log entry for the job.
@@ -804,7 +852,7 @@ internal sealed class BackupEngine : IBackupEngine
     }
 
     /// <summary>
-    /// Raises the <see cref="StateChanged"/> event.
+    /// Raises the <see cref="StateChanged"/> event with the mutable engine state object (callers should clone if needed).
     /// </summary>
     /// <param name="state">The state snapshot to publish.</param>
     private void PublishState(JobStateDto state)
@@ -812,6 +860,64 @@ internal sealed class BackupEngine : IBackupEngine
         StateChanged?.Invoke(this, new JobStateChangedEventArgs(state));
     }
 
+    /// <summary>
+    /// Pauses the current job automatically while configured business software is running, then resumes when it closes.
+    /// </summary>
+    /// <returns><c>true</c> if a stop was requested while waiting; otherwise <c>false</c>.</returns>
+    private bool WaitForBusinessSoftwareToCloseIfRunning(
+        JobExecutionControl control,
+        BackupJob job,
+        JobStateDto state,
+        string traceId)
+    {
+        var processName = _config.BusinessSoftwareProcessName;
+        if (string.IsNullOrWhiteSpace(processName))
+            return false;
+        if (!BusinessSoftwareDetector.IsRunning(processName))
+            return false;
+
+        SetAutoPausedState(control, state);
+        WriteBusinessSoftwareAutoPauseLog(job, processName, traceId);
+
+        while (true)
+        {
+            if (control.IsStopRequested)
+                return true;
+
+            var currentProcessName = _config.BusinessSoftwareProcessName;
+            if (string.IsNullOrWhiteSpace(currentProcessName))
+                break;
+            if (!BusinessSoftwareDetector.IsRunning(currentProcessName))
+                break;
+
+            Thread.Sleep(200);
+        }
+
+        if (control.IsStopRequested)
+            return true;
+
+        WriteBusinessSoftwareAutoResumeLog(job, processName, traceId);
+
+        lock (control.Sync)
+        {
+            // Ne pas ecraser une pause manuelle demandee pendant la pause automatique.
+            if (control.IsPaused)
+                return false;
+
+            if (state.Status != JobStatus.Running)
+            {
+                state.Status = JobStatus.Running;
+                state.LastActionTimestampUtc = DateTime.UtcNow;
+                PublishState(state);
+            }
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Blocks the execution loop while paused and publishes Paused/Running transitions around the wait.
+    /// </summary>
     private void WaitIfPaused(JobExecutionControl control, JobStateDto state)
     {
         if (!control.IsPaused)
@@ -850,6 +956,75 @@ internal sealed class BackupEngine : IBackupEngine
         }
     }
 
+    /// <summary>
+    /// Publishes a paused state for an automatic business-software pause without touching the manual pause gate.
+    /// </summary>
+    private void SetAutoPausedState(JobExecutionControl control, JobStateDto state)
+    {
+        lock (control.Sync)
+        {
+            if (state.Status == JobStatus.Paused)
+                return;
+
+            state.Status = JobStatus.Paused;
+            state.LastActionTimestampUtc = DateTime.UtcNow;
+            PublishState(state);
+        }
+    }
+
+    private void WriteBusinessSoftwareAutoPauseLog(BackupJob job, string processName, string traceId)
+    {
+        if (_logService is null)
+            return;
+
+        var logEntry = LogEntryBuilder.Create(
+                eventName: "job.paused",
+                category: LogEventCategory.Job,
+                action: LogEventAction.Pause,
+                message: $"Backup paused automatically because business software '{processName}' was detected")
+            .WithLevel(LogLevel.Warning)
+            .WithOutcome(LogEventOutcome.Success)
+            .WithTraceIfPresent(traceId)
+            .WithJob(
+                id: job.Id,
+                name: job.Name,
+                type: job.Type,
+                sourcePath: ToUncOrEmpty(job.SourcePath),
+                targetPath: ToUncOrEmpty(job.TargetPath),
+                status: JobStatus.Paused)
+            .Build();
+
+        _logService.Write(logEntry);
+    }
+
+    private void WriteBusinessSoftwareAutoResumeLog(BackupJob job, string processName, string traceId)
+    {
+        if (_logService is null)
+            return;
+
+        var logEntry = LogEntryBuilder.Create(
+                eventName: "job.resumed",
+                category: LogEventCategory.Job,
+                action: LogEventAction.Resume,
+                message: $"Backup resumed automatically after business software '{processName}' closed")
+            .WithLevel(LogLevel.Info)
+            .WithOutcome(LogEventOutcome.Success)
+            .WithTraceIfPresent(traceId)
+            .WithJob(
+                id: job.Id,
+                name: job.Name,
+                type: job.Type,
+                sourcePath: ToUncOrEmpty(job.SourcePath),
+                targetPath: ToUncOrEmpty(job.TargetPath),
+                status: JobStatus.Running)
+            .Build();
+
+        _logService.Write(logEntry);
+    }
+
+    /// <summary>
+    /// Applies a pause request and publishes an immediate paused state when possible.
+    /// </summary>
     private bool TrySetPaused(JobExecutionControl control)
     {
         lock (control.Sync)
@@ -870,6 +1045,9 @@ internal sealed class BackupEngine : IBackupEngine
         }
     }
 
+    /// <summary>
+    /// Applies a resume request and publishes an immediate running state when resuming from paused.
+    /// </summary>
     private bool TrySetRunning(JobExecutionControl control)
     {
         lock (control.Sync)
@@ -886,6 +1064,9 @@ internal sealed class BackupEngine : IBackupEngine
         }
     }
 
+    /// <summary>
+    /// Applies a stop request and publishes an immediate terminal error state for UI feedback.
+    /// </summary>
     private bool TrySetStopped(JobExecutionControl control)
     {
         lock (control.Sync)
@@ -952,5 +1133,24 @@ internal sealed class BackupEngine : IBackupEngine
         if (File.Exists(path))
             return new CryptoSoftProcessService(path);
         return new NoEncryptionService();
+    }
+
+    /// <summary>
+    /// Best-effort cleanup for a partially written file when a stop interrupts a transfer.
+    /// </summary>
+    private static void TryDeletePartialFile(string path)
+    {
+        if (string.IsNullOrWhiteSpace(path))
+            return;
+
+        try
+        {
+            if (File.Exists(path))
+                File.Delete(path);
+        }
+        catch
+        {
+            // Best-effort cleanup when a user stop interrupts a transfer.
+        }
     }
 }

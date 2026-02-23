@@ -14,7 +14,7 @@ public class LogEntryDtoTests
         Assert.NotEqual(default, dto.TimestampUtc);
         Assert.Equal(LogLevel.Info, dto.Level);
         Assert.Equal(string.Empty, dto.Message);
-        Assert.Equal(1, dto.SchemaVersion);
+        Assert.Equal(2, dto.SchemaVersion);
 
         Assert.NotNull(dto.Event);
         Assert.Equal(string.Empty, dto.Event.Name);

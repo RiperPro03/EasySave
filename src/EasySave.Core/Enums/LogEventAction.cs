@@ -13,5 +13,8 @@ public enum LogEventAction
     Transfer,
     Skip,
     DirectoryCreated,
-    Summary
+    Summary,
+    Pause,
+    Resume,
+    Stop
 }

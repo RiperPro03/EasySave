@@ -6,11 +6,12 @@ using EasySave.Core.Interfaces;
 using EasySave.Core.Logging;
 using EasySave.Core.Models;
 using EasySave.EasyLog.Options;
+using System.Threading;
 
 namespace EasySave.App.Services;
 
 /// <summary>
-/// Coordinates backup execution and publishes state snapshots.
+/// Coordinates asynchronous backup execution, per-job control requests, and state snapshots.
 /// </summary>
 public sealed class BackupService : IBackupService
 {
@@ -19,8 +20,11 @@ public sealed class BackupService : IBackupService
     private readonly IStateWriter _stateWriter;
     private readonly AppConfig _config;
     private readonly Dictionary<string, JobStateDto> _jobStates = new();
+    private readonly HashSet<string> _executingJobIds = new(StringComparer.Ordinal);
     private readonly object _stateLock = new();
     private readonly IAppLogService? _logService;
+
+    private readonly LargeFileTransferLimiter _largeFileLimiter = new();
     private readonly PriorityMonitor _priorityMonitor = new();
 
     /// <summary>
@@ -65,7 +69,7 @@ public sealed class BackupService : IBackupService
     }
 
     /// <summary>
-    /// Executes a backup job and records its last run time.
+    /// Starts a backup job asynchronously, publishes an immediate running snapshot, and prevents duplicate launches for the same job.
     /// </summary>
     /// <param name="job">The job to execute.</param>
     /// <returns>The execution result.</returns>
@@ -102,15 +106,14 @@ public sealed class BackupService : IBackupService
         JobStateDto? startedState = null;
         lock (_stateLock)
         {
-            // Bloque le lancement si le job est deja en cours ou en pause.
             SyncJobs();
-            if (_jobStates.TryGetValue(job.Id, out var existing) &&
-                existing.Status is JobStatus.Running or JobStatus.Paused)
+
+            if (_executingJobIds.Contains(job.Id))
             {
                 return new BackupResultDto
                 {
                     Success = false,
-                    Message = "Job is already running or paused.",
+                    Message = "Job is already running or stopping.",
                     Duration = TimeSpan.Zero
                 };
             }
@@ -123,6 +126,7 @@ public sealed class BackupService : IBackupService
                 Status = JobStatus.Running,
                 LastActionTimestampUtc = DateTime.UtcNow
             };
+            _executingJobIds.Add(job.Id);
             WriteSnapshot();
             startedState = CopyState(_jobStates[job.Id]);
         }
@@ -131,15 +135,31 @@ public sealed class BackupService : IBackupService
         {
             StateChanged?.Invoke(this, new JobStateChangedEventArgs(startedState));
         }
-
-        var result = _backupEngine.Run(job);
-        // Marque le job comme execute pour conserver l'horodatage.
-        _jobService.MarkExecuted(job.Id);
-        return result;
+        // Lance le moteur sur un thread de fond pour garder l'appelant (GUI/CLI) reactif.
+        _ = Task.Run(() => {
+            try
+            {
+                var result = _backupEngine.Run(job);
+                _jobService.MarkExecuted(job.Id);
+                return result;
+            }
+            finally
+            {
+                lock (_stateLock)
+                {
+                    _executingJobIds.Remove(job.Id);
+                }
+            }
+        });
+        return new BackupResultDto { 
+            Success = true, 
+            Message = "Job started asynchronously.", 
+            Duration = TimeSpan.Zero 
+        };
     }
 
     /// <summary>
-    /// Requests a pause for a running job.
+    /// Requests a pause for a running job, with a short retry window while the engine is still registering the job control.
     /// </summary>
     /// <param name="jobId">The job identifier.</param>
     /// <returns><c>true</c> when the pause request was accepted.</returns>
@@ -148,11 +168,15 @@ public sealed class BackupService : IBackupService
         if (string.IsNullOrWhiteSpace(jobId))
             return false;
 
-        return _backupEngine.Pause(jobId);
+        var accepted = TryControlRequest(jobId, _backupEngine.Pause);
+        if (accepted)
+            LogJobControlAction(jobId, "job.paused", LogEventAction.Pause, "Job paused by user", JobStatus.Paused);
+
+        return accepted;
     }
 
     /// <summary>
-    /// Requests a resume for a paused job.
+    /// Requests a resume for a paused job, with a short retry window while the engine is still registering the job control.
     /// </summary>
     /// <param name="jobId">The job identifier.</param>
     /// <returns><c>true</c> when the resume request was accepted.</returns>
@@ -161,11 +185,15 @@ public sealed class BackupService : IBackupService
         if (string.IsNullOrWhiteSpace(jobId))
             return false;
 
-        return _backupEngine.Resume(jobId);
+        var accepted = TryControlRequest(jobId, _backupEngine.Resume);
+        if (accepted)
+            LogJobControlAction(jobId, "job.resumed", LogEventAction.Resume, "Job resumed by user", JobStatus.Running);
+
+        return accepted;
     }
 
     /// <summary>
-    /// Requests a stop for a running job.
+    /// Requests a stop for a running job, with a short retry window while the engine is still registering the job control.
     /// </summary>
     /// <param name="jobId">The job identifier.</param>
     /// <returns><c>true</c> when the stop request was accepted.</returns>
@@ -174,7 +202,11 @@ public sealed class BackupService : IBackupService
         if (string.IsNullOrWhiteSpace(jobId))
             return false;
 
-        return _backupEngine.Stop(jobId);
+        var accepted = TryControlRequest(jobId, _backupEngine.Stop);
+        if (accepted)
+            LogJobControlAction(jobId, "job.stopped", LogEventAction.Stop, "Job stop requested by user", JobStatus.Error);
+
+        return accepted;
     }
 
     public bool IsBusinessSoftwareRunning(out string? processName)
@@ -200,21 +232,26 @@ public sealed class BackupService : IBackupService
     }
 
     /// <summary>
-    /// Handles state updates from the engine and writes snapshots.
+    /// Handles state updates from the engine, persists snapshots, and republishes a defensive copy for UI consumers.
     /// </summary>
     /// <param name="sender">Event sender.</param>
     /// <param name="e">State change event arguments.</param>
     private void OnEngineStateChanged(object? sender, JobStateChangedEventArgs e)
     {
+        JobStateDto? stateCopy = null;
         lock (_stateLock)
         {
             // Synchronise les jobs avant d'enregistrer le nouvel etat.
             SyncJobs();
             _jobStates[e.State.JobId] = CopyState(e.State);
+            stateCopy = CopyState(_jobStates[e.State.JobId]);
             WriteSnapshot();
         }
 
-        StateChanged?.Invoke(this, e);
+        if (stateCopy != null)
+        {
+            StateChanged?.Invoke(this, new JobStateChangedEventArgs(stateCopy));
+        }
     }
 
     /// <summary>
@@ -355,6 +392,46 @@ public sealed class BackupService : IBackupService
     /// <returns>A configured backup engine.</returns>
     private IBackupEngine CreateEngine()
     {
+        return new BackupEngine(_config, _logService, cryptoService:null, largeFileLimiter :_largeFileLimiter);
+    }
+
+    /// <summary>
+    /// Retries a control request briefly to bridge the gap between async job launch and engine-side control registration.
+    /// </summary>
+    private bool TryControlRequest(string jobId, Func<string, bool> request)
+    {
+        if (request(jobId))
+            return true;
+
+        if (!ShouldRetryControlRequest(jobId))
+            return false;
+
+        var timeoutAt = DateTime.UtcNow.AddMilliseconds(300);
+        while (DateTime.UtcNow < timeoutAt)
+        {
+            Thread.Sleep(15);
+
+            if (request(jobId))
+                return true;
+
+            if (!ShouldRetryControlRequest(jobId))
+                break;
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Indicates whether a failed control request should be retried based on the service snapshot and in-flight execution tracking.
+    /// </summary>
+    private bool ShouldRetryControlRequest(string jobId)
+    {
+        lock (_stateLock)
+        {
+            return _executingJobIds.Contains(jobId)
+                && _jobStates.TryGetValue(jobId, out var state)
+                && state.Status is JobStatus.Running or JobStatus.Paused;
+        }
         // Modifiez l'instanciation pour passer _priorityMonitor
         return new BackupEngine(_config, _priorityMonitor, _logService);
     }
@@ -406,6 +483,40 @@ public sealed class BackupService : IBackupService
                 sourcePath: ToUncOrEmpty(job.SourcePath),
                 targetPath: ToUncOrEmpty(job.TargetPath),
                 status: JobStatus.Idle,
+                isActive: job.IsActive);
+        }
+
+        _logService.Write(entryBuilder.Build());
+    }
+
+    private void LogJobControlAction(
+        string jobId,
+        string eventName,
+        LogEventAction action,
+        string message,
+        JobStatus status)
+    {
+        if (_logService is null)
+            return;
+
+        var entryBuilder = LogEntryBuilder.Create(
+                eventName: eventName,
+                category: LogEventCategory.Job,
+                action: action,
+                message: message)
+            .WithLevel(LogLevel.Notice)
+            .WithOutcome(LogEventOutcome.Success);
+
+        var job = _jobService.GetById(jobId);
+        if (job != null)
+        {
+            entryBuilder = entryBuilder.WithJob(
+                id: job.Id,
+                name: job.Name,
+                type: job.Type,
+                sourcePath: ToUncOrEmpty(job.SourcePath),
+                targetPath: ToUncOrEmpty(job.TargetPath),
+                status: status,
                 isActive: job.IsActive);
         }
 
