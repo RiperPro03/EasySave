@@ -109,3 +109,31 @@ This project respects semantic versioning.
 
 - Docs deliverable v2.0 (user + support + changelog + UML) 
  https://github.com/RiperPro03/EasySave/issues/98
+
+## [3.0.0]
+
+### Features
+
+- [FEAT] Parallel execution of jobs
+ https://github.com/RiperPro03/EasySave/issues/135
+- [FEAT] Job progress bar
+ https://github.com/RiperPro03/EasySave/issues/136
+- [FEAT] CryptoSoft mono-instance
+ https://github.com/RiperPro03/EasySave/issues/137
+- [FEAT] Priority file management
+ https://github.com/RiperPro03/EasySave/issues/138
+- [FEAT] Ban on simultaneous transfer of large files
+ https://github.com/RiperPro03/EasySave/issues/139
+- [FEAT] Real-time interaction with each job
+ https://github.com/RiperPro03/EasySave/issues/140
+- [FEAT] Automatic pause if business software active
+ https://github.com/RiperPro03/EasySave/issues/141
+- [FEAT] Centralized logs (docker)
+ https://github.com/RiperPro03/EasySave/issues/142
+- [FEAT] Add nKo threshold option
+ https://github.com/RiperPro03/EasySave/issues/155
+
+### Documentation
+
+- Docs deliverable v3.0
+ https://github.com/RiperPro03/EasySave/issues/159
