@@ -3,8 +3,10 @@ using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using EasySave.App.Gui.Localization;
+using EasySave.App.Gui.Models;
 using EasySave.App.Services;
 using EasySave.Core.Enums;
+using EasySave.Core.Resources;
 using EasySave.EasyLog.Options;
 
 namespace EasySave.App.Gui.ViewModels;
@@ -12,6 +14,7 @@ namespace EasySave.App.Gui.ViewModels;
 public partial class SettingsViewModel : ViewModelBase
 {
     private readonly SettingsService? _settings;
+    public event EventHandler<UiNotificationEventArgs>? NotificationRequested;
 
     // Propriétés automatiques (le toolkit crée le reste pour nous)
     [ObservableProperty] private bool _encryptionEnabled;
@@ -25,7 +28,7 @@ public partial class SettingsViewModel : ViewModelBase
     [ObservableProperty] private string _businessSoftwareProcessName = string.Empty;
     [ObservableProperty] private string _logServerHost = "localhost";
     [ObservableProperty] private string _logServerPort = "9696";
-    [ObservableProperty] private string _largeFileThreshold = "10000";
+    [ObservableProperty] private int _largeFileThresholdKb = 10000;
     
     // Listes pour remplir les menus déroulants (ComboBox)
     public Language[] Languages => Enum.GetValues<Language>();
@@ -54,7 +57,7 @@ public partial class SettingsViewModel : ViewModelBase
         // Si ton service possède une propriété ExtensionsToEncrypt (List<string>)
         ExtensionsToEncrypt = string.Join(", ", settings.ExtensionsToEncrypt);
         BusinessSoftwareProcessName = settings.BusinessSoftwareProcessName ?? string.Empty;
-        LargeFileThreshold = settings.LargeFileThresholdKb.ToString();
+        LargeFileThresholdKb = settings.LargeFileThresholdKb;
     }
     // Changes are applied on save to avoid log spam.
 
@@ -69,28 +72,67 @@ public partial class SettingsViewModel : ViewModelBase
             .Where(x => !string.IsNullOrWhiteSpace(x))
             .ToList();
 
-        // On garde la valeur actuelle si la saisie du port est invalide pour eviter un crash de l'ecran.
-        var parsedServerPort = int.TryParse(LogServerPort, out var portValue)
-            && portValue is > 0 and <= 65535
-            ? portValue
-            : _settings.LogServerPort;
+        bool requiresRemoteServer = SelectedLogStorageMode is LogStorageMode.ServerOnly or LogStorageMode.LocalAndServer;
+        if (requiresRemoteServer && string.IsNullOrWhiteSpace(LogServerHost))
+        {
+            NotificationRequested?.Invoke(
+                this,
+                new UiNotificationEventArgs(
+                    Strings.Gui_Nav_Settings,
+                    Strings.Gui_Settings_Notify_Error_HostRequired,
+                    UiNotificationSeverity.Error));
+            return;
+        }
+
+        if (!int.TryParse(LogServerPort, out var parsedServerPort) || parsedServerPort is <= 0 or > 65535)
+        {
+            NotificationRequested?.Invoke(
+                this,
+                new UiNotificationEventArgs(
+                    Strings.Gui_Nav_Settings,
+                    Strings.Gui_Settings_Notify_Error_PortInvalid,
+                    UiNotificationSeverity.Error));
+            return;
+        }
 
         // Threshold conversion (string → int)
-        int threshold = int.TryParse(LargeFileThreshold, out var kb) 
-            ? kb 
+        int threshold = LargeFileThresholdKb > 0
+            ? LargeFileThresholdKb
             : _settings.LargeFileThresholdKb;
 
-        _settings.ApplySettings(
-            encryptionEnabled: EncryptionEnabled,
-            encryptionKey: EncryptionKey,
-            language: SelectedLanguage,
-            logFormat: SelectedLogFormat,
-            logStorageMode: SelectedLogStorageMode,
-            logServerHost: LogServerHost,
-            logServerPort: parsedServerPort,
-            extensionsToEncrypt: list,
-            businessSoftwareProcessName: BusinessSoftwareProcessName,
-            largeFileThresholdKb: threshold);
+        try
+        {
+            _settings.ApplySettings(
+                encryptionEnabled: EncryptionEnabled,
+                encryptionKey: EncryptionKey,
+                language: SelectedLanguage,
+                logFormat: SelectedLogFormat,
+                logStorageMode: SelectedLogStorageMode,
+                logServerHost: LogServerHost,
+                logServerPort: parsedServerPort,
+                extensionsToEncrypt: list,
+                businessSoftwareProcessName: BusinessSoftwareProcessName,
+                largeFileThresholdKb: threshold);
+        }
+        catch (Exception ex)
+        {
+            NotificationRequested?.Invoke(
+                this,
+                new UiNotificationEventArgs(
+                    Strings.Gui_Nav_Settings,
+                    string.Format(Strings.Gui_Settings_Notify_Error_SaveFailedFormat, ex.Message),
+                    UiNotificationSeverity.Error));
+            return;
+        }
+
+        LargeFileThresholdKb = threshold;
+
+        NotificationRequested?.Invoke(
+            this,
+            new UiNotificationEventArgs(
+                Strings.Gui_Nav_Settings,
+                Strings.Gui_Settings_Notify_SaveSuccess,
+                UiNotificationSeverity.Success));
 
         Loc.Instance.SetLanguage(SelectedLanguage);
         OnPropertyChanged(nameof(Languages));
@@ -107,6 +149,12 @@ public partial class SettingsViewModel : ViewModelBase
         OnPropertyChanged(nameof(Languages));
         OnPropertyChanged(nameof(LogFormats));
         OnPropertyChanged(nameof(LogStorageModes));
+    }
+
+    partial void OnLargeFileThresholdKbChanged(int value)
+    {
+        if (value < 1)
+            LargeFileThresholdKb = 1;
     }
 }
 

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Net.Http;
 using System.Threading;
@@ -7,6 +8,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using EasySave.App.Gui.Enums;
 using EasySave.App.Gui.Localization;
+using EasySave.App.Gui.Models;
 using EasySave.App.Services;
 using EasySave.Core.Events;
 using EasySave.Core.Interfaces;
@@ -35,10 +37,13 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
     private readonly SynchronizationContext? _uiContext;
     private readonly SettingsService? _settingsService;
     private readonly HttpClient _logHubHealthClient = new();
+    private readonly Dictionary<string, JobStatus> _jobStatusesById = new(StringComparer.Ordinal);
     private CancellationTokenSource? _logHubHealthCts;
+    private string? _lastLogHubHealthNotificationKey;
     private JobStatus _lastJobStatus = JobStatus.Idle;
     private string? _lastJobName;
     private bool _disposed;
+    public event EventHandler<UiNotificationEventArgs>? NotificationRequested;
 
     public string AppVersion { get; } = "v3.0.0";
     public string AppTagline => Strings.Gui_App_Tagline;
@@ -117,6 +122,8 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
         _settingsViewModel = new SettingsViewModel();
         _aboutViewModel = new AboutViewModel();
         _jobsViewModel.JobsChanged += OnJobsChanged;
+        _jobsViewModel.NotificationRequested += OnChildNotificationRequested;
+        _settingsViewModel.NotificationRequested += OnChildNotificationRequested;
         Loc.Instance.PropertyChanged += OnLocalizationChanged;
         // Valeur visible en mode design/local sans checker reseau.
         LogHubHealthLabel = "LogHub: local";
@@ -160,6 +167,8 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
         _aboutViewModel = new AboutViewModel();
         _appLogService = appLogService;
         _jobsViewModel.JobsChanged += OnJobsChanged;
+        _jobsViewModel.NotificationRequested += OnChildNotificationRequested;
+        _settingsViewModel.NotificationRequested += OnChildNotificationRequested;
         _backupService.StateChanged += OnBackupStateChanged;
         Loc.Instance.PropertyChanged += OnLocalizationChanged;
         if (_appLogService != null)
@@ -232,6 +241,7 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
     
     private void OnBackupStateChanged(object? sender, JobStateChangedEventArgs e)
     {
+        MaybeNotifyJobStateTransition(e);
         _lastJobStatus = e.State.Status;
         _lastJobName = e.State.JobName;
         CurrentState = ResolveJobStatusLabel(e.State.Status);
@@ -240,6 +250,49 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
             StatusMessage = string.Format(Strings.Gui_Status_JobFormat, e.State.JobName, ResolveJobStatusLabel(e.State.Status));
         }
         LastUpdateTime = DateTime.Now;
+    }
+
+    private void OnChildNotificationRequested(object? sender, UiNotificationEventArgs e)
+    {
+        NotificationRequested?.Invoke(this, e);
+    }
+
+    private void MaybeNotifyJobStateTransition(JobStateChangedEventArgs e)
+    {
+        if (string.IsNullOrWhiteSpace(e.State.JobId))
+            return;
+
+        var status = e.State.Status;
+        if (_jobStatusesById.TryGetValue(e.State.JobId, out var previous) && previous == status)
+            return;
+
+        _jobStatusesById[e.State.JobId] = status;
+
+        UiNotificationEventArgs? notification = status switch
+        {
+            JobStatus.Running => new UiNotificationEventArgs(
+                Strings.Gui_Nav_LiveExecution,
+                string.Format(Strings.Gui_Execution_Notify_RunningFormat, e.State.JobName),
+                UiNotificationSeverity.Info),
+            JobStatus.Paused => new UiNotificationEventArgs(
+                Strings.Gui_Nav_LiveExecution,
+                string.Format(Strings.Gui_Execution_Notify_PausedFormat, e.State.JobName),
+                UiNotificationSeverity.Warning),
+            JobStatus.Completed => new UiNotificationEventArgs(
+                Strings.Gui_Nav_LiveExecution,
+                string.Format(Strings.Gui_Execution_Notify_CompletedFormat, e.State.JobName),
+                UiNotificationSeverity.Success),
+            JobStatus.Error => new UiNotificationEventArgs(
+                Strings.Gui_Nav_LiveExecution,
+                string.IsNullOrWhiteSpace(e.State.ErrorMessage)
+                    ? string.Format(Strings.Gui_Execution_Notify_ErrorSimpleFormat, e.State.JobName)
+                    : string.Format(Strings.Gui_Execution_Notify_ErrorWithDetailsFormat, e.State.JobName, e.State.ErrorMessage),
+                UiNotificationSeverity.Error),
+            _ => null
+        };
+
+        if (notification != null)
+            NotificationRequested?.Invoke(this, notification);
     }
 
     private void OnJobsChanged()
@@ -406,6 +459,8 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
 
     private void PostLogHubHealthStatus(string label, string dotBrush, string tooltip)
     {
+        MaybeNotifyLogHubHealthChange(label, tooltip);
+
         if (_uiContext != null)
         {
             _uiContext.Post(_ =>
@@ -420,6 +475,52 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
         LogHubHealthLabel = label;
         LogHubHealthDotBrush = dotBrush;
         LogHubHealthTooltip = tooltip;
+    }
+
+    private void MaybeNotifyLogHubHealthChange(string label, string tooltip)
+    {
+        if (_settingsService is null)
+            return;
+
+        // No connectivity notification in LocalOnly mode.
+        if (_settingsService.LogStorageMode == LogStorageMode.LocalOnly)
+        {
+            _lastLogHubHealthNotificationKey = null;
+            return;
+        }
+
+        string key = label;
+        if (string.Equals(_lastLogHubHealthNotificationKey, key, StringComparison.Ordinal))
+            return;
+
+        if (_lastLogHubHealthNotificationKey is null)
+        {
+            _lastLogHubHealthNotificationKey = key;
+            return;
+        }
+
+        _lastLogHubHealthNotificationKey = key;
+
+        if (label.Contains("online", StringComparison.OrdinalIgnoreCase))
+        {
+            NotificationRequested?.Invoke(
+                this,
+                new UiNotificationEventArgs(
+                    Strings.Gui_LogHub_Notify_Title,
+                    Strings.Gui_LogHub_Notify_Online,
+                    UiNotificationSeverity.Success));
+            return;
+        }
+
+        if (label.Contains("offline", StringComparison.OrdinalIgnoreCase))
+        {
+            NotificationRequested?.Invoke(
+                this,
+                new UiNotificationEventArgs(
+                    Strings.Gui_LogHub_Notify_Title,
+                    Strings.Gui_LogHub_Notify_Offline,
+                    UiNotificationSeverity.Warning));
+        }
     }
 
     /// <summary>
@@ -443,6 +544,8 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
         }
 
         _jobsViewModel.JobsChanged -= OnJobsChanged;
+        _jobsViewModel.NotificationRequested -= OnChildNotificationRequested;
+        _settingsViewModel.NotificationRequested -= OnChildNotificationRequested;
         if (_appLogService != null)
         {
             _appLogService.LogWritten -= OnLogWritten;

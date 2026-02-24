@@ -649,5 +649,59 @@ Nommage des ressources :
     <data name="Gui_Execution_Error_BusinessSoftware" xml:space="preserve">
         <value>Un logiciel métier est en cours. Impossible de lancer la séquence.</value>
     </data>
+    <data name="Gui_Settings_LargeFileThresholdLabel" xml:space="preserve">
+        <value>Seuil gros fichiers (KB)</value>
+    </data>
+    <data name="Gui_Settings_LargeFileThresholdTooltip" xml:space="preserve">
+        <value>Les fichiers plus grands que ce seuil seront limités à un transfert à la fois.</value>
+    </data>
+    <data name="Gui_Settings_Notify_SaveSuccess" xml:space="preserve">
+        <value>Paramètres enregistrés avec succès.</value>
+    </data>
+    <data name="Gui_Settings_Notify_Error_HostRequired" xml:space="preserve">
+        <value>L'hôte du serveur de logs centralisé est requis.</value>
+    </data>
+    <data name="Gui_Settings_Notify_Error_PortInvalid" xml:space="preserve">
+        <value>Le port du serveur de logs centralisé doit être un nombre entre 1 et 65535.</value>
+    </data>
+    <data name="Gui_Settings_Notify_Error_SaveFailedFormat" xml:space="preserve">
+        <value>Échec de l'enregistrement des paramètres : {0}</value>
+    </data>
+    <data name="Gui_Execution_Notify_RunningFormat" xml:space="preserve">
+        <value>Le travail '{0}' est en cours.</value>
+    </data>
+    <data name="Gui_Execution_Notify_PausedFormat" xml:space="preserve">
+        <value>Le travail '{0}' est en pause.</value>
+    </data>
+    <data name="Gui_Execution_Notify_CompletedFormat" xml:space="preserve">
+        <value>Le travail '{0}' est terminé.</value>
+    </data>
+    <data name="Gui_Execution_Notify_ErrorSimpleFormat" xml:space="preserve">
+        <value>Le travail '{0}' s'est terminé avec une erreur.</value>
+    </data>
+    <data name="Gui_Execution_Notify_ErrorWithDetailsFormat" xml:space="preserve">
+        <value>Travail '{0}' : {1}</value>
+    </data>
+    <data name="Gui_Jobs_Notify_CreatedFormat" xml:space="preserve">
+        <value>Travail '{0}' créé.</value>
+    </data>
+    <data name="Gui_Jobs_Notify_UpdatedFormat" xml:space="preserve">
+        <value>Travail '{0}' mis à jour.</value>
+    </data>
+    <data name="Gui_Jobs_Notify_DeletedFormat" xml:space="preserve">
+        <value>Travail '{0}' supprimé.</value>
+    </data>
+    <data name="Gui_Jobs_Notify_ErrorFormat" xml:space="preserve">
+        <value>Échec de l'opération sur le travail : {0}</value>
+    </data>
+    <data name="Gui_LogHub_Notify_Title" xml:space="preserve">
+        <value>LogHub</value>
+    </data>
+    <data name="Gui_LogHub_Notify_Online" xml:space="preserve">
+        <value>Connexion LogHub rétablie.</value>
+    </data>
+    <data name="Gui_LogHub_Notify_Offline" xml:space="preserve">
+        <value>LogHub inaccessible. Les logs distants ne sont pas disponibles.</value>
+    </data>
 </root>
 
