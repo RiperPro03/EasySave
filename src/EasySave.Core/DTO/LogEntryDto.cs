@@ -319,6 +319,10 @@ public sealed class LogSettingsDto
     /// Business software process name.
     /// </summary>
     public string? BusinessSoftwareProcessName { get; set; }
+    /// <summary>
+    /// Threshold 
+    /// </summary>
+    public int? LargeFileThresholdKb { get; set; }
 }
 
 /// <summary>
