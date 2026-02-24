@@ -4,6 +4,7 @@ using EasySave.EasyLog.Interfaces;
 using EasySave.EasyLog.Loggers;
 using EasySave.EasyLog.Options;
 using EasySave.EasyLog.Serialization;
+using EasySave.EasyLog.WebSockets;
 using EasySave.EasyLog.Utils;
 using EasySave.EasyLog.Writers;
 using JsonSerializer = EasySave.EasyLog.Serialization.JsonSerializer;
@@ -109,6 +110,145 @@ public class EasyLogTests
     }
 
     [Fact]
+    public void LoggerFactory_CanReturnWebSocketLogger_ForServerOnlyMode()
+    {
+        var options = new LogOptions
+        {
+            StorageMode = LogStorageMode.ServerOnly,
+            UseSafeLogger = false,
+            Server = new LogServerOptions
+            {
+                Host = "localhost",
+                Port = 9696,
+                WebSocketPath = "/ws/logs"
+            }
+        };
+
+        ILogger<SampleEntry> logger = LoggerFactory.Create<SampleEntry>(options);
+
+        Assert.IsType<WebSocketLogger<SampleEntry>>(logger);
+    }
+
+    [Fact]
+    public void LogReaderFactory_CanCreateRemoteReader_ForServerOnlyMode()
+    {
+        var options = new LogOptions
+        {
+            StorageMode = LogStorageMode.ServerOnly,
+            Server = new LogServerOptions
+            {
+                Host = "127.0.0.1",
+                Port = 9696,
+                WebSocketPath = "/ws/logs"
+            }
+        };
+
+        ILogReader<SampleEntry> reader = LogReaderFactory.Create<SampleEntry>(options);
+
+        Assert.NotNull(reader);
+        Assert.Equal(string.Empty, reader.LogDirectory);
+        Assert.Empty(reader.GetLogFiles());
+    }
+
+    [Fact]
+    public void LogHubWebSocketClient_BuildsUriFromHostPortPath()
+    {
+        var client = new LogHubWebSocketClient(new LogServerOptions
+        {
+            Host = "10.0.0.42",
+            Port = 8081,
+            WebSocketPath = "custom/ws",
+            UseTls = false
+        });
+
+        Uri uri = GetPrivateUri(client);
+
+        Assert.Equal("ws://10.0.0.42:8081/custom/ws", uri.ToString());
+    }
+
+    [Fact]
+    public void LogHubWebSocketClient_PrefersExplicitWebSocketUrl()
+    {
+        var client = new LogHubWebSocketClient(new LogServerOptions
+        {
+            WebSocketUrl = "wss://logs.example.com:9443/ws/logs",
+            Host = "ignored-host",
+            Port = 1
+        });
+
+        Uri uri = GetPrivateUri(client);
+
+        Assert.Equal("wss://logs.example.com:9443/ws/logs", uri.ToString());
+    }
+
+    [Fact]
+    public void LogReaderFactory_ReadsJsonEntries()
+    {
+        string root = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(root);
+        string filePath = Path.Combine(root, "2026-02-05.json");
+        File.WriteAllText(filePath, "{\"Message\":\"hello\",\"Count\":2}\n");
+
+        var reader = LogReaderFactory.Create<SampleEntry>(new LogOptions
+        {
+            LogDirectory = root
+        });
+
+        IReadOnlyList<SampleEntry> entries = reader.ReadEntriesFromFile(filePath);
+
+        Assert.Single(entries);
+        Assert.Equal("hello", entries[0].Message);
+        Assert.Equal(2, entries[0].Count);
+
+        Directory.Delete(root, true);
+    }
+
+    [Fact]
+    public void LogReaderFactory_ReadsXmlEntries()
+    {
+        string root = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(root);
+        string filePath = Path.Combine(root, "2026-02-05.xml");
+        File.WriteAllText(filePath, "<logs><SampleEntry><Message>hello</Message><Count>3</Count></SampleEntry></logs>");
+
+        var reader = LogReaderFactory.Create<SampleEntry>(new LogOptions
+        {
+            LogDirectory = root
+        });
+
+        IReadOnlyList<SampleEntry> entries = reader.ReadEntriesFromFile(filePath);
+
+        Assert.Single(entries);
+        Assert.Equal("hello", entries[0].Message);
+        Assert.Equal(3, entries[0].Count);
+
+        Directory.Delete(root, true);
+    }
+
+    [Fact]
+    public void LogReaderFactory_ThrowsWhenServerOptionsMissingInServerOnlyMode()
+    {
+        var options = new LogOptions
+        {
+            StorageMode = LogStorageMode.ServerOnly
+        };
+
+        Assert.Throws<ArgumentException>(() => LogReaderFactory.Create<SampleEntry>(options));
+    }
+
+    [Fact]
+    public void LoggerFactory_ThrowsWhenServerOptionsMissingInServerOnlyMode()
+    {
+        var options = new LogOptions
+        {
+            StorageMode = LogStorageMode.ServerOnly,
+            UseSafeLogger = false
+        };
+
+        Assert.Throws<ArgumentException>(() => LoggerFactory.Create<SampleEntry>(options));
+    }
+
+    [Fact]
     public void DailyLogger_WritesJsonWithoutWrapping()
     {
         string root = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
@@ -211,5 +351,15 @@ public class EasyLogTests
         {
             return _result;
         }
+    }
+
+    private static Uri GetPrivateUri(LogHubWebSocketClient client)
+    {
+        var field = typeof(LogHubWebSocketClient).GetField("_serverUri", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+        Assert.NotNull(field);
+
+        var value = field!.GetValue(client);
+        Assert.IsType<Uri>(value);
+        return (Uri)value!;
     }
 }

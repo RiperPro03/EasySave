@@ -61,7 +61,12 @@ public sealed class BackupService : IBackupService
         var formatProvider = logFormatProvider ?? (() => logFormat ?? LogFormat.Json);
         _logService = logService ?? (string.IsNullOrWhiteSpace(logDirectory)
             ? null
-            : new AppLogService(logDirectory, formatProvider));
+            : new AppLogService(
+                logDirectory,
+                formatProvider,
+                () => _config.LogStorageMode,
+                () => _config.LogServerHost,
+                () => _config.LogServerPort));
         _backupEngine = CreateEngine();
         _backupEngine.StateChanged += OnEngineStateChanged;
         // Publie un snapshot initial pour exposer l'etat au demarrage.

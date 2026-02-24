@@ -281,6 +281,11 @@ public sealed class LogSettingsDto
     public LogFormat? LogFormat { get; set; }
 
     /// <summary>
+    /// Selected log storage mode.
+    /// </summary>
+    public LogStorageMode? LogStorageMode { get; set; }
+
+    /// <summary>
     /// Log directory path.
     /// </summary>
     public string? LogDirectory { get; set; }
@@ -289,6 +294,16 @@ public sealed class LogSettingsDto
     /// Configuration file path.
     /// </summary>
     public string? ConfigPath { get; set; }
+
+    /// <summary>
+    /// Centralized log server host or IP.
+    /// </summary>
+    public string? LogServerHost { get; set; }
+
+    /// <summary>
+    /// Centralized log server port.
+    /// </summary>
+    public int? LogServerPort { get; set; }
 
     /// <summary>
     /// Whether encryption is enabled.

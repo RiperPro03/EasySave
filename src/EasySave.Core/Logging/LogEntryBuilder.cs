@@ -160,6 +160,9 @@ public sealed class LogEntryBuilder
     /// <param name="logFormat">Selected log format.</param>
     /// <param name="logDirectory">Optional log directory.</param>
       /// <param name="configPath">Optional config path.</param>
+      /// <param name="logStorageMode">Optional log storage mode.</param>
+      /// <param name="logServerHost">Optional centralized log server host or IP.</param>
+      /// <param name="logServerPort">Optional centralized log server port.</param>
       /// <param name="encryptionEnabled">Optional encryption flag.</param>
       /// <param name="extensionsToEncrypt">Optional encryption extension list.</param>
       /// <param name="businessSoftwareProcessName">Optional business software process name.</param>
@@ -169,6 +172,9 @@ public sealed class LogEntryBuilder
           LogFormat logFormat,
           string? logDirectory = null,
           string? configPath = null,
+          LogStorageMode? logStorageMode = null,
+          string? logServerHost = null,
+          int? logServerPort = null,
           bool? encryptionEnabled = null,
           IEnumerable<string>? extensionsToEncrypt = null,
           string? businessSoftwareProcessName = null)
@@ -179,6 +185,9 @@ public sealed class LogEntryBuilder
               LogFormat = logFormat,
               LogDirectory = logDirectory,
               ConfigPath = configPath,
+              LogStorageMode = logStorageMode,
+              LogServerHost = logServerHost,
+              LogServerPort = logServerPort,
               EncryptionEnabled = encryptionEnabled,
               ExtensionsToEncrypt = extensionsToEncrypt?.ToList(),
               BusinessSoftwareProcessName = businessSoftwareProcessName
