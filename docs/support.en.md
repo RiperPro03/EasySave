@@ -108,11 +108,11 @@ The open source tool used for testing is **xUnit**.
 Unit tests guarantee the reliability of the code and limit regressions during future evolutions.
 
 The tests cover :
-	- Validation of source and target paths
-	- Selection of files to be copied 
-	- Complete backup logic 
-	- Differential backup logic
-	- JSON file generation 
+- Validation of source and target paths
+- Selection of files to be copied 
+- Complete backup logic 
+- Differential backup logic
+- JSON file generation 
 
 # Version 2.0
 
