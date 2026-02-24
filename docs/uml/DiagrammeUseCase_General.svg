@@ -10,7 +10,7 @@
    width="1231px"
    zoomAndPan="magnify"
    id="svg87"
-   sodipodi:docname="UseCaseV3.svg"
+   sodipodi:docname="DiagrammeUseCase_General.svg"
    inkscape:version="1.4 (86a8ad7, 2024-10-11)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
@@ -28,9 +28,9 @@
      inkscape:pageopacity="0"
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#505050"
-     inkscape:zoom="0.57031529"
-     inkscape:cx="453.25806"
-     inkscape:cy="1603.499"
+     inkscape:zoom="1.1406306"
+     inkscape:cx="431.77871"
+     inkscape:cy="1564.4855"
      inkscape:window-width="1920"
      inkscape:window-height="1094"
      inkscape:window-x="-11"
@@ -611,19 +611,20 @@
        class="entity"
        data-qualified-name="EasySave v3.0.Supervision.UC_LiveState"
        data-source-line="53"
-       id="ent0023">
+       id="ent0023"
+       transform="translate(-0.6199262,-91.749078)">
       <ellipse
-         cx="272.6219"
+         cx="272.62189"
          cy="1659.0953"
-         fill="#FFF3E0"
+         fill="#fff3e0"
          rx="115.8919"
          ry="25.5784"
-         style="stroke:#2F3A4A;stroke-width:0.5;"
+         style="stroke:#2f3a4a;stroke-width:0.5"
          id="ellipse27" />
       <text
          fill="#000000"
          font-family="sans-serif"
-         font-size="14"
+         font-size="14px"
          font-weight="bold"
          lengthAdjust="spacing"
          textLength="210.5674"
@@ -636,25 +637,27 @@
        class="entity"
        data-qualified-name="EasySave v3.0.Supervision.UC_ViewLogs"
        data-source-line="54"
-       id="ent0024">
+       id="ent0024"
+       transform="translate(-164.38035,70.558772)">
       <ellipse
-         cx="585.382"
-         cy="1581.0973"
-         fill="#FFF3E0"
+         cx="561.2049"
+         cy="1588.5364"
+         fill="#fff3e0"
          rx="118.152"
-         ry="26.0304"
-         style="stroke:#2F3A4A;stroke-width:0.5;"
+         ry="26.030399"
+         style="stroke:#2f3a4a;stroke-width:0.5"
          id="ellipse28" />
       <text
          fill="#000000"
          font-family="sans-serif"
-         font-size="14"
+         font-size="14px"
          font-weight="bold"
          lengthAdjust="spacing"
          textLength="215.4072"
-         x="477.6784"
+         x="477.67841"
          y="1585.7457"
-         id="text29">Consulter les logs / activite</text>
+         id="text29"
+         transform="translate(-23.557196,7.4391144)">Consulter les logs / activite</text>
     </g>
     <!--entity UC_ReadLocalLogs-->
     <g
@@ -662,10 +665,10 @@
        data-qualified-name="EasySave v3.0.Supervision.UC_ReadLocalLogs"
        data-source-line="55"
        id="ent0025"
-       transform="translate(10.538745,11.158672)">
+       transform="matrix(0.90351091,0,0,1.0006894,367.56207,-42.439465)">
       <ellipse
-         cx="272.62439"
-         cy="1581.0978"
+         cx="300.52106"
+         cy="1673.4668"
          fill="#fff3e0"
          rx="77.104401"
          ry="17.8209"
@@ -680,33 +683,10 @@
          textLength="123.7988"
          x="210.72501"
          y="1585.7462"
-         id="text30">Lire logs locaux</text>
+         id="text30"
+         transform="translate(32.856089,92.369004)">Lire logs locaux</text>
     </g>
     <!--entity UC_ReadServerLogs-->
-    <g
-       class="entity"
-       data-qualified-name="EasySave v3.0.Supervision.UC_ReadServerLogs"
-       data-source-line="56"
-       id="ent0026">
-      <ellipse
-         cx="272.6218"
-         cy="1507.1012"
-         fill="#FFF3E0"
-         rx="92.4218"
-         ry="20.8844"
-         style="stroke:#2F3A4A;stroke-width:0.5;"
-         id="ellipse30" />
-      <text
-         fill="#000000"
-         font-family="sans-serif"
-         font-size="14"
-         font-weight="bold"
-         lengthAdjust="spacing"
-         textLength="159.2021"
-         x="193.0207"
-         y="1511.7497"
-         id="text31">Lire logs centralises</text>
-    </g>
     <!--entity UC_Lang-->
     <g
        class="entity"
@@ -1176,17 +1156,13 @@
        data-entity-2="ent0023"
        data-link-type="dependency"
        data-source-line="79"
-       id="lnk39">
+       id="lnk39"
+       transform="matrix(1.9920239,0,0,0.9995889,-30.296695,0.50440259)">
       <path
-         d="M30.79,790.4869 C30.79,963.1269 30.79,1659.0969 30.79,1659.0969 C30.79,1659.0969 88.36,1659.0969 150.31,1659.0969"
+         d="m 30.79,790.4869 c 0,172.64 0,868.61 0,868.61 0,0 57.57,0 119.52,0"
          fill="none"
          id="User-to-UC_LiveState"
-         style="stroke:#181818;stroke-width:1;" />
-      <polygon
-         fill="#181818"
-         points="156.31,1659.0969,147.31,1655.0969,151.31,1659.0969,147.31,1663.0969,156.31,1659.0969"
-         style="stroke:#181818;stroke-width:1;"
-         id="polygon55" />
+         style="stroke:#181818;stroke-width:1" />
     </g>
     <!--link User to UC_ViewLogs-->
     <g
@@ -1196,17 +1172,12 @@
        data-link-type="dependency"
        data-source-line="80"
        id="lnk40"
-       transform="matrix(0.92861383,0,0,1.0096532,3.0367148,-7.6497159)">
+       transform="matrix(0.22690704,0,0,1.0101754,32.835514,-8.2647133)">
       <path
          d="m 42.79,790.5469 c 0,160.66 0,769.99 0,769.99 0,0 312.87,0 461.71,0"
          fill="none"
          id="User-to-UC_ViewLogs"
          style="stroke:#181818;stroke-width:1" />
-      <polygon
-         fill="#181818"
-         points="505.5,1560.5369 501.5,1564.5369 510.5,1560.5369 501.5,1556.5369 "
-         style="stroke:#181818;stroke-width:1"
-         id="polygon56" />
     </g>
     <!--link User to UC_Lang-->
     <g
@@ -1407,17 +1378,12 @@
        data-link-type="dependency"
        data-source-line="96"
        id="lnk51"
-       transform="matrix(0.99997208,0,0,1.0243873,0.0167861,-36.759509)">
+       transform="matrix(0.37369651,0,0,1.0246997,523.99816,-37.016941)">
       <path
          d="m 365.28,1507.0969 c 132.04,0 358.51,0 358.51,0 0,0 0,-1362.37 0,-1362.37 0,0 53.65,0 105.85,0"
          fill="none"
          id="UC_ReadServerLogs-to-LogHub"
          style="stroke:#181818;stroke-width:1" />
-      <polygon
-         fill="#181818"
-         points="830.64,144.7269 826.64,148.7269 835.64,144.7269 826.64,140.7269 "
-         style="stroke:#181818;stroke-width:1"
-         id="polygon67" />
     </g>
     <!--link UC_CRUD to UC_ValidateJob-->
     <g
@@ -1744,17 +1710,13 @@
        data-entity-2="ent0024"
        data-link-type="dependency"
        data-source-line="121"
-       id="lnk63">
+       id="lnk63"
+       transform="matrix(0.84314312,0,0,1,228.58327,61.526435)">
       <path
-         d="M349.93,1581.0969 C385.2,1581.0969 421.76,1581.0969 460.94,1581.0969"
+         d="m 332.65148,1585.4364 c 35.27,0 71.83,0 111.01,0"
          fill="none"
          id="UC_ReadLocalLogs-to-UC_ViewLogs"
-         style="stroke:#181818;stroke-width:1;stroke-dasharray:7,7;" />
-      <polygon
-         fill="#181818"
-         points="466.94,1581.0969,457.94,1577.0969,461.94,1581.0969,457.94,1585.0969,466.94,1581.0969"
-         style="stroke:#181818;stroke-width:1;"
-         id="polygon79" />
+         style="stroke:#181818;stroke-width:1;stroke-dasharray:7, 7" />
       <text
          fill="#000000"
          font-family="sans-serif"
@@ -1764,37 +1726,19 @@
          x="346.42999"
          y="1594.1638"
          id="text79"
-         transform="translate(31.095807,2.1917701)">«extend»</text>
+         transform="matrix(1.149347,0,0,1,-46.901438,6.5312535)">«extend»</text>
     </g>
     <!--link UC_ReadServerLogs to UC_ViewLogs-->
-    <g
-       class="link"
-       data-entity-1="ent0026"
-       data-entity-2="ent0024"
-       data-link-type="dependency"
-       data-source-line="122"
-       id="lnk64">
-      <path
-         d="M357.79,1515.4669 C357.79,1529.8769 357.79,1557.8069 357.79,1557.8069 C357.79,1557.8069 455.43,1557.8069 522.83,1557.8069"
-         fill="none"
-         id="UC_ReadServerLogs-to-UC_ViewLogs"
-         style="stroke:#181818;stroke-width:1;stroke-dasharray:7,7;" />
-      <polygon
-         fill="#181818"
-         points="528.83,1557.8069,519.83,1553.8069,523.83,1557.8069,519.83,1561.8069,528.83,1557.8069"
-         style="stroke:#181818;stroke-width:1;"
-         id="polygon80" />
-      <text
-         fill="#000000"
-         font-family="sans-serif"
-         font-size="13px"
-         lengthAdjust="spacing"
-         textLength="61.185101"
-         x="360.14001"
-         y="1570.8738"
-         id="text80"
-         transform="translate(18,-20)">«extend»</text>
-    </g>
+    <text
+       fill="#000000"
+       font-family="sans-serif"
+       font-size="13px"
+       lengthAdjust="spacing"
+       textLength="61.185101"
+       x="360.14001"
+       y="1570.8738"
+       id="text80-1-2"
+       transform="translate(51.605392,-32.241726)">«extend»</text>
     <!--link UC_Lang to UC_SaveConfig-->
     <g
        class="link"
@@ -1823,6 +1767,26 @@
          y="391.51379"
          id="text81"
          transform="translate(-58.892989,-30.99631)">«include»</text>
+    </g>
+    <g
+       class="link"
+       data-entity-1="ent0028"
+       data-entity-2="ent0035"
+       data-link-type="dependency"
+       data-source-line="125"
+       id="lnk65-2"
+       transform="matrix(-0.78385206,0,0,0.66698381,840.47411,1280.1154)">
+      <path
+         d="m 417.18422,365.67871 c 72.10877,0 149.35513,0 149.35513,0 0,0 0,104.56035 0,147.32005"
+         fill="none"
+         id="UC_Lang-to-UC_SaveConfig-4"
+         style="stroke:#181818;stroke-width:1.10311;stroke-dasharray:7.72179, 7.72179" />
+      <polygon
+         fill="#181818"
+         points="495.79,511.4869 491.79,507.4869 495.79,516.4869 499.79,507.4869 "
+         style="stroke:#181818;stroke-width:1"
+         id="polygon81-5"
+         transform="translate(70.552497,4.7021054)" />
     </g>
     <!--link UC_LogFormat to UC_SaveConfig-->
     <g
@@ -1997,7 +1961,50 @@
          id="text87"
          transform="translate(-80.280443,-19.217712)">«include»</text>
     </g>
-<?plantuml-src bLRRRXit47tNLmpSXpW870Tr2xH5Qi1nLgaD-GAjdQI0WOBQ7KciAN93ScKBXV-zGt8lt5r5TlGYYJDpvdPcI85p2rQ1vekbXPnhp2nNScJkkIoOPYkOiUn-eLKfyrCbb8Q79RSOoSsIvUg1omNCcJ2nH729TbCWA6sNQXH9M6O9wRyHm8SU-a_9R-DVaz-THEaSTNNwy_Zev9UJqLCCKXhCcC7jCEFn-2XvznqOWB6IDhKRWJ1J8dUubblwbp2pITaQuG1k2ThZxty-UllkzMZq2lxyteTa9wStoUqqtQaLqjwxjLnmmooMUW-OSPvqBPke1Syu2bYXvQZlv7xoQ55BVErLFvI6YchCIL7K5gTwKrYLghdjAxUI2FslSWOfwhN7_gYoUzHm25zmbhhVDbW6lUTIJlzERvABPAUMunEJ2ohjNbFRDTLpZzf6VIYeRsn1maze7EyWHmF_gfdPysq5sF-4cY8KrV6TF9tUVWGk15yH3SrhNx_JVznfqF_C1CyhYrn9YS6oLlHYAlsvcWNzZpZdacj0gfmq50BvA3HNcbj6qs0eH1q3aE5r46y2GChADIwOpgCmQsMNBXaOqdpgf9iyObRwXD52mOMoxlZpKPFsjJiZn58wm3kPgTMAILUTd4AjZ9liYSrQYIk9NUD245s8PNNjMf25K3Ccele5X0icDwE04I9i8gWLfwLit5H6gDk802LaYZpUqUWp2s-WzQbBQVaA8oJtjmA9crreYjwl8H3zSPW9bRbIlG5MMdLGCDe2XngfOwP1heVaki49w3GqWdyhlGVNGHh1q05NcP0AyG_cedoieUfMZuLw223db9qa4fcgtRX6YIkKjgab3KzLGhbM6wUc5eR21UF6hgGaCbBN7YEo2KFvHRlj6igxvFEvgyUQisYMcvRvam6pqh8W8EwOt90fBVbQ8uXNlYVK8ekhWXg2A9e0-1fJahQjDQMmLOu-WKEtjVcQmcjcYUC31Mw2oOGx5qxJjQWjuHHPFg4JiKsrhOI9zKCjAeDkVXJPd2zAxNlNP7Ywf2NZegMl4c4yFKmkczJehDPIL1WDSwLNL0YAu4wUfrUNXryl9b4dnbxSDLcft9F3M1K2ySO-BwfCY9T-NF17ssaghLtIlY3hfh0-VDAkwE1GNItkv58PUrZGPLdjtm4vWd5tRsM19Ow1D7FD4dEJ9x3BbMtcWm5ZO4hoHHiMTN-WjW4OBBa0kdiDp3a5WzfyVvmcJ2zmp0NUB6crBjtLEzYXMTpWU94stf_SVRtxQfgS9PSftDwSJSxI4tSnxzHt5p0S71mtDqdtfDskMux3oem5xIZ5fysmT7KTDpi73Vrwfp6J-gAO79qGuxR7Wbv3kn4DMlIobmyaNs-IwMMo-mcqTJrxt_7JfedTIw9tp61LUeNgkJ9O7h7mcIIcoUJavkpAaUPYibENX0VqWVwBPLIH1zw-FUwzDE0FUF-UoqoKEHuVznMZ5yLknVeruKQcgrZ7T5s_9ChsYJbgRkqQfoLqmF5R8m_-jcewZdSrQuVjEuPB__AaDymGfdlLmp3-WSKMZZnZ4T_K02_nGSI0tcTO_i32DWzVj9v5MvKXFIDVMmiONTUZ_cK93PMgtJ7iLfVkEzLhZvqBT5Jje5uT8i85zM5bcaNrerRH8liHgsZ7lT0gtdulZx2x6bySuM1hFcVrFm00?>  </g>
+    <g
+       class="entity"
+       data-qualified-name="EasySave v3.0.Supervision.UC_ReadServerLogs"
+       data-source-line="56"
+       id="ent0026"
+       transform="translate(295.8047,0.06875769)"
+       style="width:1231px;height:2016px;background:#FFFFFF">
+      <ellipse
+         cx="272.6218"
+         cy="1507.1012"
+         fill="#fff3e0"
+         rx="92.421799"
+         ry="20.884399"
+         style="stroke:#2f3a4a;stroke-width:0.5"
+         id="ellipse30" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14px"
+         font-weight="bold"
+         lengthAdjust="spacing"
+         textLength="159.2021"
+         x="193.02071"
+         y="1511.7498"
+         id="text31">Lire logs centralises</text>
+    </g>
+<?plantuml-src bLRRRXit47tNLmpSXpW870Tr2xH5Qi1nLgaD-GAjdQI0WOBQ7KciAN93ScKBXV-zGt8lt5r5TlGYYJDpvdPcI85p2rQ1vekbXPnhp2nNScJkkIoOPYkOiUn-eLKfyrCbb8Q79RSOoSsIvUg1omNCcJ2nH729TbCWA6sNQXH9M6O9wRyHm8SU-a_9R-DVaz-THEaSTNNwy_Zev9UJqLCCKXhCcC7jCEFn-2XvznqOWB6IDhKRWJ1J8dUubblwbp2pITaQuG1k2ThZxty-UllkzMZq2lxyteTa9wStoUqqtQaLqjwxjLnmmooMUW-OSPvqBPke1Syu2bYXvQZlv7xoQ55BVErLFvI6YchCIL7K5gTwKrYLghdjAxUI2FslSWOfwhN7_gYoUzHm25zmbhhVDbW6lUTIJlzERvABPAUMunEJ2ohjNbFRDTLpZzf6VIYeRsn1maze7EyWHmF_gfdPysq5sF-4cY8KrV6TF9tUVWGk15yH3SrhNx_JVznfqF_C1CyhYrn9YS6oLlHYAlsvcWNzZpZdacj0gfmq50BvA3HNcbj6qs0eH1q3aE5r46y2GChADIwOpgCmQsMNBXaOqdpgf9iyObRwXD52mOMoxlZpKPFsjJiZn58wm3kPgTMAILUTd4AjZ9liYSrQYIk9NUD245s8PNNjMf25K3Ccele5X0icDwE04I9i8gWLfwLit5H6gDk802LaYZpUqUWp2s-WzQbBQVaA8oJtjmA9crreYjwl8H3zSPW9bRbIlG5MMdLGCDe2XngfOwP1heVaki49w3GqWdyhlGVNGHh1q05NcP0AyG_cedoieUfMZuLw223db9qa4fcgtRX6YIkKjgab3KzLGhbM6wUc5eR21UF6hgGaCbBN7YEo2KFvHRlj6igxvFEvgyUQisYMcvRvam6pqh8W8EwOt90fBVbQ8uXNlYVK8ekhWXg2A9e0-1fJahQjDQMmLOu-WKEtjVcQmcjcYUC31Mw2oOGx5qxJjQWjuHHPFg4JiKsrhOI9zKCjAeDkVXJPd2zAxNlNP7Ywf2NZegMl4c4yFKmkczJehDPIL1WDSwLNL0YAu4wUfrUNXryl9b4dnbxSDLcft9F3M1K2ySO-BwfCY9T-NF17ssaghLtIlY3hfh0-VDAkwE1GNItkv58PUrZGPLdjtm4vWd5tRsM19Ow1D7FD4dEJ9x3BbMtcWm5ZO4hoHHiMTN-WjW4OBBa0kdiDp3a5WzfyVvmcJ2zmp0NUB6crBjtLEzYXMTpWU94stf_SVRtxQfgS9PSftDwSJSxI4tSnxzHt5p0S71mtDqdtfDskMux3oem5xIZ5fysmT7KTDpi73Vrwfp6J-gAO79qGuxR7Wbv3kn4DMlIobmyaNs-IwMMo-mcqTJrxt_7JfedTIw9tp61LUeNgkJ9O7h7mcIIcoUJavkpAaUPYibENX0VqWVwBPLIH1zw-FUwzDE0FUF-UoqoKEHuVznMZ5yLknVeruKQcgrZ7T5s_9ChsYJbgRkqQfoLqmF5R8m_-jcewZdSrQuVjEuPB__AaDymGfdlLmp3-WSKMZZnZ4T_K02_nGSI0tcTO_i32DWzVj9v5MvKXFIDVMmiONTUZ_cK93PMgtJ7iLfVkEzLhZvqBT5Jje5uT8i85zM5bcaNrerRH8liHgsZ7lT0gtdulZx2x6bySuM1hFcVrFm00?>    <polygon
+       fill="#181818"
+       points="457.94,1577.0969 461.94,1581.0969 457.94,1585.0969 466.94,1581.0969 "
+       style="stroke:#181818;stroke-width:1"
+       id="polygon79-6"
+       transform="translate(-311.58457,-13.32657)" />
+    <polygon
+       fill="#181818"
+       points="457.94,1577.0969 461.94,1581.0969 457.94,1585.0969 466.94,1581.0969 "
+       style="stroke:#181818;stroke-width:1"
+       id="polygon79-6-8"
+       transform="translate(-189.7781,77.907894)" />
+    <path
+       style="fill:#161616;fill-opacity:1;stroke:#fbfbfb;stroke-width:0;stroke-dasharray:none"
+       d="m 502.60831,1647.2213 8.25277,-4.3782 0.54243,0.8524 -3.37085,3.5258 3.29336,3.2159 -0.46494,0.8136 z"
+       id="path87"
+       sodipodi:nodetypes="ccccccc" />
+  </g>
   <metadata
      id="metadata87">
     <rdf:RDF>
