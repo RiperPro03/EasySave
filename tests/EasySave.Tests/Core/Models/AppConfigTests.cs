@@ -15,6 +15,9 @@ public class AppConfigTests
         Assert.True(cfg.LogDirectory.Length > 0);
         Assert.True(cfg.Language == Language.English || cfg.Language == Language.French);
         Assert.Equal(LogFormat.Json, cfg.LogFormat);
+        Assert.Equal(LogStorageMode.LocalOnly, cfg.LogStorageMode);
+        Assert.Equal("localhost", cfg.LogServerHost);
+        Assert.Equal(9696, cfg.LogServerPort);
     }
 
     [Fact]
@@ -58,5 +61,37 @@ public class AppConfigTests
         cfg.UpdateLogDirectory(@"C:\Logs");
 
         Assert.Equal(@"C:\Logs", cfg.LogDirectory);
+    }
+
+    [Fact]
+    public void ChangeLogStorageMode_ShouldUpdateValue()
+    {
+        var cfg = AppConfig.LoadDefaults();
+
+        cfg.ChangeLogStorageMode(LogStorageMode.LocalAndServer);
+
+        Assert.Equal(LogStorageMode.LocalAndServer, cfg.LogStorageMode);
+    }
+
+    [Fact]
+    public void UpdateLogServerConnection_ShouldUpdateValues()
+    {
+        var cfg = AppConfig.LoadDefaults();
+
+        cfg.UpdateLogServerConnection("192.168.1.50", 8080);
+
+        Assert.Equal("192.168.1.50", cfg.LogServerHost);
+        Assert.Equal(8080, cfg.LogServerPort);
+    }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(-1)]
+    [InlineData(70000)]
+    public void UpdateLogServerConnection_ShouldThrow_IfPortInvalid(int port)
+    {
+        var cfg = AppConfig.LoadDefaults();
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => cfg.UpdateLogServerConnection("localhost", port));
     }
 }

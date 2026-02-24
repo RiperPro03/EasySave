@@ -45,7 +45,13 @@ public partial class App : Application
             var pathProvider = new PathProvider();
             var config = AppConfig.LoadDefaults();
             var logContext = BuildLogContext();
-            var appLogService = new AppLogService(pathProvider.LogsPath, () => config.LogFormat, logContext);
+            var appLogService = new AppLogService(
+                pathProvider.LogsPath,
+                () => config.LogFormat,
+                () => config.LogStorageMode,
+                () => config.LogServerHost,
+                () => config.LogServerPort,
+                logContext);
             var configRepository = new AppConfigRepository(pathProvider, appLogService);
             config = configRepository.Load();
 
@@ -79,7 +85,7 @@ public partial class App : Application
     /// </summary>
     private static LogContext BuildLogContext()
     {
-        var version = "2.0.0";
+        var version = "3.0.0";
         return new LogContext
         {
             AppName = "EasySave",
