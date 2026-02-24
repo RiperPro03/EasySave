@@ -211,3 +211,22 @@ CryptoSoft est désormais **mono‑instance** :
 - Impossible d’exécuter plusieurs instances simultanément
 
 ## 8. Centralisation des logs journaliers (Docker)
+
+EasySave 3.0 permet la **centralisation des logs** via un service Docker dédié.
+
+L’utilisateur peut choisir :
+- Logs uniquement locaux
+- Logs uniquement centralisés
+- Logs locaux + centralisés
+
+**Caractéristiques** :
+- Un seul fichier journalier unique pour tous les utilisateurs
+- Identification de l’utilisateur et de la machine dans chaque entrée
+- Transmission en temps réel au serveur Docker
+
+## 9. Nouveaux paramètres 
+
+- Liste des extensions prioritaires
+- Seuil maximal de taille (Ko) pour les trasnferts simultanés
+- Mode de centralisation des logs
+- Gestion de CryptoSoft mono-instance
