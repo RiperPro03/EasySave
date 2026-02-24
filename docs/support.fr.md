@@ -110,9 +110,54 @@ Pour la partie tests, l'outil open source utilisé est **xUnit**.
 Les tests unitaires permettent de garantir la fiabilité du code et de limiter les régressions lors des évolutions futures.
 
 Les tests couvrent :
-	- Validation des chemins source et cible
-	- Sélection des fichiers à copier 
-	- Logique de la sauvegarde complète 
-	- Logique de la sauvegarde différentielle
+- Validation des chemins source et cible
+- Sélection des fichiers à copier 
+- Logique de la sauvegarde complète 
+- Logique de la sauvegarde différentielle
+- Génération des fichiers JSON 
 
-	- Génération des fichiers JSON 
+
+# Version 2.0
+
+## 1. Nouveaux paramètres dans `setting.json`
+
+- Extensions à chiffrer
+- Clé de chiffrement
+- Nom du logiciel métier
+
+Ces paramètres sont configurables via **Settings**.
+
+## 2. Chiffrement via CryptoSoft
+
+**CryptoSoft** est un programme externe chargé du chiffrement des fichiers.
+
+**Fonctionnement** :
+```
+EasySave  
+-> lance CryptoSoft.exe  
+-> lui passe le fichier et la clé  
+-> récupère le code retour  
+```
+- Le **temps de chiffrement** est récupéré et ajouté aux logs (`encryptionTime`)
+- `>0` → temps de chiffrement en ms
+- 0 → pas de cryptage
+- <0 → code erreur
+
+**Remarque** : Seuls les fichiers dont l’extension et le logiciel métier correspondent aux valeurs définies par l’utilisateur dans les paramètres seront chiffrés.
+
+## 3. Gestion du logiciel métier
+
+L’utilisateur peut définir un **logiciel métier à surveiller**.
+
+**Comportement** :
+
+- Impossible de démarrer un job si le logiciel métier est actif  
+- Une sauvegarde en cours s’arrête après le fichier courant
+- Un log est généré indiquant l'arrêt
+
+## 4. Autres évolutions v2.0
+
+- Interface graphique (Avalonia)
+- Nombre de jobs illimité
+- Paramètres de cryptage et logiciel métier intégrés
+- Logs enrichis avec le temps de chiffrement

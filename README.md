@@ -24,6 +24,10 @@ Le projet est conçu pour évoluer par versions successives (v1 → v3) en respe
 - Maintenabilité
 - Architecture propre
 
+<div align="center">
+  <img src="docs/app-gui.png" alt="Aperçu de l'interface GUI EasySave" width="900" />
+</div>
+
 ---
 
 ## Documentation
@@ -89,7 +93,7 @@ Le projet est conçu pour évoluer par versions successives (v1 → v3) en respe
   </tr>
   <tr>
     <td><strong>Types de sauvegarde</strong></td>
-    <td>Complète • Différentielle</td>
+    <td>Complète & Différentielle</td>
   </tr>
   <tr>
     <td><strong>Modes d'exécution</strong></td>
@@ -97,11 +101,73 @@ Le projet est conçu pour évoluer par versions successives (v1 → v3) en respe
   </tr>
   <tr>
     <td><strong>Langues</strong></td>
-    <td>Français • Anglais</td>
+    <td>Français & Anglais</td>
   </tr>
   <tr>
     <td><strong>Logs</strong></td>
     <td>Fichier log journalier (JSON) • Fichier d'état (<code>state.json</code>)</td>
+  </tr>
+  <tr>
+    <td><strong>DLL dédiée</strong></td>
+    <td><code>EasyLog.dll</code> pour la gestion des logs</td>
+  </tr>
+</table>
+
+---
+
+## Fonctionnalités (Version 2.0)
+
+<table>
+  <tr>
+    <td><strong>Interface</strong></td>
+    <td>Application graphique Avalonia</td>
+  </tr>
+  <tr>
+    <td><strong>Travaux de sauvegarde</strong></td>
+    <td>Nombre illimité de travaux configurables</td>
+  </tr>
+  <tr>
+    <td><strong>Types de sauvegarde</strong></td>
+    <td>Complète & Différentielle</td>
+  </tr>
+  <tr>
+    <td><strong>Modes d'exécution</strong></td>
+    <td>Unitaire • Séquentielle • Ligne de commande (identique à la version 1.0)</td>
+  </tr>
+  <tr>
+    <td><strong>Langues</strong></td>
+    <td>Français & Anglais, aucune chaîne en dur dans le code</td>
+  </tr>
+  <tr>
+    <td><strong>Logs</strong></td>
+    <td>
+    Fichier log journalier (JSON ou XML)<br>
+    • Temps de cryptage ajouté (ms)<br>
+    • 0 = pas de cryptage<br>
+    • &gt;0 = durée du cryptage<br>
+    • &lt;0 = code erreur
+    </td>
+  </tr>
+  <tr>
+    <td><strong>Format du fichier log</strong></td>
+    <td>Choix utilisateur : JSON ou XML (hérité de la version 1.1)</td>
+  </tr>
+  <tr>
+    <td><strong>Fichier d'état</strong></td>
+    <td><code>state.json</code></td>
+  </tr>
+  <tr>
+    <td><strong>Cryptage</strong></td>
+    <td>Intégration du logiciel externe <strong>CryptoSoft</strong> (cryptage conditionnel selon extensions définies)</td>
+  </tr>
+  <tr>
+    <td><strong>Logiciel métier</strong></td>
+    <td>
+    Détection d’un logiciel métier<br>
+    • Interdiction de lancer un travail<br>
+    • En mode séquentiel : termine le fichier en cours puis stoppe<br>
+    • Arrêt consigné dans le log
+    </td>
   </tr>
   <tr>
     <td><strong>DLL dédiée</strong></td>
@@ -122,7 +188,8 @@ EasySave/
 │   ├── EasySave.App            # Services, infrastructure, persistance
 │   ├── EasySave.EasyLog        # DLL de logging
 │   ├── EasySave.App.Console    # Interface console
-│   └── EasySave.App.Gui        # Interface graphique (v2)
+│   ├── EasySave.App.Gui        # Interface graphique
+│   └── CryptoSoft              # Chiffrement XOR
 │
 └── tests/
     └── EasySave.Tests          # Tests unitaires
@@ -158,12 +225,12 @@ EasySave/
 
 ## Prérequis
 
-| Composant | Version | Vérification |
+| Composant | Version | / |
 |-----------|---------|--------------|
 | **Windows** | 10+ | Obligatoire |
 | **.NET SDK** | 10.0+ | `dotnet --version` |
 | **IDE** | Visual Studio 2026+ ou Rider | Recommandé |
-| **Git** | Dernière version | `git --version` |
+| **Git** | 2.49.0 | `git --version` |
 
 ---
 
@@ -176,10 +243,10 @@ git clone https://github.com/RiperPro03/EasySave.git
 cd EasySave
 ```
 
-### 2. Lancer l'application Console
+### 2. Générer l'executable dans 'EasySave\out\EasySave'
 
 ```bash
-dotnet run --project src/EasySave.App.Console
+powershell -ExecutionPolicy Bypass -File .\scripts\publish-flat.ps1
 ```
 
 ### 3. Exécuter les tests unitaires
@@ -187,6 +254,13 @@ dotnet run --project src/EasySave.App.Console
 ```bash
 dotnet test
 ```
+
+### À noter, vous pouvez lancer directement l'application Gui
+
+```bash
+dotnet run --project src/EasySave.App.Gui
+```
+
 
 ---
 
@@ -200,24 +274,21 @@ dotnet test
 
 ---
 
-## Internationalisation
-
-- **Langues supportées :** Français • Anglais
-- **Architecture :** Textes centralisés, aucune chaîne en dur dans le code
-
----
-
 ## Licence
 
 Ce projet est développé dans le cadre d'un projet académique **CESI**.
+
+MIT License
+
+Copyright &copy; 2026 — Projet académique CESI
 
 ## Diagrammes UML
 
 ### EasyLog - Système de Logging
 
-<div align="center">
+<div align="left">
 
-Le module **EasyLog** est une DLL dédiée au logging indépendant et réutilisable.
+Le module **EasyLog** est une DLL dédiée au logging indépendant et réutilisable, il est de fait inchangé pour cette v2.
 
 ![Diagramme de classes EasyLog](docs/uml/EasyLog/DiagrammeClass_EasyLog.svg)
 
@@ -244,11 +315,11 @@ Le module **EasyLog** est une DLL dédiée au logging indépendant et réutilisa
 
 ---
 
-### Console - Interface Utilisateur
+### Interface Utilisateur
 
-<div align="center">
+<div align="left">
 
-L'interface **Console** offre une expérience utilisateur en ligne de commande (CLI).
+L'interface **Console** offre une expérience utilisateur en ligne de commande (CLI), elle aussi est inchangé depuis la v1, cette dernière étant "abandonné" au profit de l'interface Gui
 
 ![Diagramme de classes Console](docs/uml/Console/DiagrammeClass_Console_(ConsoleUi).svg)
 
@@ -274,31 +345,46 @@ L'interface **Console** offre une expérience utilisateur en ligne de commande (
 
 ---
 
-### App - Logique Applicative
+L'interface **Gui** apporte l'expérience graphique d'EasySave en s'appuyant sur Avalonia et le pattern MVVM.
 
-<div align="center">
-
-Le module **App** contient les implémentations concrètes des services métier.
-
-![Diagramme de classes App](docs/uml/App/DiagrammeClass_App_Implementation.svg)
+![Diagramme de classes GUI](docs/uml/Gui/DiagrammeClass_Gui_v2.svg)
 
 <details>
-<summary><strong>Voir les détails du module App</strong></summary>
+<summary><strong>Voir le résumé du module GUI</strong></summary>
 
-**Services :**
-- `BackupEngine` : Exécution d'un job, progression, logs
-- `BackupService` : Orchestration et snapshot global `state.json`
-- `JobService` : Opérations CRUD sur les jobs
-- `PathProvider` : Gestion des chemins applicatifs (AppData/ProSoft/EasySave)
-- `StateWriter` : Écriture du snapshot d'état global
+**Résumé :**
+- Architecture MVVM stricte : `MainWindowViewModel`, `DashboardViewModel`, `JobsViewModel`, `ExecutionViewModel`, `SettingsViewModel`.
+- Vues principales : `MainWindow`, `DashboardView`, `JobsView`, `ExecutionView`, `JobEditorDialog`.
+- Modèles d'affichage dédiés pour l'exécution et l'activité (`ExecutionJobItem`, `LogEntryItem`, `RecentActivityItem`).
+- Navigation et actions pilotées par les ViewModels, sans logique métier dans le code-behind.
+- Localisation dynamique FR/EN et convertisseurs UI (`LogLevelToBrushConverter`, `StatusToTextConverter`, `L10nFormatConverter`).
+- Bootstrap de l'application via `Program`, `App` et `ViewLocator`.
 
-**Stratégies de copie :**
-- `FullCopyStrategy` : Copie totale des fichiers
-- `DifferentialCopyStrategy` : Copie sélective (taille, date, hash)
+</details>
+</div>
 
-**Repositories :**
-- `JobRepository` : Persistance dans `jobs.json` (limite 5 jobs)
-- `AppConfigRepository` : Persistance `setting.json` (langue, format log)
+---
+
+### App - Logique Applicative
+
+<div align="left">
+
+Le module **App** implémente la logique applicative concrète et orchestre l'exécution des sauvegardes.
+
+![Diagramme de classes App](docs/uml/App/DiagrammeClass_App_Implementation_v2.svg)
+
+<details>
+<summary><strong>Voir le résumé du module App</strong></summary>
+
+**Résumé :**
+- Orchestration des traitements via `BackupService` (pilotage) et `BackupEngine` (copie/chiffrement/état).
+- Gestion métier des jobs et paramètres via `JobService` et `SettingsService`.
+- Stratégies de copie `FullCopyStrategy` et `DifferentialCopyStrategy` (comparaison avancée avec hash).
+- Persistance via repositories (`JobRepository`, `AppConfigRepository`) et écriture temps réel de `state.json` (`StateWriter`).
+- Journalisation et diagnostic via `AppLogService`, `LogReaderService` et `PathProvider`.
+- Intégration de `CryptoSoft` (`CryptoSoftProcessService`) avec fallback (`NoEncryptionService`).
+- Contrôle d'exécution (Pause/Resume/Stop) et blocage si logiciel métier détecté (`BusinessSoftwareDetector`).
+- Résolution des chemins réseau au format UNC pour fiabiliser l'exécution et la traçabilité (`UncResolver`).
 
 </details>
 
@@ -308,27 +394,23 @@ Le module **App** contient les implémentations concrètes des services métier.
 
 ### Core - Couche Métier
 
-<div align="center">
+<div align="left">
 
-Le module **Core** définit le domaine métier, les DTOs et les contrats de l'application.
+Le module **Core** porte le domaine métier et les contrats partagés par toute l'application.
 
-![Diagramme de classes Core](docs/uml/Core/DiagrammeClass_Core.svg)
+![Diagramme de classes Core](docs/uml/Core/DiagrammeClass_Core_v2.svg)
 
 <details>
-<summary><strong>Voir les détails du module Core</strong></summary>
+<summary><strong>Voir le résumé du module Core</strong></summary>
 
-**Responsabilités :**
-- **Modèles métier** : `BackupJob`, `AppConfig`
-- **DTOs** : `BackupJobDto`, `BackupResultDto`, `JobStateDto`, `LogEntryDto`, `ResultDto`, `AppStateDto`
-- **Énumérations** : `BackupType`, `JobStatus`, `Language`
-- **Interfaces** : `IBackupEngine`, `IBackupService`, `IJobService`, `IJobRepository`, `IBackupCopyStrategy`, `IPathProvider`, `IStateWriter`, `IFileSystem`
-- **Événements** : `JobStateChangedEventArgs`
-- **Utilitaires** : `Guard`, `Localization`
-
-**Contraintes :**
-- Aucune dépendance UI
-- Pas de code d'infrastructure
-- Interfaces testables uniquement
+**Résumé :**
+- Modèles métier centraux : `BackupJob`, `AppConfig`.
+- DTOs d'échange et de résultat : `BackupJobDto`, `BackupResultDto`, `JobStateDto`, `LogEntryDto`, `ResultDto`, `AppStateDto`.
+- Énumérations communes : `BackupType`, `JobStatus`, `Language`, `LogLevel`, `LogEventCategory`.
+- Contrats d'abstraction : `IBackupEngine`, `IBackupService`, `IJobService`, `IJobRepository`, `ICryptoService`, `IAppLogService`, `IPathProvider`, `IStateWriter`.
+- Événements de suivi : `JobStateChangedEventArgs`.
+- Utilitaires transverses : `Guard`, `Localization`, `LogEntryBuilder`.
+- Contrainte d'architecture : couche pure, indépendante de l'UI et du stockage, testable par injection d'interfaces.
 
 </details>
 
@@ -340,20 +422,44 @@ Le module **Core** définit le domaine métier, les DTOs et les contrats de l'ap
 
 ### Diagramme d'Activité
 
-<div align="center">
+<div align="left">
 
 Vue d'ensemble du flux d'exécution des sauvegardes dans l'application.
 
-![Diagramme d'activité général](docs/uml/DiagrammeActivite_General.svg)
+![Diagramme d'activité général](docs/uml/DiagrammeActivite_General_v2.svg)
 
 <details>
-<summary><strong>Voir les détails du diagramme d'activité</strong></summary>
+<summary><strong> Flux d'activité & Processus d'exécution</strong></summary>
 
-**Représente :**
-- Flux de création d'un travail de sauvegarde
-- Processus d'exécution (complète/différentielle)
-- Gestion des erreurs et des logs
-- Mise à jour de l'état en temps réel
+Étapes principales :
+
+Initialisation : Chargement de la configuration, application de la langue et injection des services au démarrage.
+
+Gestion des travaux : CRUD complet des jobs de sauvegarde avec persistance immédiate.
+
+Cycle d'exécution :
+
+Vérification préventive du logiciel métier (blocage si le processus est détecté).
+
+Sélection intelligente de la stratégie (Complet vs Différentiel via Hash).
+
+File d'attente séquentielle pour les lancements groupés.
+
+Moteur de copie & Sécurité :
+
+Boucle de copie de fichiers avec mise à jour en temps réel de l'état (Progression, Débit).
+
+Interfaçage avec CryptoSoft pour le chiffrement à la volée selon les extensions définies.
+
+Finalisation : Génération automatique des rapports de fin (Success/Error) et mise à jour des logs.
+
+Contraintes de flux :
+
+Interruption immédiate ou mise en pause si le logiciel métier est lancé en cours de backup.
+
+Gestion des erreurs bloquantes (source indisponible) vs erreurs mineures (échec de chiffrement sur un fichier).
+
+Pilotage interactif : Pause, Reprise ou Stop à tout moment depuis l'interface.
 
 </details>
 
@@ -363,7 +469,7 @@ Vue d'ensemble du flux d'exécution des sauvegardes dans l'application.
 
 <div align="center">
 
-![Diagramme d'activité général - Mermaid](docs/uml/DiagrammeActivite_General_mermaid.svg)
+![Diagramme d'activité général - Mermaid](docs/uml/DiagrammeActivite_General_mermaid_v2.svg)
 
 </div>
 
@@ -371,19 +477,29 @@ Vue d'ensemble du flux d'exécution des sauvegardes dans l'application.
 
 ### Diagramme de Cas d'Utilisation
 
-<div align="center">
+<div align="left">
 
-Interactions entre les acteurs (utilisateurs) et le système EasySave.
+Ce diagramme formalise les interactions entre l'utilisateur, les services externes et les fonctionnalités métier d'EasySave v2.0.
 
-![Diagramme de cas d'utilisation](docs/uml/DiagrammeUseCase_General.svg)
+![Diagramme de cas d'utilisation](docs/uml/DiagrammeUseCase_General.png)
 
 <details>
-<summary><strong>Voir les détails du diagramme de cas d'utilisation</strong></summary>
+<summary><strong>Voir le résumé du scénario Use Case</strong></summary>
 
-**Acteurs et cas d'usage :**
-- Utilisateur : Créer, configurer, exécuter des sauvegardes
-- Système : Gérer les logs, surveiller l'état, gérer les fichiers
-- Relations : Include, Extend entre les cas d'usage
+**Acteurs :**
+- `Utilisateur` : gère les jobs (CRUD), lance un job ou tous les jobs, consulte les résultats, configure la langue et le format de log.
+- `Logiciel Métier (Externe)` : est contrôlé avant/pendant l'exécution pour autoriser ou bloquer une sauvegarde.
+- `CryptoSoft (Externe)` : chiffre les fichiers éligibles selon la configuration.
+
+**Cas d'usage couverts :**
+- Gestion des travaux : création/édition/suppression des jobs, validation des données, persistance.
+- Exécution : lancement unitaire ou global, mise à jour de `state.json`, journalisation des événements.
+- Configuration : langue FR/EN, format JSON/XML, extensions à chiffrer et logiciel métier à surveiller.
+
+**Relations UML clés :**
+- `<<include>>` : `Exécuter tous les jobs` inclut `Exécuter un job`; les actions de configuration incluent `Sauvegarder configuration`.
+- `<<include>>` : `Exécuter un job` inclut la mise à jour d'état, la journalisation et la détection du logiciel métier.
+- `<<extend>>` : le chiffrement via `CryptoSoft` étend l'exécution d'un job lorsqu'il est requis; la consultation de résultat étend l'exécution d'un job.
 
 </details>
 
@@ -395,21 +511,22 @@ Interactions entre les acteurs (utilisateurs) et le système EasySave.
 
 ### Lancement d'un Job de Sauvegarde
 
-<div align="center">
+<div align="left">
 
-Séquence d'exécution complète d'un travail de sauvegarde.
+Ce diagramme illustre le cycle complet d'un job, de la sélection par l'utilisateur jusqu'au résultat final affiché.
 
-![Diagramme de séquence - Lancement d'un job](docs/uml/DiagrammeSequence_de_lancement_d_un_job.svg)
+![Diagramme de séquence - Lancement d'un job](docs/uml/DiagrammeSequence_de_lancement_d_un_job_v2.svg)
 
 <details>
-<summary><strong>Voir les détails du diagramme</strong></summary>
+<summary><strong>Voir le résumé du scénario</strong></summary>
 
-**Interactions :**
-- Initialisation du job par l'utilisateur
-- Vérification des paramètres et de l'état
-- Démarrage du processus de sauvegarde
-- Notification de progression
-- Finalisation et mise à jour de l'état
+**Résumé :**
+- Chargement du job (via `JobService`/`JobRepository`) puis validation de son état.
+- Contrôle du logiciel métier avant démarrage (blocage si processus interdit détecté).
+- Exécution par `BackupEngine` avec stratégie adaptée (`Full` ou `Differential`).
+- Suivi temps réel: progression, écriture de l'état (`StateWriter`) et journalisation continue.
+- Chiffrement conditionnel via `CryptoSoft` selon la configuration et les extensions ciblées.
+- Finalisation avec log de synthèse, statut final (`Completed`/`Error`) et marquage du job exécuté.
 
 </details>
 
@@ -419,21 +536,21 @@ Séquence d'exécution complète d'un travail de sauvegarde.
 
 ### Sauvegarde Différentielle
 
-<div align="center">
+<div align="left">
 
-Processus détaillé d'une sauvegarde différentielle.
+Ce diagramme décrit la logique de copie sélective en mode différentiel.
 
-![Diagramme de séquence - Sauvegarde différentielle](docs/uml/DiagrammeSequence_sauvegarde_differentielle.svg)
+![Diagramme de séquence - Sauvegarde différentielle](docs/uml/DiagrammeSequence_sauvegarde_differentielle_v2.svg)
 
 <details>
-<summary><strong>Voir les détails du diagramme</strong></summary>
+<summary><strong>Voir le résumé du scénario</strong></summary>
 
-**Processus :**
-- Comparaison avec la dernière sauvegarde complète
-- Identification des fichiers modifiés
-- Copie sélective des fichiers différents
-- Mise à jour des métadonnées
-- Génération des logs différentiels
+**Résumé :**
+- Double contrôle logiciel métier: avant lancement et pendant l'exécution.
+- Décision de copie par `DifferentialCopyStrategy` (existence, taille, date, puis hash si nécessaire).
+- Copie uniquement des fichiers nouveaux/modifiés; les autres sont explicitement ignorés (`file.skipped`).
+- Chiffrement optionnel post-copie; en cas d'échec de chiffrement, la sauvegarde continue avec erreur tracée.
+- Production d'un résumé final de traitement pour le job différentiel.
 
 </details>
 
@@ -443,21 +560,21 @@ Processus détaillé d'une sauvegarde différentielle.
 
 ### Lancement d'un Batch via Arguments
 
-<div align="center">
+<div align="left">
 
-Exécution de plusieurs sauvegardes en mode batch via ligne de commande.
+Ce diagramme montre l'exécution séquentielle de plusieurs jobs depuis la ligne de commande.
 
-![Diagramme de séquence - Batch via arguments](docs/uml/DiagrammeSequence_lancement_d_un_batch_via_arguments.svg)
+![Diagramme de séquence - Batch via arguments](docs/uml/DiagrammeSequence_lancement_d_un_batch_via_arguments_v2.svg)
 
 <details>
-<summary><strong>Voir les détails du diagramme</strong></summary>
+<summary><strong>Voir le résumé du scénario</strong></summary>
 
-**Workflow :**
-- Parsing des arguments en ligne de commande
-- Validation de la syntaxe (ex: `1-3`, `1;3`)
-- Exécution séquentielle des jobs
-- Gestion des erreurs par job
-- Rapport global de l'exécution
+**Résumé :**
+- Analyse des arguments (`ArgsParser`) avec support des formats `1;2;3` et `1-3`.
+- Gestion immédiate des erreurs de syntaxe/intervalle avant toute exécution.
+- Contrôle global puis contrôle par job (`CanStartSequence`) pour respecter la contrainte logiciel métier.
+- Boucle d'exécution séquentielle: chargement du job, lancement, retour de résultat, puis passage au suivant.
+- Isolation des erreurs par job et restitution d'un bilan global de batch en fin de traitement.
 
 </details>
 
@@ -467,22 +584,23 @@ Exécution de plusieurs sauvegardes en mode batch via ligne de commande.
 
 ### Processus de Journalisation
 
-<div align="center">
+<div align="left">
 
-Mécanisme de création et mise à jour des logs en temps réel.
+Ce diagramme présente la chaîne de journalisation, de la construction de l'entrée jusqu'à l'écriture disque.
 
-![Diagramme de séquence - Journalisation](docs/uml/DiagrammeSequence_de_journalisation.svg)
+![Diagramme de séquence - Journalisation](docs/uml/DiagrammeSequence_de_journalisation_v2.svg)
 
 <details>
-<summary><strong>Voir les détails du diagramme</strong></summary>
+<summary><strong>Voir le résumé du scénario</strong></summary>
 
-**Flux de journalisation :**
-- Capture des événements de sauvegarde
-- Formatage en JSON/XML
-- Écriture dans le fichier log journalier
-- Mise à jour du fichier d'état global
-- Horodatage et traçabilité
+**Résumé :**
+- Construction d'un `LogEntryDto` via `LogEntryBuilder` (contexte, résultat, niveau de sévérité).
+- Création du logger via `LoggerFactory` avec sélection du format (JSON/XML).
+- Instanciation de `DailyLogger` et encapsulation optionnelle par `SafeLogger` pour sécuriser l'écriture.
+- Sérialisation de l'entrée puis écriture dans le fichier journalier via `ILogWriter`.
+- Retour d'état (succès/échec) au client appelant pour assurer la traçabilité des opérations.
 
 </details>
 
 </div>
+

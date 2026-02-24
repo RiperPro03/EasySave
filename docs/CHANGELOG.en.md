@@ -66,3 +66,46 @@ This project respects semantic versioning.
 - Command-line application only
 - Maximum 5 backup jobs
 - Sequential backup only
+
+## [2.0.0]
+
+### Features
+
+- FEAT] App GUI navigation 
+ https://github.com/RiperPro03/EasySave/issues/85
+
+- FEAT] Add Folder Pickers (Source/Target) with UI Validation 
+ https://github.com/RiperPro03/EasySave/issues/90
+
+- FEAT] Backup Job View 
+ https://github.com/RiperPro03/EasySave/issues/91
+
+- FEAT] Live Execution View 
+ https://github.com/RiperPro03/EasySave/issues/92
+
+- FEAT] Setting View 
+ https://github.com/RiperPro03/EasySave/issues/95
+
+- FEAT] Repository Jobs: upgrade to “unlimited” 
+ https://github.com/RiperPro03/EasySave/issues/97
+
+- FEAT] Integrate CryptoSoft 
+ https://github.com/RiperPro03/EasySave/issues/99
+
+- FEAT] Log: add "encryption time (ms)" 
+ https://github.com/RiperPro03/EasySave/issues/100
+
+- FEAT] Configurable business software detection (process) 
+ https://github.com/RiperPro03/EasySave/issues/101
+
+- [FEAT] Prohibit job launch if business software active (and log shutdown) 
+ https://github.com/RiperPro03/EasySave/issues/102
+
+- FEAT] Sequential: if business software appears -> end current file then stop 
+ https://github.com/RiperPro03/EasySave/issues/103
+
+
+### Documentation
+
+- Docs deliverable v2.0 (user + support + changelog + UML) 
+ https://github.com/RiperPro03/EasySave/issues/98

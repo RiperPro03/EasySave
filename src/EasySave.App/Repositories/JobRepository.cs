@@ -1,6 +1,7 @@
 using EasySave.Core.DTO;
 using EasySave.Core.Interfaces;
 using EasySave.Core.Models;
+using System.Collections.Concurrent;
 using System.Text.Json;
 
 namespace EasySave.App.Repositories;
@@ -10,9 +11,13 @@ namespace EasySave.App.Repositories;
 /// </summary>
 internal sealed class JobRepository : IJobRepository
 {
+    private static readonly ConcurrentDictionary<string, object> FileLocks = new(StringComparer.OrdinalIgnoreCase);
     private readonly IPathProvider _pathProvider;
     private readonly List<BackupJob> _jobs;
     private readonly string _jobsFilePath;
+    private readonly object _sync = new();
+    private readonly object _fileLock;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="JobRepository"/> class.
     /// </summary>
@@ -24,6 +29,7 @@ internal sealed class JobRepository : IJobRepository
         _pathProvider.EnsureDirectoriesCreated();
 
         _jobsFilePath = Path.Combine(_pathProvider.ConfigPath, "jobs.json");
+        _fileLock = FileLocks.GetOrAdd(Path.GetFullPath(_jobsFilePath), _ => new object());
         _jobs = LoadJobs();
     }
 
@@ -31,14 +37,27 @@ internal sealed class JobRepository : IJobRepository
     /// Returns all persisted jobs.
     /// </summary>
     /// <returns>A read-only list of jobs.</returns>
-    public IReadOnlyList<BackupJob> GetAll() => _jobs.AsReadOnly();
+    public IReadOnlyList<BackupJob> GetAll()
+    {
+        lock (_sync)
+        {
+            // Snapshot pour eviter les enumerations concurrentes sur la liste interne.
+            return _jobs.ToList().AsReadOnly();
+        }
+    }
 
     /// <summary>
     /// Gets a job by identifier.
     /// </summary>
     /// <param name="id">The job identifier.</param>
     /// <returns>The matching job, or <c>null</c> if not found.</returns>
-    public BackupJob? GetById(string id) => _jobs.FirstOrDefault(job => job.Id == id);
+    public BackupJob? GetById(string id)
+    {
+        lock (_sync)
+        {
+            return _jobs.FirstOrDefault(job => job.Id == id);
+        }
+    }
 
     /// <summary>
     /// Adds a new job.
@@ -52,12 +71,15 @@ internal sealed class JobRepository : IJobRepository
     {
         if (job is null)
             throw new ArgumentNullException(nameof(job));
-        
-        if (_jobs.Any(existing => existing.Id == job.Id))
-            throw new InvalidOperationException($"Job with ID {job.Id} already exists.");
 
-        _jobs.Add(job);
-        SaveJobs();
+        lock (_sync)
+        {
+            if (_jobs.Any(existing => existing.Id == job.Id))
+                throw new InvalidOperationException($"Job with ID {job.Id} already exists.");
+
+            _jobs.Add(job);
+            SaveJobsLocked();
+        }
     }
     /// <summary>
     /// Removes a job by identifier.
@@ -66,12 +88,15 @@ internal sealed class JobRepository : IJobRepository
     /// <exception cref="KeyNotFoundException">Thrown when the job does not exist.</exception>
     public void Remove(string id)
     {
-        var job = GetById(id);
-        if (job is null)
-            throw new KeyNotFoundException($"Job with ID {id} not found.");
+        lock (_sync)
+        {
+            var job = _jobs.FirstOrDefault(candidate => candidate.Id == id);
+            if (job is null)
+                throw new KeyNotFoundException($"Job with ID {id} not found.");
 
-        _jobs.Remove(job);
-        SaveJobs();
+            _jobs.Remove(job);
+            SaveJobsLocked();
+        }
     }
 
     /// <summary>
@@ -87,22 +112,27 @@ internal sealed class JobRepository : IJobRepository
             throw new ArgumentNullException(nameof(updatedjob));
         }
 
-        var existingJob = GetById(updatedjob.Id);
-        if (existingJob is null)
-            throw new KeyNotFoundException($"Job with ID {updatedjob.Id} not found.");
-
-        existingJob.UpdateDefinition(updatedjob.Name, updatedjob.SourcePath, updatedjob.TargetPath, updatedjob.Type);
-        if (updatedjob.IsActive)
-            existingJob.Enable();
-        else
-            existingJob.Disable();
-
-        if (updatedjob.LastRun is not null)
+        lock (_sync)
         {
-            existingJob.MarkExecuted(updatedjob.LastRun);
-        }
+            var existingJob = _jobs.FirstOrDefault(candidate => candidate.Id == updatedjob.Id);
+            if (existingJob is null)
+                throw new KeyNotFoundException($"Job with ID {updatedjob.Id} not found.");
 
-        SaveJobs();
+
+            existingJob.UpdateDefinition(updatedjob.Name, updatedjob.SourcePath, updatedjob.TargetPath, updatedjob.Type, updatedjob.PriorityExtensions);
+
+            if (updatedjob.IsActive)
+                existingJob.Enable();
+            else
+                existingJob.Disable();
+
+            if (updatedjob.LastRun is not null)
+            {
+                existingJob.MarkExecuted(updatedjob.LastRun);
+            }
+
+            SaveJobsLocked();
+        }
     }
 
     /// <summary>
@@ -111,10 +141,15 @@ internal sealed class JobRepository : IJobRepository
     /// <returns>A list of valid jobs.</returns>
     private List<BackupJob> LoadJobs()
     {
-        if (!File.Exists(_jobsFilePath))
-            return new List<BackupJob>();
+        string json;
+        lock (_fileLock)
+        {
+            if (!File.Exists(_jobsFilePath))
+                return new List<BackupJob>();
 
-        var json = File.ReadAllText(_jobsFilePath);
+            json = File.ReadAllText(_jobsFilePath);
+        }
+
         if (string.IsNullOrWhiteSpace(json))
             return new List<BackupJob>();
 
@@ -150,14 +185,18 @@ internal sealed class JobRepository : IJobRepository
     /// <summary>
     /// Persists jobs to the JSON file.
     /// </summary>
-    private void SaveJobs()
+    private void SaveJobsLocked()
     {
-        _pathProvider.EnsureDirectoriesCreated();
+        lock (_fileLock)
+        {
+            _pathProvider.EnsureDirectoriesCreated();
 
-        var dtos = _jobs.Select(BackupJobDto.FromModel).ToList();
-        var json = JsonSerializer.Serialize(dtos, new JsonSerializerOptions { WriteIndented = true });
-        File.WriteAllText(_jobsFilePath, json);
+            var dtos = _jobs.Select(BackupJobDto.FromModel).ToList();
+            var json = JsonSerializer.Serialize(dtos, new JsonSerializerOptions { WriteIndented = true });
+            var tempFilePath = _jobsFilePath + ".tmp";
+
+            File.WriteAllText(tempFilePath, json);
+            File.Move(tempFilePath, _jobsFilePath, overwrite: true);
+        }
     }
-
-
 }

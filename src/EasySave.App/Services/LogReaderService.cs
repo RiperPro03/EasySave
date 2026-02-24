@@ -1,306 +1,125 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Xml;
-using System.Xml.Linq;
-using System.Xml.Serialization;
 using EasySave.Core.DTO;
+using EasySave.EasyLog.Factories;
+using EasySave.EasyLog.Interfaces;
+using EasySave.EasyLog.Options;
 
 namespace EasySave.App.Services;
 
 /// <summary>
-/// Reads log files and exposes parsed entries or formatted content.
+/// Reads application logs through EasyLog.
 /// </summary>
 public sealed class LogReaderService
 {
-    private static readonly JsonSerializerOptions LogJsonOptions = new()
-    {
-        PropertyNameCaseInsensitive = true,
-        Converters = { new JsonStringEnumConverter() }
-    };
+    private const int LocalAndServerConnectTimeoutMs = 150;
+    private const int LocalAndServerReceiveTimeoutMs = 250;
+    private readonly string _resolvedLogDirectory;
+    private readonly Func<LogStorageMode> _logStorageModeProvider;
+    private readonly Func<string> _logServerHostProvider;
+    private readonly Func<int> _logServerPortProvider;
+    private readonly object _syncRoot = new();
+    private ILogReader<LogEntryDto>? _logReader;
+    private LogStorageMode _currentStorageMode;
+    private string _currentServerHost = string.Empty;
+    private int _currentServerPort;
 
-    private static readonly JsonSerializerOptions PrettyJsonOptions = new()
-    {
-        WriteIndented = true,
-        Converters = { new JsonStringEnumConverter() }
-    };
-
-    private readonly string _logDirectory;
-
+    /// <summary>
+    /// Initializes a new instance of the service.
+    /// Uses the default EasySave AppData log folder when no path is provided.
+    /// </summary>
+    /// <param name="logDirectory">Optional path to the logs folder.</param>
     public LogReaderService(string? logDirectory = null)
+        : this(
+            logDirectory,
+            () => LogStorageMode.LocalOnly,
+            () => "localhost",
+            () => 9696)
     {
-        _logDirectory = string.IsNullOrWhiteSpace(logDirectory)
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the service with dynamic storage settings.
+    /// </summary>
+    /// <param name="logDirectory">Optional path to the local logs folder.</param>
+    /// <param name="logStorageModeProvider">Provides the current storage mode.</param>
+    /// <param name="logServerHostProvider">Provides the centralized log server host.</param>
+    /// <param name="logServerPortProvider">Provides the centralized log server port.</param>
+    public LogReaderService(
+        string? logDirectory,
+        Func<LogStorageMode> logStorageModeProvider,
+        Func<string> logServerHostProvider,
+        Func<int> logServerPortProvider)
+    {
+        _resolvedLogDirectory = string.IsNullOrWhiteSpace(logDirectory)
             ? Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                 "ProSoft",
                 "EasySave",
                 "Logs")
             : logDirectory;
+        _logStorageModeProvider = logStorageModeProvider ?? throw new ArgumentNullException(nameof(logStorageModeProvider));
+        _logServerHostProvider = logServerHostProvider ?? throw new ArgumentNullException(nameof(logServerHostProvider));
+        _logServerPortProvider = logServerPortProvider ?? throw new ArgumentNullException(nameof(logServerPortProvider));
+        _currentStorageMode = _logStorageModeProvider();
     }
 
-    public string LogDirectory => _logDirectory;
-
     /// <summary>
-    /// Reads all entries across recent log files.
+    /// Reads log entries from a limited number of files in the log directory.
     /// </summary>
     public IReadOnlyList<LogEntryDto> ReadEntries(int maxFiles = 7)
     {
-        if (string.IsNullOrWhiteSpace(_logDirectory) || !Directory.Exists(_logDirectory))
-            return Array.Empty<LogEntryDto>();
-
-        var entries = new List<LogEntryDto>();
-        foreach (var file in EnumerateLogFiles(maxFiles))
-        {
-            entries.AddRange(ReadEntriesFromFile(file));
-        }
-
-        return entries;
+        EnsureReader();
+        return _logReader!.ReadEntries(maxFiles);
     }
 
     /// <summary>
-    /// Reads all entries across all available log files.
+    /// Reads all parseable log entries from every supported file in the log directory.
     /// </summary>
     public IReadOnlyList<LogEntryDto> ReadAllEntries()
     {
-        if (string.IsNullOrWhiteSpace(_logDirectory) || !Directory.Exists(_logDirectory))
-            return Array.Empty<LogEntryDto>();
-
-        var entries = new List<LogEntryDto>();
-        foreach (var file in EnumerateLogFiles(null))
-        {
-            entries.AddRange(ReadEntriesFromFile(file));
-        }
-
-        return entries;
+        EnsureReader();
+        return _logReader!.ReadAllEntries();
     }
 
-    /// <summary>
-    /// Reads log files and returns formatted content for the log view.
-    /// </summary>
-    public IReadOnlyList<LogFileEntry> ReadLogFiles(int? maxFiles = null)
+    private void EnsureReader()
     {
-        if (!Directory.Exists(_logDirectory))
+        var desiredStorageMode = _logStorageModeProvider();
+        var desiredServerHost = _logServerHostProvider();
+        var desiredServerPort = _logServerPortProvider();
+
+        lock (_syncRoot)
         {
-            return new[]
+            if (_logReader != null
+                && desiredStorageMode == _currentStorageMode
+                && string.Equals(desiredServerHost, _currentServerHost, StringComparison.Ordinal)
+                && desiredServerPort == _currentServerPort)
             {
-                new LogFileEntry
+                return;
+            }
+
+            _currentStorageMode = desiredStorageMode;
+            _currentServerHost = desiredServerHost;
+            _currentServerPort = desiredServerPort;
+
+            // En mode mixte, la lecture distante est best-effort pour ne pas bloquer l'UI.
+            // On applique des timeouts courts; les logs locaux restent prioritaires.
+            bool isMixedMode = desiredStorageMode == LogStorageMode.LocalAndServer;
+
+            // Le reader EasyLog est reconstruit seulement si la strategie ou la cible serveur change.
+            _logReader = LogReaderFactory.Create<LogEntryDto>(new LogOptions
+            {
+                LogDirectory = _resolvedLogDirectory,
+                StorageMode = desiredStorageMode,
+                Server = new LogServerOptions
                 {
-                    FileName = "Erreur",
-                    Content = "Le dossier de logs n'existe pas."
+                    Host = desiredServerHost,
+                    Port = desiredServerPort,
+                    ConnectTimeoutMs = isMixedMode ? LocalAndServerConnectTimeoutMs : 5000,
+                    ReceiveTimeoutMs = isMixedMode ? LocalAndServerReceiveTimeoutMs : 10000
                 }
-            };
-        }
-
-        var files = EnumerateLogFiles(maxFiles).ToList();
-        if (!files.Any())
-        {
-            return new[]
-            {
-                new LogFileEntry
-                {
-                    FileName = "Aucun log",
-                    Content = "Aucun fichier de log trouvé."
-                }
-            };
-        }
-
-        var results = new List<LogFileEntry>();
-        foreach (var file in files)
-        {
-            var extension = Path.GetExtension(file);
-            var entries = ReadEntriesFromFile(file).ToList();
-            var content = FormatEntries(entries, extension, file);
-            var label = string.Equals(extension, ".xml", StringComparison.OrdinalIgnoreCase) ? "XML" : "JSON";
-
-            results.Add(new LogFileEntry
-            {
-                FileName = $"{label}: {Path.GetFileName(file)}",
-                Content = content
             });
         }
-
-        return results;
     }
-
-    private IEnumerable<string> EnumerateLogFiles(int? maxFiles)
-    {
-        var files = Directory
-            .EnumerateFiles(_logDirectory, "*.json")
-            .Concat(Directory.EnumerateFiles(_logDirectory, "*.xml"))
-            .OrderByDescending(Path.GetFileName);
-
-        return maxFiles.HasValue ? files.Take(maxFiles.Value) : files;
-    }
-
-    private static IEnumerable<LogEntryDto> ReadEntriesFromFile(string filePath)
-    {
-        var extension = Path.GetExtension(filePath);
-        if (string.Equals(extension, ".xml", StringComparison.OrdinalIgnoreCase))
-        {
-            return ReadXmlEntries(filePath);
-        }
-
-        if (string.Equals(extension, ".json", StringComparison.OrdinalIgnoreCase))
-        {
-            return ReadJsonEntries(filePath);
-        }
-
-        return Array.Empty<LogEntryDto>();
-    }
-
-    private static IEnumerable<LogEntryDto> ReadJsonEntries(string filePath)
-    {
-        IEnumerable<string> lines;
-        try
-        {
-            lines = File.ReadLines(filePath);
-        }
-        catch (IOException)
-        {
-            yield break;
-        }
-
-        foreach (var line in lines)
-        {
-            var trimmed = line.Trim();
-            if (trimmed.Length == 0)
-                continue;
-            if (string.Equals(trimmed, "<logs>", StringComparison.OrdinalIgnoreCase))
-                continue;
-            if (string.Equals(trimmed, "</logs>", StringComparison.OrdinalIgnoreCase))
-                continue;
-
-            LogEntryDto? entry;
-            try
-            {
-                entry = JsonSerializer.Deserialize<LogEntryDto>(trimmed, LogJsonOptions);
-            }
-            catch (JsonException)
-            {
-                continue;
-            }
-
-            if (entry != null)
-                yield return entry;
-        }
-    }
-
-    private static IEnumerable<LogEntryDto> ReadXmlEntries(string filePath)
-    {
-        XDocument document;
-        try
-        {
-            document = XDocument.Load(filePath);
-        }
-        catch (Exception)
-        {
-            yield break;
-        }
-
-        var serializer = new XmlSerializer(typeof(LogEntryDto));
-        var root = document.Root;
-        if (root is null)
-            yield break;
-
-        foreach (var element in root.Elements())
-        {
-            LogEntryDto? entry = null;
-            try
-            {
-                using var reader = element.CreateReader();
-                entry = serializer.Deserialize(reader) as LogEntryDto;
-            }
-            catch (InvalidOperationException)
-            {
-                entry = null;
-            }
-
-            if (entry != null)
-                yield return entry;
-        }
-    }
-
-    private static string FormatEntries(IEnumerable<LogEntryDto> entries, string extension, string filePath)
-    {
-        var entryList = entries.ToList();
-        if (entryList.Count == 0)
-        {
-            try
-            {
-                return File.ReadAllText(filePath);
-            }
-            catch (IOException)
-            {
-                return string.Empty;
-            }
-        }
-
-        if (string.Equals(extension, ".xml", StringComparison.OrdinalIgnoreCase))
-            return FormatXml(entryList);
-
-        return FormatJson(entryList);
-    }
-
-    private static string FormatJson(IEnumerable<LogEntryDto> entries)
-    {
-        var blocks = entries
-            .Select(entry => JsonSerializer.Serialize(entry, PrettyJsonOptions))
-            .ToList();
-
-        return string.Join(Environment.NewLine + Environment.NewLine, blocks);
-    }
-
-    private static string FormatXml(IEnumerable<LogEntryDto> entries)
-    {
-        var serializer = new XmlSerializer(typeof(LogEntryDto));
-        var root = new XElement("logs");
-
-        foreach (var entry in entries)
-        {
-            var entryXml = SerializeXml(serializer, entry);
-            if (entryXml is not null)
-                root.Add(entryXml);
-        }
-
-        var doc = new XDocument(root);
-        var settings = new XmlWriterSettings
-        {
-            OmitXmlDeclaration = true,
-            Indent = true
-        };
-
-        using var writer = new StringWriter();
-        using var xmlWriter = XmlWriter.Create(writer, settings);
-        doc.Save(xmlWriter);
-        xmlWriter.Flush();
-        return writer.ToString();
-    }
-
-    private static XElement? SerializeXml(XmlSerializer serializer, LogEntryDto entry)
-    {
-        try
-        {
-            using var stringWriter = new StringWriter();
-            var settings = new XmlWriterSettings { OmitXmlDeclaration = true };
-            using var xmlWriter = XmlWriter.Create(stringWriter, settings);
-            serializer.Serialize(xmlWriter, entry);
-            return XElement.Parse(stringWriter.ToString());
-        }
-        catch (InvalidOperationException)
-        {
-            return null;
-        }
-    }
-}
-
-/// <summary>
-/// Represents a formatted log file entry for the log view.
-/// </summary>
-public sealed class LogFileEntry
-{
-    public string FileName { get; set; } = string.Empty;
-    public string Content { get; set; } = string.Empty;
 }

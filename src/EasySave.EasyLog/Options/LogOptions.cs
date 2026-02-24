@@ -19,5 +19,15 @@ namespace EasySave.EasyLog.Options
         /// Gets a value indicating whether to wrap the logger in a safe wrapper.
         /// </summary>
         public bool UseSafeLogger { get; init; } = true;
+
+        /// <summary>
+        /// Gets where logs are read/written.
+        /// </summary>
+        public LogStorageMode StorageMode { get; init; } = LogStorageMode.LocalOnly;
+
+        /// <summary>
+        /// Gets remote server options for ServerOnly / LocalAndServer modes.
+        /// </summary>
+        public LogServerOptions? Server { get; init; }
     }
 }

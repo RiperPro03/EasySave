@@ -84,10 +84,16 @@ public sealed class AppConfigRepository
         var config = AppConfig.LoadDefaults();
         config.ChangeLanguage(dto.Language);
         config.ChangeLogFormat(dto.LogFormat);
+        config.ChangeLogStorageMode(dto.LogStorageMode);
+        // Compatibilite ascendante: on garde les valeurs par defaut si l'ancien fichier n'a pas ces champs.
+        config.UpdateLogServerConnection(
+            string.IsNullOrWhiteSpace(dto.LogServerHost) ? config.LogServerHost : dto.LogServerHost,
+            dto.LogServerPort is <= 0 or > 65535 ? config.LogServerPort : dto.LogServerPort);
         config.ChangeBussinessSoftware(dto.BusinessSoftwareProcessName);
         config.SetEncryptionEnabled(dto.EncryptionEnabled);
         config.UpdateEncryptionKey(dto.EncryptionKey);
         config.UpdateExtensionsToEncrypt(dto.ExtensionsToEncrypt ?? new List<string>());
+        config.UpdateLargeFileThreshold(dto.LargeFileThresholdKb);
         return config;
     }
 
@@ -107,10 +113,14 @@ public sealed class AppConfigRepository
         {
             Language = config.Language,
             LogFormat = config.LogFormat,
+            LogStorageMode = config.LogStorageMode,
+            LogServerHost = config.LogServerHost,
+            LogServerPort = config.LogServerPort,
             BusinessSoftwareProcessName = config.BusinessSoftwareProcessName,
             EncryptionEnabled = config.EncryptionEnabled,
             EncryptionKey = config.EncryptionKey,
-            ExtensionsToEncrypt = config.ExtensionsToEncrypt.ToList()
+            ExtensionsToEncrypt = config.ExtensionsToEncrypt.ToList(),
+            LargeFileThresholdKb = config.LargeFileThresholdKb
         };
 
         var json = JsonSerializer.Serialize(dto, _options);
@@ -135,9 +145,13 @@ public sealed class AppConfigRepository
                 config.LogFormat,
                 ToUncOrEmpty(config.LogDirectory),
                 ToUncOrEmpty(_configFilePath),
+                config.LogStorageMode,
+                config.LogServerHost,
+                config.LogServerPort,
                 config.EncryptionEnabled,
                 config.ExtensionsToEncrypt,
-                config.BusinessSoftwareProcessName)
+                config.BusinessSoftwareProcessName,
+                config.LargeFileThresholdKb)
             .Build();
 
         _logService.Write(entry);
@@ -161,9 +175,13 @@ public sealed class AppConfigRepository
     {
         public Language Language { get; set; } = Language.English;
         public LogFormat LogFormat { get; set; } = LogFormat.Json;
+        public LogStorageMode LogStorageMode { get; set; } = LogStorageMode.LocalOnly;
+        public string? LogServerHost { get; set; } = "localhost";
+        public int LogServerPort { get; set; } = 9696;
         public string? BusinessSoftwareProcessName { get; set; }
         public bool EncryptionEnabled { get; set; }
         public string? EncryptionKey { get; set; }
         public List<string>? ExtensionsToEncrypt { get; set; }
+        public int LargeFileThresholdKb { get; set; }
     }
 }

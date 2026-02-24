@@ -42,7 +42,7 @@ public class JobServiceTests : IDisposable
 
         service.Create("1", "Job1", @"C:\Src", @"D:\Dst", BackupType.Full);
 
-        service.Update("1", "Job1-Updated", @"C:\NewSrc", @"D:\NewDst", BackupType.Differential, isActive: false);
+        service.Update("1", "Job1-Updated", @"C:\NewSrc", @"D:\NewDst", BackupType.Differential, isActive: false, new List<string>());
 
         var job = service.GetById("1");
         Assert.NotNull(job);
@@ -60,7 +60,7 @@ public class JobServiceTests : IDisposable
         var service = new JobService(repository);
 
         Assert.Throws<KeyNotFoundException>(
-            () => service.Update("missing", "Job", @"C:\Src", @"D:\Dst", BackupType.Full, isActive: true));
+            () => service.Update("missing", "Job", @"C:\Src", @"D:\Dst", BackupType.Full, isActive: true, new List<string>()));
     }
 
     [Fact]

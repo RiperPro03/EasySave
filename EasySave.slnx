@@ -1,9 +1,12 @@
 <Solution>
-  <Project Path="src/CryptoSoft/CryptoSoft.csproj" />
+  <Project Path="src/CryptoSoft/CryptoSoft.csproj">
+    <Build Solution="Debug|*" Project="false" />
+  </Project>
   <Project Path="src/EasySave.App.Console/EasySave.App.Console.csproj" />
   <Project Path="src/EasySave.App.Gui/EasySave.App.Gui.csproj" />
   <Project Path="src/EasySave.App/EasySave.App.csproj" />
   <Project Path="src/EasySave.Core/EasySave.Core.csproj" />
   <Project Path="src/EasySave.EasyLog/EasySave.EasyLog.csproj" />
+  <Project Path="src/LogHub.Server/LogHub.Server.csproj" />
   <Project Path="tests/EasySave.Tests/EasySave.Tests.csproj" />
 </Solution>

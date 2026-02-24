@@ -18,12 +18,21 @@ public partial class SettingsViewModel : ViewModelBase
     [ObservableProperty] private string _encryptionKey = string.Empty;
     [ObservableProperty] private Language _selectedLanguage;
     [ObservableProperty] private LogFormat _selectedLogFormat;
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsRemoteLogServerSettingsVisible))]
+    private LogStorageMode _selectedLogStorageMode;
     [ObservableProperty] private string _extensionsToEncrypt = string.Empty;
     [ObservableProperty] private string _businessSoftwareProcessName = string.Empty;
+    [ObservableProperty] private string _logServerHost = "localhost";
+    [ObservableProperty] private string _logServerPort = "9696";
+    [ObservableProperty] private string _largeFileThreshold = "10000";
     
     // Listes pour remplir les menus déroulants (ComboBox)
     public Language[] Languages => Enum.GetValues<Language>();
     public LogFormat[] LogFormats => Enum.GetValues<LogFormat>();
+    public LogStorageMode[] LogStorageModes => Enum.GetValues<LogStorageMode>();
+    public bool IsRemoteLogServerSettingsVisible
+        => SelectedLogStorageMode is LogStorageMode.ServerOnly or LogStorageMode.LocalAndServer;
 
     public SettingsViewModel(SettingsService? settings = null)
     {
@@ -37,11 +46,15 @@ public partial class SettingsViewModel : ViewModelBase
         EncryptionKey = settings.EncryptionKey;
         SelectedLanguage = settings.Language;
         SelectedLogFormat = settings.LogFormat;
+        SelectedLogStorageMode = settings.LogStorageMode;
+        LogServerHost = settings.LogServerHost;
+        LogServerPort = settings.LogServerPort.ToString();
         
         // On transforme la liste d'extensions en une chaîne de caractères séparée par des virgules
         // Si ton service possède une propriété ExtensionsToEncrypt (List<string>)
         ExtensionsToEncrypt = string.Join(", ", settings.ExtensionsToEncrypt);
         BusinessSoftwareProcessName = settings.BusinessSoftwareProcessName ?? string.Empty;
+        LargeFileThreshold = settings.LargeFileThresholdKb.ToString();
     }
     // Changes are applied on save to avoid log spam.
 
@@ -56,17 +69,34 @@ public partial class SettingsViewModel : ViewModelBase
             .Where(x => !string.IsNullOrWhiteSpace(x))
             .ToList();
 
+        // On garde la valeur actuelle si la saisie du port est invalide pour eviter un crash de l'ecran.
+        var parsedServerPort = int.TryParse(LogServerPort, out var portValue)
+            && portValue is > 0 and <= 65535
+            ? portValue
+            : _settings.LogServerPort;
+
+        // Threshold conversion (string → int)
+        int threshold = int.TryParse(LargeFileThreshold, out var kb) 
+            ? kb 
+            : _settings.LargeFileThresholdKb;
+
         _settings.ApplySettings(
             encryptionEnabled: EncryptionEnabled,
             encryptionKey: EncryptionKey,
             language: SelectedLanguage,
             logFormat: SelectedLogFormat,
+            logStorageMode: SelectedLogStorageMode,
+            logServerHost: LogServerHost,
+            logServerPort: parsedServerPort,
             extensionsToEncrypt: list,
-            businessSoftwareProcessName: BusinessSoftwareProcessName);
+            businessSoftwareProcessName: BusinessSoftwareProcessName,
+            largeFileThresholdKb: threshold);
 
         Loc.Instance.SetLanguage(SelectedLanguage);
         OnPropertyChanged(nameof(Languages));
         OnPropertyChanged(nameof(LogFormats));
+        OnPropertyChanged(nameof(LogStorageModes));
+        OnPropertyChanged(nameof(IsRemoteLogServerSettingsVisible));
     }
 
     public void SetFrench() => Loc.Instance.SetLanguage(Language.French);
@@ -76,6 +106,7 @@ public partial class SettingsViewModel : ViewModelBase
     {
         OnPropertyChanged(nameof(Languages));
         OnPropertyChanged(nameof(LogFormats));
+        OnPropertyChanged(nameof(LogStorageModes));
     }
 }
 

@@ -25,12 +25,20 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
 {
     private static readonly TimeSpan LogRefreshCooldown = TimeSpan.FromSeconds(2);
     private static readonly TimeSpan LogRefreshDelay = TimeSpan.FromMilliseconds(300);
+    private const string ColorAccentGreen = "#30D158";
+    private const string ColorAccentBlue = "#0A84FF";
+    private const string ColorAccentOrange = "#FF9F0A";
+    private const string ColorAccentRed = "#FF3B30";
+    private const string ColorNeutralGray = "#A0A7B4";
+    private const string ColorGlassOverlay = "#20FFFFFF";
+    private const string ColorTextMuted = "#80FFFFFF";
     private readonly IJobService? _jobService;
     private readonly IBackupService? _backupService;
     private readonly LogReaderService? _logReader;
     private readonly SynchronizationContext? _uiContext;
     private DateTime _lastLogRefreshUtc;
     private CancellationTokenSource? _logRefreshCts;
+    private int _recentActivitiesLoadVersion;
     private bool _disposed;
 
     [ObservableProperty]
@@ -202,13 +210,50 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
     /// </summary>
     private void LoadRecentActivities()
     {
-        RecentActivities.Clear();
-        HasRecentActivities = false;
         if (_logReader is null)
+        {
+            ApplyRecentActivities(Array.Empty<RecentActivityItem>());
             return;
+        }
 
-        var activityItems = BuildRecentActivities();
-        foreach (var item in activityItems)
+        int loadVersion = Interlocked.Increment(ref _recentActivitiesLoadVersion);
+        _ = Task.Run(() =>
+        {
+            List<RecentActivityItem> activityItems;
+            try
+            {
+                // Lecture/parsing des logs hors thread UI pour eviter les freezes reseau/IO.
+                activityItems = BuildRecentActivities();
+            }
+            catch
+            {
+                activityItems = new List<RecentActivityItem>();
+            }
+
+            if (loadVersion != Volatile.Read(ref _recentActivitiesLoadVersion))
+                return;
+
+            if (_uiContext != null)
+            {
+                _uiContext.Post(_ =>
+                {
+                    if (loadVersion != Volatile.Read(ref _recentActivitiesLoadVersion))
+                        return;
+
+                    ApplyRecentActivities(activityItems);
+                }, null);
+            }
+            else
+            {
+                ApplyRecentActivities(activityItems);
+            }
+        });
+    }
+
+    private void ApplyRecentActivities(IReadOnlyList<RecentActivityItem> items)
+    {
+        RecentActivities.Clear();
+        foreach (var item in items)
         {
             RecentActivities.Add(item);
         }
@@ -300,10 +345,15 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
     /// Indicates whether an action is a job CRUD action.
     /// </summary>
     /// <param name="action">Action to inspect.</param>
-    /// <returns><c>true</c> for Create/Update/Delete.</returns>
+    /// <returns><c>true</c> for job actions shown on the dashboard.</returns>
     private static bool IsJobCrudAction(LogEventAction action)
     {
-        return action is LogEventAction.Create or LogEventAction.Update or LogEventAction.Delete;
+        return action is LogEventAction.Create
+            or LogEventAction.Update
+            or LogEventAction.Delete
+            or LogEventAction.Pause
+            or LogEventAction.Resume
+            or LogEventAction.Stop;
     }
 
     /// <summary>
@@ -325,7 +375,7 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
             subtitle,
             timestamp,
             glyph,
-            "#20FFFFFF",
+            ColorGlassOverlay,
             color);
     }
 
@@ -338,6 +388,9 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
             LogEventAction.Create => Strings.Gui_Dashboard_Job_Created,
             LogEventAction.Update => Strings.Gui_Dashboard_Job_Updated,
             LogEventAction.Delete => Strings.Gui_Dashboard_Job_Deleted,
+            LogEventAction.Pause => Strings.Gui_Dashboard_Job_Paused,
+            LogEventAction.Resume => Strings.Gui_Dashboard_Job_Resumed,
+            LogEventAction.Stop => Strings.Gui_Dashboard_Job_Stopped,
             _ => Strings.Gui_Dashboard_Job_Changed
         };
 
@@ -351,13 +404,16 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
         var subtitle = Truncate($"{actionLabel} | {typeLabel} | {statusLabel}", 140);
         var (glyph, color) = entry.Event.Action switch
         {
-            LogEventAction.Create => ("+", "#30D158"),
-            LogEventAction.Update => ("~", "#0A84FF"),
-            LogEventAction.Delete => ("x", "#FF3B30"),
-            _ => ("J", "#80FFFFFF")
+            LogEventAction.Create => ("+", ColorAccentGreen),
+            LogEventAction.Update => ("~", ColorAccentBlue),
+            LogEventAction.Delete => ("-", ColorNeutralGray),
+            LogEventAction.Pause => ("||", ColorAccentOrange),
+            LogEventAction.Resume => (">", ColorAccentGreen),
+            LogEventAction.Stop => ("■", ColorNeutralGray),
+            _ => ("J", ColorTextMuted)
         };
 
-        return new RecentActivityItem(title, subtitle, timestamp, glyph, "#20FFFFFF", color);
+        return new RecentActivityItem(title, subtitle, timestamp, glyph, ColorGlassOverlay, color);
     }
 
     private RecentActivityItem CreateSettingsActivityItem(LogEntryDto entry)
@@ -383,7 +439,7 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
             _ => Strings.Gui_Common_Unknown
         };
         var subtitle = Truncate($"{actionLabel} | {languageLabel} | {formatLabel}", 140);
-        return new RecentActivityItem(title, subtitle, timestamp, "S", "#20FFFFFF", "#FF9F0A");
+        return new RecentActivityItem(title, subtitle, timestamp, "S", ColorGlassOverlay, ColorAccentOrange);
     }
 
     /// <summary>
@@ -526,16 +582,19 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
     private static (string glyph, string color) MapStatusGlyph(LogEventAction action, LogEventOutcome outcome)
     {
         if (outcome == LogEventOutcome.Failure)
-            return ("!", "#FF3B30");
+            return ("!", ColorAccentRed);
 
         return action switch
         {
-            LogEventAction.Skip => ("-", "#FF9F0A"),
-            LogEventAction.DirectoryCreated => ("+", "#0A84FF"),
-            LogEventAction.Update => ("~", "#0A84FF"),
-            LogEventAction.Delete => ("x", "#FF3B30"),
-            LogEventAction.Create => ("+", "#30D158"),
-            _ => ("✓", "#30D158")
+            LogEventAction.Skip => ("-", ColorAccentOrange),
+            LogEventAction.DirectoryCreated => ("+", ColorAccentBlue),
+            LogEventAction.Update => ("~", ColorAccentBlue),
+            LogEventAction.Delete => ("-", ColorNeutralGray),
+            LogEventAction.Create => ("+", ColorAccentGreen),
+            LogEventAction.Pause => ("||", ColorAccentOrange),
+            LogEventAction.Resume => (">", ColorAccentGreen),
+            LogEventAction.Stop => ("■", ColorNeutralGray),
+            _ => ("✓", ColorAccentGreen)
         };
     }
 

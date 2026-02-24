@@ -6,110 +6,110 @@
              x:DataType="vm:JobsViewModel"
              x:CompileBindings="False">
 
-    <UserControl.Resources>
-        <conv:TypeToEmojiConverter x:Key="TypeToEmojiConverter"/>
-        <conv:TypeToTextConverter x:Key="TypeToTextConverter"/>
-        <conv:StatusToTextConverter x:Key="StatusToTextConverter"/>
-    </UserControl.Resources>
+	<UserControl.Resources>
+		<conv:TypeToEmojiConverter x:Key="TypeToEmojiConverter"/>
+		<conv:TypeToTextConverter x:Key="TypeToTextConverter"/>
+		<conv:StatusToTextConverter x:Key="StatusToTextConverter"/>
+	</UserControl.Resources>
 
-    <UserControl.Styles>
+	<UserControl.Styles>
         <!-- Style pour les cartes de jobs -->
-        <Style Selector="Border.job-card">
-            <Setter Property="Background" Value="#18FFFFFF"/>
-            <Setter Property="BorderBrush" Value="#28FFFFFF"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="CornerRadius" Value="12"/>
-            <Setter Property="Padding" Value="20"/>
-            <Setter Property="Margin" Value="0,0,0,12"/>
-        </Style>
-        
-        <Style Selector="Border.job-card:pointerover">
-            <Setter Property="Background" Value="#25FFFFFF"/>
-            <Setter Property="BorderBrush" Value="#35FFFFFF"/>
-        </Style>
-        
-        <!-- Boutons d'action -->
-        <Style Selector="Button.action-btn">
-            <Setter Property="Padding" Value="18,10"/>
-            <Setter Property="CornerRadius" Value="8"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="FontSize" Value="14"/>
-        </Style>
-        
-        <Style Selector="Button.primary">
-            <Setter Property="Background" Value="#0A84FF"/>
-            <Setter Property="Foreground" Value="White"/>
-        </Style>
-        
-        <Style Selector="Button.primary:pointerover">
-            <Setter Property="Background" Value="#0066DD"/>
-        </Style>
-        
-        <Style Selector="Button.secondary">
-            <Setter Property="Background" Value="#28FFFFFF"/>
-            <Setter Property="Foreground" Value="#FFFFFF"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="BorderBrush" Value="#35FFFFFF"/>
-        </Style>
-        
-        <Style Selector="Button.secondary:pointerover">
-            <Setter Property="Background" Value="#35FFFFFF"/>
-        </Style>
-        
-        <Style Selector="Button.danger">
-            <Setter Property="Background" Value="#FF3B30"/>
-            <Setter Property="Foreground" Value="White"/>
-        </Style>
-        
-        <Style Selector="Button.danger:pointerover">
-            <Setter Property="Background" Value="#DD2520"/>
-        </Style>
-        
-        <!-- Badge de statut -->
-        <Style Selector="Border.status-badge">
-            <Setter Property="CornerRadius" Value="6"/>
-            <Setter Property="Padding" Value="8,4"/>
-        </Style>
-        
-        <Style Selector="Border.status-active">
-            <Setter Property="Background" Value="#1530D158"/>
-            <Setter Property="BorderBrush" Value="#30D158"/>
-            <Setter Property="BorderThickness" Value="1"/>
-        </Style>
-        
-        <Style Selector="Border.status-inactive">
-            <Setter Property="Background" Value="#15FF9F0A"/>
-            <Setter Property="BorderBrush" Value="#FF9F0A"/>
-            <Setter Property="BorderThickness" Value="1"/>
-        </Style>
-    </UserControl.Styles>
+		<Style Selector="Border.job-card">
+			<Setter Property="Background" Value="#18FFFFFF"/>
+			<Setter Property="BorderBrush" Value="#28FFFFFF"/>
+			<Setter Property="BorderThickness" Value="1"/>
+			<Setter Property="CornerRadius" Value="12"/>
+			<Setter Property="Padding" Value="20"/>
+			<Setter Property="Margin" Value="0,0,0,12"/>
+		</Style>
 
-    <Grid RowDefinitions="Auto,*,Auto">
-        
+		<Style Selector="Border.job-card:pointerover">
+			<Setter Property="Background" Value="#25FFFFFF"/>
+			<Setter Property="BorderBrush" Value="#35FFFFFF"/>
+		</Style>
+
+        <!-- Boutons d'action -->
+		<Style Selector="Button.action-btn">
+			<Setter Property="Padding" Value="18,10"/>
+			<Setter Property="CornerRadius" Value="8"/>
+			<Setter Property="BorderThickness" Value="0"/>
+			<Setter Property="Cursor" Value="Hand"/>
+			<Setter Property="FontWeight" Value="SemiBold"/>
+			<Setter Property="FontSize" Value="14"/>
+		</Style>
+
+		<Style Selector="Button.primary">
+			<Setter Property="Background" Value="#0A84FF"/>
+			<Setter Property="Foreground" Value="White"/>
+		</Style>
+
+		<Style Selector="Button.primary:pointerover">
+			<Setter Property="Background" Value="#0066DD"/>
+		</Style>
+
+		<Style Selector="Button.secondary">
+			<Setter Property="Background" Value="#28FFFFFF"/>
+			<Setter Property="Foreground" Value="#FFFFFF"/>
+			<Setter Property="BorderThickness" Value="1"/>
+			<Setter Property="BorderBrush" Value="#35FFFFFF"/>
+		</Style>
+
+		<Style Selector="Button.secondary:pointerover">
+			<Setter Property="Background" Value="#35FFFFFF"/>
+		</Style>
+
+		<Style Selector="Button.danger">
+			<Setter Property="Background" Value="#FF3B30"/>
+			<Setter Property="Foreground" Value="White"/>
+		</Style>
+
+		<Style Selector="Button.danger:pointerover">
+			<Setter Property="Background" Value="#DD2520"/>
+		</Style>
+
+        <!-- Badge de statut -->
+		<Style Selector="Border.status-badge">
+			<Setter Property="CornerRadius" Value="6"/>
+			<Setter Property="Padding" Value="8,4"/>
+		</Style>
+
+		<Style Selector="Border.status-active">
+			<Setter Property="Background" Value="#1530D158"/>
+			<Setter Property="BorderBrush" Value="#30D158"/>
+			<Setter Property="BorderThickness" Value="1"/>
+		</Style>
+
+		<Style Selector="Border.status-inactive">
+			<Setter Property="Background" Value="#15FF9F0A"/>
+			<Setter Property="BorderBrush" Value="#FF9F0A"/>
+			<Setter Property="BorderThickness" Value="1"/>
+		</Style>
+	</UserControl.Styles>
+
+	<Grid RowDefinitions="Auto,*,Auto">
+
         <!-- Header avec actions -->
-        <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,24">
-            
-            <StackPanel Grid.Column="1" 
-                        Orientation="Horizontal" 
+		<Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,24">
+
+			<StackPanel Grid.Column="1"
+                        Orientation="Horizontal"
                         Spacing="12"
                         VerticalAlignment="Center">
-                <Button Content="{Binding Source={StaticResource Loc}, Path=[Gui_Jobs_New]}"
+				<Button Content="{Binding Source={StaticResource Loc}, Path=[Gui_Jobs_New]}"
                         Classes="action-btn primary"
                         Command="{Binding CreateJobCommand}"/>
-            </StackPanel>
-        </Grid>
+			</StackPanel>
+		</Grid>
 
         <!-- Liste des jobs -->
-        <ScrollViewer Grid.Row="1" 
+		<ScrollViewer Grid.Row="1"
                       VerticalScrollBarVisibility="Auto"
                       HorizontalScrollBarVisibility="Disabled">
-            
-            <StackPanel Spacing="0" Margin="0,0,0,80">
-                
+
+			<StackPanel Spacing="0" Margin="0,0,0,80">
+
                 <!-- Message si aucun job -->
-                <Border IsVisible="{Binding !HasJobs}"
+				<Border IsVisible="{Binding !HasJobs}"
                         Background="#15FFFFFF"
                         BorderBrush="#25FFFFFF"
                         BorderThickness="1"
@@ -117,194 +117,219 @@
                         Padding="40"
                         HorizontalAlignment="Center"
                         Margin="0,60,0,0">
-                    <StackPanel Spacing="16" HorizontalAlignment="Center">
-                        <TextBlock Text="{Binding Source={StaticResource Loc}, Path=[Gui_Jobs_NoJobs_Title]}"
+					<StackPanel Spacing="16" HorizontalAlignment="Center">
+						<TextBlock Text="{Binding Source={StaticResource Loc}, Path=[Gui_Jobs_NoJobs_Title]}"
                                    FontSize="48"
                                    HorizontalAlignment="Center"/>
-                        <TextBlock Text="{Binding Source={StaticResource Loc}, Path=[Gui_Jobs_NoJobs_Subtitle]}"
+						<TextBlock Text="{Binding Source={StaticResource Loc}, Path=[Gui_Jobs_NoJobs_Subtitle]}"
                                    FontSize="18"
                                    FontWeight="SemiBold"
                                    Foreground="#FFFFFF"
                                    HorizontalAlignment="Center"/>
-                        <TextBlock Text="{Binding Source={StaticResource Loc}, Path=[Gui_Jobs_NoJobs_Hint]}"
+						<TextBlock Text="{Binding Source={StaticResource Loc}, Path=[Gui_Jobs_NoJobs_Hint]}"
                                    FontSize="14"
                                    Foreground="#80FFFFFF"
                                    HorizontalAlignment="Center"/>
-                        <Button Content="{Binding Source={StaticResource Loc}, Path=[Gui_Jobs_CreateFirst]}"
+						<Button Content="{Binding Source={StaticResource Loc}, Path=[Gui_Jobs_CreateFirst]}"
                                 Classes="action-btn primary"
                                 Command="{Binding CreateJobCommand}"
                                 HorizontalAlignment="Center"
                                 Margin="0,8,0,0"/>
-                    </StackPanel>
-                </Border>
+					</StackPanel>
+				</Border>
 
                 <!-- Liste des jobs -->
-                <ItemsControl ItemsSource="{Binding Jobs}"
+				<ItemsControl ItemsSource="{Binding Jobs}"
                               IsVisible="{Binding HasJobs}">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Border Classes="job-card">
-                                <Grid ColumnDefinitions="Auto,*,Auto">
-                                    
+					<ItemsControl.ItemTemplate>
+						<DataTemplate>
+							<Border Classes="job-card">
+								<Grid ColumnDefinitions="Auto,*,Auto">
+
                                     <!-- Icone et type -->
-                                    <Border Grid.Column="0"
+									<Border Grid.Column="0"
                                             Width="50"
                                             Height="50"
                                             CornerRadius="10"
                                             Background="#20FFFFFF"
                                             VerticalAlignment="Top"
                                             Margin="0,0,16,0">
-                                        <TextBlock Text="{Binding Type, Converter={StaticResource TypeToEmojiConverter}}"
+										<TextBlock Text="{Binding Type, Converter={StaticResource TypeToEmojiConverter}}"
                                                    FontSize="24"
                                                    HorizontalAlignment="Center"
                                                    VerticalAlignment="Center"/>
-                                    </Border>
-                                    
+									</Border>
+
                                     <!-- Infos job -->
-                                    <StackPanel Grid.Column="1" Spacing="8">
-                                        
+									<StackPanel Grid.Column="1" Spacing="8">
+
                                         <!-- Nom et statut -->
-                                        <Grid ColumnDefinitions="*,Auto">
-                                            <TextBlock Grid.Column="0"
+										<Grid ColumnDefinitions="*,Auto">
+											<TextBlock Grid.Column="0"
                                                        Text="{Binding Name}"
                                                        FontSize="18"
                                                        FontWeight="SemiBold"
                                                        Foreground="#FFFFFF"/>
-                                            
-                                            <Border Grid.Column="1"
+
+											<Border Grid.Column="1"
                                                     Classes="status-badge"
                                                     Classes.status-active="{Binding IsActive}"
                                                     Classes.status-inactive="{Binding !IsActive}">
-                                                <TextBlock Text="{Binding IsActive, Converter={StaticResource StatusToTextConverter}}"
+												<TextBlock Text="{Binding IsActive, Converter={StaticResource StatusToTextConverter}}"
                                                            FontSize="11"
                                                            FontWeight="Medium"
                                                            Foreground="#FFFFFF"/>
-                                            </Border>
-                                        </Grid>
-                                        
+											</Border>
+										</Grid>
+
                                         <!-- Type de sauvegarde -->
-                                        <StackPanel Orientation="Horizontal" Spacing="8">
-                                            <TextBlock Text="{Binding Source={StaticResource Loc}, Path=[Gui_Jobs_Label_Type]}"
+										<StackPanel Orientation="Horizontal" Spacing="8">
+											<TextBlock Text="{Binding Source={StaticResource Loc}, Path=[Gui_Jobs_Label_Type]}"
                                                        FontSize="12"
                                                        Foreground="#80FFFFFF"/>
-                                            <TextBlock Text="{Binding Type, Converter={StaticResource TypeToTextConverter}}"
+											<TextBlock Text="{Binding Type, Converter={StaticResource TypeToTextConverter}}"
                                                        FontSize="12"
                                                        FontWeight="Medium"
                                                        Foreground="#FFFFFF"/>
-                                        </StackPanel>
-                                        
+										</StackPanel>
+
                                         <!-- Chemins -->
-                                        <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto" ColumnSpacing="12" RowSpacing="4">
-                                            <TextBlock Grid.Row="0" Grid.Column="0"
+										<Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto" ColumnSpacing="12" RowSpacing="4">
+											<TextBlock Grid.Row="0" Grid.Column="0"
                                                        Text="{Binding Source={StaticResource Loc}, Path=[Gui_Jobs_Label_Source]}"
                                                        FontSize="12"
                                                        Foreground="#80FFFFFF"/>
-                                            <TextBlock Grid.Row="0" Grid.Column="1"
+											<TextBlock Grid.Row="0" Grid.Column="1"
                                                        Text="{Binding SourcePath}"
                                                        FontSize="12"
                                                        Foreground="#CCFFFFFF"
                                                        TextTrimming="CharacterEllipsis"/>
-                                            
-                                            <TextBlock Grid.Row="1" Grid.Column="0"
+
+											<TextBlock Grid.Row="1" Grid.Column="0"
                                                        Text="{Binding Source={StaticResource Loc}, Path=[Gui_Jobs_Label_Target]}"
                                                        FontSize="12"
                                                        Foreground="#80FFFFFF"/>
-                                            <TextBlock Grid.Row="1" Grid.Column="1"
+											<TextBlock Grid.Row="1" Grid.Column="1"
                                                        Text="{Binding TargetPath}"
                                                        FontSize="12"
                                                        Foreground="#CCFFFFFF"
                                                        TextTrimming="CharacterEllipsis"/>
-                                        </Grid>
-                                        
-                                        <!-- Derniere execution -->
-                                        <TextBlock FontSize="11"
+										</Grid>
+
+										<StackPanel Orientation="Horizontal" Spacing="8" Margin="0,2,0,0"
+                                                    IsVisible="{Binding PriorityExtensions.Count}">
+											<TextBlock Text="★" Foreground="#0A84FF" FontSize="12" VerticalAlignment="Center"/>
+											<ItemsControl ItemsSource="{Binding PriorityExtensions}">
+												<ItemsControl.ItemsPanel>
+													<ItemsPanelTemplate>
+														<WrapPanel />
+													</ItemsPanelTemplate>
+												</ItemsControl.ItemsPanel>
+												<ItemsControl.ItemTemplate>
+													<DataTemplate>
+														<Border Background="#250A84FF"
+                                                                BorderBrush="#400A84FF"
+                                                                BorderThickness="1"
+                                                                CornerRadius="4"
+                                                                Margin="0,0,6,0"
+                                                                Padding="6,1">
+															<TextBlock Text="{Binding}"
+                                                                       FontSize="10"
+                                                                       Foreground="#0A84FF"
+                                                                       FontWeight="Bold"/>
+														</Border>
+													</DataTemplate>
+												</ItemsControl.ItemTemplate>
+											</ItemsControl>
+										</StackPanel>
+
+										<TextBlock FontSize="11"
                                                    FontStyle="Italic"
                                                    Foreground="#60FFFFFF"
                                                    Margin="0,4,0,0">
-                                            <TextBlock.Text>
-                                                <MultiBinding Converter="{StaticResource L10nNullableFormatConverter}">
-                                                    <Binding Path="LastRun"/>
-                                                    <Binding Path="[Gui_Jobs_LastRunFormat]" Source="{StaticResource Loc}"/>
-                                                    <Binding Path="[Gui_Jobs_LastRunNever]" Source="{StaticResource Loc}"/>
-                                                </MultiBinding>
-                                            </TextBlock.Text>
-                                        </TextBlock>
-                                    </StackPanel>
-                                    
+											<TextBlock.Text>
+												<MultiBinding Converter="{StaticResource L10nNullableFormatConverter}">
+													<Binding Path="LastRun"/>
+													<Binding Path="[Gui_Jobs_LastRunFormat]" Source="{StaticResource Loc}"/>
+													<Binding Path="[Gui_Jobs_LastRunNever]" Source="{StaticResource Loc}"/>
+												</MultiBinding>
+											</TextBlock.Text>
+										</TextBlock>
+									</StackPanel>
+
                                     <!-- Boutons d'action -->
-                                    <StackPanel Grid.Column="2" 
+									<StackPanel Grid.Column="2"
                                                 Spacing="8"
                                                 VerticalAlignment="Center">
-                                        <Button Content="{Binding Source={StaticResource Loc}, Path=[Gui_Jobs_Edit]}"
+										<Button Content="{Binding Source={StaticResource Loc}, Path=[Gui_Jobs_Edit]}"
                                                 Classes="action-btn secondary"
                                                 Command="{Binding $parent[ItemsControl].DataContext.EditJobCommand}"
                                                 CommandParameter="{Binding}"
                                                 ToolTip.Tip="{Binding Source={StaticResource Loc}, Path=[Gui_Jobs_EditTooltip]}"
                                                 Padding="12,8"
                                                 Width="72"/>
-                                        <Button Content="{Binding Source={StaticResource Loc}, Path=[Gui_Jobs_Delete]}"
+										<Button Content="{Binding Source={StaticResource Loc}, Path=[Gui_Jobs_Delete]}"
                                                 Classes="action-btn danger"
                                                 Command="{Binding $parent[ItemsControl].DataContext.DeleteJobCommand}"
                                                 CommandParameter="{Binding}"
                                                 ToolTip.Tip="{Binding Source={StaticResource Loc}, Path=[Gui_Jobs_DeleteTooltip]}"
                                                 Padding="12,8"
                                                 Width="72"/>
-                                    </StackPanel>
-                                    
-                                </Grid>
-                            </Border>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-                
-            </StackPanel>
-        </ScrollViewer>
+									</StackPanel>
+
+								</Grid>
+							</Border>
+						</DataTemplate>
+					</ItemsControl.ItemTemplate>
+				</ItemsControl>
+
+			</StackPanel>
+		</ScrollViewer>
 
         <!-- Footer avec statistiques -->
-        <Border Grid.Row="2"
+		<Border Grid.Row="2"
                 Background="#15FFFFFF"
                 BorderBrush="#25FFFFFF"
                 BorderThickness="1,1,1,0"
                 CornerRadius="12,12,0,0"
                 Padding="20,12"
                 Margin="0,0,0,100">
-            <Grid ColumnDefinitions="*,Auto,Auto">
-                <TextBlock Grid.Column="0"
+			<Grid ColumnDefinitions="*,Auto,Auto">
+				<TextBlock Grid.Column="0"
                            FontSize="12"
                            Foreground="#80FFFFFF"
                            VerticalAlignment="Center">
-                    <TextBlock.Text>
-                        <MultiBinding Converter="{StaticResource L10nFormatConverter}">
-                            <Binding Path="ActiveJobsCount"/>
-                            <Binding Path="[Gui_Jobs_ActiveJobsFormat]" Source="{StaticResource Loc}"/>
-                        </MultiBinding>
-                    </TextBlock.Text>
-                </TextBlock>
-                
-                <StackPanel Grid.Column="1" 
-                            Orientation="Horizontal" 
+					<TextBlock.Text>
+						<MultiBinding Converter="{StaticResource L10nFormatConverter}">
+							<Binding Path="ActiveJobsCount"/>
+							<Binding Path="[Gui_Jobs_ActiveJobsFormat]" Source="{StaticResource Loc}"/>
+						</MultiBinding>
+					</TextBlock.Text>
+				</TextBlock>
+
+				<StackPanel Grid.Column="1"
+                            Orientation="Horizontal"
                             Spacing="4"
                             VerticalAlignment="Center"
                             Margin="0,0,16,0">
-                    <Ellipse Width="8" Height="8" Fill="#30D158"/>
-                    <TextBlock Text="{Binding Source={StaticResource Loc}, Path=[Gui_Jobs_Active]}"
+					<Ellipse Width="8" Height="8" Fill="#30D158"/>
+					<TextBlock Text="{Binding Source={StaticResource Loc}, Path=[Gui_Jobs_Active]}"
                                FontSize="11"
                                Foreground="#80FFFFFF"/>
-                </StackPanel>
-                
-                <StackPanel Grid.Column="2" 
-                            Orientation="Horizontal" 
+				</StackPanel>
+
+				<StackPanel Grid.Column="2"
+                            Orientation="Horizontal"
                             Spacing="4"
                             VerticalAlignment="Center">
-                    <Ellipse Width="8" Height="8" Fill="#FF9F0A"/>
-                    <TextBlock Text="{Binding Source={StaticResource Loc}, Path=[Gui_Jobs_Inactive]}"
+					<Ellipse Width="8" Height="8" Fill="#FF9F0A"/>
+					<TextBlock Text="{Binding Source={StaticResource Loc}, Path=[Gui_Jobs_Inactive]}"
                                FontSize="11"
                                Foreground="#80FFFFFF"/>
-                </StackPanel>
-            </Grid>
-        </Border>
+				</StackPanel>
+			</Grid>
+		</Border>
 
-    </Grid>
-    
+	</Grid>
+
 </UserControl>
-

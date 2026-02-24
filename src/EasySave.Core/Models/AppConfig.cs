@@ -13,11 +13,15 @@ public class AppConfig
     public Language Language { get; private set; }
     public string LogDirectory { get; private set; }
     public LogFormat LogFormat { get; private set; }
+    public LogStorageMode LogStorageMode { get; private set; } = LogStorageMode.LocalOnly;
+    public string LogServerHost { get; private set; } = "localhost";
+    public int LogServerPort { get; private set; } = 9696;
     public string? BusinessSoftwareProcessName { get; private set; }
     public bool EncryptionEnabled { get; private set; }
     public string EncryptionKey { get; private set; } = string.Empty;
     private List<string> _extensionsToEncrypt = new();
     public IReadOnlyList<string> ExtensionsToEncrypt => _extensionsToEncrypt;
+    public int LargeFileThresholdKb { get; private set; } = 10000; 
 
     /// <summary>
     /// Initializes a new instance of the <see cref="AppConfig"/> class.
@@ -71,6 +75,30 @@ public class AppConfig
     public void ChangeLogFormat(LogFormat logFormat)
     {
         LogFormat = logFormat;
+    }
+
+    /// <summary>
+    /// Updates the log storage strategy.
+    /// </summary>
+    /// <param name="storageMode">The storage mode used by EasyLog.</param>
+    public void ChangeLogStorageMode(LogStorageMode storageMode)
+    {
+        LogStorageMode = storageMode;
+    }
+
+    /// <summary>
+    /// Updates the centralized log server connection settings.
+    /// </summary>
+    /// <param name="host">The server host name or IP address.</param>
+    /// <param name="port">The server port.</param>
+    public void UpdateLogServerConnection(string host, int port)
+    {
+        LogServerHost = Guard.NotNullOrWhiteSpace(host, nameof(host));
+
+        if (port is <= 0 or > 65535)
+            throw new ArgumentOutOfRangeException(nameof(port), "Port must be between 1 and 65535.");
+
+        LogServerPort = port;
     }
 
     /// <summary>
@@ -132,5 +160,14 @@ public class AppConfig
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
             "EasySave",
             "Logs");
+    }
+    /// <summary>
+    /// Updates the threshold for large file detection
+    /// </summary>
+    /// <param name="thresholdkb">Threshold in kilobytes</param>
+    /// <exception cref="ArgumentOutOfRangeException"></exception>
+    public void UpdateLargeFileThreshold(int thresholdkb)
+    {
+        LargeFileThresholdKb = thresholdkb;
     }
 }

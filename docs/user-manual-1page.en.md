@@ -130,3 +130,23 @@ Menu :
 	- Maximum 5 jobs 
 	- Sequential execution 
 	- Graphical interface planned for v2 
+
+# Version 2.0 
+
+## New parameters
+
+- EncryptionEnabled
+- EncryptionKey
+- ExtensionsToEncrypt
+- BusinessSoftwareProcessName
+
+## Encryption 
+
+Files whose extension and business software correspond to the values defined by the user in the parameters will be encrypted.
+
+## Business software 
+
+When business software is active : 
+
+- Unable to start a job 
+- A backup in progress stops cleanly

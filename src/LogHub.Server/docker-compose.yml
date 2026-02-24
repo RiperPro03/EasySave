@@ -1,0 +1,13 @@
+services:
+  loghub-server:
+    build:
+      context: ../..
+      dockerfile: src/LogHub.Server/Dockerfile
+    ports:
+      - "${LOGHUB_PORT:-9696}:${LOGHUB_PORT:-9696}"
+    volumes:
+      - ./logs:/app/logs
+    environment:
+      - LogHub__Port=${LOGHUB_PORT:-9696}
+      - LogHub__WebSocketPath=/ws/logs
+      - LogHub__LogDirectory=/app/logs

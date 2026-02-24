@@ -1,0 +1,347 @@
+@startuml EasySave_App_Gui_Classes
+
+' ============================================
+' CONFIGURATION
+' ============================================
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam linetype polyline
+skinparam nodesep 70
+skinparam ranksep 160
+left to right direction
+skinparam packageStyle rectangle
+
+skinparam class {
+    BackgroundColor<<Gui>> #FFF8E1
+    BorderColor<<Gui>> #EF6C00
+    BackgroundColor<<ViewModel>> #E8F5E9
+    BorderColor<<ViewModel>> #2E7D32
+    BackgroundColor<<Model>> #E3F2FD
+    BorderColor<<Model>> #1565C0
+    BackgroundColor<<View>> #F3E5F5
+    BorderColor<<View>> #6A1B9A
+    BackgroundColor<<Converter>> #ECEFF1
+    BorderColor<<Converter>> #455A64
+    BackgroundColor<<External>> #FAFAFA
+    BorderColor<<External>> #9E9E9E
+}
+
+title Diagramme de classes - EasySave.App.Gui (MVVM)
+
+package "EasySave.App.Gui" {
+
+  package "Bootstrap" {
+    class Program <<Gui>> {
+      +{static} void Main(string[] args)
+      +{static} AppBuilder BuildAvaloniaApp()
+    }
+
+    class App <<Gui>> {
+      +void Initialize()
+      +void OnFrameworkInitializationCompleted()
+      -{static} LogContext BuildLogContext()
+      -void DisableAvaloniaDataAnnotationValidation()
+    }
+
+    class ViewLocator <<Gui>> {
+      +Control? Build(object? param)
+      +bool Match(object? data)
+    }
+  }
+
+  package "Enums" {
+    enum NavigationTab <<Gui>> {
+      Dashboard
+      Jobs
+      Execution
+      Logs
+      Settings
+      About
+    }
+  }
+
+  package "Localization" {
+    class Loc <<Gui>> {
+      +{static} Loc Instance
+      +Language Language
+      +string this[string key]
+      +void SetLanguage(Language language)
+      +event PropertyChangedEventHandler? PropertyChanged
+    }
+  }
+
+  package "Models" {
+    class ExecutionJobItem <<Model>> {
+      +ExecutionJobItem(BackupJob job)
+      +ExecutionJobItem(string jobId, string jobName)
+      +string JobId
+      +string JobName
+      +JobStatus Status
+      +int ProgressPercentage
+      +bool CanPlayPause
+      +bool CanStop
+      +bool CanStart
+      +void UpdateDefinition(BackupJob job)
+      +void UpdateFromState(JobStateDto state)
+    }
+
+    class LogEntryItem <<Model>> {
+      +LogEntryItem(LogEntryDto entry)
+      +LogEntryDto Entry
+      +IReadOnlyList<LogSection> Sections
+    }
+
+    class LogSection <<Model>> {
+      +LogSection(string title, IReadOnlyList<LogField> fields)
+      +string Title
+      +IReadOnlyList<LogField> Fields
+    }
+
+    class LogField <<Model>> {
+      +LogField(string label, string value)
+      +string Label
+      +string Value
+    }
+
+    class RecentActivityItem <<Model>> {
+      +RecentActivityItem(title: string, subtitle: string, timestamp: string, badgeGlyph: string, badgeBackground: string, badgeForeground: string)
+      +string Title
+      +string Subtitle
+      +string Timestamp
+    }
+  }
+
+  package "ViewModels" {
+    abstract class ViewModelBase <<ViewModel>>
+
+    class MainWindowViewModel <<ViewModel>> {
+      +MainWindowViewModel()
+      +MainWindowViewModel(IJobService jobService, IBackupService backupService, string? logsPath, SettingsService settingsService, IAppLogService? appLogService = null)
+      +string AppVersion
+      +string StatusMessage
+      +string CurrentPageTitle
+      +object? CurrentView
+      +NavigationTab ActiveTab
+      +void Dispose()
+    }
+
+    class DashboardViewModel <<ViewModel>> {
+      +DashboardViewModel()
+      +DashboardViewModel(IJobService jobService, IBackupService backupService, LogReaderService logReader)
+      +ObservableCollection<RecentActivityItem> RecentActivities
+      +int TotalJobs
+      +int ActiveJobs
+      +int InactiveJobs
+      +string LastBackup
+      +string SystemStatus
+      +void RefreshJobSummary()
+      +void NotifyLogWritten()
+      +void Dispose()
+    }
+
+    class JobsViewModel <<ViewModel>> {
+      +JobsViewModel()
+      +JobsViewModel(IJobService jobService)
+      +ObservableCollection<BackupJob> Jobs
+      +string? LastError
+      +event Action? CreateRequested
+      +event Action<BackupJob>? EditRequested
+      +event Action? JobsChanged
+      +void CreateFromEditor(JobEditorViewModel editor)
+      +void UpdateFromEditor(JobEditorViewModel editor)
+    }
+
+    class JobEditorViewModel <<ViewModel>> {
+      +string JobId
+      +string Name
+      +string SourcePath
+      +string TargetPath
+      +BackupType SelectedType
+      +bool IsActive
+      +bool CanSave
+      +bool IsEditMode
+      +event EventHandler<bool?>? CloseRequested
+      +{static} JobEditorViewModel CreateNew()
+      +{static} JobEditorViewModel FromJob(BackupJob job)
+    }
+
+    class ExecutionViewModel <<ViewModel>> {
+      +ExecutionViewModel()
+      +ExecutionViewModel(IJobService jobService, IBackupService backupService)
+      +ObservableCollection<ExecutionJobItem> Jobs
+      +string? LastError
+      +void RefreshJobs()
+      +void Dispose()
+    }
+
+    class LogsViewModel <<ViewModel>> {
+      +LogsViewModel()
+      +LogsViewModel(LogReaderService logReader)
+      +ObservableCollection<LogEntryItem> Logs
+      +void RefreshLogs()
+    }
+
+    class SettingsViewModel <<ViewModel>> {
+      +SettingsViewModel(SettingsService? settings = null)
+      +bool EncryptionEnabled
+      +string EncryptionKey
+      +Language SelectedLanguage
+      +LogFormat SelectedLogFormat
+      +string ExtensionsToEncrypt
+      +string BusinessSoftwareProcessName
+      +void SaveSettings()
+      +void RefreshLocalization()
+    }
+
+    class AboutViewModel <<ViewModel>> {
+      +string ProductName
+      +string Version
+    }
+  }
+
+  package "Converters" {
+    class LogLevelToBrushConverter <<Converter>>
+    class StatusToTextConverter <<Converter>>
+    class LanguageToTextConverter <<Converter>>
+    class LogFormatToTextConverter <<Converter>>
+    class L10nFormatConverter <<Converter>>
+    class L10nNullableFormatConverter <<Converter>>
+    class TypeToTextConverter <<Converter>>
+    class TypeToEmojiConverter <<Converter>>
+  }
+
+  package "Views" {
+    class MainWindow <<View>> {
+      +MainWindow()
+      +void OnClosed(EventArgs e)
+    }
+    class DashboardView <<View>>
+    class JobsView <<View>>
+    class JobEditorDialog <<View>>
+    class ExecutionView <<View>>
+    class LogsView <<View>>
+    class SettingsView <<View>>
+    class AboutView <<View>>
+  }
+}
+
+package "External Dependencies" {
+  class IJobService <<External>>
+  class IBackupService <<External>>
+  class IAppLogService <<External>>
+  class SettingsService <<External>>
+  class LogReaderService <<External>>
+  class AppLogService <<External>>
+  class JobService <<External>>
+  class BackupService <<External>>
+  class PathProvider <<External>>
+  class AppConfigRepository <<External>>
+  class AppConfig <<External>>
+  class LogContext <<External>>
+  class BackupJob <<External>>
+  class BackupType <<External>>
+  class JobStatus <<External>>
+  class JobStateDto <<External>>
+  class LogEntryDto <<External>>
+  class Language <<External>>
+  class LogLevel <<External>>
+  class LogFormat <<External>>
+  class Strings <<External>>
+}
+
+' ============================================
+' RELATIONS - GUI
+' ============================================
+Program ..> App : starts
+App --> MainWindow : creates
+App --> MainWindowViewModel : injects
+App ..> PathProvider : creates
+App ..> AppConfig : loads
+App ..> AppLogService : creates
+App ..> AppConfigRepository : creates
+App ..> JobService : creates
+App ..> BackupService : creates
+App ..> SettingsService : creates
+App ..> LogContext : builds
+
+ViewLocator ..> ViewModelBase : matches
+
+MainWindow --> MainWindowViewModel : DataContext
+MainWindowViewModel *-- DashboardViewModel
+MainWindowViewModel *-- JobsViewModel
+MainWindowViewModel *-- ExecutionViewModel
+MainWindowViewModel *-- LogsViewModel
+MainWindowViewModel *-- SettingsViewModel
+MainWindowViewModel *-- AboutViewModel
+MainWindowViewModel ..> NavigationTab : uses
+MainWindowViewModel ..> IBackupService : uses
+MainWindowViewModel ..> IAppLogService : listens
+MainWindowViewModel ..> IJobService : uses
+MainWindowViewModel ..> SettingsService : uses
+MainWindowViewModel ..> Loc : listens
+
+DashboardViewModel ..> IJobService : uses
+DashboardViewModel ..> IBackupService : listens
+DashboardViewModel ..> LogReaderService : reads
+DashboardViewModel --> RecentActivityItem : builds
+
+JobsViewModel ..> IJobService : uses
+JobsViewModel --> BackupJob : exposes
+JobsViewModel ..> JobEditorViewModel : creates/updates
+
+JobEditorViewModel ..> BackupType : edits
+JobEditorViewModel ..> BackupJob : maps from
+
+ExecutionViewModel ..> IJobService : uses
+ExecutionViewModel ..> IBackupService : controls
+ExecutionViewModel --> ExecutionJobItem : exposes
+
+LogsViewModel ..> LogReaderService : reads
+LogsViewModel --> LogEntryItem : exposes
+
+SettingsViewModel ..> SettingsService : applies
+SettingsViewModel ..> Loc : updates language
+SettingsViewModel ..> Language : uses
+SettingsViewModel ..> LogFormat : uses
+
+ExecutionJobItem ..> BackupJob : wraps
+ExecutionJobItem ..> JobStateDto : updates from
+ExecutionJobItem ..> BackupType : uses
+ExecutionJobItem ..> JobStatus : uses
+
+LogEntryItem ..> LogEntryDto : wraps
+LogEntryItem --> LogSection : contains
+LogSection --> LogField : contains
+Loc ..> Language : uses
+Loc ..> Strings : reads
+
+LogLevelToBrushConverter ..> LogLevel : maps
+StatusToTextConverter ..> Strings : maps
+LanguageToTextConverter ..> Language : maps
+LanguageToTextConverter ..> Strings : maps
+LogFormatToTextConverter ..> LogFormat : maps
+LogFormatToTextConverter ..> Strings : maps
+TypeToTextConverter ..> BackupType : maps
+TypeToTextConverter ..> Strings : maps
+TypeToEmojiConverter ..> BackupType : maps
+
+DashboardView --> DashboardViewModel : binds
+JobsView --> JobsViewModel : binds
+JobEditorDialog --> JobEditorViewModel : binds
+ExecutionView --> ExecutionViewModel : binds
+LogsView --> LogsViewModel : binds
+SettingsView --> SettingsViewModel : binds
+AboutView --> AboutViewModel : binds
+
+JobsView ..> JobEditorDialog : opens
+JobsView ..> JobEditorViewModel : creates
+
+' Layout hints
+Bootstrap -[hidden]down-> Enums
+Enums -[hidden]down-> Localization
+Localization -[hidden]down-> Models
+Models -[hidden]down-> ViewModels
+ViewModels -[hidden]down-> Converters
+Converters -[hidden]down-> Views
+
+@enduml

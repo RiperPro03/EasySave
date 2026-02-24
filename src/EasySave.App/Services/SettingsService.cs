@@ -21,9 +21,13 @@ public class SettingsService
     public string EncryptionKey => _config.EncryptionKey;
     public Language Language => _config.Language;
     public LogFormat LogFormat => _config.LogFormat;
+    public LogStorageMode LogStorageMode => _config.LogStorageMode;
+    public string LogServerHost => _config.LogServerHost;
+    public int LogServerPort => _config.LogServerPort;
     public string? BusinessSoftwareProcessName => _config.BusinessSoftwareProcessName;
     
     public IReadOnlyList<string> ExtensionsToEncrypt => _config.ExtensionsToEncrypt;
+    public int LargeFileThresholdKb => _config.LargeFileThresholdKb;
 
     public void ToggleEncryption()
     {
@@ -49,6 +53,18 @@ public class SettingsService
         _repository.Save(_config);
     }
 
+    public void UpdateLogStorageMode(LogStorageMode storageMode)
+    {
+        _config.ChangeLogStorageMode(storageMode);
+        _repository.Save(_config);
+    }
+
+    public void UpdateLogServerConnection(string host, int port)
+    {
+        _config.UpdateLogServerConnection(host, port);
+        _repository.Save(_config);
+    }
+
     public void UpdateBusinessSoftwareProcessName(string? name)
     {
         _config.ChangeBussinessSoftware(string.IsNullOrWhiteSpace(name) ? null : name.Trim());
@@ -60,17 +76,26 @@ public class SettingsService
         string? encryptionKey,
         Language language,
         LogFormat logFormat,
+        LogStorageMode logStorageMode,
+        string? logServerHost,
+        int logServerPort,
         IEnumerable<string> extensionsToEncrypt,
-        string? businessSoftwareProcessName)
+        string? businessSoftwareProcessName,
+        int largeFileThresholdKb)
     {
         _config.SetEncryptionEnabled(encryptionEnabled);
         _config.UpdateEncryptionKey(encryptionKey);
         _config.ChangeLanguage(language);
         _config.ChangeLogFormat(logFormat);
+        _config.ChangeLogStorageMode(logStorageMode);
+        _config.UpdateLogServerConnection(
+            string.IsNullOrWhiteSpace(logServerHost) ? _config.LogServerHost : logServerHost.Trim(),
+            logServerPort);
         _config.UpdateExtensionsToEncrypt(extensionsToEncrypt);
         _config.ChangeBussinessSoftware(string.IsNullOrWhiteSpace(businessSoftwareProcessName)
             ? null
             : businessSoftwareProcessName.Trim());
+        _config.UpdateLargeFileThreshold(largeFileThresholdKb);
         _repository.Save(_config);
     }
     
@@ -78,5 +103,11 @@ public class SettingsService
     {
         _config.UpdateExtensionsToEncrypt(extensions);
         _repository.Save(_config); // Sauvegarde physique sur le disque
+    }
+
+    public void UpdateLargeFileThreshold(int kb)
+    {
+        _config.UpdateLargeFileThreshold(kb);
+        _repository.Save(_config);
     }
 }

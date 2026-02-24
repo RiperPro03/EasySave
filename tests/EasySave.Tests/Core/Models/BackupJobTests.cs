@@ -109,7 +109,7 @@ public class BackupJobTests
     {
         var job = BackupJobBuilder.Valid().Build();
 
-        job.UpdateDefinition("NewName", @"D:\Src2", @"D:\Dst2", BackupType.Differential);
+        job.UpdateDefinition("NewName", @"D:\Src2", @"D:\Dst2", BackupType.Differential, new List<string>());
 
         Assert.Equal("NewName", job.Name);
         Assert.Equal(@"D:\Src2", job.SourcePath);
@@ -126,7 +126,7 @@ public class BackupJobTests
         var job = BackupJobBuilder.Valid().Build();
 
         ExceptionAssert.ThrowsArgumentException(
-            () => job.UpdateDefinition(name!, @"C:\Src", @"C:\Dst", BackupType.Full),
+            () => job.UpdateDefinition(name!, @"C:\Src", @"C:\Dst", BackupType.Full, new List<string>()),
             "name");
     }
 

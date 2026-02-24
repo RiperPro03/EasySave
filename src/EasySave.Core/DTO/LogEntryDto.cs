@@ -27,7 +27,7 @@ public sealed class LogEntryDto
     /// <summary>
     /// Schema version for backward compatibility.
     /// </summary>
-    public int SchemaVersion { get; set; } = 1;
+    public int SchemaVersion { get; set; } = 2;
 
     /// <summary>
     /// Event metadata (name/category/action/outcome).
@@ -281,6 +281,11 @@ public sealed class LogSettingsDto
     public LogFormat? LogFormat { get; set; }
 
     /// <summary>
+    /// Selected log storage mode.
+    /// </summary>
+    public LogStorageMode? LogStorageMode { get; set; }
+
+    /// <summary>
     /// Log directory path.
     /// </summary>
     public string? LogDirectory { get; set; }
@@ -289,6 +294,16 @@ public sealed class LogSettingsDto
     /// Configuration file path.
     /// </summary>
     public string? ConfigPath { get; set; }
+
+    /// <summary>
+    /// Centralized log server host or IP.
+    /// </summary>
+    public string? LogServerHost { get; set; }
+
+    /// <summary>
+    /// Centralized log server port.
+    /// </summary>
+    public int? LogServerPort { get; set; }
 
     /// <summary>
     /// Whether encryption is enabled.
@@ -304,6 +319,10 @@ public sealed class LogSettingsDto
     /// Business software process name.
     /// </summary>
     public string? BusinessSoftwareProcessName { get; set; }
+    /// <summary>
+    /// Threshold 
+    /// </summary>
+    public int? LargeFileThresholdKb { get; set; }
 }
 
 /// <summary>

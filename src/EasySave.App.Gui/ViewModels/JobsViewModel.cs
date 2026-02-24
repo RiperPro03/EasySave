@@ -127,14 +127,16 @@ public sealed partial class JobsViewModel : ViewModelBase
             if (_jobService != null)
             {
                 var id = GenerateNextId();
-                _jobService.Create(id, editor.Name, editor.SourcePath, editor.TargetPath, editor.SelectedType, editor.IsActive);
+                // Ajout de editor.PriorityExtensions pour la création via service
+                _jobService.Create(id, editor.Name, editor.SourcePath, editor.TargetPath, editor.SelectedType, editor.IsActive, editor.PriorityExtensions);
                 LastError = null;
                 Refresh();
             }
             else
             {
                 var id = GenerateNextId();
-                Jobs.Add(new BackupJob(id, editor.Name, editor.SourcePath, editor.TargetPath, editor.SelectedType, editor.IsActive));
+                // Ajout de editor.PriorityExtensions pour le mode démo/sans service
+                Jobs.Add(new BackupJob(id, editor.Name, editor.SourcePath, editor.TargetPath, editor.SelectedType, editor.IsActive, editor.PriorityExtensions));
                 LastError = null;
                 NotifyJobsChanged();
             }
@@ -154,7 +156,8 @@ public sealed partial class JobsViewModel : ViewModelBase
         {
             if (_jobService != null)
             {
-                _jobService.Update(editor.JobId, editor.Name, editor.SourcePath, editor.TargetPath, editor.SelectedType, editor.IsActive);
+                // Ajout de editor.PriorityExtensions pour la mise à jour via service
+                _jobService.Update(editor.JobId, editor.Name, editor.SourcePath, editor.TargetPath, editor.SelectedType, editor.IsActive, editor.PriorityExtensions);
                 LastError = null;
                 Refresh();
             }
@@ -164,7 +167,8 @@ public sealed partial class JobsViewModel : ViewModelBase
                 if (existing == null)
                     return;
 
-                existing.UpdateDefinition(editor.Name, editor.SourcePath, editor.TargetPath, editor.SelectedType);
+                // Mise à jour de la définition incluant les extensions prioritaires
+                existing.UpdateDefinition(editor.Name, editor.SourcePath, editor.TargetPath, editor.SelectedType, editor.PriorityExtensions);
                 if (editor.IsActive)
                     existing.Enable();
                 else

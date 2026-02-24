@@ -71,8 +71,11 @@ public sealed class LogEntryItem
             var fields = new List<LogField>();
             AddField(fields, "Language", entry.Settings.Language);
             AddField(fields, "LogFormat", entry.Settings.LogFormat);
+            AddField(fields, "LogStorageMode", entry.Settings.LogStorageMode);
             AddField(fields, "LogDirectory", entry.Settings.LogDirectory);
             AddField(fields, "ConfigPath", entry.Settings.ConfigPath);
+            AddField(fields, "LogServerHost", entry.Settings.LogServerHost);
+            AddField(fields, "LogServerPort", entry.Settings.LogServerPort);
             AddField(fields, "EncryptionEnabled", entry.Settings.EncryptionEnabled);
             if (entry.Settings.ExtensionsToEncrypt is not null)
             {
@@ -80,6 +83,7 @@ public sealed class LogEntryItem
                 AddField(fields, "ExtensionsToEncrypt", extensions);
             }
             AddField(fields, "BusinessSoftwareProcessName", entry.Settings.BusinessSoftwareProcessName);
+            AddField(fields, "LargeFileThresholdKb", entry.Settings.LargeFileThresholdKb);
 
             if (fields.Count > 0)
                 sections.Add(new LogSection("Settings", fields));

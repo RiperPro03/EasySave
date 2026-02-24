@@ -1,42 +1,96 @@
 flowchart TD
-  %% Diagramme d activite general - lancement app et execution d un job
+  %% Diagramme d activite general - Utilisation GUI (langage naturel)
 
   start([Debut])
-  init[Demarrage de l application]
-  loadConfig[Charger la configuration]
-  setCulture[Appliquer la langue / culture]
-  initServices[Initialiser services et controleurs]
-  argsCheck{Arguments fournis ?}
+  openApp[Ouvrir l application GUI]
+  loadConfig[Charger la configuration utilisateur]
+  applyLang[Appliquer la langue]
+  initApp[Initialiser les services et ecrans]
+  showDashboard[Afficher le tableau de bord]
+  nav{Action utilisateur}
 
-  start --> init --> loadConfig --> setCulture --> initServices --> argsCheck
+  start --> openApp --> loadConfig --> applyLang --> initApp --> showDashboard --> nav
 
-  %% Mode arguments
-  argsCheck --|Oui|--> parseArgs[Parser les arguments]
-  parseArgs --> argsValid{Arguments valides ?}
-  argsValid --|Non|--> showArgsError[Afficher erreur] --> fin([Fin])
+  %% -------------------- NAVIGATION PRINCIPALE --------------------
+  nav -- Gerer les travaux --> jobsList[Afficher la liste des travaux]
+  jobsList --> jobsAction{Que faire ?}
+  jobsAction -- Creer --> jobCreate[Creer un nouveau travail]
+  jobsAction -- Modifier --> jobEdit[Modifier un travail]
+  jobsAction -- Supprimer --> jobDelete[Supprimer un travail]
+  jobsAction -- Activer/Desactiver --> jobToggle[Changer l etat actif]
+  jobCreate --> saveJobs[Enregistrer les changements]
+  jobEdit --> saveJobs
+  jobDelete --> saveJobs
+  jobToggle --> saveJobs
+  saveJobs --> showDashboard
 
-  argsValid --|Oui|--> loopIds{{Pour chaque id}}
-  loopIds --> getJob[Charger le job]
-  getJob --> jobFound{Job trouve ?}
-  jobFound --|Non|--> showJobError[Afficher job introuvable] --> loopIds
-  jobFound --|Oui|--> runJob[Executer le job]
-  runJob --> showResult[Afficher resultat] --> loopIds
-  loopIds --> batchSummary[Afficher resume batch] --> fin
+  nav -- Parametres --> settings[Modifier langue, format log, options de securite]
+  settings --> saveSettings[Enregistrer les parametres]
+  saveSettings --> showDashboard
 
-  %% Mode menu interactif
-  argsCheck --|Non|--> showMenu[Afficher menu principal]
-  showMenu --> chooseAction{Choix utilisateur}
-  chooseAction --|Lancer un job|--> selectJob[Selectionner un job] --> runJobUI[Executer le job] --> showResultUI[Afficher resultat] --> showMenu
-  chooseAction --|Gerer les jobs|--> manageJobs[Creer / Modifier / Supprimer] --> showMenu
-  chooseAction --|Parametres|--> settings[Modifier langue ou format log] --> showMenu
-  chooseAction --|Quitter|--> fin
+  nav -- Consulter les logs --> openLogs[Afficher les journaux recents]
+  openLogs --> showDashboard
 
-  %% Execution d un job (vue globale)
-  runJob --> engineStart[BackupService vers BackupEngine]
-  engineStart --> checkSource[Verifier dossier source]
-  checkSource --> sourceOk{Source valide ?}
-  sourceOk --|Non|--> jobError[Marquer erreur et logger] --> jobDone[Retourner resultat]
-  sourceOk --|Oui|--> selectStrategy[Choisir strategie Full ou Diff]
-  selectStrategy --> processFiles[Parcourir fichiers et copier si besoin]
-  processFiles --> finalize[Finaliser statut et logger] --> jobDone
-  jobDone --> showResult
+  nav -- Suivi en direct --> openExecution[Afficher l ecran d execution]
+  openExecution --> runMode{Choix execution}
+  runMode -- Lancer un travail --> pickOne[Selectionner un travail]
+  runMode -- Lancer tous les travaux --> runAll[Executer les travaux actifs en sequence]
+  runMode -- Pause ou Reprendre ou Stop --> liveControl[Piloter un travail en cours]
+  liveControl --> openExecution
+
+  %% -------------------- EXECUTION D UN TRAVAIL --------------------
+  pickOne --> runOne[Demarrer le travail]
+  runAll --> seqCheckStart{Logiciel metier actif ?}
+  seqCheckStart -- Oui --> seqBlocked[Afficher blocage et arreter la sequence] --> openExecution
+  seqCheckStart -- Non --> seqLoop[Parcourir les travaux actifs]
+  seqLoop --> seqStepCheck{Logiciel metier actif avant ce travail ?}
+  seqStepCheck -- Oui --> seqStopNow[Arreter la sequence et informer utilisateur] --> openExecution
+  seqStepCheck -- Non --> runOne
+
+  runOne --> jobActive{Travail actif ?}
+  jobActive -- Non --> inactiveMsg[Afficher travail inactif] --> runReturn[Retour a l ecran d execution]
+  jobActive -- Oui --> preStartCheck{Logiciel metier actif ?}
+  preStartCheck -- Oui --> startBlocked[Afficher blocage au demarrage] --> runReturn
+  preStartCheck -- Non --> startRun[Passer le travail en cours + demarrer le suivi]
+
+  startRun --> sourceCheck{Source disponible ?}
+  sourceCheck -- Non --> sourceError[Afficher erreur source] --> finishError[Fin du travail en erreur]
+  sourceCheck -- Oui --> strategy[Choisir le mode de copie complet ou differentiel]
+  strategy --> filesLoop{Fichier suivant ?}
+  filesLoop -- Non --> finalize[Finaliser le travail et ecrire le resume]
+  filesLoop -- Oui --> copyDecision{Le fichier doit etre copie ?}
+
+  copyDecision -- Non --> skipFile[Ignorer le fichier]
+  skipFile --> updateProgress[Mettre a jour progression et etat]
+
+  copyDecision -- Oui --> copyFile[Copier le fichier]
+  copyFile --> cryptoNeeded{Chiffrement requis pour ce fichier ?}
+  cryptoNeeded -- Non --> updateProgress
+  cryptoNeeded -- Oui --> cryptoAvailable{CryptoSoft disponible ?}
+  cryptoAvailable -- Non --> cryptoSkip[Informer que le chiffrement est saute]
+  cryptoSkip --> updateProgress
+  cryptoAvailable -- Oui --> encryptFile[Chiffrer le fichier]
+  encryptFile --> encryptResult{Chiffrement reussi ?}
+  encryptResult -- Non --> cryptoError[Ajouter une erreur de chiffrement]
+  cryptoError --> updateProgress
+  encryptResult -- Oui --> updateProgress
+
+  updateProgress --> midRunCheck{Logiciel metier detecte en cours ?}
+  midRunCheck -- Oui --> stopAfterCurrent[Terminer le fichier courant puis arreter le travail]
+  stopAfterCurrent --> finalize
+  midRunCheck -- Non --> filesLoop
+
+  finalize --> resultOk{Des erreurs existent ?}
+  resultOk -- Non --> finishOk[Marquer termine]
+  resultOk -- Oui --> finishWithErrors[Marquer termine avec erreurs]
+  finishOk --> runReturn
+  finishWithErrors --> runReturn
+  finishError --> runReturn
+
+  runReturn --> showResult[Afficher le resultat dans l ecran d execution]
+  showResult --> afterRun{Autre action ?}
+  afterRun -- Relancer --> openExecution
+  afterRun -- Retour accueil --> showDashboard
+  afterRun -- Quitter --> finishNode([Fin])
+
+  nav -- Quitter --> finishNode

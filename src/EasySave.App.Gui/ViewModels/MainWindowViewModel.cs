@@ -1,6 +1,8 @@
 using System;
 using System.ComponentModel;
+using System.Net.Http;
 using System.Threading;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using EasySave.App.Gui.Enums;
@@ -10,6 +12,7 @@ using EasySave.Core.Events;
 using EasySave.Core.Interfaces;
 using EasySave.Core.Enums;
 using EasySave.Core.Resources;
+using EasySave.EasyLog.Options;
 
 namespace EasySave.App.Gui.ViewModels;
 
@@ -30,11 +33,14 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
     private readonly AboutViewModel _aboutViewModel;
     private readonly IAppLogService? _appLogService;
     private readonly SynchronizationContext? _uiContext;
+    private readonly SettingsService? _settingsService;
+    private readonly HttpClient _logHubHealthClient = new();
+    private CancellationTokenSource? _logHubHealthCts;
     private JobStatus _lastJobStatus = JobStatus.Idle;
     private string? _lastJobName;
     private bool _disposed;
 
-    public string AppVersion { get; } = "v2.0.0";
+    public string AppVersion { get; } = "v3.0.0";
     public string AppTagline => Strings.Gui_App_Tagline;
     public string SidebarWorkspaceLabel => Strings.Gui_Sidebar_Workspace;
     public string SidebarSystemLabel => Strings.Gui_Sidebar_System;
@@ -59,6 +65,15 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
 
     [ObservableProperty]
     private object? _currentView;
+
+    [ObservableProperty]
+    private string _logHubHealthLabel = "LogHub: local";
+
+    [ObservableProperty]
+    private string _logHubHealthDotBrush = "#7A7A7A";
+
+    [ObservableProperty]
+    private string _logHubHealthTooltip = "LocalOnly";
 
     // Suivi de l onglet actif pour le style de la sidebar.
     [ObservableProperty]
@@ -103,6 +118,10 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
         _aboutViewModel = new AboutViewModel();
         _jobsViewModel.JobsChanged += OnJobsChanged;
         Loc.Instance.PropertyChanged += OnLocalizationChanged;
+        // Valeur visible en mode design/local sans checker reseau.
+        LogHubHealthLabel = "LogHub: local";
+        LogHubHealthDotBrush = "#7A7A7A";
+        LogHubHealthTooltip = "LocalOnly";
         ShowDashboard();
     }
 
@@ -126,8 +145,13 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
         if (settingsService is null)
             throw new ArgumentNullException(nameof(settingsService));
 
+        _settingsService = settingsService;
         _backupService = backupService ?? throw new ArgumentNullException(nameof(backupService));
-        var logReader = new LogReaderService(logsPath);
+        var logReader = new LogReaderService(
+            logsPath,
+            () => settingsService.LogStorageMode,
+            () => settingsService.LogServerHost,
+            () => settingsService.LogServerPort);
         _dashboardViewModel = new DashboardViewModel(jobService, _backupService, logReader);
         _jobsViewModel = new JobsViewModel(jobService);
         _executionViewModel = new ExecutionViewModel(jobService, _backupService);
@@ -142,6 +166,7 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
         {
             _appLogService.LogWritten += OnLogWritten;
         }
+        StartLogHubHealthMonitor();
         ShowDashboard();
     }
 
@@ -307,6 +332,96 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
         CurrentView = view;
     }
 
+    private void StartLogHubHealthMonitor()
+    {
+        if (_settingsService is null)
+            return;
+
+        _logHubHealthCts?.Cancel();
+        _logHubHealthCts?.Dispose();
+        _logHubHealthCts = new CancellationTokenSource();
+        var token = _logHubHealthCts.Token;
+
+        _ = Task.Run(async () =>
+        {
+            while (!token.IsCancellationRequested)
+            {
+                try
+                {
+                    await RefreshLogHubHealthAsync(token).ConfigureAwait(false);
+                }
+                catch (OperationCanceledException) when (token.IsCancellationRequested)
+                {
+                    break;
+                }
+                catch
+                {
+                    PostLogHubHealthStatus("LogHub: offline", "#FF453A", "Health check failed");
+                }
+
+                try
+                {
+                    await Task.Delay(TimeSpan.FromSeconds(3), token).ConfigureAwait(false);
+                }
+                catch (OperationCanceledException) when (token.IsCancellationRequested)
+                {
+                    break;
+                }
+            }
+        }, token);
+    }
+
+    private async Task RefreshLogHubHealthAsync(CancellationToken cancellationToken)
+    {
+        if (_settingsService is null)
+            return;
+
+        if (_settingsService.LogStorageMode == LogStorageMode.LocalOnly)
+        {
+            PostLogHubHealthStatus("LogHub: local", "#7A7A7A", "LocalOnly");
+            return;
+        }
+
+        var host = _settingsService.LogServerHost;
+        var port = _settingsService.LogServerPort;
+        string url = $"http://{host}:{port}/health";
+
+        using var timeoutCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        timeoutCts.CancelAfter(TimeSpan.FromMilliseconds(700));
+
+        try
+        {
+            using var response = await _logHubHealthClient.GetAsync(url, timeoutCts.Token).ConfigureAwait(false);
+            bool online = response.IsSuccessStatusCode;
+            PostLogHubHealthStatus(
+                online ? "LogHub: online" : "LogHub: offline",
+                online ? "#30D158" : "#FF453A",
+                $"{url} ({(int)response.StatusCode})");
+        }
+        catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException)
+        {
+            PostLogHubHealthStatus("LogHub: offline", "#FF453A", $"{url} (unreachable)");
+        }
+    }
+
+    private void PostLogHubHealthStatus(string label, string dotBrush, string tooltip)
+    {
+        if (_uiContext != null)
+        {
+            _uiContext.Post(_ =>
+            {
+                LogHubHealthLabel = label;
+                LogHubHealthDotBrush = dotBrush;
+                LogHubHealthTooltip = tooltip;
+            }, null);
+            return;
+        }
+
+        LogHubHealthLabel = label;
+        LogHubHealthDotBrush = dotBrush;
+        LogHubHealthTooltip = tooltip;
+    }
+
     /// <summary>
     /// Unsubscribes from events and releases managed resources.
     /// </summary>
@@ -316,6 +431,10 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
             return;
 
         _disposed = true;
+        _logHubHealthCts?.Cancel();
+        _logHubHealthCts?.Dispose();
+        _logHubHealthCts = null;
+        _logHubHealthClient.Dispose();
         Loc.Instance.PropertyChanged -= OnLocalizationChanged;
 
         if (_backupService != null)

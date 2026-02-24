@@ -203,6 +203,19 @@
                                    Margin="4,8,0,0"
                                    TextWrapping="Wrap"/>
                     </StackPanel>
+
+					<!-- Priorisation -->
+					<StackPanel>
+						<TextBlock Classes="label" Text="Extensions prioritaires" />
+						<TextBox Classes="input"
+								 Text="{Binding PriorityExtensionsRaw}"
+								 Watermark="Exemple: .pdf, .zip, .docx"
+								 ToolTip.Tip="Séparez les extensions par une virgule. Ces fichiers seront traités en priorité."/>
+						<TextBlock Text="Les fichiers avec ces extensions seront copiés avant les autres."
+								   FontSize="11"
+								   Foreground="#80FFFFFF"
+								   Margin="4,4,0,0"/>
+					</StackPanel>
                     
                     <!-- Statut actif -->
                     <StackPanel>
