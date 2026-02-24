@@ -150,3 +150,77 @@ When business software is active :
 
 - Unable to start a job 
 - A backup in progress stops cleanly
+
+# Version 3.0 
+
+## 1. Parallel backup
+
+EasySave 3.0 now runs backups in parallel.
+
+- Multiple jobs can run at the same time
+- Improved performance
+- No special settings required: everything is automatic
+
+## 2. Priority files
+
+The user can define a **priority extensions list** in the parameters.
+
+**Rule**: 
+As long as a priority file is pending in a job, non-priority files are not processed.
+This ensures that important files come first.
+
+## 3. Limiting large files
+
+A new parameter lets you define a **maximum threshold (in Kb)**.
+
+**How it works** :
+- Two files larger than this threshold cannot be transferred at the same time.
+- Smaller files continue as normal
+- The threshold can be modified in Settings.
+
+## 4. Real-time job control
+
+From the graphical interface, the user can:
+
+- **Pause** a job (the pause takes effect after the current file)
+- **Resume** a job
+- **Stop** a job immediately
+- **Monitor progress** (percentage, status, current file)
+
+These actions are available for an individual job or for all jobs.
+
+## 5. Automatic pause (job software)
+
+If a job software defined in the parameters is detected :
+
+- All jobs are automatically paused
+- They resume automatically when the business software is closed.
+
+This mechanism prevents backups from disrupting critical applications.
+
+## 6. CryptoSoft mono-instance
+
+CryptoSoft can no longer be launched several times at the same time.
+
+- EasySave automatically waits until CryptoSoft is available.
+- Any waits are visible in the logs
+
+## 7 Log centralization (Docker)
+
+EasySave 3.0 allows logs to be sent to a Docker server.
+
+The user can choose :
+- **Local only**
+- **Centralized only**
+- **Local + centralized**
+
+**Features** :
+- A single log file for all users
+- User and machine identification
+- Real-time sending to Docker server
+
+## 8. New settings in Settings
+
+- List of priority extensions
+- Maximum threshold for large files
+- Log centralization mode

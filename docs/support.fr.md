@@ -171,7 +171,7 @@ Cette version marque une rupture importante avec les précédentes grâce à l�
 
 ## 2. Sauvegarde en parallèle
 
-EasySave 3.0 abandonne le mode séquentiel pour un focntionnement parallèle : 
+EasySave 3.0 abandonne le mode séquentiel pour un fonctionnement parallèle : 
 - Plusieurs travaux peuvent s'exécuter simultanément
 - Chaque job peut traiter plusieurs fichiers en parallèle
 
@@ -227,6 +227,6 @@ L’utilisateur peut choisir :
 ## 9. Nouveaux paramètres 
 
 - Liste des extensions prioritaires
-- Seuil maximal de taille (Ko) pour les trasnferts simultanés
+- Seuil maximal de taille (Ko) pour les transferts simultanés
 - Mode de centralisation des logs
 - Gestion de CryptoSoft mono-instance

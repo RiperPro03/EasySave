@@ -142,6 +142,7 @@ Menu :
 ## Chiffrement 
 
 Les fichiers dont l'extension et le logiciel métier correspondent aux valeurs définies par l’utilisateur dans les paramètres seront chiffrés.
+
 ## Logiciel métier 
 
 L'utilisateur peut définir un logiciel métier à surveiller dans les paramètres généraux.  
@@ -149,3 +150,77 @@ Lorsque le logiciel métier est actif :
 
 - Impossible de lancer un job 
 - Une sauvegarde en cours s'arrête proprement
+
+# Version 3.0 
+
+## 1. Sauvegarde en parallèle
+
+EasySave 3.0 exécute désormais les sauvegardes en parallèle.
+
+- Plusieurs travaux peuvent fonctionner en même temps
+- Les performances sont améliorées
+- Aucun réglage particulier n’est nécessaire : tout est automatique
+
+## 2. Fichiers prioritaires
+
+L’utilisateur peut définir une **liste d’extensions prioritaires** dans les paramètres.
+
+**Règle** :  
+Tant qu’un fichier prioritaire est en attente dans un travail, les fichiers non prioritaires ne sont pas traités.
+Cela garantit que les fichiers importants passent en premier.
+
+## 3. Limitation des fichiers volumineux
+
+Un nouveau paramètre permet de définir un **seuil maximal (en Ko)**.
+
+**Fonctionnement** :
+- Deux fichiers plus gros que ce seuil ne peuvent pas être transférés en même temps
+- Les fichiers plus petits continuent normalement
+- Le seuil est modifiable dans les paramètres (Settings)
+
+## 4. Contrôle en temps réel des travaux
+
+Depuis l’interface graphique, l’utilisateur peut :
+
+- **Mettre en pause** un travail (la pause prend effet après le fichier en cours)
+- **Reprendre** un travail
+- **Arrêter** un travail immédiatement
+- **Suivre la progression** (pourcentage, état, fichier en cours)
+
+Ces actions sont disponibles pour un travail individuel ou pour tous les travaux.
+
+## 5. Pause automatique (logiciel métier)
+
+Si un logiciel métier défini dans les paramètres est détecté :
+
+- Tous les travaux passent automatiquement en pause
+- Ils reprennent automatiquement lorsque le logiciel métier est fermé
+
+Ce mécanisme évite que les sauvegardes perturbent les applications critiques.
+
+## 6. CryptoSoft mono-instance
+
+CryptoSoft ne peut plus être lancé plusieurs fois en même temps.
+
+- EasySave attend automatiquement que CryptoSoft soit disponible
+- Les éventuelles attentes sont visibles dans les logs
+
+## 7 Centralisation des logs (Docker)
+
+EasySave 3.0 permet d’envoyer les logs vers un serveur Docker.
+
+L’utilisateur peut choisir :
+- **Local uniquement**
+- **Centralisé uniquement**
+- **Local + centralisé**
+
+**Caractéristiques** :
+- Un fichier journalier unique pour tous les utilisateurs
+- Identification de l’utilisateur et de la machine
+- Envoi en temps réel au serveur Docker
+
+## 8. Nouveaux paramètres dans Settings
+
+- Liste des extensions prioritaires
+- Seuil maximal pour les fichiers volumineux
+- Mode de centralisation des logs
