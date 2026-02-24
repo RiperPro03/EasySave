@@ -88,7 +88,6 @@ namespace EasySave.App.Gui.ViewModels
         /// </summary>
         private void LoadLogs()
         {
-            // Récupération des données brutes via le service
             var rawEntries = _logReader.ReadAllEntries();
 
             _allLogsCache = rawEntries
@@ -109,7 +108,6 @@ namespace EasySave.App.Gui.ViewModels
                 EventTypes.Add("Tous");
             }
 
-            // CORRECTION ERREUR INDEX : Utilisation d'une liste temporaire
             var typesToRemove = EventTypes.Where(t => t != "Tous" && !namesFound.Contains(t)).ToList();
             foreach (var type in typesToRemove)
             {
@@ -137,13 +135,11 @@ namespace EasySave.App.Gui.ViewModels
 
             var filtered = _allLogsCache.AsEnumerable();
 
-            // Filtre par Type d'événement
             if (!string.IsNullOrEmpty(_selectedEventType) && _selectedEventType != "Tous")
             {
                 filtered = filtered.Where(l => l.Entry.Event?.Name == _selectedEventType);
             }
 
-            // Filtre par ID (Vérifie si Job.Id ou Trace.Id COMMENCE par la saisie)
             if (!string.IsNullOrWhiteSpace(_searchIdText))
             {
                 filtered = filtered.Where(l =>
@@ -151,7 +147,6 @@ namespace EasySave.App.Gui.ViewModels
                     var jobId = l.Entry.Job?.Id;
                     var traceId = l.Entry.Trace?.Id;
 
-                    // Utilisation de StartsWith pour chercher uniquement le début de la chaîne
                     return (jobId != null && jobId.StartsWith(_searchIdText, StringComparison.OrdinalIgnoreCase)) ||
                            (traceId != null && traceId.StartsWith(_searchIdText, StringComparison.OrdinalIgnoreCase));
                 });
@@ -163,4 +158,4 @@ namespace EasySave.App.Gui.ViewModels
             }
         }
     }
-}
+}    
