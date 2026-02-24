@@ -93,6 +93,7 @@ public sealed class AppConfigRepository
         config.SetEncryptionEnabled(dto.EncryptionEnabled);
         config.UpdateEncryptionKey(dto.EncryptionKey);
         config.UpdateExtensionsToEncrypt(dto.ExtensionsToEncrypt ?? new List<string>());
+        config.UpdateLargeFileThreshold(dto.LargeFileThresholdKb);
         return config;
     }
 
@@ -118,7 +119,8 @@ public sealed class AppConfigRepository
             BusinessSoftwareProcessName = config.BusinessSoftwareProcessName,
             EncryptionEnabled = config.EncryptionEnabled,
             EncryptionKey = config.EncryptionKey,
-            ExtensionsToEncrypt = config.ExtensionsToEncrypt.ToList()
+            ExtensionsToEncrypt = config.ExtensionsToEncrypt.ToList(),
+            LargeFileThresholdKb = config.LargeFileThresholdKb
         };
 
         var json = JsonSerializer.Serialize(dto, _options);
@@ -148,7 +150,8 @@ public sealed class AppConfigRepository
                 config.LogServerPort,
                 config.EncryptionEnabled,
                 config.ExtensionsToEncrypt,
-                config.BusinessSoftwareProcessName)
+                config.BusinessSoftwareProcessName,
+                config.LargeFileThresholdKb)
             .Build();
 
         _logService.Write(entry);
@@ -179,5 +182,6 @@ public sealed class AppConfigRepository
         public bool EncryptionEnabled { get; set; }
         public string? EncryptionKey { get; set; }
         public List<string>? ExtensionsToEncrypt { get; set; }
+        public int LargeFileThresholdKb { get; set; }
     }
 }

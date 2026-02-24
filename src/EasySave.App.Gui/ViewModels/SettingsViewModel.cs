@@ -25,6 +25,7 @@ public partial class SettingsViewModel : ViewModelBase
     [ObservableProperty] private string _businessSoftwareProcessName = string.Empty;
     [ObservableProperty] private string _logServerHost = "localhost";
     [ObservableProperty] private string _logServerPort = "9696";
+    [ObservableProperty] private string _largeFileThreshold = "10000";
     
     // Listes pour remplir les menus déroulants (ComboBox)
     public Language[] Languages => Enum.GetValues<Language>();
@@ -53,6 +54,7 @@ public partial class SettingsViewModel : ViewModelBase
         // Si ton service possède une propriété ExtensionsToEncrypt (List<string>)
         ExtensionsToEncrypt = string.Join(", ", settings.ExtensionsToEncrypt);
         BusinessSoftwareProcessName = settings.BusinessSoftwareProcessName ?? string.Empty;
+        LargeFileThreshold = settings.LargeFileThresholdKb.ToString();
     }
     // Changes are applied on save to avoid log spam.
 
@@ -73,6 +75,11 @@ public partial class SettingsViewModel : ViewModelBase
             ? portValue
             : _settings.LogServerPort;
 
+        // Threshold conversion (string → int)
+        int threshold = int.TryParse(LargeFileThreshold, out var kb) 
+            ? kb 
+            : _settings.LargeFileThresholdKb;
+
         _settings.ApplySettings(
             encryptionEnabled: EncryptionEnabled,
             encryptionKey: EncryptionKey,
@@ -82,7 +89,8 @@ public partial class SettingsViewModel : ViewModelBase
             logServerHost: LogServerHost,
             logServerPort: parsedServerPort,
             extensionsToEncrypt: list,
-            businessSoftwareProcessName: BusinessSoftwareProcessName);
+            businessSoftwareProcessName: BusinessSoftwareProcessName,
+            largeFileThresholdKb: threshold);
 
         Loc.Instance.SetLanguage(SelectedLanguage);
         OnPropertyChanged(nameof(Languages));

@@ -27,6 +27,7 @@ public class SettingsService
     public string? BusinessSoftwareProcessName => _config.BusinessSoftwareProcessName;
     
     public IReadOnlyList<string> ExtensionsToEncrypt => _config.ExtensionsToEncrypt;
+    public int LargeFileThresholdKb => _config.LargeFileThresholdKb;
 
     public void ToggleEncryption()
     {
@@ -79,7 +80,8 @@ public class SettingsService
         string? logServerHost,
         int logServerPort,
         IEnumerable<string> extensionsToEncrypt,
-        string? businessSoftwareProcessName)
+        string? businessSoftwareProcessName,
+        int largeFileThresholdKb)
     {
         _config.SetEncryptionEnabled(encryptionEnabled);
         _config.UpdateEncryptionKey(encryptionKey);
@@ -93,6 +95,7 @@ public class SettingsService
         _config.ChangeBussinessSoftware(string.IsNullOrWhiteSpace(businessSoftwareProcessName)
             ? null
             : businessSoftwareProcessName.Trim());
+        _config.UpdateLargeFileThreshold(largeFileThresholdKb);
         _repository.Save(_config);
     }
     
@@ -100,5 +103,11 @@ public class SettingsService
     {
         _config.UpdateExtensionsToEncrypt(extensions);
         _repository.Save(_config); // Sauvegarde physique sur le disque
+    }
+
+    public void UpdateLargeFileThreshold(int kb)
+    {
+        _config.UpdateLargeFileThreshold(kb);
+        _repository.Save(_config);
     }
 }
