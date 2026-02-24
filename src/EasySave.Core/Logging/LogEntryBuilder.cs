@@ -166,6 +166,7 @@ public sealed class LogEntryBuilder
       /// <param name="encryptionEnabled">Optional encryption flag.</param>
       /// <param name="extensionsToEncrypt">Optional encryption extension list.</param>
       /// <param name="businessSoftwareProcessName">Optional business software process name.</param>
+      /// <param name="largeFileThresholdKb">Optional max file size for parallel transfers.</param>
       /// <returns>The current builder.</returns>
       public LogEntryBuilder WithSettings(
           Language language,
@@ -177,7 +178,8 @@ public sealed class LogEntryBuilder
           int? logServerPort = null,
           bool? encryptionEnabled = null,
           IEnumerable<string>? extensionsToEncrypt = null,
-          string? businessSoftwareProcessName = null)
+          string? businessSoftwareProcessName = null,
+          int? largeFileThresholdKb = null)
       {
           _entry.Settings = new LogSettingsDto
           {
@@ -190,7 +192,8 @@ public sealed class LogEntryBuilder
               LogServerPort = logServerPort,
               EncryptionEnabled = encryptionEnabled,
               ExtensionsToEncrypt = extensionsToEncrypt?.ToList(),
-              BusinessSoftwareProcessName = businessSoftwareProcessName
+              BusinessSoftwareProcessName = businessSoftwareProcessName,
+              LargeFileThresholdKb = largeFileThresholdKb
           };
           return this;
       }

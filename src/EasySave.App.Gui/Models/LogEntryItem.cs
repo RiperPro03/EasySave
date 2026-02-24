@@ -83,6 +83,7 @@ public sealed class LogEntryItem
                 AddField(fields, "ExtensionsToEncrypt", extensions);
             }
             AddField(fields, "BusinessSoftwareProcessName", entry.Settings.BusinessSoftwareProcessName);
+            AddField(fields, "LargeFileThresholdKb", entry.Settings.LargeFileThresholdKb);
 
             if (fields.Count > 0)
                 sections.Add(new LogSection("Settings", fields));
