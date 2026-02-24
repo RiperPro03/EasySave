@@ -8,10 +8,10 @@ Ce projet respecte le versionnement sémantique.
 ### Features
 
 - [FEAT] Gestion des chemins (Logs / State / Config)  
-  https://github.com/RiperPro03/EasySave/issues/42
+ https://github.com/RiperPro03/EasySave/issues/42
 
 - [FEAT] Service de sauvegarde "Complete"  
-  https://github.com/RiperPro03/EasySave/issues/40
+ https://github.com/RiperPro03/EasySave/issues/40
 
 - [FEAT] Service de sauvegarde "Differential"  
   https://github.com/RiperPro03/EasySave/issues/41
