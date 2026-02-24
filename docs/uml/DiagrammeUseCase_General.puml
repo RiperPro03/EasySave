@@ -1,4 +1,4 @@
-@startuml EasySave_UseCase_V2
+@startuml EasySave_UseCase_V3
 
 left to right direction
 skinparam backgroundColor white
@@ -16,40 +16,56 @@ skinparam usecase {
   FontStyle bold
 }
 
-title EasySave – Use case (V2.0)
+title EasySave - Use case (V3.0)
 
 ' =========================
 ' ACTEURS
 ' =========================
 actor "Utilisateur" as User
-actor "Logiciel Métier\n(Externe)" as BusinessApp
+actor "Logiciel metier\n(Externe)" as BusinessApp
 actor "CryptoSoft\n(Externe)" as CryptoSoft
+actor "LogHub Server\n(Docker / WebSocket)" as LogHub
 
 ' =========================
 ' SYSTEME
 ' =========================
-rectangle "EasySave v2.0" {
+rectangle "EasySave v3.0" {
 
-  package "Gestion des travaux" {
-    (Gérer les jobs\nCRUD illimités) as UC_CRUD
-    (Valider les données) as UC_ValidateJob
+  package "Gestion des jobs" {
+    (Gerer les jobs\nCRUD illimites) as UC_CRUD
+    (Valider les donnees job) as UC_ValidateJob
+    (Definir extensions\nprioritaires par job) as UC_JobPriority
     (Sauvegarder les jobs) as UC_SaveJobs
   }
 
-  package "Exécution des sauvegardes" {
-    (Exécuter un job) as UC_RunOne
-    (Exécuter tous les jobs) as UC_RunAll
-    (Mettre à jour state.json) as UC_State
-    (Journaliser dans log) as UC_Log
-    (Détecter logiciel métier) as UC_BusinessCheck
+  package "Execution et pilotage V3" {
+    (Piloter un job\ncommandes d execution) as UC_ControlOne
+    (Piloter plusieurs jobs\ncommandes globales) as UC_ControlMany
+
+    (Executer un job) as UC_RunOne
+    (Controler execution en cours\netat + commandes runtime) as UC_RuntimeControl
+    (Gerer protection logiciel metier\nblocage + auto-pause/reprise) as UC_BusinessProtection
+    (Appliquer priorisation et\ncontrole de flux) as UC_PriorityFlow
+    (Journaliser les evenements) as UC_Log
+    (Envoyer logs au serveur\ncentralise) as UC_LogServerWrite
     (Chiffrer via CryptoSoft) as UC_Crypto
-    (Consulter résultat) as UC_Result
+  }
+
+  package "Supervision" {
+    (Suivre l'etat en temps reel) as UC_LiveState
+    (Consulter les logs / activite) as UC_ViewLogs
+    (Lire logs locaux) as UC_ReadLocalLogs
+    (Lire logs centralises) as UC_ReadServerLogs
   }
 
   package "Configuration" {
     (Changer langue FR/EN) as UC_Lang
     (Choisir format log\nJSON/XML) as UC_LogFormat
-    (Définir extensions à chiffrer\net logiciel métier) as UC_DefineCrypto
+    (Choisir mode de stockage log\nLocal / Server / Mixte) as UC_LogStorageMode
+    (Configurer serveur de logs\nhost/port LogHub) as UC_LogServerConfig
+    (Definir chiffrement\nextensions + cle) as UC_CryptoConfig
+    (Definir logiciel metier\na surveiller) as UC_BusinessConfig
+    (Definir seuil gros fichiers\ncontrole de flux) as UC_LargeFileThreshold
     (Sauvegarder configuration) as UC_SaveConfig
   }
 }
@@ -58,40 +74,62 @@ rectangle "EasySave v2.0" {
 ' LIENS UTILISATEUR
 ' =========================
 User --> UC_CRUD
-User --> UC_RunOne
-User --> UC_RunAll
-User --> UC_Result
+
+User --> UC_ControlOne
+User --> UC_ControlMany
+
+User --> UC_LiveState
+User --> UC_ViewLogs
 
 User --> UC_Lang
 User --> UC_LogFormat
-User --> UC_DefineCrypto
+User --> UC_LogStorageMode
+User --> UC_LogServerConfig
+User --> UC_CryptoConfig
+User --> UC_BusinessConfig
+User --> UC_LargeFileThreshold
 
 ' =========================
 ' ACTEURS EXTERNES
 ' =========================
-UC_BusinessCheck --> BusinessApp
+UC_BusinessProtection --> BusinessApp
 UC_Crypto --> CryptoSoft
+UC_LogServerWrite --> LogHub
+UC_ReadServerLogs --> LogHub
 
 ' =========================
 ' RELATIONS UML
 ' =========================
 
-' ---- INCLUDE
+' ---- Gestion des jobs
 UC_CRUD ..> UC_ValidateJob : <<include>>
+UC_CRUD ..> UC_JobPriority : <<include>>
 UC_CRUD ..> UC_SaveJobs    : <<include>>
 
-UC_RunAll ..> UC_RunOne : <<include>>
+' ---- Pilotage utilisateur
+UC_RunOne ..> UC_ControlOne  : <<extend>>
+UC_RunOne ..> UC_ControlMany : <<extend>>
 
-UC_RunOne ..> UC_State         : <<include>>
-UC_RunOne ..> UC_Log           : <<include>>
-UC_RunOne ..> UC_BusinessCheck : <<include>>
-UC_RunOne ..> UC_Crypto        : <<extend>>
+' ---- Execution interne V3
+UC_RunOne ..> UC_RuntimeControl     : <<include>>
+UC_RunOne ..> UC_BusinessProtection : <<include>>
+UC_RunOne ..> UC_PriorityFlow       : <<include>>
+UC_RunOne ..> UC_Log                : <<include>>
+UC_Crypto ..> UC_RunOne             : <<extend>>
 
-UC_Lang ..> UC_SaveConfig : <<include>>
-UC_LogFormat ..> UC_SaveConfig : <<include>>
-UC_DefineCrypto ..> UC_SaveConfig : <<include>>
+UC_LogServerWrite ..> UC_Log : <<extend>>
 
-' ---- EXTEND
-UC_Result ..> UC_RunOne : <<extend>>
+' ---- Supervision
+UC_ReadLocalLogs  ..> UC_ViewLogs : <<extend>>
+UC_ReadServerLogs ..> UC_ViewLogs : <<extend>>
+
+' ---- Configuration
+UC_Lang               ..> UC_SaveConfig : <<include>>
+UC_LogFormat          ..> UC_SaveConfig : <<include>>
+UC_LogStorageMode     ..> UC_SaveConfig : <<include>>
+UC_LogServerConfig    ..> UC_SaveConfig : <<include>>
+UC_CryptoConfig       ..> UC_SaveConfig : <<include>>
+UC_BusinessConfig     ..> UC_SaveConfig : <<include>>
+UC_LargeFileThreshold ..> UC_SaveConfig : <<include>>
 
 @enduml

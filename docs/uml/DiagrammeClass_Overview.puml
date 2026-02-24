@@ -95,7 +95,8 @@ package "Settings / configuration" as PKG_SETTINGS #F6FFF4 {
       +UpdateLogServerConnection(host : string, port : int)
       +UpdateBusinessSoftwareProcessName(name : string?)
       +UpdateExtensionsToEncrypt(extensions : List<string>)
-      +ApplySettings(encryptionEnabled, encryptionKey, language, logFormat, logStorageMode, logServerHost, logServerPort, extensionsToEncrypt, businessSoftwareProcessName)
+      +ApplySettings(encryptionEnabled, encryptionKey, language, logFormat, logStorageMode, logServerHost, logServerPort, extensionsToEncrypt, businessSoftwareProcessName, largeFileThresholdKb)
+      +UpdateLargeFileThreshold(kb : int)
     }
   }
 }
@@ -327,7 +328,7 @@ package "App internal logging" as PKG_APPLOG #FCE4EC {
       +WithJob(id, name, type, sourcePath, targetPath, status = null, isActive = null)
       +WithFile(sourcePath, targetPath, sizeBytes, transferTimeMs, isDirectory = false)
       +WithCrypto(tool, extensionMatched, encryptionTimeMs, extension = null, instanceLock = null)
-      +WithSettings(language, logFormat, logDirectory = null, configPath = null, logStorageMode = null, logServerHost = null, logServerPort = null, encryptionEnabled = null, extensionsToEncrypt = null, businessSoftwareProcessName = null)
+      +WithSettings(language, logFormat, logDirectory = null, configPath = null, logStorageMode = null, logServerHost = null, logServerPort = null, encryptionEnabled = null, extensionsToEncrypt = null, businessSoftwareProcessName = null, largeFileThresholdKb = null)
       +WithSummary(copiedCount, skippedCount, errorCount, totalBytes, durationMs, details = null)
       +WithOutcome(outcome)
       +WithLevel(level)
@@ -402,6 +403,7 @@ package "App internal logging" as PKG_APPLOG #FCE4EC {
       +EncryptionEnabled : bool?
       +ExtensionsToEncrypt : List<string>?
       +BusinessSoftwareProcessName : string?
+      +LargeFileThresholdKb : int?
     }
     class "LogSummaryDto" as Core_LogSummaryDto <<Core>> {
       +CopiedCount : int

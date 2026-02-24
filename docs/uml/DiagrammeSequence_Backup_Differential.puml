@@ -37,6 +37,7 @@ participant "<b>BackupService</b>" as BackupService #E9F7EF
 participant "<b>StateWriter</b>" as StateWriter #FFFDE7
 participant "<b>ThreadPool</b>\n(Task.Run)" as ThreadPool #F7F9FC
 participant "<b>BackupEngine</b>" as BackupEngine #F3E8FF
+participant "<b>LargeFileTransferLimiter</b>" as Limiter #E8EAF6
 participant "<b>BusinessSoftwareDetector</b>" as Detector #FFF8E1
 participant "<b>DifferentialCopyStrategy</b>" as Strategy #E6F4FF
 participant "<b>ICryptoService</b>\n(CryptoSoft / NoEncryption)" as Crypto #E8F5E9
@@ -119,6 +120,13 @@ else Demarrage accepte
         BackupEngine -> FS : Prepare le dossier de destination
         opt Dossier cree
           BackupEngine -> Logger : Write("directory.created")
+        end
+        BackupEngine -> BackupEngine : Calcule le seuil en octets\n(depuis LargeFileThresholdKb)
+        BackupEngine -> Limiter : AcquireAsync(fileSize, thresholdBytes)
+        alt Fichier volumineux (>= seuil)
+          Limiter --> BackupEngine : Autorisation apres attente (si necessaire)
+        else Fichier non volumineux
+          Limiter --> BackupEngine : Autorisation immediate
         end
         BackupEngine -> FS : Copie le fichier vers la destination
         BackupEngine -> Logger : Write("file.transferred")
