@@ -161,3 +161,53 @@ L’utilisateur peut définir un **logiciel métier à surveiller**.
 - Nombre de jobs illimité
 - Paramètres de cryptage et logiciel métier intégrés
 - Logs enrichis avec le temps de chiffrement
+
+# Version 3.0
+
+## 1. Nouveautés générales
+
+La version EasySave 3.0 introduit plusieurs évolutions majeures destinées à améliorer les performances, la gestion des priorités et l’expérience utilisateur.
+Cette version marque une rupture importante avec les précédentes grâce à l’introduction du mode parallèle, d’une gestion avancée des fichiers, et d’une centralisation des logs.
+
+## 2. Sauvegarde en parallèle
+
+EasySave 3.0 abandonne le mode séquentiel pour un focntionnement parallèle : 
+- Plusieurs travaux peuvent s'exécuter simultanément
+- Chaque job peut traiter plusieurs fichiers en parallèle
+
+## 3. Gestions des fichiers prioritaires
+
+L'utilisateur peut désormais définir une **liste d'extensions prioritaires** dans les paramètres.
+Tant qu'un fichier prioritaire est en attente dans au moins un job, aucun fichier non prioritaire ne peut être transféré.
+
+## 4. Limitation des transferts simultanés pour les fichiers volumineux
+
+Pour éviter la saturation réseau, EasySave 3.0 introduit un **seuil maximal (n Ko)** configurable par l'utilisateur.
+
+**Règle** :
+- Deux fichiers **supérieurs au seuil** ne peuvent pas être transférés en même temps
+- Pendant le transfert d'un fichier volumineux, les autres jobs peuvent continuer à transférer des fichiers plus petits (si les règles de priorité le permettent)
+Ce seuil est configurable dans les paramètres généraux.
+
+## 5. Interaction en temps réel avec les travaux
+
+L’utilisateur peut désormais contrôler chaque travail individuellement ou l’ensemble des travaux :
+- **Pause**
+- **Reprise**
+- **Arrêt immédiat**
+- **Suivi en temps réel** (progression, état, fichier en cours, etc.)
+Cette fonctionnalité améliore la maîtrise et la visibilité des opérations.
+
+## 6. Pause automatique en cas de logiciel métier actif
+
+Si un logiciel métier défini par l’utilisateur est détecté :
+- Tous les travaux passent automatiquement en pause
+- Ils reprennent automatiquement lorsque le logiciel métier est fermé
+Ce mécanisme garantit que les sauvegardes ne perturbent pas les applications critiques.
+
+## 7. CryptoSoft Mono‑Instance
+
+CryptoSoft est désormais **mono‑instance** :
+- Impossible d’exécuter plusieurs instances simultanément
+
+## 8. Centralisation des logs journaliers (Docker)

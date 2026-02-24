@@ -158,3 +158,53 @@ The user can define a **business software to be monitored**.
 - Unlimited number of jobs
 - Integrated encryption parameters and business software
 - Logs enriched with encryption time
+
+# Version 3.0
+
+## 1. General new features
+
+EasySave version 3.0 introduces several major evolutions designed to improve performance, priority management and user experience.
+This version marks a major departure from previous versions, with the introduction of parallel mode, advanced file management and centralized logging.
+
+## 2. Parallel backup
+
+EasySave 3.0 abandons sequential mode for parallel operation: 
+- multiple jobs can run simultaneously
+- Each job can process several files in parallel
+
+## 3. Priority file management
+
+Users can now define a **priority extension list** in the parameters.
+As long as a priority file is pending in at least one job, no non-priority files can be transferred.
+
+## 4. Limit simultaneous transfers for large files
+
+To avoid network saturation, EasySave 3.0 introduces a user-configurable **maximum threshold (n KB)**.
+
+**Rule** :
+- Two files **above the threshold** cannot be transferred at the same time
+- While a large file is being transferred, other jobs can continue to transfer smaller files (if priority rules allow)
+This threshold can be configured in the general parameters.
+
+## 5. real-time interaction with jobs
+
+The user can now control each job individually or all jobs together:
+- **Pause**
+- **Resume**
+- **Immediate stop** Real-time monitoring
+- **Real-time monitoring** (progress, status, file in progress, etc.)
+This feature improves control and visibility of operations.
+
+## 6. Automatic pause on active business software
+
+If user-defined business software is detected :
+- All jobs are automatically paused
+- They resume automatically when the business software is closed
+This mechanism ensures that backups do not disrupt critical applications.
+
+## 7. CryptoSoft Mono-Instance
+
+CryptoSoft is now **mono-instance**:
+- Impossible to run multiple instances simultaneously
+
+## 8. Centralization of daily logs (Docker)
