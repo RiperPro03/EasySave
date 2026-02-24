@@ -53,16 +53,18 @@ public sealed class SettingsController
         _consoleView.ShowInfo($"2 - {Strings.Lang_French}");
         _consoleView.ShowInfo($"3 - {Strings.UI_LogFormatJson}");
         _consoleView.ShowInfo($"4 - {Strings.UI_LogFormatXml}");
-        _consoleView.ShowInfo($"5 - Encryption: {(_config.EncryptionEnabled ? "Disable" : "Enable")}");
-        _consoleView.ShowInfo("6 - Update encryption key");
-        _consoleView.ShowInfo("7 - Update extensions to encrypt");
-        _consoleView.ShowInfo($"8 - Update business software process name (current: {_config.BusinessSoftwareProcessName ?? "-"})");
+        _consoleView.ShowInfo($"5 - Log storage mode (current: {_config.LogStorageMode})");
+        _consoleView.ShowInfo($"6 - Central log server endpoint (current: {_config.LogServerHost}:{_config.LogServerPort})");
+        _consoleView.ShowInfo($"7 - Encryption: {(_config.EncryptionEnabled ? "Disable" : "Enable")}");
+        _consoleView.ShowInfo("8 - Update encryption key");
+        _consoleView.ShowInfo("9 - Update extensions to encrypt");
+        _consoleView.ShowInfo($"10 - Update business software process name (current: {_config.BusinessSoftwareProcessName ?? "-"})");
         
 
         _consoleView.ShowInfo($"0 - {Strings.UI_Back}");
 
         // Lecture du choix utilisateur.
-        var choice = _input.ReadChoice("> ", new[] { 0, 1, 2, 3, 4, 5, 6, 7, 8 });
+        var choice = _input.ReadChoice("> ", new[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 });
 
         switch (choice)
         {
@@ -83,15 +85,21 @@ public sealed class SettingsController
                 UpdateLogFormat(LogFormat.Xml);
                 break;
             case 5:
-                ToggleEncryption();
+                UpdateLogStorageMode();
                 break;
             case 6:
-                UpdateEncryptionKey();
+                UpdateCentralLogServerEndpoint();
                 break;
             case 7:
-                UpdateExtensionsToEncrypt();
+                ToggleEncryption();
                 break;
             case 8:
+                UpdateEncryptionKey();
+                break;
+            case 9:
+                UpdateExtensionsToEncrypt();
+                break;
+            case 10:
                 UpdateBusinessSoftwareProcessName();
                 break;
             case 0:
@@ -166,6 +174,52 @@ public sealed class SettingsController
         var name = ReadOptionalString("Business software process name (empty to clear): ");
         _config.ChangeBussinessSoftware(string.IsNullOrWhiteSpace(name) ? null : name);
         _consoleView.ShowSuccess("Business software process name updated.");
+    }
+
+    private void UpdateLogStorageMode()
+    {
+        _consoleView.ShowInfo("Choose log storage mode:");
+        _consoleView.ShowInfo("1 - LocalOnly");
+        _consoleView.ShowInfo("2 - ServerOnly");
+        _consoleView.ShowInfo("3 - LocalAndServer");
+
+        var choice = _input.ReadChoice("> ", new[] { 1, 2, 3 });
+        var storageMode = choice switch
+        {
+            1 => LogStorageMode.LocalOnly,
+            2 => LogStorageMode.ServerOnly,
+            3 => LogStorageMode.LocalAndServer,
+            _ => LogStorageMode.LocalOnly
+        };
+
+        _config.ChangeLogStorageMode(storageMode);
+        _consoleView.ShowSuccess($"Log storage mode updated: {storageMode}.");
+    }
+
+    private void UpdateCentralLogServerEndpoint()
+    {
+        var host = ReadOptionalString($"Central log server IP/Host (current: {_config.LogServerHost}): ");
+        var portText = ReadOptionalString($"Central log server port (current: {_config.LogServerPort}): ");
+
+        var resolvedHost = string.IsNullOrWhiteSpace(host) ? _config.LogServerHost : host.Trim();
+        var resolvedPort = _config.LogServerPort;
+        if (!string.IsNullOrWhiteSpace(portText))
+        {
+            if (!int.TryParse(portText, out resolvedPort))
+            {
+                _consoleView.ShowError("Invalid port.");
+                return;
+            }
+
+            if (resolvedPort is <= 0 or > 65535)
+            {
+                _consoleView.ShowError("Port must be between 1 and 65535.");
+                return;
+            }
+        }
+
+        _config.UpdateLogServerConnection(resolvedHost, resolvedPort);
+        _consoleView.ShowSuccess("Central log server endpoint updated.");
     }
 
     private string? ReadOptionalString(string prompt)

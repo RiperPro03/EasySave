@@ -36,6 +36,21 @@
             </ComboBox.ItemTemplate>
         </ComboBox>
 
+        <TextBlock Text="Log storage mode"/>
+        <ComboBox ItemsSource="{Binding LogStorageModes}"
+                  SelectedItem="{Binding SelectedLogStorageMode}"
+                  HorizontalAlignment="Stretch"/>
+
+        <StackPanel Spacing="8" IsVisible="{Binding IsRemoteLogServerSettingsVisible}">
+            <TextBlock Text="Central log server IP / Host"/>
+            <TextBox Text="{Binding LogServerHost}"
+                     Watermark="localhost or 192.168.1.10"/>
+
+            <TextBlock Text="Central log server port"/>
+            <TextBox Text="{Binding LogServerPort}"
+                     Watermark="9696"/>
+        </StackPanel>
+
         <Separator/>
 
         <ToggleSwitch Content="{Binding Source={StaticResource Loc}, Path=[Gui_Settings_EnableXor]}"

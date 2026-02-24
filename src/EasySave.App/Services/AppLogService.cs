@@ -15,23 +15,50 @@ public sealed class AppLogService : IAppLogService
 {
     private readonly string? _logDirectory;
     private readonly Func<LogFormat> _logFormatProvider;
+    private readonly Func<LogStorageMode> _logStorageModeProvider;
+    private readonly Func<string> _logServerHostProvider;
+    private readonly Func<int> _logServerPortProvider;
     private readonly LogContext? _context;
     private readonly object _logWriteLock = new();
     
     public event EventHandler? LogWritten;
     
     private LogFormat _currentFormat;
+    private LogStorageMode _currentStorageMode;
+    private string _currentServerHost = string.Empty;
+    private int _currentServerPort;
     private ILogger<LogEntryDto>? _logger;
 
     public AppLogService(
         string? logDirectory,
         Func<LogFormat> logFormatProvider,
         LogContext? context = null)
+        : this(
+            logDirectory,
+            logFormatProvider,
+            () => LogStorageMode.LocalOnly,
+            () => "localhost",
+            () => 9696,
+            context)
+    {
+    }
+
+    public AppLogService(
+        string? logDirectory,
+        Func<LogFormat> logFormatProvider,
+        Func<LogStorageMode> logStorageModeProvider,
+        Func<string> logServerHostProvider,
+        Func<int> logServerPortProvider,
+        LogContext? context = null)
     {
         _logDirectory = logDirectory;
         _logFormatProvider = logFormatProvider ?? throw new ArgumentNullException(nameof(logFormatProvider));
+        _logStorageModeProvider = logStorageModeProvider ?? throw new ArgumentNullException(nameof(logStorageModeProvider));
+        _logServerHostProvider = logServerHostProvider ?? throw new ArgumentNullException(nameof(logServerHostProvider));
+        _logServerPortProvider = logServerPortProvider ?? throw new ArgumentNullException(nameof(logServerPortProvider));
         _context = context;
         _currentFormat = _logFormatProvider();
+        _currentStorageMode = _logStorageModeProvider();
         EnsureLoggers();
     }
 
@@ -68,26 +95,52 @@ public sealed class AppLogService : IAppLogService
     private void EnsureLoggers()
     {
         var desiredFormat = _logFormatProvider();
+        var desiredStorageMode = _logStorageModeProvider();
+        var desiredServerHost = _logServerHostProvider();
+        var desiredServerPort = _logServerPortProvider();
+
         if (desiredFormat == _currentFormat
+            && desiredStorageMode == _currentStorageMode
+            && string.Equals(desiredServerHost, _currentServerHost, StringComparison.Ordinal)
+            && desiredServerPort == _currentServerPort
             && _logger != null)
             return;
 
         _currentFormat = desiredFormat;
+        _currentStorageMode = desiredStorageMode;
+        _currentServerHost = desiredServerHost;
+        _currentServerPort = desiredServerPort;
         if (string.IsNullOrWhiteSpace(_logDirectory))
         {
             _logger = null;
             return;
         }
 
-        _logger = CreateLogger<LogEntryDto>(_logDirectory, desiredFormat);
+        _logger = CreateLogger<LogEntryDto>(
+            _logDirectory,
+            desiredFormat,
+            desiredStorageMode,
+            desiredServerHost,
+            desiredServerPort);
     }
 
-    private static ILogger<T> CreateLogger<T>(string logDirectory, LogFormat format)
+    private static ILogger<T> CreateLogger<T>(
+        string logDirectory,
+        LogFormat format,
+        LogStorageMode storageMode,
+        string serverHost,
+        int serverPort)
     {
         var options = new LogOptions
         {
             LogDirectory = logDirectory,
-            Format = format
+            Format = format,
+            StorageMode = storageMode,
+            Server = new LogServerOptions
+            {
+                Host = serverHost,
+                Port = serverPort
+            }
         };
 
         return LoggerFactory.Create<T>(options);

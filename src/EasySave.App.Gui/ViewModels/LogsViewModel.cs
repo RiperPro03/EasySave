@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using EasySave.App.Gui.Models;
 using EasySave.App.Services;
 
@@ -14,6 +16,8 @@ namespace EasySave.App.Gui.ViewModels
     public class LogsViewModel : ViewModelBase
     {
         private readonly LogReaderService _logReader;
+        private readonly SynchronizationContext? _uiContext;
+        private int _loadVersion;
 
         private List<LogEntryItem> _allLogsCache = new();
 
@@ -32,7 +36,7 @@ namespace EasySave.App.Gui.ViewModels
             get => _selectedEventType;
             set
             {
-                // SetProperty gère le INotifyPropertyChanged
+                // SetProperty gere le INotifyPropertyChanged.
                 if (SetProperty(ref _selectedEventType, value))
                 {
                     ApplyFilter();
@@ -49,6 +53,7 @@ namespace EasySave.App.Gui.ViewModels
         /// <param name="logReader">Service used to read log entries from storage.</param>
         public LogsViewModel(LogReaderService logReader)
         {
+            _uiContext = SynchronizationContext.Current;
             _logReader = logReader;
             LoadLogs();
         }
@@ -68,41 +73,74 @@ namespace EasySave.App.Gui.ViewModels
         /// </summary>
         private void LoadLogs()
         {
-            // Récupération des données brutes via le service
-            var rawEntries = _logReader.ReadAllEntries();
-
-            
-            _allLogsCache = rawEntries
-                .OrderByDescending(entry => entry.TimestampUtc)
-                .Select(entry => new LogEntryItem(entry))
-                .ToList();
-
-            var namesFound = _allLogsCache
-                .Select(l => l.Entry.Event?.Name)
-                .Where(n => !string.IsNullOrEmpty(n))
-                .Distinct()
-                .OrderBy(n => n)
-                .ToList();
-
-            if (!EventTypes.Contains("Tous"))
+            int loadVersion = Interlocked.Increment(ref _loadVersion);
+            _ = Task.Run(() =>
             {
-                EventTypes.Clear();
-                EventTypes.Add("Tous");
-            }
+                List<LogEntryItem> cache;
+                List<string> namesFound;
 
-            for (int i = EventTypes.Count - 1; i >= 1; i--)
-            {
-                if (!namesFound.Contains(EventTypes[i]))
-                    EventTypes.RemoveAt(i);
-            }
+                try
+                {
+                    // Lecture/parsing hors thread UI pour eviter les freezes reseau/IO.
+                    var rawEntries = _logReader.ReadAllEntries();
+                    cache = rawEntries
+                        .OrderByDescending(entry => entry.TimestampUtc)
+                        .Select(entry => new LogEntryItem(entry))
+                        .ToList();
 
-            foreach (var name in namesFound.Where(name => !EventTypes.Contains(name)))
-            {
-                EventTypes.Add(name);
-            }
+                    namesFound = cache
+                        .Select(l => l.Entry.Event?.Name)
+                        .Where(n => !string.IsNullOrEmpty(n))
+                        .Distinct()
+                        .OrderBy(n => n)
+                        .ToList()!;
+                }
+                catch
+                {
+                    cache = new List<LogEntryItem>();
+                    namesFound = new List<string>();
+                }
 
-            OnPropertyChanged(nameof(SelectedEventType));
-            ApplyFilter();
+                if (loadVersion != Volatile.Read(ref _loadVersion))
+                    return;
+
+                void Apply()
+                {
+                    if (loadVersion != Volatile.Read(ref _loadVersion))
+                        return;
+
+                    _allLogsCache = cache;
+
+                    if (!EventTypes.Contains("Tous"))
+                    {
+                        EventTypes.Clear();
+                        EventTypes.Add("Tous");
+                    }
+
+                    for (int i = EventTypes.Count - 1; i >= 1; i--)
+                    {
+                        if (!namesFound.Contains(EventTypes[i]))
+                            EventTypes.RemoveAt(i);
+                    }
+
+                    foreach (var name in namesFound.Where(name => !EventTypes.Contains(name)))
+                    {
+                        EventTypes.Add(name);
+                    }
+
+                    OnPropertyChanged(nameof(SelectedEventType));
+                    ApplyFilter();
+                }
+
+                if (_uiContext != null)
+                {
+                    _uiContext.Post(_ => Apply(), null);
+                }
+                else
+                {
+                    Apply();
+                }
+            });
         }
 
         /// <summary>
@@ -113,7 +151,7 @@ namespace EasySave.App.Gui.ViewModels
         {
             Logs.Clear();
 
-            // Si "Tous" est sélectionné, on prend tout, sinon on filtre par nom d'événement
+            // Si "Tous" est selectionne, on prend tout, sinon on filtre par nom d'evenement.
             var filtered = (_selectedEventType == "Tous" || string.IsNullOrEmpty(_selectedEventType))
                 ? _allLogsCache
                 : _allLogsCache.Where(l => l.Entry.Event?.Name == _selectedEventType);

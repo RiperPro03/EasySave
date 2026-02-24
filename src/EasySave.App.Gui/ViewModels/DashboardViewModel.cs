@@ -38,6 +38,7 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
     private readonly SynchronizationContext? _uiContext;
     private DateTime _lastLogRefreshUtc;
     private CancellationTokenSource? _logRefreshCts;
+    private int _recentActivitiesLoadVersion;
     private bool _disposed;
 
     [ObservableProperty]
@@ -209,13 +210,50 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
     /// </summary>
     private void LoadRecentActivities()
     {
-        RecentActivities.Clear();
-        HasRecentActivities = false;
         if (_logReader is null)
+        {
+            ApplyRecentActivities(Array.Empty<RecentActivityItem>());
             return;
+        }
 
-        var activityItems = BuildRecentActivities();
-        foreach (var item in activityItems)
+        int loadVersion = Interlocked.Increment(ref _recentActivitiesLoadVersion);
+        _ = Task.Run(() =>
+        {
+            List<RecentActivityItem> activityItems;
+            try
+            {
+                // Lecture/parsing des logs hors thread UI pour eviter les freezes reseau/IO.
+                activityItems = BuildRecentActivities();
+            }
+            catch
+            {
+                activityItems = new List<RecentActivityItem>();
+            }
+
+            if (loadVersion != Volatile.Read(ref _recentActivitiesLoadVersion))
+                return;
+
+            if (_uiContext != null)
+            {
+                _uiContext.Post(_ =>
+                {
+                    if (loadVersion != Volatile.Read(ref _recentActivitiesLoadVersion))
+                        return;
+
+                    ApplyRecentActivities(activityItems);
+                }, null);
+            }
+            else
+            {
+                ApplyRecentActivities(activityItems);
+            }
+        });
+    }
+
+    private void ApplyRecentActivities(IReadOnlyList<RecentActivityItem> items)
+    {
+        RecentActivities.Clear();
+        foreach (var item in items)
         {
             RecentActivities.Add(item);
         }
