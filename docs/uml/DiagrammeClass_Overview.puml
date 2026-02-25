@@ -1,0 +1,754 @@
+@startuml EasySave_Overview_By_Functional_Packages
+
+skinparam shadowing false
+skinparam dpi 170
+skinparam backgroundColor #FFFFFF
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+
+skinparam class {
+  BackgroundColor #F7F9FC
+  BorderColor #2F3A4A
+  FontColor #1C2A3A
+}
+
+skinparam interface {
+  BackgroundColor #EEF3FF
+  BorderColor #2F3A4A
+  FontColor #1C2A3A
+}
+
+skinparam enum {
+  BackgroundColor #FFF7E6
+  BorderColor #2F3A4A
+  FontColor #1C2A3A
+}
+
+skinparam note {
+  BackgroundColor #FFFDE7
+  BorderColor #C8B560
+}
+
+title <b>EasySave</b>\n<i>Overview class diagram by functional packages (Core / App / EasyLog)</i>
+
+legend right
+  <<Core>> : EasySave.Core
+  <<App>> : EasySave.App
+  <<EasyLog>> : EasySave.EasyLog
+  UI (Console/GUI) and LogHub server intentionally excluded
+  --
+  Green links: Jobs
+  Blue links: Execution
+  Purple links: Logs
+  Teal links: Settings
+  Light green links: State
+  Orange links: Encryption
+  Ocher links: Utilities / business software detection
+  Gray links: Cross-cutting links
+endlegend
+
+package "Settings / configuration" as PKG_SETTINGS #F6FFF4 {
+  package "Core settings model / enums" as PKG_SETTINGS_CORE {
+    enum "Language" as Core_Language <<Core>> {
+      English
+      French
+    }
+    class "AppConfig" as Core_AppConfig <<Core>> {
+      +Language : Language
+      +LogFormat : LogFormat
+      +LogStorageMode : LogStorageMode
+      +BusinessSoftwareProcessName : string?
+      +EncryptionEnabled : bool
+      +EncryptionKey : string
+      +ExtensionsToEncrypt : List<string>
+      +LargeFileThresholdKb : int
+    }
+  }
+
+  package "Path infrastructure" as PKG_SETTINGS_APP_INFRA {
+    interface "IPathProvider" as Core_IPathProvider <<Core>> {
+      +ConfigPath : string
+      +LogsPath : string
+      +EnsureDirectoriesCreated()
+    }
+    class "PathProvider" as App_PathProvider <<App>> {
+      +ConfigPath : string
+      +LogsPath : string
+      +EnsureDirectoriesCreated()
+    }
+    class "AppConfigRepository" as App_AppConfigRepository <<App>> {
+      +Load() : AppConfig
+      +Save(config : AppConfig)
+    }
+  }
+
+  package "App service" as PKG_SETTINGS_APP_SERVICE {
+    class "SettingsService" as App_SettingsService <<App>> {
+      -_config : AppConfig
+      -_repository : AppConfigRepository
+      +ToggleEncryption()
+      +UpdateEncryptionKey(newKey : string)
+      +UpdateLanguage(lang : Language)
+      +UpdateLogFormat(format : LogFormat)
+      +UpdateLogStorageMode(storageMode : LogStorageMode)
+      +UpdateLogServerConnection(host : string, port : int)
+      +UpdateBusinessSoftwareProcessName(name : string?)
+      +UpdateExtensionsToEncrypt(extensions : List<string>)
+      +ApplySettings(encryptionEnabled, encryptionKey, language, logFormat, logStorageMode, logServerHost, logServerPort, extensionsToEncrypt, businessSoftwareProcessName, largeFileThresholdKb)
+      +UpdateLargeFileThreshold(kb : int)
+    }
+  }
+}
+
+package "Job management" as PKG_JOBS #F7F9FC {
+  package "Job model (Core)" as PKG_JOBS_CORE {
+    class "BackupJob" as Core_BackupJob <<Core>> {
+      +Id : string
+      +Name : string
+      +SourcePath : string
+      +TargetPath : string
+      +Type : BackupType
+      +IsActive : bool
+      +CreatedAt : DateTime
+      +LastRun : DateTime?
+      +PriorityExtensions : List<string>
+      +Enable()
+      +Disable()
+      +MarkExecuted(nowUtc : DateTime? = null)
+      +UpdateDefinition(name, sourcePath, targetPath, type, priorityExtensions)
+      +ToString() : string
+    }
+    enum "BackupType" as Core_BackupType <<Core>> {
+      Full
+      Differential
+    }
+  }
+
+  package "Job repository" as PKG_JOBS_APP_REPO {
+    interface "IJobRepository" as Core_IJobRepository <<Core>> {
+      +GetAll()
+      +GetById(id)
+      +Add(job)
+      +Update(job)
+      +Remove(id)
+    }
+    class "JobRepository" as App_JobRepository <<App>> {
+      -_jobs : List<BackupJob>
+      +GetAll()
+      +GetById(id)
+      +Add(job)
+      +Update(job)
+      +Remove(id)
+    }
+  }
+
+  package "Job service" as PKG_JOBS_APP_SERVICE {
+    interface "IJobService" as Core_IJobService <<Core>> {
+      +GetAll()
+      +GetById(id)
+      +Create(id, name, sourcePath, targetPath, type, isActive = true, priorityExtensions = null)
+      +Update(id, name, sourcePath, targetPath, type, isActive, priorityExtensions)
+      +Delete(id)
+      +MarkExecuted(id)
+    }
+    class "JobService" as App_JobService <<App>> {
+      -_jobRepository : IJobRepository
+      -_logService : IAppLogService?
+      +GetAll()
+      +GetById(id)
+      +Create(id, name, sourcePath, targetPath, type, isActive, priorityExtensions)
+      +Update(id, name, sourcePath, targetPath, type, isActive, priorityExtensions)
+      +Delete(id)
+      +MarkExecuted(id, nowUtc = null)
+    }
+  }
+}
+
+package "Backup execution" as PKG_EXEC #EEF7FF {
+  package "Backup service orchestration" as PKG_EXEC_APP_ORCH {
+    interface "IBackupService" as Core_IBackupService <<Core>> {
+      +Run(job) : BackupResultDto
+      +Pause(jobId) : bool
+      +Resume(jobId) : bool
+      +Stop(jobId) : bool
+      +CanStartSequence(out reason) : bool
+      +StateChanged (event)
+    }
+    class "BackupService" as App_BackupService <<App>> {
+      -_backupEngine : IBackupEngine
+      -_jobService : IJobService
+      -_stateWriter : IStateWriter
+      -_config : AppConfig
+      +Run(job)
+      +Pause(jobId)
+      +Resume(jobId)
+      +Stop(jobId)
+      +CanStartSequence(out reason)
+      +StateChanged (event)
+    }
+  }
+
+  package "Backup engine" as PKG_EXEC_ENGINE {
+    interface "IBackupEngine" as Core_IBackupEngine <<Core>> {
+      +Run(job) : BackupResultDto
+      +Pause(jobId) : bool
+      +Resume(jobId) : bool
+      +Stop(jobId) : bool
+      +StateChanged (event)
+    }
+    class "BackupEngine" as App_BackupEngine <<App>> {
+      -_config : AppConfig
+      -_cryptoService : ICryptoService
+      -_logService : IAppLogService?
+      +Run(job)
+      +Pause(jobId)
+      +Resume(jobId)
+      +Stop(jobId)
+      +StateChanged (event)
+    }
+  }
+
+  package "Execution models (Core)" as PKG_EXEC_CORE {
+    class "BackupResultDto" as Core_BackupResultDto <<Core>> {
+      +Success : bool
+      +Message : string
+      +CopiedCount : int
+      +SkippedCount : int
+      +ErrorCount : int
+      +Duration : TimeSpan
+    }
+    enum "JobStatus" as Core_JobStatus <<Core>> {
+      Idle
+      Running
+      Paused
+      Completed
+      Error
+    }
+  }
+
+  package "Copy strategies" as PKG_EXEC_STRATEGIES {
+    interface "IBackupCopyStrategy" as Core_IBackupCopyStrategy <<Core>> {
+      +ShouldCopy(source, target) : bool
+    }
+    class "DifferentialCopyStrategy" as App_DifferentialStrategy <<App>> {
+      +ShouldCopy(source, target) : bool
+    }
+    class "FullCopyStrategy" as App_FullStrategy <<App>> {
+      +ShouldCopy(source, target) : bool
+    }
+  }
+
+  package "Runtime controls / scheduling" as PKG_EXEC_RUNTIME {
+    class "JobExecutionControl" as App_JobExecutionControl <<App>> {
+      +RequestPause()
+      +RequestResume()
+      +RequestStop()
+      +WaitWhilePaused()
+    }
+    class "PriorityMonitor" as App_PriorityMonitor <<App>> {
+      +EnterPriorityZone()
+      +ExitPriorityZone()
+      +IsPriorityWorkActive : bool
+    }
+    class "LargeFileTransferLimiter" as App_LargeFileTransferLimiter <<App>> {
+      +AcquireAsync(fileSize, threshold)
+    }
+  }
+}
+
+package "State management" as PKG_STATE #E8F5E9 {
+  package "State models / events (Core)" as PKG_STATE_CORE {
+    class "JobStateDto" as Core_JobStateDto <<Core>> {
+      +JobId : string
+      +JobName : string
+      +Status : JobStatus
+      +ProgressPercentage : int
+      +CurrentSourceFile : string?
+      +CurrentTargetFile : string?
+    }
+    class "AppStateDto" as Core_AppStateDto <<Core>> {
+      +GeneratedAtUtc : DateTime
+      +GlobalStatus : JobStatus
+      +Jobs : List<JobStateDto>
+    }
+    class "JobStateChangedEventArgs" as Core_JobStateChangedEventArgs <<Core>> {
+      +State : JobStateDto
+    }
+  }
+
+  package "State persistence" as PKG_STATE_APP {
+    interface "IStateWriter" as Core_IStateWriter <<Core>> {
+      +Write(snapshot : AppStateDto)
+    }
+    class "StateWriter" as App_StateWriter <<App>> {
+      +Write(snapshot : AppStateDto)
+    }
+  }
+}
+
+package "Encryption" as PKG_CRYPTO #FFF3E0 {
+  package "Crypto services" as PKG_CRYPTO_CORE {
+    interface "ICryptoService" as Core_ICryptoService <<Core>> {
+      +EncryptFileAsync(path, key)
+    }
+    class "CryptoSoftProcessService" as App_CryptoSoftProcessService <<App>> {
+      +EncryptFileAsync(path, key)
+    }
+    class "NoEncryptionService" as App_NoEncryptionService <<App>> {
+      +EncryptFileAsync(path, key)
+    }
+  }
+}
+
+package "Utilities" as PKG_UTILS #FFF8E1 {
+  package "Business software detection" as PKG_BIZSOFT_APP {
+    class "BusinessSoftwareDetector" as App_BusinessSoftwareDetector <<App>> {
+      +IsRunning(processName) : bool
+      +ValidateNotRunning(processName)
+    }
+  }
+
+  package "UNC path utility" as PKG_UTILS_UNC {
+    class "UncResolver" as App_UncResolver <<App>> {
+      +ResolveToUncForLog(path) : string
+    }
+  }
+}
+
+package "App internal logging" as PKG_APPLOG #FCE4EC {
+  package "Core log model / facade contract" as PKG_APPLOG_CORE {
+    interface "IAppLogService" as Core_IAppLogService <<Core>> {
+      +Write(entry : LogEntryDto)
+      +LogWritten (event)
+    }
+    class "LogEntryBuilder" as Core_LogEntryBuilder <<Core>> {
+      +Create(eventName, category, action, message = "")
+      +WithTraceIfPresent(traceId)
+      +WithJob(id, name, type, sourcePath, targetPath, status = null, isActive = null)
+      +WithFile(sourcePath, targetPath, sizeBytes, transferTimeMs, isDirectory = false)
+      +WithCrypto(tool, extensionMatched, encryptionTimeMs, extension = null, instanceLock = null)
+      +WithSettings(language, logFormat, logDirectory = null, configPath = null, logStorageMode = null, logServerHost = null, logServerPort = null, encryptionEnabled = null, extensionsToEncrypt = null, businessSoftwareProcessName = null, largeFileThresholdKb = null)
+      +WithSummary(copiedCount, skippedCount, errorCount, totalBytes, durationMs, details = null)
+      +WithOutcome(outcome)
+      +WithLevel(level)
+      +Fail(errorType, errorMessage, errorCode = null, errorStack = null)
+      +Build() : LogEntryDto
+    }
+    class "LogEntryDto" as Core_LogEntryDto <<Core>> {
+      +TimestampUtc : DateTime
+      +Level : LogLevel
+      +Message : string
+      +SchemaVersion : int
+      +Event : LogEventDto
+      +App : LogAppDto?
+      +Trace : LogTraceDto?
+      +Host : LogHostDto?
+      +Job : LogJobDto?
+      +File : LogFileDto?
+      +Crypto : LogCryptoDto?
+      +Settings : LogSettingsDto?
+      +Summary : LogSummaryDto?
+      +Error : LogErrorDto?
+    }
+    class "LogEventDto" as Core_LogEventDto <<Core>> {
+      +Name : string
+      +Category : LogEventCategory
+      +Action : LogEventAction
+      +Outcome : LogEventOutcome
+    }
+    class "LogAppDto" as Core_LogAppDto <<Core>> {
+      +Name : string
+      +Version : string
+    }
+    class "LogTraceDto" as Core_LogTraceDto <<Core>> {
+      +Id : string
+    }
+    class "LogHostDto" as Core_LogHostDto <<Core>> {
+      +Name : string
+      +User : string
+      +Pid : int?
+    }
+    class "LogJobDto" as Core_LogJobDto <<Core>> {
+      +Id : string
+      +Name : string
+      +Type : BackupType?
+      +Status : JobStatus?
+      +IsActive : bool?
+      +SourcePath : string?
+      +TargetPath : string?
+    }
+    class "LogFileDto" as Core_LogFileDto <<Core>> {
+      +SourcePath : string?
+      +TargetPath : string?
+      +SizeBytes : long?
+      +TransferTimeMs : double?
+      +IsDirectory : bool?
+    }
+    class "LogCryptoDto" as Core_LogCryptoDto <<Core>> {
+      +Tool : string
+      +ExtensionMatched : bool
+      +EncryptionTimeMs : long
+      +Extension : string?
+      +InstanceLock : string?
+    }
+    class "LogSettingsDto" as Core_LogSettingsDto <<Core>> {
+      +Language : Language?
+      +LogFormat : LogFormat?
+      +LogStorageMode : LogStorageMode?
+      +LogDirectory : string?
+      +ConfigPath : string?
+      +LogServerHost : string?
+      +LogServerPort : int?
+      +EncryptionEnabled : bool?
+      +ExtensionsToEncrypt : List<string>?
+      +BusinessSoftwareProcessName : string?
+      +LargeFileThresholdKb : int?
+    }
+    class "LogSummaryDto" as Core_LogSummaryDto <<Core>> {
+      +CopiedCount : int
+      +SkippedCount : int
+      +ErrorCount : int
+      +TotalBytes : long
+      +DurationMs : double
+      +Details : string?
+    }
+    class "LogErrorDto" as Core_LogErrorDto <<Core>> {
+      +Type : string?
+      +Code : string?
+      +Message : string?
+      +Stack : string?
+    }
+    class "LogContext" as Core_LogContext <<Core>> {
+      +AppName : string
+      +AppVersion : string
+      +HostName : string
+      +UserName : string
+      +ProcessId : int
+    }
+    enum "LogLevel" as Core_LogLevel <<Core>> {
+      Emergency
+      Alert
+      Critical
+      Error
+      Warning
+      Notice
+      Info
+      Debug
+    }
+    enum "LogEventCategory" as Core_LogEventCategory <<Core>> {
+      System
+      Job
+      File
+      Settings
+    }
+    enum "LogEventAction" as Core_LogEventAction <<Core>> {
+      Unknown
+      Create
+      Update
+      Delete
+      Save
+      Transfer
+      Skip
+      DirectoryCreated
+      Summary
+      Pause
+      Resume
+      Stop
+    }
+    enum "LogEventOutcome" as Core_LogEventOutcome <<Core>> {
+      Success
+      Failure
+      Unknown
+    }
+  }
+
+  package "App logging services" as PKG_APPLOG_APP {
+    class "AppLogService" as App_AppLogService <<App>> {
+      -_logger : ILogger<LogEntryDto>?
+      +Write(entry : LogEntryDto)
+      +LogWritten (event)
+    }
+    class "LogReaderService" as App_LogReaderService <<App>> {
+      -_logReader : ILogReader<LogEntryDto>?
+      +ReadEntries(maxFiles)
+      +ReadAllEntries()
+    }
+  }
+}
+
+package "EasyLog" as PKG_EASYLOG #FFF6FB {
+  package "Loggers" as PKG_EASYLOG_LOGGERS {
+    interface "ILogger<T>" as EasyLog_ILogger <<EasyLog>> {
+      +Write(entry) : bool
+    }
+    class "DailyLogger<T>" as EasyLog_DailyLogger <<EasyLog>> {
+      +Write(entry) : bool
+    }
+    class "SafeLogger<T>" as EasyLog_SafeLogger <<EasyLog>> {
+      +Write(entry) : bool
+    }
+    class "WebSocketLogger<T>" as EasyLog_WebSocketLogger <<EasyLog>> {
+      +Write(entry) : bool
+    }
+  }
+
+  package "Readers" as PKG_EASYLOG_READERS {
+    interface "ILogReader<T>" as EasyLog_ILogReader <<EasyLog>> {
+      +LogDirectory : string
+      +GetLogFiles(maxFiles = null) : IReadOnlyList<string>
+      +ReadEntries(maxFiles) : IReadOnlyList<T>
+      +ReadAllEntries() : IReadOnlyList<T>
+      +ReadEntriesFromFile(path) : IReadOnlyList<T>
+    }
+    class "LocalFileLogReader<T>" as EasyLog_LocalFileLogReader <<EasyLog>> {
+      +LogDirectory : string
+      +GetLogFiles(maxFiles = null)
+      +ReadEntries(maxFiles = 7)
+      +ReadAllEntries()
+      +ReadEntriesFromFile(filePath)
+    }
+    class "WebSocketLogReader<T>" as EasyLog_WebSocketLogReader <<EasyLog>> {
+      +LogDirectory : string
+      +GetLogFiles(maxFiles = null)
+      +ReadEntries(maxFiles = 7)
+      +ReadAllEntries()
+      +ReadEntriesFromFile(filePath)
+    }
+  }
+
+  package "Writers / serializers" as PKG_EASYLOG_IO {
+    interface "ILogSerializer" as EasyLog_ILogSerializer <<EasyLog>> {
+      +Serialize(entry) : string
+      +FileExtension : string
+    }
+    interface "ILogWriter" as EasyLog_ILogWriter <<EasyLog>> {
+      +Write(filePath, message) : bool
+    }
+    class "JsonSerializer" as EasyLog_JsonSerializer <<EasyLog>> {
+      +Serialize(entry) : string
+      +FileExtension : string
+    }
+    class "XmlSerializer" as EasyLog_XmlSerializer <<EasyLog>> {
+      +Serialize(entry) : string
+      +FileExtension : string
+    }
+    class "FileLogWriter" as EasyLog_FileLogWriter <<EasyLog>> {
+      +Write(filePath, message) : bool
+    }
+  }
+
+  package "Factories / options" as PKG_EASYLOG_FACTORY {
+    class "LoggerFactory" as EasyLog_LoggerFactory <<EasyLog>> {
+      +Create<T>(options) : ILogger<T>
+    }
+    class "LogReaderFactory" as EasyLog_LogReaderFactory <<EasyLog>> {
+      +Create<T>(options) : ILogReader<T>
+    }
+    class "LogOptions" as EasyLog_LogOptions <<EasyLog>> {
+      +LogDirectory : string
+      +Format : LogFormat
+      +UseSafeLogger : bool
+      +StorageMode : LogStorageMode
+      +Server : LogServerOptions?
+    }
+    class "LogServerOptions" as EasyLog_LogServerOptions <<EasyLog>> {
+      +Host : string
+      +Port : int
+      +WebSocketUrl : string
+      +ConnectTimeoutMs : int
+      +ReceiveTimeoutMs : int
+    }
+    enum "LogFormat" as EasyLog_LogFormat <<EasyLog>> {
+      Json
+      Xml
+    }
+    enum "LogStorageMode" as EasyLog_LogStorageMode <<EasyLog>> {
+      LocalOnly
+      ServerOnly
+      LocalAndServer
+    }
+  }
+
+  package "Transport" as PKG_EASYLOG_TRANSPORT {
+    class "LogHubWebSocketClient" as EasyLog_LogHubWebSocketClient <<EasyLog>> {
+      +SendWrite(extension, serializedEntry, timestampUtc) : bool
+      +ReadEntries(maxFiles : int?, readAll : bool) : IReadOnlyList<RemoteLogEntry>
+    }
+  }
+}
+
+' Layout helpers (package ordering only)
+PKG_SETTINGS -[hidden]down-> PKG_JOBS
+PKG_JOBS -[hidden]right-> PKG_EXEC
+PKG_EXEC -[hidden]down-> PKG_STATE
+PKG_STATE -[hidden]down-> PKG_CRYPTO
+PKG_CRYPTO -[hidden]down-> PKG_UTILS
+PKG_EXEC -[hidden]right-> PKG_APPLOG
+PKG_APPLOG -[hidden]down-> PKG_EASYLOG
+
+' =========================
+' Relations - Jobs
+' =========================
+App_JobRepository ..[#2E7D32]|> Core_IJobRepository
+App_JobService ..[#2E7D32]|> Core_IJobService
+App_JobService -[#2E7D32]-> Core_IJobRepository
+App_JobService -[#2E7D32]-> Core_BackupJob
+App_JobRepository -[#2E7D32]-> Core_BackupJob
+Core_BackupJob -[#2E7D32]-> Core_BackupType
+
+' =========================
+' Relations - Execution
+' =========================
+App_BackupService ..[#1565C0]|> Core_IBackupService
+App_BackupEngine ..[#1565C0]|> Core_IBackupEngine
+App_DifferentialStrategy ..[#1565C0]|> Core_IBackupCopyStrategy
+App_FullStrategy ..[#1565C0]|> Core_IBackupCopyStrategy
+App_BackupService -[#1565C0]-> Core_IBackupEngine
+App_BackupService -[#1565C0]-> App_PriorityMonitor
+App_BackupService -[#1565C0]-> App_LargeFileTransferLimiter
+App_BackupService ..[#AD8B00]> App_BusinessSoftwareDetector
+
+App_BackupEngine -[#1565C0]-> Core_IBackupCopyStrategy
+App_BackupEngine -[#1565C0]-> Core_BackupResultDto
+App_BackupEngine -[#1565C0]-> App_JobExecutionControl
+App_BackupEngine -[#1565C0]-> App_PriorityMonitor
+App_BackupEngine -[#1565C0]-> App_LargeFileTransferLimiter
+App_BackupEngine -[#1565C0]-> Core_ICryptoService
+App_BackupEngine ..[#AD8B00]> App_BusinessSoftwareDetector
+
+' =========================
+' Relations - State
+' =========================
+App_StateWriter ..[#66BB6A]|> Core_IStateWriter
+App_BackupService -[#66BB6A]-> Core_IStateWriter
+App_BackupService -[#66BB6A]-> Core_JobStateDto
+App_BackupService -[#66BB6A]-> Core_AppStateDto
+App_BackupService ..[#66BB6A]> Core_JobStateChangedEventArgs
+App_BackupEngine -[#66BB6A]-> Core_JobStateDto
+App_BackupEngine ..[#66BB6A]> Core_JobStateChangedEventArgs
+Core_AppStateDto -[#66BB6A]-> Core_JobStateDto
+
+' =========================
+' Relations - Encryption
+' =========================
+App_CryptoSoftProcessService ..[#EF6C00]|> Core_ICryptoService
+App_NoEncryptionService ..[#EF6C00]|> Core_ICryptoService
+
+' =========================
+' Relations - Business software detection
+' =========================
+' Single-class package (no internal relation)
+
+' =========================
+' Relations - Utilities (UNC)
+' =========================
+App_BackupEngine ..[#AD8B00]> App_UncResolver
+App_BackupService ..[#AD8B00]> App_UncResolver
+App_JobService ..[#AD8B00]> App_UncResolver
+App_AppConfigRepository ..[#AD8B00]> App_UncResolver
+
+' =========================
+' Relations - Logs internes App
+' =========================
+App_AppLogService ..[#8E24AA]|> Core_IAppLogService
+App_AppLogService -[#8E24AA]-> Core_LogEntryDto
+App_AppLogService -[#8E24AA]-> Core_LogContext
+App_AppLogService ..[#8E24AA]> EasyLog_LoggerFactory
+
+App_LogReaderService -[#8E24AA]-> Core_LogEntryDto
+App_LogReaderService ..[#8E24AA]> EasyLog_LogReaderFactory
+
+Core_LogEntryBuilder -[#8E24AA]-> Core_LogEntryDto
+Core_LogEntryDto -[#8E24AA]-> Core_LogLevel
+Core_LogEntryDto -[#8E24AA]-> Core_LogEventDto
+Core_LogEntryDto -[#8E24AA]-> Core_LogAppDto
+Core_LogEntryDto -[#8E24AA]-> Core_LogTraceDto
+Core_LogEntryDto -[#8E24AA]-> Core_LogHostDto
+Core_LogEntryDto -[#8E24AA]-> Core_LogJobDto
+Core_LogEntryDto -[#8E24AA]-> Core_LogFileDto
+Core_LogEntryDto -[#8E24AA]-> Core_LogCryptoDto
+Core_LogEntryDto -[#8E24AA]-> Core_LogSettingsDto
+Core_LogEntryDto -[#8E24AA]-> Core_LogSummaryDto
+Core_LogEntryDto -[#8E24AA]-> Core_LogErrorDto
+Core_LogEntryDto -[#8E24AA]-> Core_LogEventCategory
+Core_LogEntryDto -[#8E24AA]-> Core_LogEventAction
+Core_LogEntryDto -[#8E24AA]-> Core_LogEventOutcome
+Core_LogEventDto -[#8E24AA]-> Core_LogEventCategory
+Core_LogEventDto -[#8E24AA]-> Core_LogEventAction
+Core_LogEventDto -[#8E24AA]-> Core_LogEventOutcome
+Core_LogJobDto -[#8E24AA]-> Core_BackupType
+Core_LogJobDto -[#8E24AA]-> Core_JobStatus
+Core_LogSettingsDto -[#8E24AA]-> Core_Language
+Core_LogSettingsDto -[#8E24AA]-> EasyLog_LogFormat
+Core_LogSettingsDto -[#8E24AA]-> EasyLog_LogStorageMode
+
+' =========================
+' Relations - EasyLog (technique)
+' =========================
+EasyLog_LoggerFactory -[#8E24AA]-> EasyLog_LogOptions
+EasyLog_LoggerFactory -[#8E24AA]-> EasyLog_ILogSerializer
+EasyLog_LoggerFactory -[#8E24AA]-> EasyLog_ILogWriter
+EasyLog_LoggerFactory -[#8E24AA]-> EasyLog_ILogger
+EasyLog_LogReaderFactory -[#8E24AA]-> EasyLog_LogOptions
+EasyLog_LogReaderFactory -[#8E24AA]-> EasyLog_ILogReader
+
+EasyLog_DailyLogger ..[#8E24AA]|> EasyLog_ILogger
+EasyLog_SafeLogger ..[#8E24AA]|> EasyLog_ILogger
+EasyLog_WebSocketLogger ..[#8E24AA]|> EasyLog_ILogger
+EasyLog_LocalFileLogReader ..[#8E24AA]|> EasyLog_ILogReader
+EasyLog_WebSocketLogReader ..[#8E24AA]|> EasyLog_ILogReader
+EasyLog_JsonSerializer ..[#8E24AA]|> EasyLog_ILogSerializer
+EasyLog_XmlSerializer ..[#8E24AA]|> EasyLog_ILogSerializer
+EasyLog_FileLogWriter ..[#8E24AA]|> EasyLog_ILogWriter
+
+EasyLog_DailyLogger -[#8E24AA]-> EasyLog_ILogSerializer
+EasyLog_DailyLogger -[#8E24AA]-> EasyLog_ILogWriter
+EasyLog_SafeLogger -[#8E24AA]-> EasyLog_ILogger
+EasyLog_WebSocketLogger -[#8E24AA]-> EasyLog_ILogSerializer
+EasyLog_WebSocketLogger -[#8E24AA]-> EasyLog_LogHubWebSocketClient
+EasyLog_WebSocketLogReader -[#8E24AA]-> EasyLog_LogHubWebSocketClient
+EasyLog_WebSocketLogger -[#8E24AA]-> EasyLog_LogServerOptions
+EasyLog_WebSocketLogReader -[#8E24AA]-> EasyLog_LogServerOptions
+EasyLog_LogOptions -[#8E24AA]-> EasyLog_LogFormat
+EasyLog_LogOptions -[#8E24AA]-> EasyLog_LogStorageMode
+EasyLog_LogOptions -[#8E24AA]-> EasyLog_LogServerOptions
+
+' =========================
+' Relations - Settings
+' =========================
+App_PathProvider ..[#00897B]|> Core_IPathProvider
+App_AppConfigRepository -[#00897B]-> Core_AppConfig
+App_SettingsService -[#00897B]-> Core_AppConfig
+App_SettingsService -[#00897B]-> App_AppConfigRepository
+Core_AppConfig -[#00897B]-> Core_Language
+
+' =========================
+' Cross-package links
+' =========================
+note as N_CROSS
+  Cross-package class links are intentionally hidden
+  to avoid clutter between packages.
+  Exception: utility links to UncResolver and execution links to crypto/business detection are shown.
+  Minimal logging links to EasyLog factories are also shown.
+end note
+
+note bottom of PKG_EXEC
+  Execution package = orchestration, engine, and copy strategies.
+  Encryption and state management are separated for readability.
+end note
+
+note bottom of PKG_STATE
+  State package = state DTOs, state-changed event, and state.json persistence.
+end note
+
+note bottom of PKG_APPLOG
+  App internal logging = logging facade + log reading services.
+  This layer consumes EasyLog without exposing technical details to other services.
+end note
+
+note bottom of PKG_EASYLOG
+  EasyLog = technical logging library (factory, logger, reader, serializer, writer, WebSocket).
+end note
+
+@enduml

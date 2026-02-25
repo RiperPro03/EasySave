@@ -1,0 +1,4508 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?plantuml 1.2026.2beta3?><svg
+   contentStyleType="text/css"
+   data-diagram-type="CLASS"
+   height="2928px"
+   preserveAspectRatio="none"
+   style="width:1905px;height:2928px;background:#FFFFFF;"
+   version="1.1"
+   viewBox="0 0 1905 2928"
+   width="1905px"
+   zoomAndPan="magnify"
+   id="svg173"
+   sodipodi:docname="DiagrammeClass_EasySave_App_Gui_MVVM_Focus.svg"
+   inkscape:version="1.4 (86a8ad7, 2024-10-11)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <sodipodi:namedview
+     id="namedview173"
+     pagecolor="#505050"
+     bordercolor="#eeeeee"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#505050"
+     inkscape:zoom="0.3926761"
+     inkscape:cx="1032.6577"
+     inkscape:cy="2283.0521"
+     inkscape:window-width="1920"
+     inkscape:window-height="1094"
+     inkscape:window-x="-11"
+     inkscape:window-y="-11"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="g173" />
+  <title
+     id="title1">Class Diagram - EasySave.App.Gui (Views + ViewModels + UI items)</title>
+  <defs
+     id="defs1" />
+  <g
+     id="g173">
+    <g
+       class="title"
+       data-source-line="20"
+       id="g1">
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         font-weight="bold"
+         lengthAdjust="spacing"
+         textLength="537.4824"
+         x="677.1838"
+         y="22.9951"
+         id="text1">Class Diagram - EasySave.App.Gui (Views + ViewModels + UI items)</text>
+    </g>
+    <!--cluster ViewModels-->
+    <g
+       class="cluster"
+       data-qualified-name="ViewModels"
+       data-source-line="22"
+       id="ent0002">
+      <rect
+         fill="none"
+         height="1197"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#000000;stroke-width:1.5;"
+         width="1175.08"
+         x="268.73"
+         y="805.2969"
+         id="rect1" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14px"
+         font-weight="bold"
+         lengthAdjust="spacing"
+         textLength="94.260696"
+         x="809.13959"
+         y="820.29199"
+         id="text2"
+         transform="translate(-304.32472)">ViewModels</text>
+    </g>
+    <!--cluster UI Model Items-->
+    <g
+       class="cluster"
+       data-qualified-name="UI Model Items"
+       data-source-line="99"
+       id="ent0012">
+      <rect
+         fill="none"
+         height="587"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#000000;stroke-width:1.5;"
+         width="645.89"
+         x="1253.96"
+         y="2026.2969"
+         id="rect2" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         font-weight="bold"
+         lengthAdjust="spacing"
+         textLength="118.5078"
+         x="1517.6511"
+         y="2041.292"
+         id="text3">UI Model Items</text>
+    </g>
+    <!--cluster Used Services (App)-->
+    <g
+       class="cluster"
+       data-qualified-name="Used Services .App."
+       data-source-line="134"
+       id="ent0018">
+      <rect
+         fill="none"
+         height="737"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#000000;stroke-width:1.5;"
+         width="191.16"
+         x="1261.4"
+         y="44.2969"
+         id="rect3" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         font-weight="bold"
+         lengthAdjust="spacing"
+         textLength="159.1748"
+         x="1277.3926"
+         y="59.292"
+         id="text4">Used Services (App)</text>
+    </g>
+    <!--cluster Views-->
+    <g
+       class="cluster"
+       data-qualified-name="Views"
+       data-source-line="143"
+       id="ent0025">
+      <rect
+         fill="none"
+         height="896"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#000000;stroke-width:1.5;"
+         width="461.78"
+         x="7"
+         y="2026.2969"
+         id="rect4" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14px"
+         font-weight="bold"
+         lengthAdjust="spacing"
+         textLength="46.3955"
+         x="214.6922"
+         y="2041.292"
+         id="text5"
+         transform="translate(-198.98155,-2.701107)">Views</text>
+    </g>
+    <!--class ViewModelBase-->
+    <g
+       class="entity"
+       data-qualified-name="ViewModels.ViewModelBase"
+       data-source-line="23"
+       id="ent0003"
+       transform="translate(14)">
+      <rect
+         fill="#eceff1"
+         height="56.265598"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#455a64;stroke-width:0.5"
+         width="141.6553"
+         x="1286.15"
+         y="1385.1669"
+         id="rect5" />
+      <circle
+         cx="1301.15"
+         cy="1405.2997"
+         fill="#a9dcdf"
+         style="stroke:#181818;stroke-width:1"
+         id="ellipse5"
+         r="11" />
+      <path
+         d="m 1301.2594,1400.6434 -1.1563,5.0782 h 2.3282 z m -1.4844,-2.2343 h 2.9844 l 3.3594,12.3906 h -2.4532 l -0.7656,-3.0625 h -3.2812 l -0.75,3.0625 h -2.4375 z"
+         fill="#000000"
+         id="path5" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="12px"
+         font-style="italic"
+         lengthAdjust="spacing"
+         textLength="43.904301"
+         x="1348.0255"
+         y="1401.3055"
+         id="text6">«Base»</text>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14px"
+         font-style="italic"
+         lengthAdjust="spacing"
+         textLength="109.6553"
+         x="1315.15"
+         y="1417.1307"
+         id="text7">ViewModelBase</text>
+      <line
+         style="stroke:#455a64;stroke-width:0.5"
+         x1="1287.15"
+         x2="1426.8053"
+         y1="1425.4325"
+         y2="1425.4325"
+         id="line7" />
+      <line
+         style="stroke:#455a64;stroke-width:0.5"
+         x1="1287.15"
+         x2="1426.8053"
+         y1="1433.4325"
+         y2="1433.4325"
+         id="line8" />
+    </g>
+    <!--class MainWindowViewModel-->
+    <g
+       class="entity"
+       data-qualified-name="ViewModels.MainWindowViewModel"
+       data-source-line="25"
+       id="ent0004">
+      <rect
+         fill="#E8F5E9"
+         height="154.0469"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#2E7D32;stroke-width:0.5;"
+         width="196.4932"
+         x="284.73"
+         y="958.2769"
+         id="rect8" />
+      <ellipse
+         cx="299.73"
+         cy="978.4097"
+         fill="#ADD1B2"
+         rx="11"
+         ry="11"
+         style="stroke:#181818;stroke-width:1;"
+         id="ellipse8" />
+      <path
+         d="M302.6988,984.0503 Q302.1206,984.3472 301.48,984.4878 Q300.8394,984.6441 300.1363,984.6441 Q297.6363,984.6441 296.3081,983.0034 Q294.9956,981.3472 294.9956,978.2222 Q294.9956,975.0972 296.3081,973.4409 Q297.6363,971.7847 300.1363,971.7847 Q300.8394,971.7847 301.48,971.9409 Q302.1363,972.0972 302.6988,972.3941 L302.6988,975.1128 Q302.0738,974.5347 301.48,974.2691 Q300.8863,973.9878 300.2613,973.9878 Q298.9175,973.9878 298.23,975.0659 Q297.5425,976.1284 297.5425,978.2222 Q297.5425,980.3159 298.23,981.3941 Q298.9175,982.4566 300.2613,982.4566 Q300.8863,982.4566 301.48,982.1909 Q302.0738,981.9097 302.6988,981.3316 L302.6988,984.0503 Z "
+         fill="#000000"
+         id="path8" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="12"
+         font-style="italic"
+         lengthAdjust="spacing"
+         textLength="79.4531"
+         x="356.25"
+         y="974.4155"
+         id="text8">«ViewModel»</text>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="164.4932"
+         x="313.73"
+         y="990.2407"
+         id="text9">MainWindowViewModel</text>
+      <line
+         style="stroke:#2E7D32;stroke-width:0.5;"
+         x1="285.73"
+         x2="480.2232"
+         y1="998.5425"
+         y2="998.5425"
+         id="line9" />
+      <g
+         data-visibility-modifier="PUBLIC_FIELD"
+         id="g9">
+        <ellipse
+           cx="295.73"
+           cy="1012.1909"
+           fill="none"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse9" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="79.9189"
+         x="304.73"
+         y="1015.5376"
+         id="text10">AppVersion</text>
+      <g
+         data-visibility-modifier="PUBLIC_FIELD"
+         id="g10">
+        <ellipse
+           cx="295.73"
+           cy="1028.4878"
+           fill="none"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse10" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="105.9707"
+         x="304.73"
+         y="1031.8345"
+         id="text11">StatusMessage</text>
+      <g
+         data-visibility-modifier="PUBLIC_FIELD"
+         id="g11">
+        <ellipse
+           cx="295.73"
+           cy="1044.7847"
+           fill="none"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse11" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="118.0908"
+         x="304.73"
+         y="1048.1314"
+         id="text12">CurrentPageTitle</text>
+      <g
+         data-visibility-modifier="PUBLIC_FIELD"
+         id="g12">
+        <ellipse
+           cx="295.73"
+           cy="1061.0816"
+           fill="none"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse12" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="86.666"
+         x="304.73"
+         y="1064.4282"
+         id="text13">CurrentView</text>
+      <g
+         data-visibility-modifier="PUBLIC_FIELD"
+         id="g13">
+        <ellipse
+           cx="295.73"
+           cy="1077.3784"
+           fill="none"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse13" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="69.5693"
+         x="304.73"
+         y="1080.7251"
+         id="text14">ActiveTab</text>
+      <line
+         style="stroke:#2E7D32;stroke-width:0.5;"
+         x1="285.73"
+         x2="480.2232"
+         y1="1088.0269"
+         y2="1088.0269"
+         id="line14" />
+      <g
+         data-visibility-modifier="PUBLIC_METHOD"
+         id="g14">
+        <ellipse
+           cx="295.73"
+           cy="1101.6753"
+           fill="#84BE84"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse14" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="66.2471"
+         x="304.73"
+         y="1105.022"
+         id="text15">Dispose()</text>
+    </g>
+    <!--class DashboardViewModel-->
+    <g
+       class="entity"
+       data-qualified-name="ViewModels.DashboardViewModel"
+       data-source-line="34"
+       id="ent0005">
+      <rect
+         fill="#E8F5E9"
+         height="202.9375"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#2E7D32;stroke-width:0.5;"
+         width="183.7646"
+         x="966.19"
+         y="1103.8269"
+         id="rect15" />
+      <ellipse
+         cx="981.19"
+         cy="1123.9597"
+         fill="#ADD1B2"
+         rx="11"
+         ry="11"
+         style="stroke:#181818;stroke-width:1;"
+         id="ellipse15" />
+      <path
+         d="M984.1588,1129.6003 Q983.5806,1129.8972 982.94,1130.0378 Q982.2994,1130.1941 981.5963,1130.1941 Q979.0963,1130.1941 977.7681,1128.5534 Q976.4556,1126.8972 976.4556,1123.7722 Q976.4556,1120.6472 977.7681,1118.9909 Q979.0963,1117.3347 981.5963,1117.3347 Q982.2994,1117.3347 982.94,1117.4909 Q983.5963,1117.6472 984.1588,1117.9441 L984.1588,1120.6628 Q983.5338,1120.0847 982.94,1119.8191 Q982.3463,1119.5378 981.7213,1119.5378 Q980.3775,1119.5378 979.69,1120.6159 Q979.0025,1121.6784 979.0025,1123.7722 Q979.0025,1125.8659 979.69,1126.9441 Q980.3775,1128.0066 981.7213,1128.0066 Q982.3463,1128.0066 982.94,1127.7409 Q983.5338,1127.4597 984.1588,1126.8816 L984.1588,1129.6003 Z "
+         fill="#000000"
+         id="path15" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="12"
+         font-style="italic"
+         lengthAdjust="spacing"
+         textLength="79.4531"
+         x="1031.3458"
+         y="1119.9655"
+         id="text16">«ViewModel»</text>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="151.7646"
+         x="995.19"
+         y="1135.7907"
+         id="text17">DashboardViewModel</text>
+      <line
+         style="stroke:#2E7D32;stroke-width:0.5;"
+         x1="967.19"
+         x2="1148.9546"
+         y1="1144.0925"
+         y2="1144.0925"
+         id="line17" />
+      <g
+         data-visibility-modifier="PUBLIC_FIELD"
+         id="g17">
+        <ellipse
+           cx="977.19"
+           cy="1157.7409"
+           fill="none"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse17" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="113.1279"
+         x="986.19"
+         y="1161.0876"
+         id="text18">RecentActivities</text>
+      <g
+         data-visibility-modifier="PUBLIC_FIELD"
+         id="g18">
+        <ellipse
+           cx="977.19"
+           cy="1174.0378"
+           fill="none"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse18" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="63.9502"
+         x="986.19"
+         y="1177.3845"
+         id="text19">TotalJobs</text>
+      <g
+         data-visibility-modifier="PUBLIC_FIELD"
+         id="g19">
+        <ellipse
+           cx="977.19"
+           cy="1190.3347"
+           fill="none"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse19" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="72.4268"
+         x="986.19"
+         y="1193.6814"
+         id="text20">ActiveJobs</text>
+      <g
+         data-visibility-modifier="PUBLIC_FIELD"
+         id="g20">
+        <ellipse
+           cx="977.19"
+           cy="1206.6316"
+           fill="none"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse20" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="84.4307"
+         x="986.19"
+         y="1209.9782"
+         id="text21">InactiveJobs</text>
+      <g
+         data-visibility-modifier="PUBLIC_FIELD"
+         id="g21">
+        <ellipse
+           cx="977.19"
+           cy="1222.9284"
+           fill="none"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse21" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="80.9102"
+         x="986.19"
+         y="1226.2751"
+         id="text22">LastBackup</text>
+      <g
+         data-visibility-modifier="PUBLIC_FIELD"
+         id="g22">
+        <ellipse
+           cx="977.19"
+           cy="1239.2253"
+           fill="none"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse22" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="96.8174"
+         x="986.19"
+         y="1242.572"
+         id="text23">SystemStatus</text>
+      <line
+         style="stroke:#2E7D32;stroke-width:0.5;"
+         x1="967.19"
+         x2="1148.9546"
+         y1="1249.8738"
+         y2="1249.8738"
+         id="line23" />
+      <g
+         data-visibility-modifier="PUBLIC_METHOD"
+         id="g23">
+        <ellipse
+           cx="977.19"
+           cy="1263.5222"
+           fill="#84BE84"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse23" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="153.9658"
+         x="986.19"
+         y="1266.8689"
+         id="text24">RefreshJobSummary()</text>
+      <g
+         data-visibility-modifier="PUBLIC_METHOD"
+         id="g24">
+        <ellipse
+           cx="977.19"
+           cy="1279.8191"
+           fill="#84BE84"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse24" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="129.7598"
+         x="986.19"
+         y="1283.1657"
+         id="text25">NotifyLogWritten()</text>
+      <g
+         data-visibility-modifier="PUBLIC_METHOD"
+         id="g25">
+        <ellipse
+           cx="977.19"
+           cy="1296.1159"
+           fill="#84BE84"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse25" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="66.2471"
+         x="986.19"
+         y="1299.4626"
+         id="text26">Dispose()</text>
+    </g>
+    <!--class JobsViewModel-->
+    <g
+       class="entity"
+       data-qualified-name="ViewModels.JobsViewModel"
+       data-source-line="46"
+       id="ent0006">
+      <rect
+         fill="#E8F5E9"
+         height="170.3438"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#2E7D32;stroke-width:0.5;"
+         width="178.4209"
+         x="634.5"
+         y="1625.1269"
+         id="rect26" />
+      <ellipse
+         cx="668.3917"
+         cy="1645.2597"
+         fill="#ADD1B2"
+         rx="11"
+         ry="11"
+         style="stroke:#181818;stroke-width:1;"
+         id="ellipse26" />
+      <path
+         d="M671.3604,1650.9003 Q670.7823,1651.1972 670.1417,1651.3378 Q669.501,1651.4941 668.7979,1651.4941 Q666.2979,1651.4941 664.9698,1649.8534 Q663.6573,1648.1972 663.6573,1645.0722 Q663.6573,1641.9472 664.9698,1640.2909 Q666.2979,1638.6347 668.7979,1638.6347 Q669.501,1638.6347 670.1417,1638.7909 Q670.7979,1638.9472 671.3604,1639.2441 L671.3604,1641.9628 Q670.7354,1641.3847 670.1417,1641.1191 Q669.5479,1640.8378 668.9229,1640.8378 Q667.5792,1640.8378 666.8917,1641.9159 Q666.2042,1642.9784 666.2042,1645.0722 Q666.2042,1647.1659 666.8917,1648.2441 Q667.5792,1649.3066 668.9229,1649.3066 Q669.5479,1649.3066 670.1417,1649.0409 Q670.7354,1648.7597 671.3604,1648.1816 L671.3604,1650.9003 Z "
+         fill="#000000"
+         id="path26" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="12"
+         font-style="italic"
+         lengthAdjust="spacing"
+         textLength="79.4531"
+         x="699.083"
+         y="1641.2655"
+         id="text27">«ViewModel»</text>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="104.4395"
+         x="686.5898"
+         y="1657.0907"
+         id="text28">JobsViewModel</text>
+      <line
+         style="stroke:#2E7D32;stroke-width:0.5;"
+         x1="635.5"
+         x2="811.9209"
+         y1="1665.3925"
+         y2="1665.3925"
+         id="line28" />
+      <g
+         data-visibility-modifier="PUBLIC_FIELD"
+         id="g28">
+        <ellipse
+           cx="645.5"
+           cy="1679.0409"
+           fill="none"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse28" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="28.875"
+         x="654.5"
+         y="1682.3876"
+         id="text29">Jobs</text>
+      <g
+         data-visibility-modifier="PUBLIC_FIELD"
+         id="g29">
+        <ellipse
+           cx="645.5"
+           cy="1695.3378"
+           fill="none"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse29" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="63.8408"
+         x="654.5"
+         y="1698.6845"
+         id="text30">LastError</text>
+      <g
+         data-visibility-modifier="PUBLIC_FIELD"
+         id="g30">
+        <ellipse
+           cx="645.5"
+           cy="1711.6347"
+           fill="none"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse30" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="121.8232"
+         x="654.5"
+         y="1714.9814"
+         id="text31">CreateRequested</text>
+      <g
+         data-visibility-modifier="PUBLIC_FIELD"
+         id="g31">
+        <ellipse
+           cx="645.5"
+           cy="1727.9316"
+           fill="none"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse31" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="102.1084"
+         x="654.5"
+         y="1731.2782"
+         id="text32">EditRequested</text>
+      <g
+         data-visibility-modifier="PUBLIC_FIELD"
+         id="g32">
+        <ellipse
+           cx="645.5"
+           cy="1744.2284"
+           fill="none"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse32" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="91.3623"
+         x="654.5"
+         y="1747.5751"
+         id="text33">JobsChanged</text>
+      <line
+         style="stroke:#2E7D32;stroke-width:0.5;"
+         x1="635.5"
+         x2="811.9209"
+         y1="1754.8769"
+         y2="1754.8769"
+         id="line33" />
+      <g
+         data-visibility-modifier="PUBLIC_METHOD"
+         id="g33">
+        <ellipse
+           cx="645.5"
+           cy="1768.5253"
+           fill="#84BE84"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse33" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="148.5449"
+         x="654.5"
+         y="1771.872"
+         id="text34">CreateFromEditor(...)</text>
+      <g
+         data-visibility-modifier="PUBLIC_METHOD"
+         id="g34">
+        <ellipse
+           cx="645.5"
+           cy="1784.8222"
+           fill="#84BE84"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse34" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="152.4209"
+         x="654.5"
+         y="1788.1689"
+         id="text35">UpdateFromEditor(...)</text>
+    </g>
+    <!--class JobEditorViewModel-->
+    <g
+       class="entity"
+       data-qualified-name="ViewModels.JobEditorViewModel"
+       data-source-line="56"
+       id="ent0007">
+      <rect
+         fill="#E8F5E9"
+         height="235.5313"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#2E7D32;stroke-width:0.5;"
+         width="170.5781"
+         x="972.79"
+         y="1592.5269"
+         id="rect35" />
+      <ellipse
+         cx="987.79"
+         cy="1612.6597"
+         fill="#ADD1B2"
+         rx="11"
+         ry="11"
+         style="stroke:#181818;stroke-width:1;"
+         id="ellipse35" />
+      <path
+         d="M990.7588,1618.3003 Q990.1806,1618.5972 989.54,1618.7378 Q988.8994,1618.8941 988.1963,1618.8941 Q985.6963,1618.8941 984.3681,1617.2534 Q983.0556,1615.5972 983.0556,1612.4722 Q983.0556,1609.3472 984.3681,1607.6909 Q985.6963,1606.0347 988.1963,1606.0347 Q988.8994,1606.0347 989.54,1606.1909 Q990.1963,1606.3472 990.7588,1606.6441 L990.7588,1609.3628 Q990.1338,1608.7847 989.54,1608.5191 Q988.9463,1608.2378 988.3213,1608.2378 Q986.9775,1608.2378 986.29,1609.3159 Q985.6025,1610.3784 985.6025,1612.4722 Q985.6025,1614.5659 986.29,1615.6441 Q986.9775,1616.7066 988.3213,1616.7066 Q988.9463,1616.7066 989.54,1616.4409 Q990.1338,1616.1597 990.7588,1615.5816 L990.7588,1618.3003 Z "
+         fill="#000000"
+         id="path35" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="12"
+         font-style="italic"
+         lengthAdjust="spacing"
+         textLength="79.4531"
+         x="1031.3525"
+         y="1608.6655"
+         id="text36">«ViewModel»</text>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="138.5781"
+         x="1001.79"
+         y="1624.4907"
+         id="text37">JobEditorViewModel</text>
+      <line
+         style="stroke:#2E7D32;stroke-width:0.5;"
+         x1="973.79"
+         x2="1142.3681"
+         y1="1632.7925"
+         y2="1632.7925"
+         id="line37" />
+      <g
+         data-visibility-modifier="PUBLIC_FIELD"
+         id="g37">
+        <ellipse
+           cx="983.79"
+           cy="1646.4409"
+           fill="none"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse37" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="34.5967"
+         x="992.79"
+         y="1649.7876"
+         id="text38">JobId</text>
+      <g
+         data-visibility-modifier="PUBLIC_FIELD"
+         id="g38">
+        <ellipse
+           cx="983.79"
+           cy="1662.7378"
+           fill="none"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse38" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="41.3027"
+         x="992.79"
+         y="1666.0845"
+         id="text39">Name</text>
+      <g
+         data-visibility-modifier="PUBLIC_FIELD"
+         id="g39">
+        <ellipse
+           cx="983.79"
+           cy="1679.0347"
+           fill="none"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse39" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="79.7754"
+         x="992.79"
+         y="1682.3814"
+         id="text40">SourcePath</text>
+      <g
+         data-visibility-modifier="PUBLIC_FIELD"
+         id="g40">
+        <ellipse
+           cx="983.79"
+           cy="1695.3316"
+           fill="none"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse40" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="77.2598"
+         x="992.79"
+         y="1698.6782"
+         id="text41">TargetPath</text>
+      <g
+         data-visibility-modifier="PUBLIC_FIELD"
+         id="g41">
+        <ellipse
+           cx="983.79"
+           cy="1711.6284"
+           fill="none"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse41" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="95.0264"
+         x="992.79"
+         y="1714.9751"
+         id="text42">SelectedType</text>
+      <g
+         data-visibility-modifier="PUBLIC_FIELD"
+         id="g42">
+        <ellipse
+           cx="983.79"
+           cy="1727.9253"
+           fill="none"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse42" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="54.9746"
+         x="992.79"
+         y="1731.272"
+         id="text43">IsActive</text>
+      <g
+         data-visibility-modifier="PUBLIC_FIELD"
+         id="g43">
+        <ellipse
+           cx="983.79"
+           cy="1744.2222"
+           fill="none"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse43" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="61.5918"
+         x="992.79"
+         y="1747.5689"
+         id="text44">CanSave</text>
+      <g
+         data-visibility-modifier="PUBLIC_FIELD"
+         id="g44">
+        <ellipse
+           cx="983.79"
+           cy="1760.5191"
+           fill="none"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse44" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="76.6787"
+         x="992.79"
+         y="1763.8657"
+         id="text45">IsEditMode</text>
+      <g
+         data-visibility-modifier="PUBLIC_FIELD"
+         id="g45">
+        <ellipse
+           cx="983.79"
+           cy="1776.8159"
+           fill="none"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse45" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="113.1348"
+         x="992.79"
+         y="1780.1626"
+         id="text46">CloseRequested</text>
+      <line
+         style="stroke:#2E7D32;stroke-width:0.5;"
+         x1="973.79"
+         x2="1142.3681"
+         y1="1787.4644"
+         y2="1787.4644"
+         id="line46" />
+      <g
+         data-visibility-modifier="PUBLIC_METHOD"
+         id="g46">
+        <ellipse
+           cx="983.79"
+           cy="1801.1128"
+           fill="#84BE84"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse46" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="88.2861"
+         x="992.79"
+         y="1804.4595"
+         id="text47">CreateNew()</text>
+      <g
+         data-visibility-modifier="PUBLIC_METHOD"
+         id="g47">
+        <ellipse
+           cx="983.79"
+           cy="1817.4097"
+           fill="#84BE84"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse47" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="81.8672"
+         x="992.79"
+         y="1820.7564"
+         id="text48">FromJob(...)</text>
+    </g>
+    <!--class ExecutionViewModel-->
+    <g
+       class="entity"
+       data-qualified-name="ViewModels.ExecutionViewModel"
+       data-source-line="70"
+       id="ent0008">
+      <rect
+         fill="#E8F5E9"
+         height="121.4531"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#2E7D32;stroke-width:0.5;"
+         width="176.6963"
+         x="969.73"
+         y="840.5669"
+         id="rect48" />
+      <ellipse
+         cx="984.73"
+         cy="860.6997"
+         fill="#ADD1B2"
+         rx="11"
+         ry="11"
+         style="stroke:#181818;stroke-width:1;"
+         id="ellipse48" />
+      <path
+         d="M987.6988,866.3403 Q987.1206,866.6372 986.48,866.7778 Q985.8394,866.9341 985.1363,866.9341 Q982.6363,866.9341 981.3081,865.2934 Q979.9956,863.6372 979.9956,860.5122 Q979.9956,857.3872 981.3081,855.7309 Q982.6363,854.0747 985.1363,854.0747 Q985.8394,854.0747 986.48,854.2309 Q987.1363,854.3872 987.6988,854.6841 L987.6988,857.4028 Q987.0738,856.8247 986.48,856.5591 Q985.8863,856.2778 985.2613,856.2778 Q983.9175,856.2778 983.23,857.3559 Q982.5425,858.4184 982.5425,860.5122 Q982.5425,862.6059 983.23,863.6841 Q983.9175,864.7466 985.2613,864.7466 Q985.8863,864.7466 986.48,864.4809 Q987.0738,864.1997 987.6988,863.6216 L987.6988,866.3403 Z "
+         fill="#000000"
+         id="path48" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="12"
+         font-style="italic"
+         lengthAdjust="spacing"
+         textLength="79.4531"
+         x="1031.3516"
+         y="856.7055"
+         id="text49">«ViewModel»</text>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="144.6963"
+         x="998.73"
+         y="872.5307"
+         id="text50">ExecutionViewModel</text>
+      <line
+         style="stroke:#2E7D32;stroke-width:0.5;"
+         x1="970.73"
+         x2="1145.4263"
+         y1="880.8325"
+         y2="880.8325"
+         id="line50" />
+      <g
+         data-visibility-modifier="PUBLIC_FIELD"
+         id="g50">
+        <ellipse
+           cx="980.73"
+           cy="894.4809"
+           fill="none"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse50" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="28.875"
+         x="989.73"
+         y="897.8276"
+         id="text51">Jobs</text>
+      <g
+         data-visibility-modifier="PUBLIC_FIELD"
+         id="g51">
+        <ellipse
+           cx="980.73"
+           cy="910.7778"
+           fill="none"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse51" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="63.8408"
+         x="989.73"
+         y="914.1245"
+         id="text52">LastError</text>
+      <line
+         style="stroke:#2E7D32;stroke-width:0.5;"
+         x1="970.73"
+         x2="1145.4263"
+         y1="921.4263"
+         y2="921.4263"
+         id="line52" />
+      <g
+         data-visibility-modifier="PUBLIC_METHOD"
+         id="g52">
+        <ellipse
+           cx="980.73"
+           cy="935.0747"
+           fill="#84BE84"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse52" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="93.6045"
+         x="989.73"
+         y="938.4214"
+         id="text53">RefreshJobs()</text>
+      <g
+         data-visibility-modifier="PUBLIC_METHOD"
+         id="g53">
+        <ellipse
+           cx="980.73"
+           cy="951.3716"
+           fill="#84BE84"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse53" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="66.2471"
+         x="989.73"
+         y="954.7182"
+         id="text54">Dispose()</text>
+    </g>
+    <!--class LogsViewModel-->
+    <g
+       class="entity"
+       data-qualified-name="ViewModels.LogsViewModel"
+       data-source-line="77"
+       id="ent0009">
+      <rect
+         fill="#E8F5E9"
+         height="88.8594"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#2E7D32;stroke-width:0.5;"
+         width="140.1104"
+         x="988.02"
+         y="1897.8669"
+         id="rect54" />
+      <ellipse
+         cx="1003.02"
+         cy="1917.9997"
+         fill="#ADD1B2"
+         rx="11"
+         ry="11"
+         style="stroke:#181818;stroke-width:1;"
+         id="ellipse54" />
+      <path
+         d="M1005.9888,1923.6403 Q1005.4106,1923.9372 1004.77,1924.0778 Q1004.1294,1924.2341 1003.4263,1924.2341 Q1000.9263,1924.2341 999.5981,1922.5934 Q998.2856,1920.9372 998.2856,1917.8122 Q998.2856,1914.6872 999.5981,1913.0309 Q1000.9263,1911.3747 1003.4263,1911.3747 Q1004.1294,1911.3747 1004.77,1911.5309 Q1005.4263,1911.6872 1005.9888,1911.9841 L1005.9888,1914.7028 Q1005.3638,1914.1247 1004.77,1913.8591 Q1004.1763,1913.5778 1003.5513,1913.5778 Q1002.2075,1913.5778 1001.52,1914.6559 Q1000.8325,1915.7184 1000.8325,1917.8122 Q1000.8325,1919.9059 1001.52,1920.9841 Q1002.2075,1922.0466 1003.5513,1922.0466 Q1004.1763,1922.0466 1004.77,1921.7809 Q1005.3638,1921.4997 1005.9888,1920.9216 L1005.9888,1923.6403 Z "
+         fill="#000000"
+         id="path54" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="12"
+         font-style="italic"
+         lengthAdjust="spacing"
+         textLength="79.4531"
+         x="1031.3486"
+         y="1914.0055"
+         id="text55">«ViewModel»</text>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="108.1104"
+         x="1017.02"
+         y="1929.8307"
+         id="text56">LogsViewModel</text>
+      <line
+         style="stroke:#2E7D32;stroke-width:0.5;"
+         x1="989.02"
+         x2="1127.1304"
+         y1="1938.1325"
+         y2="1938.1325"
+         id="line56" />
+      <g
+         data-visibility-modifier="PUBLIC_FIELD"
+         id="g56">
+        <ellipse
+           cx="999.02"
+           cy="1951.7809"
+           fill="none"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse56" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="32.5459"
+         x="1008.02"
+         y="1955.1276"
+         id="text57">Logs</text>
+      <line
+         style="stroke:#2E7D32;stroke-width:0.5;"
+         x1="989.02"
+         x2="1127.1304"
+         y1="1962.4294"
+         y2="1962.4294"
+         id="line57" />
+      <g
+         data-visibility-modifier="PUBLIC_METHOD"
+         id="g57">
+        <ellipse
+           cx="999.02"
+           cy="1976.0778"
+           fill="#84BE84"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse57" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="97.2754"
+         x="1008.02"
+         y="1979.4245"
+         id="text58">RefreshLogs()</text>
+    </g>
+    <!--class SettingsViewModel-->
+    <g
+       class="entity"
+       data-qualified-name="ViewModels.SettingsViewModel"
+       data-source-line="82"
+       id="ent0010">
+      <rect
+         fill="#E8F5E9"
+         height="186.6406"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#2E7D32;stroke-width:0.5;"
+         width="244.9688"
+         x="601.22"
+         y="941.9769"
+         id="rect58" />
+      <ellipse
+         cx="652.9612"
+         cy="962.1097"
+         fill="#ADD1B2"
+         rx="11"
+         ry="11"
+         style="stroke:#181818;stroke-width:1;"
+         id="ellipse58" />
+      <path
+         d="M655.93,967.7503 Q655.3518,968.0472 654.7112,968.1878 Q654.0706,968.3441 653.3675,968.3441 Q650.8675,968.3441 649.5393,966.7034 Q648.2268,965.0472 648.2268,961.9222 Q648.2268,958.7972 649.5393,957.1409 Q650.8675,955.4847 653.3675,955.4847 Q654.0706,955.4847 654.7112,955.6409 Q655.3675,955.7972 655.93,956.0941 L655.93,958.8128 Q655.305,958.2347 654.7112,957.9691 Q654.1175,957.6878 653.4925,957.6878 Q652.1487,957.6878 651.4612,958.7659 Q650.7737,959.8284 650.7737,961.9222 Q650.7737,964.0159 651.4612,965.0941 Q652.1487,966.1566 653.4925,966.1566 Q654.1175,966.1566 654.7112,965.8909 Q655.305,965.6097 655.93,965.0316 L655.93,967.7503 Z "
+         fill="#000000"
+         id="path58" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="12"
+         font-style="italic"
+         lengthAdjust="spacing"
+         textLength="79.4531"
+         x="700.2278"
+         y="958.1155"
+         id="text59">«ViewModel»</text>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="132.9863"
+         x="673.4612"
+         y="973.9407"
+         id="text60">SettingsViewModel</text>
+      <line
+         style="stroke:#2E7D32;stroke-width:0.5;"
+         x1="602.22"
+         x2="845.1888"
+         y1="982.2425"
+         y2="982.2425"
+         id="line60" />
+      <g
+         data-visibility-modifier="PUBLIC_FIELD"
+         id="g60">
+        <ellipse
+           cx="612.22"
+           cy="995.8909"
+           fill="none"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse60" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="131.7354"
+         x="621.22"
+         y="999.2376"
+         id="text61">EncryptionEnabled</text>
+      <g
+         data-visibility-modifier="PUBLIC_FIELD"
+         id="g61">
+        <ellipse
+           cx="612.22"
+           cy="1012.1878"
+           fill="none"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse61" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="101.2402"
+         x="621.22"
+         y="1015.5345"
+         id="text62">EncryptionKey</text>
+      <g
+         data-visibility-modifier="PUBLIC_FIELD"
+         id="g62">
+        <ellipse
+           cx="612.22"
+           cy="1028.4847"
+           fill="none"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse62" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="129.7803"
+         x="621.22"
+         y="1031.8314"
+         id="text63">SelectedLanguage</text>
+      <g
+         data-visibility-modifier="PUBLIC_FIELD"
+         id="g63">
+        <ellipse
+           cx="612.22"
+           cy="1044.7816"
+           fill="none"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse63" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="136.0215"
+         x="621.22"
+         y="1048.1282"
+         id="text64">SelectedLogFormat</text>
+      <g
+         data-visibility-modifier="PUBLIC_FIELD"
+         id="g64">
+        <ellipse
+           cx="612.22"
+           cy="1061.0784"
+           fill="none"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse64" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="146.9727"
+         x="621.22"
+         y="1064.4251"
+         id="text65">ExtensionsToEncrypt</text>
+      <g
+         data-visibility-modifier="PUBLIC_FIELD"
+         id="g65">
+        <ellipse
+           cx="612.22"
+           cy="1077.3753"
+           fill="none"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse65" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="218.9688"
+         x="621.22"
+         y="1080.722"
+         id="text66">BusinessSoftwareProcessName</text>
+      <line
+         style="stroke:#2E7D32;stroke-width:0.5;"
+         x1="602.22"
+         x2="845.1888"
+         y1="1088.0238"
+         y2="1088.0238"
+         id="line66" />
+      <g
+         data-visibility-modifier="PUBLIC_METHOD"
+         id="g66">
+        <ellipse
+           cx="612.22"
+           cy="1101.6722"
+           fill="#84BE84"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse66" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="102.71"
+         x="621.22"
+         y="1105.0189"
+         id="text67">SaveSettings()</text>
+      <g
+         data-visibility-modifier="PUBLIC_METHOD"
+         id="g67">
+        <ellipse
+           cx="612.22"
+           cy="1117.9691"
+           fill="#84BE84"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse67" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="147.8955"
+         x="621.22"
+         y="1121.3157"
+         id="text68">RefreshLocalization()</text>
+    </g>
+    <!--class AboutViewModel-->
+    <g
+       class="entity"
+       data-qualified-name="ViewModels.AboutViewModel"
+       data-source-line="93"
+       id="ent0011">
+      <rect
+         fill="#E8F5E9"
+         height="88.8594"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#2E7D32;stroke-width:0.5;"
+         width="148.9561"
+         x="649.23"
+         y="1465.8669"
+         id="rect68" />
+      <ellipse
+         cx="664.23"
+         cy="1485.9997"
+         fill="#ADD1B2"
+         rx="11"
+         ry="11"
+         style="stroke:#181818;stroke-width:1;"
+         id="ellipse68" />
+      <path
+         d="M667.1988,1491.6403 Q666.6206,1491.9372 665.98,1492.0778 Q665.3394,1492.2341 664.6363,1492.2341 Q662.1363,1492.2341 660.8081,1490.5934 Q659.4956,1488.9372 659.4956,1485.8122 Q659.4956,1482.6872 660.8081,1481.0309 Q662.1363,1479.3747 664.6363,1479.3747 Q665.3394,1479.3747 665.98,1479.5309 Q666.6363,1479.6872 667.1988,1479.9841 L667.1988,1482.7028 Q666.5738,1482.1247 665.98,1481.8591 Q665.3863,1481.5778 664.7613,1481.5778 Q663.4175,1481.5778 662.73,1482.6559 Q662.0425,1483.7184 662.0425,1485.8122 Q662.0425,1487.9059 662.73,1488.9841 Q663.4175,1490.0466 664.7613,1490.0466 Q665.3863,1490.0466 665.98,1489.7809 Q666.5738,1489.4997 667.1988,1488.9216 L667.1988,1491.6403 Z "
+         fill="#000000"
+         id="path68" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="12"
+         font-style="italic"
+         lengthAdjust="spacing"
+         textLength="79.4531"
+         x="696.9815"
+         y="1482.0055"
+         id="text69">«ViewModel»</text>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="116.9561"
+         x="678.23"
+         y="1497.8307"
+         id="text70">AboutViewModel</text>
+      <line
+         style="stroke:#2E7D32;stroke-width:0.5;"
+         x1="650.23"
+         x2="797.1861"
+         y1="1506.1325"
+         y2="1506.1325"
+         id="line70" />
+      <g
+         data-visibility-modifier="PUBLIC_FIELD"
+         id="g70">
+        <ellipse
+           cx="660.23"
+           cy="1519.7809"
+           fill="none"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse70" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="95.0127"
+         x="669.23"
+         y="1523.1276"
+         id="text71">ProductName</text>
+      <g
+         data-visibility-modifier="PUBLIC_FIELD"
+         id="g71">
+        <ellipse
+           cx="660.23"
+           cy="1536.0778"
+           fill="none"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse71" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="52.5684"
+         x="669.23"
+         y="1539.4245"
+         id="text72">Version</text>
+      <line
+         style="stroke:#2E7D32;stroke-width:0.5;"
+         x1="650.23"
+         x2="797.1861"
+         y1="1546.7263"
+         y2="1546.7263"
+         id="line72" />
+    </g>
+    <!--class ExecutionJobItem-->
+    <g
+       class="entity"
+       data-qualified-name="UI Model Items.ExecutionJobItem"
+       data-source-line="100"
+       id="ent0013">
+      <rect
+         fill="#E3F2FD"
+         height="202.9375"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#1565C0;stroke-width:0.5;"
+         width="174.0459"
+         x="1269.96"
+         y="2060.8269"
+         id="rect72" />
+      <ellipse
+         cx="1293.7187"
+         cy="2080.9597"
+         fill="#ADD1B2"
+         rx="11"
+         ry="11"
+         style="stroke:#181818;stroke-width:1;"
+         id="ellipse72" />
+      <path
+         d="M1296.6875,2086.6003 Q1296.1094,2086.8972 1295.4687,2087.0378 Q1294.8281,2087.1941 1294.125,2087.1941 Q1291.625,2087.1941 1290.2969,2085.5534 Q1288.9844,2083.8972 1288.9844,2080.7722 Q1288.9844,2077.6472 1290.2969,2075.9909 Q1291.625,2074.3347 1294.125,2074.3347 Q1294.8281,2074.3347 1295.4687,2074.4909 Q1296.125,2074.6472 1296.6875,2074.9441 L1296.6875,2077.6628 Q1296.0625,2077.0847 1295.4687,2076.8191 Q1294.875,2076.5378 1294.25,2076.5378 Q1292.9062,2076.5378 1292.2187,2077.6159 Q1291.5312,2078.6784 1291.5312,2080.7722 Q1291.5312,2082.8659 1292.2187,2083.9441 Q1292.9062,2085.0066 1294.25,2085.0066 Q1294.875,2085.0066 1295.4687,2084.7409 Q1296.0625,2084.4597 1296.6875,2083.8816 L1296.6875,2086.6003 Z "
+         fill="#000000"
+         id="path72" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="12"
+         font-style="italic"
+         lengthAdjust="spacing"
+         textLength="50.7129"
+         x="1345.5997"
+         y="2076.9655"
+         id="text73">«Model»</text>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="122.582"
+         x="1309.6651"
+         y="2092.7907"
+         id="text74">ExecutionJobItem</text>
+      <line
+         style="stroke:#1565C0;stroke-width:0.5;"
+         x1="1270.96"
+         x2="1443.0059"
+         y1="2101.0925"
+         y2="2101.0925"
+         id="line74" />
+      <g
+         data-visibility-modifier="PUBLIC_FIELD"
+         id="g74">
+        <ellipse
+           cx="1280.96"
+           cy="2114.7409"
+           fill="none"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse74" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="34.5967"
+         x="1289.96"
+         y="2118.0876"
+         id="text75">JobId</text>
+      <g
+         data-visibility-modifier="PUBLIC_FIELD"
+         id="g75">
+        <ellipse
+           cx="1280.96"
+           cy="2131.0378"
+           fill="none"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse75" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="62.8838"
+         x="1289.96"
+         y="2134.3845"
+         id="text76">JobName</text>
+      <g
+         data-visibility-modifier="PUBLIC_FIELD"
+         id="g76">
+        <ellipse
+           cx="1280.96"
+           cy="2147.3347"
+           fill="none"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse76" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="44.6113"
+         x="1289.96"
+         y="2150.6814"
+         id="text77">Status</text>
+      <g
+         data-visibility-modifier="PUBLIC_FIELD"
+         id="g77">
+        <ellipse
+           cx="1280.96"
+           cy="2163.6316"
+           fill="none"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse77" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="140.1709"
+         x="1289.96"
+         y="2166.9782"
+         id="text78">ProgressPercentage</text>
+      <g
+         data-visibility-modifier="PUBLIC_FIELD"
+         id="g78">
+        <ellipse
+           cx="1280.96"
+           cy="2179.9284"
+           fill="none"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse78" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="98.2256"
+         x="1289.96"
+         y="2183.2751"
+         id="text79">CanPlayPause</text>
+      <g
+         data-visibility-modifier="PUBLIC_FIELD"
+         id="g79">
+        <ellipse
+           cx="1280.96"
+           cy="2196.2253"
+           fill="none"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse79" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="59.0557"
+         x="1289.96"
+         y="2199.572"
+         id="text80">CanStop</text>
+      <g
+         data-visibility-modifier="PUBLIC_FIELD"
+         id="g80">
+        <ellipse
+           cx="1280.96"
+           cy="2212.5222"
+           fill="none"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse80" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="61.4277"
+         x="1289.96"
+         y="2215.8689"
+         id="text81">CanStart</text>
+      <line
+         style="stroke:#1565C0;stroke-width:0.5;"
+         x1="1270.96"
+         x2="1443.0059"
+         y1="2223.1706"
+         y2="2223.1706"
+         id="line81" />
+      <g
+         data-visibility-modifier="PUBLIC_METHOD"
+         id="g81">
+        <ellipse
+           cx="1280.96"
+           cy="2236.8191"
+           fill="#84BE84"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse81" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="142.7686"
+         x="1289.96"
+         y="2240.1657"
+         id="text82">UpdateDefinition(...)</text>
+      <g
+         data-visibility-modifier="PUBLIC_METHOD"
+         id="g82">
+        <ellipse
+           cx="1280.96"
+           cy="2253.1159"
+           fill="#84BE84"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse82" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="148.0459"
+         x="1289.96"
+         y="2256.4626"
+         id="text83">UpdateFromState(...)</text>
+    </g>
+    <!--class LogEntryItem-->
+    <g
+       class="entity"
+       data-qualified-name="UI Model Items.LogEntryItem"
+       data-source-line="112"
+       id="ent0014">
+      <rect
+         fill="#E3F2FD"
+         height="88.8594"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#1565C0;stroke-width:0.5;"
+         width="126.3701"
+         x="1293.79"
+         y="2508.8669"
+         id="rect83" />
+      <ellipse
+         cx="1308.79"
+         cy="2528.9997"
+         fill="#ADD1B2"
+         rx="11"
+         ry="11"
+         style="stroke:#181818;stroke-width:1;"
+         id="ellipse83" />
+      <path
+         d="M1311.7588,2534.6403 Q1311.1806,2534.9372 1310.54,2535.0778 Q1309.8994,2535.2341 1309.1963,2535.2341 Q1306.6963,2535.2341 1305.3681,2533.5934 Q1304.0556,2531.9372 1304.0556,2528.8122 Q1304.0556,2525.6872 1305.3681,2524.0309 Q1306.6963,2522.3747 1309.1963,2522.3747 Q1309.8994,2522.3747 1310.54,2522.5309 Q1311.1963,2522.6872 1311.7588,2522.9841 L1311.7588,2525.7028 Q1311.1338,2525.1247 1310.54,2524.8591 Q1309.9463,2524.5778 1309.3213,2524.5778 Q1307.9775,2524.5778 1307.29,2525.6559 Q1306.6025,2526.7184 1306.6025,2528.8122 Q1306.6025,2530.9059 1307.29,2531.9841 Q1307.9775,2533.0466 1309.3213,2533.0466 Q1309.9463,2533.0466 1310.54,2532.7809 Q1311.1338,2532.4997 1311.7588,2531.9216 L1311.7588,2534.6403 Z "
+         fill="#000000"
+         id="path83" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="12"
+         font-style="italic"
+         lengthAdjust="spacing"
+         textLength="50.7129"
+         x="1344.6186"
+         y="2525.0055"
+         id="text84">«Model»</text>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="94.3701"
+         x="1322.79"
+         y="2540.8307"
+         id="text85">LogEntryItem</text>
+      <line
+         style="stroke:#1565C0;stroke-width:0.5;"
+         x1="1294.79"
+         x2="1419.1601"
+         y1="2549.1325"
+         y2="2549.1325"
+         id="line85" />
+      <g
+         data-visibility-modifier="PUBLIC_FIELD"
+         id="g85">
+        <ellipse
+           cx="1304.79"
+           cy="2562.7809"
+           fill="none"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse85" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="37.249"
+         x="1313.79"
+         y="2566.1276"
+         id="text86">Entry</text>
+      <g
+         data-visibility-modifier="PUBLIC_FIELD"
+         id="g86">
+        <ellipse
+           cx="1304.79"
+           cy="2579.0778"
+           fill="none"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse86" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="59.3086"
+         x="1313.79"
+         y="2582.4245"
+         id="text87">Sections</text>
+      <line
+         style="stroke:#1565C0;stroke-width:0.5;"
+         x1="1294.79"
+         x2="1419.1601"
+         y1="2589.7263"
+         y2="2589.7263"
+         id="line87" />
+    </g>
+    <!--class LogSection-->
+    <g
+       class="entity"
+       data-qualified-name="UI Model Items.LogSection"
+       data-source-line="117"
+       id="ent0015">
+      <rect
+         fill="#E3F2FD"
+         height="88.8594"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#1565C0;stroke-width:0.5;"
+         width="109.2666"
+         x="1564"
+         y="2508.8669"
+         id="rect87" />
+      <ellipse
+         cx="1579"
+         cy="2528.9997"
+         fill="#ADD1B2"
+         rx="11"
+         ry="11"
+         style="stroke:#181818;stroke-width:1;"
+         id="ellipse87" />
+      <path
+         d="M1581.9688,2534.6403 Q1581.3906,2534.9372 1580.75,2535.0778 Q1580.1094,2535.2341 1579.4063,2535.2341 Q1576.9063,2535.2341 1575.5781,2533.5934 Q1574.2656,2531.9372 1574.2656,2528.8122 Q1574.2656,2525.6872 1575.5781,2524.0309 Q1576.9063,2522.3747 1579.4063,2522.3747 Q1580.1094,2522.3747 1580.75,2522.5309 Q1581.4063,2522.6872 1581.9688,2522.9841 L1581.9688,2525.7028 Q1581.3438,2525.1247 1580.75,2524.8591 Q1580.1563,2524.5778 1579.5313,2524.5778 Q1578.1875,2524.5778 1577.5,2525.6559 Q1576.8125,2526.7184 1576.8125,2528.8122 Q1576.8125,2530.9059 1577.5,2531.9841 Q1578.1875,2533.0466 1579.5313,2533.0466 Q1580.1563,2533.0466 1580.75,2532.7809 Q1581.3438,2532.4997 1581.9688,2531.9216 L1581.9688,2534.6403 Z "
+         fill="#000000"
+         id="path87" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="12"
+         font-style="italic"
+         lengthAdjust="spacing"
+         textLength="50.7129"
+         x="1606.2769"
+         y="2525.0055"
+         id="text88">«Model»</text>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="77.2666"
+         x="1593"
+         y="2540.8307"
+         id="text89">LogSection</text>
+      <line
+         style="stroke:#1565C0;stroke-width:0.5;"
+         x1="1565"
+         x2="1672.2666"
+         y1="2549.1325"
+         y2="2549.1325"
+         id="line89" />
+      <g
+         data-visibility-modifier="PUBLIC_FIELD"
+         id="g89">
+        <ellipse
+           cx="1575"
+           cy="2562.7809"
+           fill="none"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse89" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="30.4336"
+         x="1584"
+         y="2566.1276"
+         id="text90">Title</text>
+      <g
+         data-visibility-modifier="PUBLIC_FIELD"
+         id="g90">
+        <ellipse
+           cx="1575"
+           cy="2579.0778"
+           fill="none"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse90" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="40.626"
+         x="1584"
+         y="2582.4245"
+         id="text91">Fields</text>
+      <line
+         style="stroke:#1565C0;stroke-width:0.5;"
+         x1="1565"
+         x2="1672.2666"
+         y1="2589.7263"
+         y2="2589.7263"
+         id="line91" />
+    </g>
+    <!--class LogField-->
+    <g
+       class="entity"
+       data-qualified-name="UI Model Items.LogField"
+       data-source-line="122"
+       id="ent0016">
+      <rect
+         fill="#E3F2FD"
+         height="88.8594"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#1565C0;stroke-width:0.5;"
+         width="90.584"
+         x="1793.27"
+         y="2508.8669"
+         id="rect91" />
+      <ellipse
+         cx="1808.27"
+         cy="2528.9997"
+         fill="#ADD1B2"
+         rx="11"
+         ry="11"
+         style="stroke:#181818;stroke-width:1;"
+         id="ellipse91" />
+      <path
+         d="M1811.2388,2534.6403 Q1810.6606,2534.9372 1810.02,2535.0778 Q1809.3794,2535.2341 1808.6763,2535.2341 Q1806.1763,2535.2341 1804.8481,2533.5934 Q1803.5356,2531.9372 1803.5356,2528.8122 Q1803.5356,2525.6872 1804.8481,2524.0309 Q1806.1763,2522.3747 1808.6763,2522.3747 Q1809.3794,2522.3747 1810.02,2522.5309 Q1810.6763,2522.6872 1811.2388,2522.9841 L1811.2388,2525.7028 Q1810.6138,2525.1247 1810.02,2524.8591 Q1809.4263,2524.5778 1808.8013,2524.5778 Q1807.4575,2524.5778 1806.77,2525.6559 Q1806.0825,2526.7184 1806.0825,2528.8122 Q1806.0825,2530.9059 1806.77,2531.9841 Q1807.4575,2533.0466 1808.8013,2533.0466 Q1809.4263,2533.0466 1810.02,2532.7809 Q1810.6138,2532.4997 1811.2388,2531.9216 L1811.2388,2534.6403 Z "
+         fill="#000000"
+         id="path91" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="12"
+         font-style="italic"
+         lengthAdjust="spacing"
+         textLength="50.7129"
+         x="1826.2055"
+         y="2525.0055"
+         id="text92">«Model»</text>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="58.584"
+         x="1822.27"
+         y="2540.8307"
+         id="text93">LogField</text>
+      <line
+         style="stroke:#1565C0;stroke-width:0.5;"
+         x1="1794.27"
+         x2="1882.854"
+         y1="2549.1325"
+         y2="2549.1325"
+         id="line93" />
+      <g
+         data-visibility-modifier="PUBLIC_FIELD"
+         id="g93">
+        <ellipse
+           cx="1804.27"
+           cy="2562.7809"
+           fill="none"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse93" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="37.7686"
+         x="1813.27"
+         y="2566.1276"
+         id="text94">Label</text>
+      <g
+         data-visibility-modifier="PUBLIC_FIELD"
+         id="g94">
+        <ellipse
+           cx="1804.27"
+           cy="2579.0778"
+           fill="none"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse94" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="39.5322"
+         x="1813.27"
+         y="2582.4245"
+         id="text95">Value</text>
+      <line
+         style="stroke:#1565C0;stroke-width:0.5;"
+         x1="1794.27"
+         x2="1882.854"
+         y1="2589.7263"
+         y2="2589.7263"
+         id="line95" />
+    </g>
+    <!--class RecentActivityItem-->
+    <g
+       class="entity"
+       data-qualified-name="UI Model Items.RecentActivityItem"
+       data-source-line="127"
+       id="ent0017">
+      <rect
+         fill="#E3F2FD"
+         height="105.1563"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#1565C0;stroke-width:0.5;"
+         width="165.4854"
+         x="1274.24"
+         y="2333.7169"
+         id="rect95" />
+      <ellipse
+         cx="1289.24"
+         cy="2353.8497"
+         fill="#ADD1B2"
+         rx="11"
+         ry="11"
+         style="stroke:#181818;stroke-width:1;"
+         id="ellipse95" />
+      <path
+         d="M1292.2088,2359.4903 Q1291.6306,2359.7872 1290.99,2359.9278 Q1290.3494,2360.0841 1289.6463,2360.0841 Q1287.1463,2360.0841 1285.8181,2358.4434 Q1284.5056,2356.7872 1284.5056,2353.6622 Q1284.5056,2350.5372 1285.8181,2348.8809 Q1287.1463,2347.2247 1289.6463,2347.2247 Q1290.3494,2347.2247 1290.99,2347.3809 Q1291.6463,2347.5372 1292.2088,2347.8341 L1292.2088,2350.5528 Q1291.5838,2349.9747 1290.99,2349.7091 Q1290.3963,2349.4278 1289.7713,2349.4278 Q1288.4275,2349.4278 1287.74,2350.5059 Q1287.0525,2351.5684 1287.0525,2353.6622 Q1287.0525,2355.7559 1287.74,2356.8341 Q1288.4275,2357.8966 1289.7713,2357.8966 Q1290.3963,2357.8966 1290.99,2357.6309 Q1291.5838,2357.3497 1292.2088,2356.7716 L1292.2088,2359.4903 Z "
+         fill="#000000"
+         id="path95" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="12"
+         font-style="italic"
+         lengthAdjust="spacing"
+         textLength="50.7129"
+         x="1344.6262"
+         y="2349.8555"
+         id="text96">«Model»</text>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="133.4854"
+         x="1303.24"
+         y="2365.6807"
+         id="text97">RecentActivityItem</text>
+      <line
+         style="stroke:#1565C0;stroke-width:0.5;"
+         x1="1275.24"
+         x2="1438.7254"
+         y1="2373.9825"
+         y2="2373.9825"
+         id="line97" />
+      <g
+         data-visibility-modifier="PUBLIC_FIELD"
+         id="g97">
+        <ellipse
+           cx="1285.24"
+           cy="2387.6309"
+           fill="none"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse97" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="30.4336"
+         x="1294.24"
+         y="2390.9776"
+         id="text98">Title</text>
+      <g
+         data-visibility-modifier="PUBLIC_FIELD"
+         id="g98">
+        <ellipse
+           cx="1285.24"
+           cy="2403.9278"
+           fill="none"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse98" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="54.0176"
+         x="1294.24"
+         y="2407.2745"
+         id="text99">Subtitle</text>
+      <g
+         data-visibility-modifier="PUBLIC_FIELD"
+         id="g99">
+        <ellipse
+           cx="1285.24"
+           cy="2420.2247"
+           fill="none"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse99" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="78.5791"
+         x="1294.24"
+         y="2423.5714"
+         id="text100">Timestamp</text>
+      <line
+         style="stroke:#1565C0;stroke-width:0.5;"
+         x1="1275.24"
+         x2="1438.7254"
+         y1="2430.8731"
+         y2="2430.8731"
+         id="line100" />
+    </g>
+    <!--class JobService-->
+    <g
+       class="entity"
+       data-qualified-name="Used Services .App..JobService"
+       data-source-line="135"
+       id="ent0019">
+      <rect
+         fill="#ECEFF1"
+         height="56.2656"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#455A64;stroke-width:0.5;"
+         width="105.3223"
+         x="1304.32"
+         y="457.1669"
+         id="rect100" />
+      <ellipse
+         cx="1319.32"
+         cy="477.2997"
+         fill="#ADD1B2"
+         rx="11"
+         ry="11"
+         style="stroke:#181818;stroke-width:1;"
+         id="ellipse100" />
+      <path
+         d="M1322.2888,482.9403 Q1321.7106,483.2372 1321.07,483.3778 Q1320.4294,483.5341 1319.7263,483.5341 Q1317.2263,483.5341 1315.8981,481.8934 Q1314.5856,480.2372 1314.5856,477.1122 Q1314.5856,473.9872 1315.8981,472.3309 Q1317.2263,470.6747 1319.7263,470.6747 Q1320.4294,470.6747 1321.07,470.8309 Q1321.7263,470.9872 1322.2888,471.2841 L1322.2888,474.0028 Q1321.6638,473.4247 1321.07,473.1591 Q1320.4763,472.8778 1319.8513,472.8778 Q1318.5075,472.8778 1317.82,473.9559 Q1317.1325,475.0184 1317.1325,477.1122 Q1317.1325,479.2059 1317.82,480.2841 Q1318.5075,481.3466 1319.8513,481.3466 Q1320.4763,481.3466 1321.07,481.0809 Q1321.6638,480.7997 1322.2888,480.2216 L1322.2888,482.9403 Z "
+         fill="#000000"
+         id="path100" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="12"
+         font-style="italic"
+         lengthAdjust="spacing"
+         textLength="43.9043"
+         x="1348.029"
+         y="473.3055"
+         id="text101">«Base»</text>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="73.3223"
+         x="1333.32"
+         y="489.1307"
+         id="text102">JobService</text>
+      <line
+         style="stroke:#455A64;stroke-width:0.5;"
+         x1="1305.32"
+         x2="1408.6423"
+         y1="497.4325"
+         y2="497.4325"
+         id="line102" />
+      <line
+         style="stroke:#455A64;stroke-width:0.5;"
+         x1="1305.32"
+         x2="1408.6423"
+         y1="505.4325"
+         y2="505.4325"
+         id="line103" />
+    </g>
+    <!--class BackupService-->
+    <g
+       class="entity"
+       data-qualified-name="Used Services .App..BackupService"
+       data-source-line="136"
+       id="ent0020">
+      <rect
+         fill="#ECEFF1"
+         height="56.2656"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#455A64;stroke-width:0.5;"
+         width="135.4893"
+         x="1289.24"
+         y="583.1669"
+         id="rect103" />
+      <ellipse
+         cx="1304.24"
+         cy="603.2997"
+         fill="#ADD1B2"
+         rx="11"
+         ry="11"
+         style="stroke:#181818;stroke-width:1;"
+         id="ellipse103" />
+      <path
+         d="M1307.2088,608.9403 Q1306.6306,609.2372 1305.99,609.3778 Q1305.3494,609.5341 1304.6463,609.5341 Q1302.1463,609.5341 1300.8181,607.8934 Q1299.5056,606.2372 1299.5056,603.1122 Q1299.5056,599.9872 1300.8181,598.3309 Q1302.1463,596.6747 1304.6463,596.6747 Q1305.3494,596.6747 1305.99,596.8309 Q1306.6463,596.9872 1307.2088,597.2841 L1307.2088,600.0028 Q1306.5838,599.4247 1305.99,599.1591 Q1305.3963,598.8778 1304.7713,598.8778 Q1303.4275,598.8778 1302.74,599.9559 Q1302.0525,601.0184 1302.0525,603.1122 Q1302.0525,605.2059 1302.74,606.2841 Q1303.4275,607.3466 1304.7713,607.3466 Q1305.3963,607.3466 1305.99,607.0809 Q1306.5838,606.7997 1307.2088,606.2216 L1307.2088,608.9403 Z "
+         fill="#000000"
+         id="path103" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="12"
+         font-style="italic"
+         lengthAdjust="spacing"
+         textLength="43.9043"
+         x="1348.0325"
+         y="599.3055"
+         id="text103">«Base»</text>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="103.4893"
+         x="1318.24"
+         y="615.1307"
+         id="text104">BackupService</text>
+      <line
+         style="stroke:#455A64;stroke-width:0.5;"
+         x1="1290.24"
+         x2="1423.7293"
+         y1="623.4325"
+         y2="623.4325"
+         id="line104" />
+      <line
+         style="stroke:#455A64;stroke-width:0.5;"
+         x1="1290.24"
+         x2="1423.7293"
+         y1="631.4325"
+         y2="631.4325"
+         id="line105" />
+    </g>
+    <!--class SettingsService-->
+    <g
+       class="entity"
+       data-qualified-name="Used Services .App..SettingsService"
+       data-source-line="137"
+       id="ent0021">
+      <rect
+         fill="#ECEFF1"
+         height="56.2656"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#455A64;stroke-width:0.5;"
+         width="141.1631"
+         x="1286.4"
+         y="331.1669"
+         id="rect105" />
+      <ellipse
+         cx="1301.4"
+         cy="351.2997"
+         fill="#ADD1B2"
+         rx="11"
+         ry="11"
+         style="stroke:#181818;stroke-width:1;"
+         id="ellipse105" />
+      <path
+         d="M1304.3688,356.9403 Q1303.7906,357.2372 1303.15,357.3778 Q1302.5094,357.5341 1301.8063,357.5341 Q1299.3063,357.5341 1297.9781,355.8934 Q1296.6656,354.2372 1296.6656,351.1122 Q1296.6656,347.9872 1297.9781,346.3309 Q1299.3063,344.6747 1301.8063,344.6747 Q1302.5094,344.6747 1303.15,344.8309 Q1303.8063,344.9872 1304.3688,345.2841 L1304.3688,348.0028 Q1303.7438,347.4247 1303.15,347.1591 Q1302.5563,346.8778 1301.9313,346.8778 Q1300.5875,346.8778 1299.9,347.9559 Q1299.2125,349.0184 1299.2125,351.1122 Q1299.2125,353.2059 1299.9,354.2841 Q1300.5875,355.3466 1301.9313,355.3466 Q1302.5563,355.3466 1303.15,355.0809 Q1303.7438,354.7997 1304.3688,354.2216 L1304.3688,356.9403 Z "
+         fill="#000000"
+         id="path105" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="12"
+         font-style="italic"
+         lengthAdjust="spacing"
+         textLength="43.9043"
+         x="1348.0294"
+         y="347.3055"
+         id="text105">«Base»</text>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="109.1631"
+         x="1315.4"
+         y="363.1307"
+         id="text106">SettingsService</text>
+      <line
+         style="stroke:#455A64;stroke-width:0.5;"
+         x1="1287.4"
+         x2="1426.5631"
+         y1="371.4325"
+         y2="371.4325"
+         id="line106" />
+      <line
+         style="stroke:#455A64;stroke-width:0.5;"
+         x1="1287.4"
+         x2="1426.5631"
+         y1="379.4325"
+         y2="379.4325"
+         id="line107" />
+    </g>
+    <!--class LogReaderService-->
+    <g
+       class="entity"
+       data-qualified-name="Used Services .App..LogReaderService"
+       data-source-line="138"
+       id="ent0022">
+      <rect
+         fill="#ECEFF1"
+         height="56.2656"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#455A64;stroke-width:0.5;"
+         width="159.1689"
+         x="1277.4"
+         y="709.1669"
+         id="rect107" />
+      <ellipse
+         cx="1292.4"
+         cy="729.2997"
+         fill="#ADD1B2"
+         rx="11"
+         ry="11"
+         style="stroke:#181818;stroke-width:1;"
+         id="ellipse107" />
+      <path
+         d="M1295.3688,734.9403 Q1294.7906,735.2372 1294.15,735.3778 Q1293.5094,735.5341 1292.8063,735.5341 Q1290.3063,735.5341 1288.9781,733.8934 Q1287.6656,732.2372 1287.6656,729.1122 Q1287.6656,725.9872 1288.9781,724.3309 Q1290.3063,722.6747 1292.8063,722.6747 Q1293.5094,722.6747 1294.15,722.8309 Q1294.8063,722.9872 1295.3688,723.2841 L1295.3688,726.0028 Q1294.7438,725.4247 1294.15,725.1591 Q1293.5563,724.8778 1292.9313,724.8778 Q1291.5875,724.8778 1290.9,725.9559 Q1290.2125,727.0184 1290.2125,729.1122 Q1290.2125,731.2059 1290.9,732.2841 Q1291.5875,733.3466 1292.9313,733.3466 Q1293.5563,733.3466 1294.15,733.0809 Q1294.7438,732.7997 1295.3688,732.2216 L1295.3688,734.9403 Z "
+         fill="#000000"
+         id="path107" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="12"
+         font-style="italic"
+         lengthAdjust="spacing"
+         textLength="43.9043"
+         x="1348.0323"
+         y="725.3055"
+         id="text107">«Base»</text>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="127.1689"
+         x="1306.4"
+         y="741.1307"
+         id="text108">LogReaderService</text>
+      <line
+         style="stroke:#455A64;stroke-width:0.5;"
+         x1="1278.4"
+         x2="1435.5689"
+         y1="749.4325"
+         y2="749.4325"
+         id="line108" />
+      <line
+         style="stroke:#455A64;stroke-width:0.5;"
+         x1="1278.4"
+         x2="1435.5689"
+         y1="757.4325"
+         y2="757.4325"
+         id="line109" />
+    </g>
+    <!--class AppLogService-->
+    <g
+       class="entity"
+       data-qualified-name="Used Services .App..AppLogService"
+       data-source-line="139"
+       id="ent0023">
+      <rect
+         fill="#ECEFF1"
+         height="56.2656"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#455A64;stroke-width:0.5;"
+         width="136.3438"
+         x="1288.81"
+         y="79.1669"
+         id="rect109" />
+      <ellipse
+         cx="1303.81"
+         cy="99.2997"
+         fill="#ADD1B2"
+         rx="11"
+         ry="11"
+         style="stroke:#181818;stroke-width:1;"
+         id="ellipse109" />
+      <path
+         d="M1306.7788,104.9403 Q1306.2006,105.2372 1305.56,105.3778 Q1304.9194,105.5341 1304.2163,105.5341 Q1301.7163,105.5341 1300.3881,103.8934 Q1299.0756,102.2372 1299.0756,99.1122 Q1299.0756,95.9872 1300.3881,94.3309 Q1301.7163,92.6747 1304.2163,92.6747 Q1304.9194,92.6747 1305.56,92.8309 Q1306.2163,92.9872 1306.7788,93.2841 L1306.7788,96.0028 Q1306.1538,95.4247 1305.56,95.1591 Q1304.9663,94.8778 1304.3413,94.8778 Q1302.9975,94.8778 1302.31,95.9559 Q1301.6225,97.0184 1301.6225,99.1122 Q1301.6225,101.2059 1302.31,102.2841 Q1302.9975,103.3466 1304.3413,103.3466 Q1304.9663,103.3466 1305.56,103.0809 Q1306.1538,102.7997 1306.7788,102.2216 L1306.7788,104.9403 Z "
+         fill="#000000"
+         id="path109" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="12"
+         font-style="italic"
+         lengthAdjust="spacing"
+         textLength="43.9043"
+         x="1348.0297"
+         y="95.3055"
+         id="text109">«Base»</text>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="104.3438"
+         x="1317.81"
+         y="111.1307"
+         id="text110">AppLogService</text>
+      <line
+         style="stroke:#455A64;stroke-width:0.5;"
+         x1="1289.81"
+         x2="1424.1538"
+         y1="119.4325"
+         y2="119.4325"
+         id="line110" />
+      <line
+         style="stroke:#455A64;stroke-width:0.5;"
+         x1="1289.81"
+         x2="1424.1538"
+         y1="127.4325"
+         y2="127.4325"
+         id="line111" />
+    </g>
+    <!--class Loc-->
+    <g
+       class="entity"
+       data-qualified-name="Used Services .App..Loc"
+       data-source-line="140"
+       id="ent0024">
+      <rect
+         fill="#ECEFF1"
+         height="56.2656"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#455A64;stroke-width:0.5;"
+         width="71.9043"
+         x="1321.03"
+         y="205.1669"
+         id="rect111" />
+      <ellipse
+         cx="1336.03"
+         cy="225.2997"
+         fill="#ADD1B2"
+         rx="11"
+         ry="11"
+         style="stroke:#181818;stroke-width:1;"
+         id="ellipse111" />
+      <path
+         d="M1338.9988,230.9403 Q1338.4206,231.2372 1337.78,231.3778 Q1337.1394,231.5341 1336.4363,231.5341 Q1333.9363,231.5341 1332.6081,229.8934 Q1331.2956,228.2372 1331.2956,225.1122 Q1331.2956,221.9872 1332.6081,220.3309 Q1333.9363,218.6747 1336.4363,218.6747 Q1337.1394,218.6747 1337.78,218.8309 Q1338.4363,218.9872 1338.9988,219.2841 L1338.9988,222.0028 Q1338.3738,221.4247 1337.78,221.1591 Q1337.1863,220.8778 1336.5613,220.8778 Q1335.2175,220.8778 1334.53,221.9559 Q1333.8425,223.0184 1333.8425,225.1122 Q1333.8425,227.2059 1334.53,228.2841 Q1335.2175,229.3466 1336.5613,229.3466 Q1337.1863,229.3466 1337.78,229.0809 Q1338.3738,228.7997 1338.9988,228.2216 L1338.9988,230.9403 Z "
+         fill="#000000"
+         id="path111" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="12"
+         font-style="italic"
+         lengthAdjust="spacing"
+         textLength="43.9043"
+         x="1348.03"
+         y="221.3055"
+         id="text111">«Base»</text>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="24.0625"
+         x="1357.9509"
+         y="237.1307"
+         id="text112">Loc</text>
+      <line
+         style="stroke:#455A64;stroke-width:0.5;"
+         x1="1322.03"
+         x2="1391.9343"
+         y1="245.4325"
+         y2="245.4325"
+         id="line112" />
+      <line
+         style="stroke:#455A64;stroke-width:0.5;"
+         x1="1322.03"
+         x2="1391.9343"
+         y1="253.4325"
+         y2="253.4325"
+         id="line113" />
+    </g>
+    <!--class MainWindow-->
+    <g
+       class="entity"
+       data-qualified-name="Views.MainWindow"
+       data-source-line="144"
+       id="ent0026">
+      <rect
+         fill="#F3E5F5"
+         height="88.8594"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#6A1B9A;stroke-width:0.5;"
+         width="125.8525"
+         x="30.94"
+         y="2060.8669"
+         id="rect113" />
+      <ellipse
+         cx="48.1557"
+         cy="2080.9997"
+         fill="#ADD1B2"
+         rx="11"
+         ry="11"
+         style="stroke:#181818;stroke-width:1;"
+         id="ellipse113" />
+      <path
+         d="M51.1245,2086.6403 Q50.5463,2086.9372 49.9057,2087.0778 Q49.2651,2087.2341 48.562,2087.2341 Q46.062,2087.2341 44.7338,2085.5934 Q43.4213,2083.9372 43.4213,2080.8122 Q43.4213,2077.6872 44.7338,2076.0309 Q46.062,2074.3747 48.562,2074.3747 Q49.2651,2074.3747 49.9057,2074.5309 Q50.562,2074.6872 51.1245,2074.9841 L51.1245,2077.7028 Q50.4995,2077.1247 49.9057,2076.8591 Q49.312,2076.5778 48.687,2076.5778 Q47.3432,2076.5778 46.6557,2077.6559 Q45.9682,2078.7184 45.9682,2080.8122 Q45.9682,2082.9059 46.6557,2083.9841 Q47.3432,2085.0466 48.687,2085.0466 Q49.312,2085.0466 49.9057,2084.7809 Q50.4995,2084.4997 51.1245,2083.9216 L51.1245,2086.6403 Z "
+         fill="#000000"
+         id="path113" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="12"
+         font-style="italic"
+         lengthAdjust="spacing"
+         textLength="43.4238"
+         x="85.4005"
+         y="2077.0055"
+         id="text113">«View»</text>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="88.9287"
+         x="62.6481"
+         y="2092.8307"
+         id="text114">MainWindow</text>
+      <line
+         style="stroke:#6A1B9A;stroke-width:0.5;"
+         x1="31.94"
+         x2="155.7925"
+         y1="2101.1325"
+         y2="2101.1325"
+         id="line114" />
+      <line
+         style="stroke:#6A1B9A;stroke-width:0.5;"
+         x1="31.94"
+         x2="155.7925"
+         y1="2109.1325"
+         y2="2109.1325"
+         id="line115" />
+      <g
+         data-visibility-modifier="PUBLIC_METHOD"
+         id="g115">
+        <ellipse
+           cx="41.94"
+           cy="2122.7809"
+           fill="#84BE84"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse115" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="99.8525"
+         x="50.94"
+         y="2126.1276"
+         id="text115">MainWindow()</text>
+      <g
+         data-visibility-modifier="PUBLIC_METHOD"
+         id="g116">
+        <ellipse
+           cx="41.94"
+           cy="2139.0778"
+           fill="#84BE84"
+           rx="3"
+           ry="3"
+           style="stroke:#038048;stroke-width:1;"
+           id="ellipse116" />
+      </g>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="91.1914"
+         x="50.94"
+         y="2142.4245"
+         id="text116">OnClosed(...)</text>
+    </g>
+    <!--class DashboardView-->
+    <g
+       class="entity"
+       data-qualified-name="Views.DashboardView"
+       data-source-line="148"
+       id="ent0027">
+      <rect
+         fill="#F3E5F5"
+         height="56.2656"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#6A1B9A;stroke-width:0.5;"
+         width="141.7305"
+         x="23"
+         y="2724.1669"
+         id="rect116" />
+      <ellipse
+         cx="38"
+         cy="2744.2997"
+         fill="#ADD1B2"
+         rx="11"
+         ry="11"
+         style="stroke:#181818;stroke-width:1;"
+         id="ellipse117" />
+      <path
+         d="M40.9688,2749.9403 Q40.3906,2750.2372 39.75,2750.3778 Q39.1094,2750.5341 38.4063,2750.5341 Q35.9063,2750.5341 34.5781,2748.8934 Q33.2656,2747.2372 33.2656,2744.1122 Q33.2656,2740.9872 34.5781,2739.3309 Q35.9063,2737.6747 38.4063,2737.6747 Q39.1094,2737.6747 39.75,2737.8309 Q40.4063,2737.9872 40.9688,2738.2841 L40.9688,2741.0028 Q40.3438,2740.4247 39.75,2740.1591 Q39.1563,2739.8778 38.5313,2739.8778 Q37.1875,2739.8778 36.5,2740.9559 Q35.8125,2742.0184 35.8125,2744.1122 Q35.8125,2746.2059 36.5,2747.2841 Q37.1875,2748.3466 38.5313,2748.3466 Q39.1563,2748.3466 39.75,2748.0809 Q40.3438,2747.7997 40.9688,2747.2216 L40.9688,2749.9403 Z "
+         fill="#000000"
+         id="path117" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="12"
+         font-style="italic"
+         lengthAdjust="spacing"
+         textLength="43.4238"
+         x="85.1533"
+         y="2740.3055"
+         id="text117">«View»</text>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="109.7305"
+         x="52"
+         y="2756.1307"
+         id="text118">DashboardView</text>
+      <line
+         style="stroke:#6A1B9A;stroke-width:0.5;"
+         x1="24"
+         x2="163.7305"
+         y1="2764.4325"
+         y2="2764.4325"
+         id="line118" />
+      <line
+         style="stroke:#6A1B9A;stroke-width:0.5;"
+         x1="24"
+         x2="163.7305"
+         y1="2772.4325"
+         y2="2772.4325"
+         id="line119" />
+    </g>
+    <!--class JobsView-->
+    <g
+       class="entity"
+       data-qualified-name="Views.JobsView"
+       data-source-line="149"
+       id="ent0028">
+      <rect
+         fill="#F3E5F5"
+         height="56.2656"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#6A1B9A;stroke-width:0.5;"
+         width="94.4053"
+         x="46.66"
+         y="2472.1669"
+         id="rect119" />
+      <ellipse
+         cx="61.66"
+         cy="2492.2997"
+         fill="#ADD1B2"
+         rx="11"
+         ry="11"
+         style="stroke:#181818;stroke-width:1;"
+         id="ellipse119" />
+      <path
+         d="M64.6288,2497.9403 Q64.0506,2498.2372 63.41,2498.3778 Q62.7694,2498.5341 62.0663,2498.5341 Q59.5663,2498.5341 58.2381,2496.8934 Q56.9256,2495.2372 56.9256,2492.1122 Q56.9256,2488.9872 58.2381,2487.3309 Q59.5663,2485.6747 62.0663,2485.6747 Q62.7694,2485.6747 63.41,2485.8309 Q64.0663,2485.9872 64.6288,2486.2841 L64.6288,2489.0028 Q64.0038,2488.4247 63.41,2488.1591 Q62.8163,2487.8778 62.1913,2487.8778 Q60.8475,2487.8778 60.16,2488.9559 Q59.4725,2490.0184 59.4725,2492.1122 Q59.4725,2494.2059 60.16,2495.2841 Q60.8475,2496.3466 62.1913,2496.3466 Q62.8163,2496.3466 63.41,2496.0809 Q64.0038,2495.7997 64.6288,2495.2216 L64.6288,2497.9403 Z "
+         fill="#000000"
+         id="path119" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="12"
+         font-style="italic"
+         lengthAdjust="spacing"
+         textLength="43.4238"
+         x="85.1507"
+         y="2488.3055"
+         id="text119">«View»</text>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="62.4053"
+         x="75.66"
+         y="2504.1307"
+         id="text120">JobsView</text>
+      <line
+         style="stroke:#6A1B9A;stroke-width:0.5;"
+         x1="47.66"
+         x2="140.0653"
+         y1="2512.4325"
+         y2="2512.4325"
+         id="line120" />
+      <line
+         style="stroke:#6A1B9A;stroke-width:0.5;"
+         x1="47.66"
+         x2="140.0653"
+         y1="2520.4325"
+         y2="2520.4325"
+         id="line121" />
+    </g>
+    <!--class JobEditorDialog-->
+    <g
+       class="entity"
+       data-qualified-name="Views.JobEditorDialog"
+       data-source-line="150"
+       id="ent0029">
+      <rect
+         fill="#F3E5F5"
+         height="56.2656"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#6A1B9A;stroke-width:0.5;"
+         width="139.6045"
+         x="313.17"
+         y="2106.1669"
+         id="rect121" />
+      <ellipse
+         cx="328.17"
+         cy="2126.2997"
+         fill="#ADD1B2"
+         rx="11"
+         ry="11"
+         style="stroke:#181818;stroke-width:1;"
+         id="ellipse121" />
+      <path
+         d="M331.1388,2131.9403 Q330.5606,2132.2372 329.92,2132.3778 Q329.2794,2132.5341 328.5763,2132.5341 Q326.0763,2132.5341 324.7481,2130.8934 Q323.4356,2129.2372 323.4356,2126.1122 Q323.4356,2122.9872 324.7481,2121.3309 Q326.0763,2119.6747 328.5763,2119.6747 Q329.2794,2119.6747 329.92,2119.8309 Q330.5763,2119.9872 331.1388,2120.2841 L331.1388,2123.0028 Q330.5138,2122.4247 329.92,2122.1591 Q329.3263,2121.8778 328.7013,2121.8778 Q327.3575,2121.8778 326.67,2122.9559 Q325.9825,2124.0184 325.9825,2126.1122 Q325.9825,2128.2059 326.67,2129.2841 Q327.3575,2130.3466 328.7013,2130.3466 Q329.3263,2130.3466 329.92,2130.0809 Q330.5138,2129.7997 331.1388,2129.2216 L331.1388,2131.9403 Z "
+         fill="#000000"
+         id="path121" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="12"
+         font-style="italic"
+         lengthAdjust="spacing"
+         textLength="43.4238"
+         x="374.2603"
+         y="2122.3055"
+         id="text121">«View»</text>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="107.6045"
+         x="342.17"
+         y="2138.1307"
+         id="text122">JobEditorDialog</text>
+      <line
+         style="stroke:#6A1B9A;stroke-width:0.5;"
+         x1="314.17"
+         x2="451.7745"
+         y1="2146.4325"
+         y2="2146.4325"
+         id="line122" />
+      <line
+         style="stroke:#6A1B9A;stroke-width:0.5;"
+         x1="314.17"
+         x2="451.7745"
+         y1="2154.4325"
+         y2="2154.4325"
+         id="line123" />
+    </g>
+    <!--class ExecutionView-->
+    <g
+       class="entity"
+       data-qualified-name="Views.ExecutionView"
+       data-source-line="151"
+       id="ent0030">
+      <rect
+         fill="#F3E5F5"
+         height="56.2656"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#6A1B9A;stroke-width:0.5;"
+         width="134.6621"
+         x="26.53"
+         y="2598.1669"
+         id="rect123" />
+      <ellipse
+         cx="41.53"
+         cy="2618.2997"
+         fill="#ADD1B2"
+         rx="11"
+         ry="11"
+         style="stroke:#181818;stroke-width:1;"
+         id="ellipse123" />
+      <path
+         d="M44.4988,2623.9403 Q43.9206,2624.2372 43.28,2624.3778 Q42.6394,2624.5341 41.9363,2624.5341 Q39.4363,2624.5341 38.1081,2622.8934 Q36.7956,2621.2372 36.7956,2618.1122 Q36.7956,2614.9872 38.1081,2613.3309 Q39.4363,2611.6747 41.9363,2611.6747 Q42.6394,2611.6747 43.28,2611.8309 Q43.9363,2611.9872 44.4988,2612.2841 L44.4988,2615.0028 Q43.8738,2614.4247 43.28,2614.1591 Q42.6863,2613.8778 42.0613,2613.8778 Q40.7175,2613.8778 40.03,2614.9559 Q39.3425,2616.0184 39.3425,2618.1122 Q39.3425,2620.2059 40.03,2621.2841 Q40.7175,2622.3466 42.0613,2622.3466 Q42.6863,2622.3466 43.28,2622.0809 Q43.8738,2621.7997 44.4988,2621.2216 L44.4988,2623.9403 Z "
+         fill="#000000"
+         id="path123" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="12"
+         font-style="italic"
+         lengthAdjust="spacing"
+         textLength="43.4238"
+         x="85.1491"
+         y="2614.3055"
+         id="text123">«View»</text>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="102.6621"
+         x="55.53"
+         y="2630.1307"
+         id="text124">ExecutionView</text>
+      <line
+         style="stroke:#6A1B9A;stroke-width:0.5;"
+         x1="27.53"
+         x2="160.1921"
+         y1="2638.4325"
+         y2="2638.4325"
+         id="line124" />
+      <line
+         style="stroke:#6A1B9A;stroke-width:0.5;"
+         x1="27.53"
+         x2="160.1921"
+         y1="2646.4325"
+         y2="2646.4325"
+         id="line125" />
+    </g>
+    <!--class LogsView-->
+    <g
+       class="entity"
+       data-qualified-name="Views.LogsView"
+       data-source-line="152"
+       id="ent0031">
+      <rect
+         fill="#F3E5F5"
+         height="56.2656"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#6A1B9A;stroke-width:0.5;"
+         width="98.0762"
+         x="44.83"
+         y="2850.1669"
+         id="rect125" />
+      <ellipse
+         cx="59.83"
+         cy="2870.2997"
+         fill="#ADD1B2"
+         rx="11"
+         ry="11"
+         style="stroke:#181818;stroke-width:1;"
+         id="ellipse125" />
+      <path
+         d="M62.7988,2875.9403 Q62.2206,2876.2372 61.58,2876.3778 Q60.9394,2876.5341 60.2363,2876.5341 Q57.7363,2876.5341 56.4081,2874.8934 Q55.0956,2873.2372 55.0956,2870.1122 Q55.0956,2866.9872 56.4081,2865.3309 Q57.7363,2863.6747 60.2363,2863.6747 Q60.9394,2863.6747 61.58,2863.8309 Q62.2363,2863.9872 62.7988,2864.2841 L62.7988,2867.0028 Q62.1738,2866.4247 61.58,2866.1591 Q60.9863,2865.8778 60.3613,2865.8778 Q59.0175,2865.8778 58.33,2866.9559 Q57.6425,2868.0184 57.6425,2870.1122 Q57.6425,2872.2059 58.33,2873.2841 Q59.0175,2874.3466 60.3613,2874.3466 Q60.9863,2874.3466 61.58,2874.0809 Q62.1738,2873.7997 62.7988,2873.2216 L62.7988,2875.9403 Z "
+         fill="#000000"
+         id="path125" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="12"
+         font-style="italic"
+         lengthAdjust="spacing"
+         textLength="43.4238"
+         x="85.1562"
+         y="2866.3055"
+         id="text125">«View»</text>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="66.0762"
+         x="73.83"
+         y="2882.1307"
+         id="text126">LogsView</text>
+      <line
+         style="stroke:#6A1B9A;stroke-width:0.5;"
+         x1="45.83"
+         x2="141.9062"
+         y1="2890.4325"
+         y2="2890.4325"
+         id="line126" />
+      <line
+         style="stroke:#6A1B9A;stroke-width:0.5;"
+         x1="45.83"
+         x2="141.9062"
+         y1="2898.4325"
+         y2="2898.4325"
+         id="line127" />
+    </g>
+    <!--class SettingsView-->
+    <g
+       class="entity"
+       data-qualified-name="Views.SettingsView"
+       data-source-line="153"
+       id="ent0032">
+      <rect
+         fill="#F3E5F5"
+         height="56.2656"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#6A1B9A;stroke-width:0.5;"
+         width="122.9521"
+         x="32.39"
+         y="2220.1669"
+         id="rect127" />
+      <ellipse
+         cx="47.39"
+         cy="2240.2997"
+         fill="#ADD1B2"
+         rx="11"
+         ry="11"
+         style="stroke:#181818;stroke-width:1;"
+         id="ellipse127" />
+      <path
+         d="M50.3588,2245.9403 Q49.7806,2246.2372 49.14,2246.3778 Q48.4994,2246.5341 47.7963,2246.5341 Q45.2963,2246.5341 43.9681,2244.8934 Q42.6556,2243.2372 42.6556,2240.1122 Q42.6556,2236.9872 43.9681,2235.3309 Q45.2963,2233.6747 47.7963,2233.6747 Q48.4994,2233.6747 49.14,2233.8309 Q49.7963,2233.9872 50.3588,2234.2841 L50.3588,2237.0028 Q49.7338,2236.4247 49.14,2236.1591 Q48.5463,2235.8778 47.9213,2235.8778 Q46.5775,2235.8778 45.89,2236.9559 Q45.2025,2238.0184 45.2025,2240.1122 Q45.2025,2242.2059 45.89,2243.2841 Q46.5775,2244.3466 47.9213,2244.3466 Q48.5463,2244.3466 49.14,2244.0809 Q49.7338,2243.7997 50.3588,2243.2216 L50.3588,2245.9403 Z "
+         fill="#000000"
+         id="path127" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="12"
+         font-style="italic"
+         lengthAdjust="spacing"
+         textLength="43.4238"
+         x="85.1542"
+         y="2236.3055"
+         id="text127">«View»</text>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="90.9521"
+         x="61.39"
+         y="2252.1307"
+         id="text128">SettingsView</text>
+      <line
+         style="stroke:#6A1B9A;stroke-width:0.5;"
+         x1="33.39"
+         x2="154.3421"
+         y1="2260.4325"
+         y2="2260.4325"
+         id="line128" />
+      <line
+         style="stroke:#6A1B9A;stroke-width:0.5;"
+         x1="33.39"
+         x2="154.3421"
+         y1="2268.4325"
+         y2="2268.4325"
+         id="line129" />
+    </g>
+    <!--class AboutView-->
+    <g
+       class="entity"
+       data-qualified-name="Views.AboutView"
+       data-source-line="154"
+       id="ent0033">
+      <rect
+         fill="#F3E5F5"
+         height="56.2656"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#6A1B9A;stroke-width:0.5;"
+         width="106.9219"
+         x="40.4"
+         y="2346.1669"
+         id="rect129" />
+      <ellipse
+         cx="55.4"
+         cy="2366.2997"
+         fill="#ADD1B2"
+         rx="11"
+         ry="11"
+         style="stroke:#181818;stroke-width:1;"
+         id="ellipse129" />
+      <path
+         d="M58.3688,2371.9403 Q57.7906,2372.2372 57.15,2372.3778 Q56.5094,2372.5341 55.8063,2372.5341 Q53.3063,2372.5341 51.9781,2370.8934 Q50.6656,2369.2372 50.6656,2366.1122 Q50.6656,2362.9872 51.9781,2361.3309 Q53.3063,2359.6747 55.8063,2359.6747 Q56.5094,2359.6747 57.15,2359.8309 Q57.8063,2359.9872 58.3688,2360.2841 L58.3688,2363.0028 Q57.7438,2362.4247 57.15,2362.1591 Q56.5563,2361.8778 55.9313,2361.8778 Q54.5875,2361.8778 53.9,2362.9559 Q53.2125,2364.0184 53.2125,2366.1122 Q53.2125,2368.2059 53.9,2369.2841 Q54.5875,2370.3466 55.9313,2370.3466 Q56.5563,2370.3466 57.15,2370.0809 Q57.7438,2369.7997 58.3688,2369.2216 L58.3688,2371.9403 Z "
+         fill="#000000"
+         id="path129" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="12"
+         font-style="italic"
+         lengthAdjust="spacing"
+         textLength="43.4238"
+         x="85.149"
+         y="2362.3055"
+         id="text129">«View»</text>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="74.9219"
+         x="69.4"
+         y="2378.1307"
+         id="text130">AboutView</text>
+      <line
+         style="stroke:#6A1B9A;stroke-width:0.5;"
+         x1="41.4"
+         x2="146.3219"
+         y1="2386.4325"
+         y2="2386.4325"
+         id="line130" />
+      <line
+         style="stroke:#6A1B9A;stroke-width:0.5;"
+         x1="41.4"
+         x2="146.3219"
+         y1="2394.4325"
+         y2="2394.4325"
+         id="line131" />
+    </g>
+    <!--link MainWindowViewModel to ViewModelBase-->
+    <g
+       class="link"
+       data-entity-1="ent0004"
+       data-entity-2="ent0003"
+       data-link-type="extension"
+       data-source-line="158"
+       id="lnk34"
+       transform="matrix(1.0175701,0,0,0.99996526,-9.5602645,0.04391497)">
+      <path
+         codeLine="158"
+         d="m 471.85,1112.7869 c 0,109.54 0,296.49 0,296.49 0,0 585.44,0 795.82,0"
+         fill="none"
+         id="MainWindowViewModel-to-ViewModelBase"
+         style="stroke:#181818;stroke-width:1" />
+      <polygon
+         fill="none"
+         points="1285.67,1409.2769 1267.67,1403.2769 1267.67,1415.2769 "
+         style="stroke:#181818;stroke-width:1"
+         id="polygon131" />
+    </g>
+    <!--link DashboardViewModel to ViewModelBase-->
+    <g
+       class="link"
+       data-entity-1="ent0005"
+       data-entity-2="ent0003"
+       data-link-type="extension"
+       data-source-line="159"
+       id="lnk35"
+       transform="matrix(1.0699392,0,0,0.99955146,-75.999925,0.60712499)">
+      <path
+         codeLine="159"
+         d="m 1086.85,1307.2269 c 0,44.17 0,85.98 0,85.98 0,0 100.77,0 180.8,0"
+         fill="none"
+         id="DashboardViewModel-to-ViewModelBase"
+         style="stroke:#181818;stroke-width:1" />
+      <polygon
+         fill="none"
+         points="1267.65,1387.2069 1267.65,1399.2069 1285.65,1393.2069 "
+         style="stroke:#181818;stroke-width:1"
+         id="polygon132" />
+    </g>
+    <!--link JobsViewModel to ViewModelBase-->
+    <g
+       class="link"
+       data-entity-1="ent0006"
+       data-entity-2="ent0003"
+       data-link-type="extension"
+       data-source-line="160"
+       id="lnk36"
+       transform="matrix(1.0271112,0,0,0.99992129,-21.842249,0.11977464)">
+      <path
+         codeLine="160"
+         d="m 805.85,1624.8069 c 0,-83.93 0,-199.45 0,-199.45 0,0 312.94,0 461.93,0"
+         fill="none"
+         id="JobsViewModel-to-ViewModelBase"
+         style="stroke:#181818;stroke-width:1" />
+      <polygon
+         fill="none"
+         points="1267.78,1419.3569 1267.78,1431.3569 1285.78,1425.3569 "
+         style="stroke:#181818;stroke-width:1"
+         id="polygon133" />
+    </g>
+    <!--link JobEditorViewModel to ViewModelBase-->
+    <g
+       class="link"
+       data-entity-1="ent0007"
+       data-entity-2="ent0003"
+       data-link-type="extension"
+       data-source-line="161"
+       id="lnk37"
+       transform="matrix(1.0494259,0,0,0.99982197,-50.891613,0.26871644)">
+      <path
+         codeLine="161"
+         d="m 1029.85,1592.0569 c 0,-75.26 0,-158.67 0,-158.67 0,0 141.94,0 238.15,0"
+         fill="none"
+         id="JobEditorViewModel-to-ViewModelBase"
+         style="stroke:#181818;stroke-width:1" />
+      <polygon
+         fill="none"
+         points="1268,1427.3869 1268,1439.3869 1286,1433.3869 "
+         style="stroke:#181818;stroke-width:1"
+         id="polygon134" />
+    </g>
+    <!--link ExecutionViewModel to ViewModelBase-->
+    <g
+       class="link"
+       data-entity-1="ent0008"
+       data-entity-2="ent0003"
+       data-link-type="extension"
+       data-source-line="162"
+       id="lnk38">
+      <path
+         codeLine="162"
+         d="M1146.8,881.0569 C1235.2,881.0569 1357.85,881.0569 1357.85,881.0569 C1357.85,881.0569 1357.85,1256.1269 1357.85,1366.6769"
+         fill="none"
+         id="ExecutionViewModel-to-ViewModelBase"
+         style="stroke:#181818;stroke-width:1;" />
+      <polygon
+         fill="none"
+         points="1357.85,1384.6769,1363.85,1366.6769,1351.85,1366.6769,1357.85,1384.6769"
+         style="stroke:#181818;stroke-width:1;"
+         id="polygon135" />
+    </g>
+    <!--link LogsViewModel to ViewModelBase-->
+    <g
+       class="link"
+       data-entity-1="ent0009"
+       data-entity-2="ent0003"
+       data-link-type="extension"
+       data-source-line="163"
+       id="lnk39">
+      <path
+         codeLine="163"
+         d="M1128.36,1957.1069 C1216.97,1957.1069 1357.85,1957.1069 1357.85,1957.1069 C1357.85,1957.1069 1357.85,1571.6569 1357.85,1459.7669"
+         fill="none"
+         id="LogsViewModel-to-ViewModelBase"
+         style="stroke:#181818;stroke-width:1;" />
+      <polygon
+         fill="none"
+         points="1357.85,1441.7669,1351.85,1459.7669,1363.85,1459.7669,1357.85,1441.7669"
+         style="stroke:#181818;stroke-width:1;"
+         id="polygon136" />
+    </g>
+    <!--link SettingsViewModel to ViewModelBase-->
+    <g
+       class="link"
+       data-entity-1="ent0010"
+       data-entity-2="ent0003"
+       data-link-type="extension"
+       data-source-line="164"
+       id="lnk40"
+       transform="matrix(1.0285269,0,0,0.99993885,-23.667499,0.07757168)">
+      <path
+         codeLine="164"
+         d="m 829.85,1129.0569 c 0,108.43 0,272.18 0,272.18 0,0 294.16,0 438.04,0"
+         fill="none"
+         id="SettingsViewModel-to-ViewModelBase"
+         style="stroke:#181818;stroke-width:1" />
+      <polygon
+         fill="none"
+         points="1267.89,1407.2369 1285.89,1401.2369 1267.89,1395.2369 "
+         style="stroke:#181818;stroke-width:1"
+         id="polygon137" />
+    </g>
+    <!--link AboutViewModel to ViewModelBase-->
+    <g
+       class="link"
+       data-entity-1="ent0011"
+       data-entity-2="ent0003"
+       data-link-type="extension"
+       data-source-line="165"
+       id="lnk41"
+       transform="matrix(1.0225961,0,0,0.99975103,-16.351797,0.35803206)">
+      <path
+         codeLine="165"
+         d="m 723.85,1465.4369 c 0,-23.77 0,-48.12 0,-48.12 0,0 378.64,0 544.04,0"
+         fill="none"
+         id="AboutViewModel-to-ViewModelBase"
+         style="stroke:#181818;stroke-width:1" />
+      <polygon
+         fill="none"
+         points="1267.89,1411.3169 1267.89,1423.3169 1285.89,1417.3169 "
+         style="stroke:#181818;stroke-width:1"
+         id="polygon138" />
+    </g>
+    <!--link MainWindow to MainWindowViewModel-->
+    <g
+       class="link"
+       data-entity-1="ent0026"
+       data-entity-2="ent0004"
+       data-link-type="dependency"
+       data-source-line="168"
+       id="lnk42">
+      <path
+         codeLine="168"
+         d="M157.07,2083.5169 C217.62,2083.5169 299.85,2083.5169 299.85,2083.5169 C299.85,2083.5169 299.85,1361.2969 299.85,1118.7969"
+         fill="none"
+         id="MainWindow-to-MainWindowViewModel"
+         style="stroke:#181818;stroke-width:1;" />
+      <polygon
+         fill="#181818"
+         points="299.85,1112.7969,295.85,1121.7969,299.85,1117.7969,303.85,1121.7969,299.85,1112.7969"
+         style="stroke:#181818;stroke-width:1;"
+         id="polygon139" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="13"
+         lengthAdjust="spacing"
+         textLength="82.1958"
+         x="216.85"
+         y="1682.6138"
+         id="text139">DataContext</text>
+    </g>
+    <!--reverse link MainWindowViewModel to DashboardViewModel-->
+    <g
+       class="link"
+       data-entity-1="ent0004"
+       data-entity-2="ent0005"
+       data-link-type="composition"
+       data-source-line="169"
+       id="lnk43">
+      <path
+         codeLine="169"
+         d="M476.85,1124.5469 C476.85,1162.4169 476.85,1187.9969 476.85,1187.9969 C476.85,1187.9969 802.09,1187.9969 965.98,1187.9969"
+         fill="none"
+         id="MainWindowViewModel-backto-DashboardViewModel"
+         style="stroke:#181818;stroke-width:1;" />
+      <polygon
+         fill="#181818"
+         points="476.85,1112.5469,472.85,1118.5469,476.85,1124.5469,480.85,1118.5469,476.85,1112.5469"
+         style="stroke:#181818;stroke-width:1;"
+         id="polygon140" />
+    </g>
+    <!--reverse link MainWindowViewModel to JobsViewModel-->
+    <g
+       class="link"
+       data-entity-1="ent0004"
+       data-entity-2="ent0006"
+       data-link-type="composition"
+       data-source-line="170"
+       id="lnk44"
+       transform="matrix(1.0495168,0,0,0.9999625,-31.397129,0.0529271)">
+      <path
+         codeLine="170"
+         d="m 462.85,1124.7269 c 0,177.3 0,585.57 0,585.57 0,0 95.94,0 171.45,0"
+         fill="none"
+         id="MainWindowViewModel-backto-JobsViewModel"
+         style="stroke:#181818;stroke-width:1" />
+      <polygon
+         fill="#181818"
+         points="462.85,1124.7269 466.85,1118.7269 462.85,1112.7269 458.85,1118.7269 "
+         style="stroke:#181818;stroke-width:1"
+         id="polygon141" />
+    </g>
+    <!--reverse link MainWindowViewModel to ExecutionViewModel-->
+    <g
+       class="link"
+       data-entity-1="ent0004"
+       data-entity-2="ent0008"
+       data-link-type="composition"
+       data-source-line="171"
+       id="lnk45">
+      <path
+         codeLine="171"
+         d="M453.85,945.8069 C453.85,911.7169 453.85,891.2769 453.85,891.2769 C453.85,891.2769 801.29,891.2769 969.24,891.2769"
+         fill="none"
+         id="MainWindowViewModel-backto-ExecutionViewModel"
+         style="stroke:#181818;stroke-width:1;" />
+      <polygon
+         fill="#181818"
+         points="453.85,957.8069,457.85,951.8069,453.85,945.8069,449.85,951.8069,453.85,957.8069"
+         style="stroke:#181818;stroke-width:1;"
+         id="polygon142" />
+    </g>
+    <!--reverse link MainWindowViewModel to LogsViewModel-->
+    <g
+       class="link"
+       data-entity-1="ent0004"
+       data-entity-2="ent0009"
+       data-link-type="composition"
+       data-source-line="172"
+       id="lnk46"
+       transform="matrix(1.0259628,0,0,0.99998575,-25.638816,0.0217637)">
+      <path
+         codeLine="172"
+         d="m 457.85,1124.6269 c 0,219.34 0,817.67 0,817.67 0,0 371.4,0 529.9,0"
+         fill="none"
+         id="MainWindowViewModel-backto-LogsViewModel"
+         style="stroke:#181818;stroke-width:1" />
+      <polygon
+         fill="#181818"
+         points="457.85,1124.6269 461.85,1118.6269 457.85,1112.6269 453.85,1118.6269 "
+         style="stroke:#181818;stroke-width:1"
+         id="polygon143" />
+    </g>
+    <!--reverse link MainWindowViewModel to SettingsViewModel-->
+    <g
+       class="link"
+       data-entity-1="ent0004"
+       data-entity-2="ent0010"
+       data-link-type="composition"
+       data-source-line="173"
+       id="lnk47">
+      <path
+         codeLine="173"
+         d="M493.53,1035.2969 C530.78,1035.2969 561.63,1035.2969 600.83,1035.2969"
+         fill="none"
+         id="MainWindowViewModel-backto-SettingsViewModel"
+         style="stroke:#181818;stroke-width:1;" />
+      <polygon
+         fill="#181818"
+         points="481.53,1035.2969,487.53,1039.2969,493.53,1035.2969,487.53,1031.2969,481.53,1035.2969"
+         style="stroke:#181818;stroke-width:1;"
+         id="polygon144" />
+    </g>
+    <!--reverse link MainWindowViewModel to AboutViewModel-->
+    <g
+       class="link"
+       data-entity-1="ent0004"
+       data-entity-2="ent0011"
+       data-link-type="composition"
+       data-source-line="174"
+       id="lnk48"
+       transform="matrix(1.021864,0,0,0.999974,-13.641713,0.15326452)">
+      <path
+         codeLine="174"
+         d="m 467.85,1124.5769 c 0,131.08 0,370.91 0,370.91 0,0 105.65,0 181.17,0"
+         fill="none"
+         id="MainWindowViewModel-backto-AboutViewModel"
+         style="stroke:#181818;stroke-width:1" />
+      <polygon
+         fill="#181818"
+         points="463.85,1118.5769 467.85,1124.5769 471.85,1118.5769 467.85,1112.5769 "
+         style="stroke:#181818;stroke-width:1"
+         id="polygon145" />
+    </g>
+    <!--link DashboardView to DashboardViewModel-->
+    <g
+       class="link"
+       data-entity-1="ent0027"
+       data-entity-2="ent0005"
+       data-link-type="dependency"
+       data-source-line="177"
+       id="lnk49">
+      <path
+         codeLine="177"
+         d="M165.1,2752.2969 C186.71,2752.2969 204.85,2752.2969 204.85,2752.2969 C204.85,2752.2969 204.85,1247.3869 204.85,1247.3869 C204.85,1247.3869 739.33,1247.3869 959.95,1247.3869"
+         fill="none"
+         id="DashboardView-to-DashboardViewModel"
+         style="stroke:#181818;stroke-width:1;" />
+      <polygon
+         fill="#181818"
+         points="965.95,1247.3869,956.95,1243.3869,960.95,1247.3869,956.95,1251.3869,965.95,1247.3869"
+         style="stroke:#181818;stroke-width:1;"
+         id="polygon146" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="13"
+         lengthAdjust="spacing"
+         textLength="35.1279"
+         x="168.85"
+         y="1652.2338"
+         id="text146">binds</text>
+    </g>
+    <!--link JobsView to JobsViewModel-->
+    <g
+       class="link"
+       data-entity-1="ent0028"
+       data-entity-2="ent0006"
+       data-link-type="dependency"
+       data-source-line="178"
+       id="lnk50">
+      <path
+         codeLine="178"
+         d="M141.48,2496.6369 C288.24,2496.6369 723.85,2496.6369 723.85,2496.6369 C723.85,2496.6369 723.85,2005.7469 723.85,1801.9469"
+         fill="none"
+         id="JobsView-to-JobsViewModel"
+         style="stroke:#181818;stroke-width:1;" />
+      <polygon
+         fill="#181818"
+         points="723.85,1795.9469,719.85,1804.9469,723.85,1800.9469,727.85,1804.9469,723.85,1795.9469"
+         style="stroke:#181818;stroke-width:1;"
+         id="polygon147" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="13"
+         lengthAdjust="spacing"
+         textLength="35.1279"
+         x="687.85"
+         y="2450.5438"
+         id="text147">binds</text>
+    </g>
+    <!--link JobEditorDialog to JobEditorViewModel-->
+    <g
+       class="link"
+       data-entity-1="ent0029"
+       data-entity-2="ent0007"
+       data-link-type="dependency"
+       data-source-line="179"
+       id="lnk51">
+      <path
+         codeLine="179"
+         d="M453.02,2134.2969 C610.9,2134.2969 980.85,2134.2969 980.85,2134.2969 C980.85,2134.2969 980.85,1959.8669 980.85,1834.4069"
+         fill="none"
+         id="JobEditorDialog-to-JobEditorViewModel"
+         style="stroke:#181818;stroke-width:1;" />
+      <polygon
+         fill="#181818"
+         points="980.85,1828.4069,976.85,1837.4069,980.85,1833.4069,984.85,1837.4069,980.85,1828.4069"
+         style="stroke:#181818;stroke-width:1;"
+         id="polygon148" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="13px"
+         lengthAdjust="spacing"
+         textLength="35.127899"
+         x="833.89001"
+         y="2147.3638"
+         id="text148"
+         transform="translate(-26.739595,-16.553083)">binds</text>
+    </g>
+    <!--link ExecutionView to ExecutionViewModel-->
+    <g
+       class="link"
+       data-entity-1="ent0030"
+       data-entity-2="ent0008"
+       data-link-type="dependency"
+       data-source-line="180"
+       id="lnk52">
+      <path
+         codeLine="180"
+         d="M161.68,2626.2969 C360.3,2626.2969 926.85,2626.2969 926.85,2626.2969 C926.85,2626.2969 926.85,951.9969 926.85,951.9969 C926.85,951.9969 939.89,951.9969 963.46,951.9969"
+         fill="none"
+         id="ExecutionView-to-ExecutionViewModel"
+         style="stroke:#181818;stroke-width:1;" />
+      <polygon
+         fill="#181818"
+         points="969.46,951.9969,960.46,947.9969,964.46,951.9969,960.46,955.9969,969.46,951.9969"
+         style="stroke:#181818;stroke-width:1;"
+         id="polygon149" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="13"
+         lengthAdjust="spacing"
+         textLength="35.1279"
+         x="890.85"
+         y="2163.5038"
+         id="text149">binds</text>
+    </g>
+    <!--link LogsView to LogsViewModel-->
+    <g
+       class="link"
+       data-entity-1="ent0031"
+       data-entity-2="ent0009"
+       data-link-type="dependency"
+       data-source-line="181"
+       id="lnk53">
+      <path
+         codeLine="181"
+         d="M143.13,2878.2969 C336.75,2878.2969 1034.85,2878.2969 1034.85,2878.2969 C1034.85,2878.2969 1034.85,2179.6169 1034.85,1993.1269"
+         fill="none"
+         id="LogsView-to-LogsViewModel"
+         style="stroke:#181818;stroke-width:1;" />
+      <polygon
+         fill="#181818"
+         points="1034.85,1987.1269,1030.85,1996.1269,1034.85,1992.1269,1038.85,1996.1269,1034.85,1987.1269"
+         style="stroke:#181818;stroke-width:1;"
+         id="polygon150" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="13"
+         lengthAdjust="spacing"
+         textLength="35.1279"
+         x="998.58"
+         y="2891.3638"
+         id="text150">binds</text>
+    </g>
+    <!--link SettingsView to SettingsViewModel-->
+    <g
+       class="link"
+       data-entity-1="ent0032"
+       data-entity-2="ent0010"
+       data-link-type="dependency"
+       data-source-line="182"
+       id="lnk54">
+      <path
+         codeLine="182"
+         d="M155.63,2241.9669 C294.41,2241.9669 618.85,2241.9669 618.85,2241.9669 C618.85,2241.9669 618.85,1418.4869 618.85,1134.9769"
+         fill="none"
+         id="SettingsView-to-SettingsViewModel"
+         style="stroke:#181818;stroke-width:1;" />
+      <polygon
+         fill="#181818"
+         points="618.85,1128.9769,614.85,1137.9769,618.85,1133.9769,622.85,1137.9769,618.85,1128.9769"
+         style="stroke:#181818;stroke-width:1;"
+         id="polygon151" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="13"
+         lengthAdjust="spacing"
+         textLength="35.1279"
+         x="582.85"
+         y="1930.1538"
+         id="text151">binds</text>
+    </g>
+    <!--link AboutView to AboutViewModel-->
+    <g
+       class="link"
+       data-entity-1="ent0033"
+       data-entity-2="ent0011"
+       data-link-type="dependency"
+       data-source-line="183"
+       id="lnk55">
+      <path
+         codeLine="183"
+         d="M147.52,2374.2969 C190.92,2374.2969 244.85,2374.2969 244.85,2374.2969 C244.85,2374.2969 244.85,1525.1069 244.85,1525.1069 C244.85,1525.1069 508.21,1525.1069 642.89,1525.1069"
+         fill="none"
+         id="AboutView-to-AboutViewModel"
+         style="stroke:#181818;stroke-width:1;" />
+      <polygon
+         fill="#181818"
+         points="648.89,1525.1069,639.89,1521.1069,643.89,1525.1069,639.89,1529.1069,648.89,1525.1069"
+         style="stroke:#181818;stroke-width:1;"
+         id="polygon152" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="13"
+         lengthAdjust="spacing"
+         textLength="35.1279"
+         x="208.85"
+         y="1809.4138"
+         id="text152">binds</text>
+    </g>
+    <!--link JobsView to JobEditorDialog-->
+    <g
+       class="link"
+       data-entity-1="ent0028"
+       data-entity-2="ent0029"
+       data-link-type="dependency"
+       data-source-line="186"
+       id="lnk56">
+      <path
+         codeLine="186"
+         d="M141.43,2484.3969 C223.7,2484.3969 383.85,2484.3969 383.85,2484.3969 C383.85,2484.3969 383.85,2251.9969 383.85,2168.6469"
+         fill="none"
+         id="JobsView-to-JobEditorDialog"
+         style="stroke:#181818;stroke-width:1;stroke-dasharray:7,7;" />
+      <polygon
+         fill="#181818"
+         points="383.85,2162.6469,379.85,2171.6469,383.85,2167.6469,387.85,2171.6469,383.85,2162.6469"
+         style="stroke:#181818;stroke-width:1;"
+         id="polygon153" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="13"
+         lengthAdjust="spacing"
+         textLength="39.2158"
+         x="343.85"
+         y="2457.8038"
+         id="text153">opens</text>
+    </g>
+    <!--link JobsViewModel to JobEditorViewModel-->
+    <g
+       class="link"
+       data-entity-1="ent0006"
+       data-entity-2="ent0007"
+       data-link-type="dependency"
+       data-source-line="187"
+       id="lnk57">
+      <path
+         codeLine="187"
+         d="M813.31,1738.6869 C862.74,1738.6869 917.79,1738.6869 966.55,1738.6869"
+         fill="none"
+         id="JobsViewModel-to-JobEditorViewModel"
+         style="stroke:#181818;stroke-width:1;stroke-dasharray:7,7;" />
+      <polygon
+         fill="#181818"
+         points="972.55,1738.6869,963.55,1734.6869,967.55,1738.6869,963.55,1742.6869,972.55,1738.6869"
+         style="stroke:#181818;stroke-width:1;"
+         id="polygon154" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="13px"
+         lengthAdjust="spacing"
+         textLength="101.7974"
+         x="790.92999"
+         y="1751.7538"
+         id="text154"
+         transform="translate(29.0369,0.22509225)">create/edit flow</text>
+    </g>
+    <!--link DashboardViewModel to RecentActivityItem-->
+    <g
+       class="link"
+       data-entity-1="ent0005"
+       data-entity-2="ent0017"
+       data-link-type="dependency"
+       data-source-line="190"
+       id="lnk58">
+      <path
+         codeLine="190"
+         d="M1150.19,1266.1769 C1167.79,1266.1769 1180.85,1266.1769 1180.85,1266.1769 C1180.85,1266.1769 1180.85,2339.9369 1180.85,2339.9369 C1180.85,2339.9369 1222.21,2339.9369 1267.82,2339.9369"
+         fill="none"
+         id="DashboardViewModel-to-RecentActivityItem"
+         style="stroke:#181818;stroke-width:1;" />
+      <polygon
+         fill="#181818"
+         points="1273.82,2339.9369,1264.82,2335.9369,1268.82,2339.9369,1264.82,2343.9369,1273.82,2339.9369"
+         style="stroke:#181818;stroke-width:1;"
+         id="polygon155" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="13"
+         lengthAdjust="spacing"
+         textLength="53.4409"
+         x="1126.85"
+         y="1847.2738"
+         id="text155">exposes</text>
+    </g>
+    <!--link ExecutionViewModel to ExecutionJobItem-->
+    <g
+       class="link"
+       data-entity-1="ent0008"
+       data-entity-2="ent0013"
+       data-link-type="dependency"
+       data-source-line="191"
+       id="lnk59">
+      <path
+         codeLine="191"
+         d="M1146.77,921.5369 C1206.29,921.5369 1273.85,921.5369 1273.85,921.5369 C1273.85,921.5369 1273.85,1757.9369 1273.85,2054.4969"
+         fill="none"
+         id="ExecutionViewModel-to-ExecutionJobItem"
+         style="stroke:#181818;stroke-width:1;" />
+      <polygon
+         fill="#181818"
+         points="1273.85,2060.4969,1277.85,2051.4969,1273.85,2055.4969,1269.85,2051.4969,1273.85,2060.4969"
+         style="stroke:#181818;stroke-width:1;"
+         id="polygon156" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="13px"
+         lengthAdjust="spacing"
+         textLength="53.440899"
+         x="1219.85"
+         y="1440.5438"
+         id="text156"
+         transform="translate(-180,80)">exposes</text>
+    </g>
+    <!--link LogsViewModel to LogEntryItem-->
+    <g
+       class="link"
+       data-entity-1="ent0009"
+       data-entity-2="ent0014"
+       data-link-type="dependency"
+       data-source-line="192"
+       id="lnk60">
+      <path
+         codeLine="192"
+         d="M1081.85,1987.0469 C1081.85,2122.4569 1081.85,2518.6469 1081.85,2518.6469 C1081.85,2518.6469 1206.26,2518.6469 1287.52,2518.6469"
+         fill="none"
+         id="LogsViewModel-to-LogEntryItem"
+         style="stroke:#181818;stroke-width:1;" />
+      <polygon
+         fill="#181818"
+         points="1293.52,2518.6469,1284.52,2514.6469,1288.52,2518.6469,1284.52,2522.6469,1293.52,2518.6469"
+         style="stroke:#181818;stroke-width:1;"
+         id="polygon157" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="13px"
+         lengthAdjust="spacing"
+         textLength="53.440899"
+         x="1027.85"
+         y="2371.7439"
+         id="text157"
+         transform="translate(57.299133,0.63665703)">exposes</text>
+    </g>
+    <!--link LogEntryItem to LogSection-->
+    <g
+       class="link"
+       data-entity-1="ent0014"
+       data-entity-2="ent0015"
+       data-link-type="dependency"
+       data-source-line="193"
+       id="lnk61">
+      <path
+         codeLine="193"
+         d="M1420.65,2553.2969 C1464.37,2553.2969 1515.81,2553.2969 1557.56,2553.2969"
+         fill="none"
+         id="LogEntryItem-to-LogSection"
+         style="stroke:#181818;stroke-width:1;" />
+      <polygon
+         fill="#181818"
+         points="1563.56,2553.2969,1554.56,2549.2969,1558.56,2553.2969,1554.56,2557.2969,1563.56,2553.2969"
+         style="stroke:#181818;stroke-width:1;"
+         id="polygon158" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="13"
+         lengthAdjust="spacing"
+         textLength="55.0278"
+         x="1436.11"
+         y="2566.3638"
+         id="text158">contains</text>
+    </g>
+    <!--link LogSection to LogField-->
+    <g
+       class="link"
+       data-entity-1="ent0015"
+       data-entity-2="ent0016"
+       data-link-type="dependency"
+       data-source-line="194"
+       id="lnk62">
+      <path
+         codeLine="194"
+         d="M1673.57,2553.2969 C1710.33,2553.2969 1752.16,2553.2969 1786.85,2553.2969"
+         fill="none"
+         id="LogSection-to-LogField"
+         style="stroke:#181818;stroke-width:1;" />
+      <polygon
+         fill="#181818"
+         points="1792.85,2553.2969,1783.85,2549.2969,1787.85,2553.2969,1783.85,2557.2969,1792.85,2553.2969"
+         style="stroke:#181818;stroke-width:1;"
+         id="polygon159" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="13"
+         lengthAdjust="spacing"
+         textLength="55.0278"
+         x="1677.21"
+         y="2566.3638"
+         id="text159">contains</text>
+    </g>
+    <!--link MainWindowViewModel to JobService-->
+    <g
+       class="link"
+       data-entity-1="ent0004"
+       data-entity-2="ent0019"
+       data-link-type="dependency"
+       data-source-line="197"
+       id="lnk63">
+      <path
+         codeLine="197"
+         d="M397.85,957.9569 C397.85,802.8369 397.85,468.4169 397.85,468.4169 C397.85,468.4169 1096.98,468.4169 1298.05,468.4169"
+         fill="none"
+         id="MainWindowViewModel-to-JobService"
+         style="stroke:#181818;stroke-width:1;stroke-dasharray:7,7;" />
+      <polygon
+         fill="#181818"
+         points="1304.05,468.4169,1295.05,464.4169,1299.05,468.4169,1295.05,472.4169,1304.05,468.4169"
+         style="stroke:#181818;stroke-width:1;"
+         id="polygon160" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="13px"
+         lengthAdjust="spacing"
+         textLength="29.783199"
+         x="576.17999"
+         y="481.4838"
+         id="text160"
+         transform="translate(-12)">uses</text>
+    </g>
+    <!--link MainWindowViewModel to BackupService-->
+    <g
+       class="link"
+       data-entity-1="ent0004"
+       data-entity-2="ent0020"
+       data-link-type="dependency"
+       data-source-line="198"
+       id="lnk64">
+      <path
+         codeLine="198"
+         d="M425.85,957.9869 C425.85,832.2269 425.85,597.2269 425.85,597.2269 C425.85,597.2269 1068.24,597.2269 1282.89,597.2269"
+         fill="none"
+         id="MainWindowViewModel-to-BackupService"
+         style="stroke:#181818;stroke-width:1;stroke-dasharray:7,7;" />
+      <polygon
+         fill="#181818"
+         points="1288.89,597.2269,1279.89,593.2269,1283.89,597.2269,1279.89,601.2269,1288.89,597.2269"
+         style="stroke:#181818;stroke-width:1;"
+         id="polygon161" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="13px"
+         lengthAdjust="spacing"
+         textLength="29.783199"
+         x="646.98999"
+         y="610.29382"
+         id="text161"
+         transform="translate(-24)">uses</text>
+    </g>
+    <!--link MainWindowViewModel to SettingsService-->
+    <g
+       class="link"
+       data-entity-1="ent0004"
+       data-entity-2="ent0021"
+       data-link-type="dependency"
+       data-source-line="199"
+       id="lnk65">
+      <path
+         codeLine="199"
+         d="M369.85,958.0069 C369.85,778.7669 369.85,349.9169 369.85,349.9169 C369.85,349.9169 1053.65,349.9169 1279.99,349.9169"
+         fill="none"
+         id="MainWindowViewModel-to-SettingsService"
+         style="stroke:#181818;stroke-width:1;stroke-dasharray:7,7;" />
+      <polygon
+         fill="#181818"
+         points="1285.99,349.9169,1276.99,345.9169,1280.99,349.9169,1276.99,353.9169,1285.99,349.9169"
+         style="stroke:#181818;stroke-width:1;"
+         id="polygon162" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="13px"
+         lengthAdjust="spacing"
+         textLength="29.783199"
+         x="493.88"
+         y="362.9838"
+         id="text162"
+         transform="translate(-8)">uses</text>
+    </g>
+    <!--link MainWindowViewModel to AppLogService-->
+    <g
+       class="link"
+       data-entity-1="ent0004"
+       data-entity-2="ent0023"
+       data-link-type="dependency"
+       data-source-line="200"
+       id="lnk66">
+      <path
+         codeLine="200"
+         d="M312.85,958.1669 C312.85,735.4869 312.85,107.2969 312.85,107.2969 C312.85,107.2969 1050.18,107.2969 1282.47,107.2969"
+         fill="none"
+         id="MainWindowViewModel-to-AppLogService"
+         style="stroke:#181818;stroke-width:1;stroke-dasharray:7,7;" />
+      <polygon
+         fill="#181818"
+         points="1288.47,107.2969,1279.47,103.2969,1283.47,107.2969,1279.47,111.2969,1288.47,107.2969"
+         style="stroke:#181818;stroke-width:1;"
+         id="polygon163" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="13"
+         lengthAdjust="spacing"
+         textLength="42.104"
+         x="332.23"
+         y="120.3638"
+         id="text163">listens</text>
+    </g>
+    <!--link MainWindowViewModel to Loc-->
+    <g
+       class="link"
+       data-entity-1="ent0004"
+       data-entity-2="ent0024"
+       data-link-type="dependency"
+       data-source-line="201"
+       id="lnk67">
+      <path
+         codeLine="201"
+         d="M341.85,957.8669 C341.85,755.0569 341.85,223.9169 341.85,223.9169 C341.85,223.9169 1133.14,223.9169 1314.55,223.9169"
+         fill="none"
+         id="MainWindowViewModel-to-Loc"
+         style="stroke:#181818;stroke-width:1;stroke-dasharray:7,7;" />
+      <polygon
+         fill="#181818"
+         points="1320.55,223.9169,1311.55,219.9169,1315.55,223.9169,1311.55,227.9169,1320.55,223.9169"
+         style="stroke:#181818;stroke-width:1;"
+         id="polygon164" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="13"
+         lengthAdjust="spacing"
+         textLength="73.5947"
+         x="390.23"
+         y="236.9838"
+         id="text164">localization</text>
+    </g>
+    <!--link DashboardViewModel to JobService-->
+    <g
+       class="link"
+       data-entity-1="ent0005"
+       data-entity-2="ent0019"
+       data-link-type="dependency"
+       data-source-line="203"
+       id="lnk68">
+      <path
+         codeLine="203"
+         d="M1150.03,1185.0069 C1182.39,1185.0069 1210.85,1185.0069 1210.85,1185.0069 C1210.85,1185.0069 1210.85,502.1769 1210.85,502.1769 C1210.85,502.1769 1256.37,502.1769 1298.23,502.1769"
+         fill="none"
+         id="DashboardViewModel-to-JobService"
+         style="stroke:#181818;stroke-width:1;stroke-dasharray:7,7;" />
+      <polygon
+         fill="#181818"
+         points="1304.23,502.1769,1295.23,498.1769,1299.23,502.1769,1295.23,506.1769,1304.23,502.1769"
+         style="stroke:#181818;stroke-width:1;"
+         id="polygon165" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="13px"
+         lengthAdjust="spacing"
+         textLength="29.783199"
+         x="1180.85"
+         y="840.38379"
+         id="text165"
+         transform="translate(-2,150)">uses</text>
+    </g>
+    <!--link DashboardViewModel to BackupService-->
+    <g
+       class="link"
+       data-entity-1="ent0005"
+       data-entity-2="ent0020"
+       data-link-type="dependency"
+       data-source-line="204"
+       id="lnk69">
+      <path
+         codeLine="204"
+         d="M1150.27,1225.5869 C1195.69,1225.5869 1240.85,1225.5869 1240.85,1225.5869 C1240.85,1225.5869 1240.85,625.3669 1240.85,625.3669 C1240.85,625.3669 1257.48,625.3669 1282.76,625.3669"
+         fill="none"
+         id="DashboardViewModel-to-BackupService"
+         style="stroke:#181818;stroke-width:1;stroke-dasharray:7,7;" />
+      <polygon
+         fill="#181818"
+         points="1288.76,625.3669,1279.76,621.3669,1283.76,625.3669,1279.76,629.3669,1288.76,625.3669"
+         style="stroke:#181818;stroke-width:1;"
+         id="polygon166" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="13px"
+         lengthAdjust="spacing"
+         textLength="42.104"
+         x="1197.85"
+         y="959.88379"
+         id="text166"
+         transform="translate(0,56)">listens</text>
+    </g>
+    <!--link DashboardViewModel to LogReaderService-->
+    <g
+       class="link"
+       data-entity-1="ent0005"
+       data-entity-2="ent0022"
+       data-link-type="dependency"
+       data-source-line="205"
+       id="lnk70">
+      <path
+         codeLine="205"
+         d="M1150.3,1144.4169 C1211.58,1144.4169 1280.85,1144.4169 1280.85,1144.4169 C1280.85,1144.4169 1280.85,864.5969 1280.85,771.9269"
+         fill="none"
+         id="DashboardViewModel-to-LogReaderService"
+         style="stroke:#181818;stroke-width:1;stroke-dasharray:7,7;" />
+      <polygon
+         fill="#181818"
+         points="1280.85,765.9269,1276.85,774.9269,1280.85,770.9269,1284.85,774.9269,1280.85,765.9269"
+         style="stroke:#181818;stroke-width:1;"
+         id="polygon167" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="13"
+         lengthAdjust="spacing"
+         textLength="36.334"
+         x="1243.85"
+         y="1033.5138"
+         id="text167">reads</text>
+    </g>
+    <!--link JobsViewModel to JobService-->
+    <g
+       class="link"
+       data-entity-1="ent0006"
+       data-entity-2="ent0019"
+       data-link-type="dependency"
+       data-source-line="207"
+       id="lnk71">
+      <path
+         codeLine="207"
+         d="M813.39,1681.9069 C851.3,1681.9069 886.85,1681.9069 886.85,1681.9069 C886.85,1681.9069 886.85,479.6669 886.85,479.6669 C886.85,479.6669 1175.01,479.6669 1297.96,479.6669"
+         fill="none"
+         id="JobsViewModel-to-JobService"
+         style="stroke:#181818;stroke-width:1;stroke-dasharray:7,7;" />
+      <polygon
+         fill="#181818"
+         points="1303.96,479.6669,1294.96,475.6669,1298.96,479.6669,1294.96,483.6669,1303.96,479.6669"
+         style="stroke:#181818;stroke-width:1;"
+         id="polygon168" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="13"
+         lengthAdjust="spacing"
+         textLength="29.7832"
+         x="856.85"
+         y="922.0338"
+         id="text168">uses</text>
+    </g>
+    <!--link ExecutionViewModel to JobService-->
+    <g
+       class="link"
+       data-entity-1="ent0008"
+       data-entity-2="ent0019"
+       data-link-type="dependency"
+       data-source-line="208"
+       id="lnk72">
+      <path
+         codeLine="208"
+         d="M1028.85,840.3069 C1028.85,725.9869 1028.85,490.9269 1028.85,490.9269 C1028.85,490.9269 1205.03,490.9269 1297.9,490.9269"
+         fill="none"
+         id="ExecutionViewModel-to-JobService"
+         style="stroke:#181818;stroke-width:1;stroke-dasharray:7,7;" />
+      <polygon
+         fill="#181818"
+         points="1303.9,490.9269,1294.9,486.9269,1298.9,490.9269,1294.9,494.9269,1303.9,490.9269"
+         style="stroke:#181818;stroke-width:1;"
+         id="polygon169" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="13"
+         lengthAdjust="spacing"
+         textLength="29.7832"
+         x="998.85"
+         y="541.1638"
+         id="text169">uses</text>
+    </g>
+    <!--link ExecutionViewModel to BackupService-->
+    <g
+       class="link"
+       data-entity-1="ent0008"
+       data-entity-2="ent0020"
+       data-link-type="dependency"
+       data-source-line="209"
+       id="lnk73">
+      <path
+         codeLine="209"
+         d="M1087.85,840.1469 C1087.85,755.0669 1087.85,611.2969 1087.85,611.2969 C1087.85,611.2969 1203.34,611.2969 1283.07,611.2969"
+         fill="none"
+         id="ExecutionViewModel-to-BackupService"
+         style="stroke:#181818;stroke-width:1;stroke-dasharray:7,7;" />
+      <polygon
+         fill="#181818"
+         points="1289.07,611.2969,1280.07,607.2969,1284.07,611.2969,1280.07,615.2969,1289.07,611.2969"
+         style="stroke:#181818;stroke-width:1;"
+         id="polygon170" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="13"
+         lengthAdjust="spacing"
+         textLength="52.1206"
+         x="1034.85"
+         y="638.1838"
+         id="text170">controls</text>
+    </g>
+    <!--link LogsViewModel to LogReaderService-->
+    <g
+       class="link"
+       data-entity-1="ent0009"
+       data-entity-2="ent0022"
+       data-link-type="dependency"
+       data-source-line="210"
+       id="lnk74"
+       transform="matrix(1.1083745,0,0,1,-122.3093,0)">
+      <path
+         codeLine="210"
+         d="m 1128.58,1927.4869 c 66.25,0 155.27,0 155.27,0 0,0 0,-974.65 0,-1155.65"
+         fill="none"
+         id="LogsViewModel-to-LogReaderService"
+         style="stroke:#181818;stroke-width:1;stroke-dasharray:7, 7" />
+      <polygon
+         fill="#181818"
+         points="1279.85,774.8369 1283.85,770.8369 1287.85,774.8369 1283.85,765.8369 "
+         style="stroke:#181818;stroke-width:1"
+         id="polygon171" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="13px"
+         lengthAdjust="spacing"
+         textLength="36.334"
+         x="1246.85"
+         y="1420.3638"
+         id="text171"
+         transform="translate(39.791071,-374.27994)">reads</text>
+    </g>
+    <!--link SettingsViewModel to SettingsService-->
+    <g
+       class="link"
+       data-entity-1="ent0010"
+       data-entity-2="ent0021"
+       data-link-type="dependency"
+       data-source-line="211"
+       id="lnk75">
+      <path
+         codeLine="211"
+         d="M764.85,941.5569 C764.85,757.9469 764.85,368.6769 764.85,368.6769 C764.85,368.6769 1122.97,368.6769 1280.14,368.6769"
+         fill="none"
+         id="SettingsViewModel-to-SettingsService"
+         style="stroke:#181818;stroke-width:1;stroke-dasharray:7,7;" />
+      <polygon
+         fill="#181818"
+         points="1286.14,368.6769,1277.14,364.6769,1281.14,368.6769,1277.14,372.6769,1286.14,368.6769"
+         style="stroke:#181818;stroke-width:1;"
+         id="polygon172" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="13"
+         lengthAdjust="spacing"
+         textLength="46.4648"
+         x="717.85"
+         y="407.5338"
+         id="text172">applies</text>
+    </g>
+    <!--link SettingsViewModel to Loc-->
+    <g
+       class="link"
+       data-entity-1="ent0010"
+       data-entity-2="ent0024"
+       data-link-type="dependency"
+       data-source-line="212"
+       id="lnk76">
+      <path
+         codeLine="212"
+         d="M683.85,941.6469 C683.85,731.9069 683.85,242.6769 683.85,242.6769 C683.85,242.6769 1174.97,242.6769 1314.79,242.6769"
+         fill="none"
+         id="SettingsViewModel-to-Loc"
+         style="stroke:#181818;stroke-width:1;stroke-dasharray:7,7;" />
+      <polygon
+         fill="#181818"
+         points="1320.79,242.6769,1311.79,238.6769,1315.79,242.6769,1311.79,246.6769,1320.79,242.6769"
+         style="stroke:#181818;stroke-width:1;"
+         id="polygon173" />
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="13"
+         lengthAdjust="spacing"
+         textLength="73.5947"
+         x="609.85"
+         y="286.7638"
+         id="text173">localization</text>
+    </g>
+<?plantuml-src dLVRSjis47tdLs3IXzhDIFKbSXfDHZEsBXctjgknbEGP8bSKnX300g1jjVM_Ty4xIB2Qra_cxi5YBsTt8Vt4H48LtPCD3PzY9LCHJIMNYhpic850Ltgzev5yOI8cMyfrKyEP07D8W4XbThAX43823GdvUDOGAYgUhF3yuYpWi3N4IA9Ol3CaOWf2mwHee1FqYiQmCWSEnAgfY3a43KJ8gTRahu3WtuqRm-VFtnYytACNV38XFyn_MOpcdtAWL14e7-XY_d5sUT5lpM8Mb_FHOkGtPFLNr-StdwxzDcflBXSNYrdNI0Ku7rsDfcT-ApTKGsPaEbyiphj6Ils7qUZwwaFm5WI66SpWD4lMZD7Ofcv0vbGVLlGPXjT9CloICd9YOz3aFQcIOZ--tX8amrwV1a5H4FAk1hpBiaytsYWQcg8WbTgwGagF0WJc-dlAn7Sca58LahYbo4lw7Ztx1afRMcJVAqDDgkz1QtGZ5qrJfK2O9GhMDan7QaqMbf1Spx2cc_npndGYDPoSukTRxTYCwjr6KXKTyUiHGhIUsMI6WSwbQsae_rLkTFFA-ljMq9RaZcfZovicHNW7ZPdEWomlsYhGEpooIlTxgWwPnwXua8Pj3tSo_gwOCI1AUKzWziuZCRbkpPMIgiYb0chW4Vv80TsBSk4yOgObiWQcE-pHKf0VN2YvjsYfJeR3OU7croJogboNSzrnls-B2n_elgZ_IgOgX2Krkw8qLCLWwkyLS9md4ArnT1NLqNcz2jUfiArHggmZzjf2oJ73hU3pM1_WfIo4ZGrTymGsVuKmjQFk_nQa9eK-KdRanx6oMuXZrWhQTbPW34x_OxRc8bI7n8Os5tJ3AwvKuj_WuER_3kcILhrSIMMya6fFJN7-5GbkXu1Uoy9MhhX9DQuVhLToQrweWgMI8NusQ80rB7qlKrM56LBE_gJMhNQurnkPcYEnubrH6fhwhdfGlTcPMyrAd9-vcLixHVDvsIA2fJ0gIRq0kjp6VnjnDKO4EX9ZG7e9oWwbUZ1IiUJqiAIfRf3QoAJnGPLfzkCCjaomB2E-LhMtWeVGMAwvCEhWZo5JbVNDLhpk72yKtSEDaRvWmAFkqKpSFNX7Dy2Bmb2UWdlEcTyzVZUkNgKRKt-jsHuRd-wJRgarHDWhwfaX3Sa9Rg_JPhtj5C-LzKuiTVaQw5MN9Eu5O2OUWU8Ze1U1tcIPxZKGriAtrgvtQ5jlRr8zUugSrQgostuNsRICQjfuTsrbgREnl9fyCU1JXiku2t06R5TT3iMkfZdckjfgAjGgpDEF97laCB43tCHKX13udZU3mTyJzrqKU1uR7fIxkVs0zfxqe3nBnuDozuK7q5q47b1hV7eGc3MR91BAFQwjREAG4q6VMPpDO_oz0PoVDXA9HYRUP-COUMJeL0e3hyQR-Py60y-xhXVgvBiNrKrdBzJ9QI-gazXUf9jTcygSauD6aia63rfpBicoB7feDyxmkk9QXdE9ru0upLSWsmmiuMuhMh27Y2MuQaoBSwbOGfmEjR0k8KjetQuMr-9a2SBiuNxUScGOKYx15LudOJYST6RDcCW4toAjhdIGpKl2x5NuCw0YkwIiLj4O4tlvFli_-udb7maJtxeQ4tYrBpxjx-n9zt5HdsXt-SJTu0wm5XUuSbLZSDXqoD4CLaeBKBwK6v1stBfQaWZ1B1aWD4bgiHJySEfjWIBNvHuRazHwseTqr-eHS7l97e6x2tLCEDFsdTgBjniMKOrtP-0hk3_07c0xljA77dZdbJ0co53R1rv2jtpmCEq_0TlEMdOeoTk4_5T7k_tkhnooYTiVvdvyjnJ_0000?>  </g>
+  <metadata
+     id="metadata173">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:title>Class Diagram - EasySave.App.Gui (Views + ViewModels + UI items)</dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+</svg>

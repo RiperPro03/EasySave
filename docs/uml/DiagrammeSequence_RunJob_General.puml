@@ -29,122 +29,295 @@ skinparam sequence {
   GroupBackgroundColor #F7F9FC
 }
 
-title <b>EasySave</b>\n<i>Sequence de lancement d un job (V2: blocage metier + CryptoSoft)</i>
+title <b>EasySave</b>\n<i>Sequence de lancement d'un job</i>
 
-' -------------------- ACTEURS / PARTICIPANTS --------------------
 actor Utilisateur #FFF4E5
-
 participant "<b>Interface</b>\n(Console ou GUI)" as UI #EEF3FF
 participant "<b>JobService</b>" as JobService #E9F7EF
 participant "<b>JobRepository</b>" as JobRepository #F3E8FF
 participant "<b>BackupService</b>" as BackupService #E6F4FF
-participant "<b>BusinessSoftwareDetector</b>" as Detector #FFF8E1
-participant "<b>BackupEngine</b>" as BackupEngine #FFE9EC
-participant "<b>IBackupCopyStrategy</b>" as Strategy #F7F9FC
-participant "<b>ICryptoService</b>\n(CryptoSoftProcess / NoEncryption)" as Crypto #E8F5E9
 participant "<b>StateWriter</b>" as StateWriter #FFFDE7
+participant "<b>ThreadPool</b>\n(Task.Run)" as ThreadPool #F7F9FC
+participant "<b>BackupEngine</b>" as BackupEngine #FFE9EC
+participant "<b>LargeFileTransferLimiter</b>" as Limiter #E8EAF6
+participant "<b>BusinessSoftwareDetector</b>" as Detector #FFF8E1
+participant "<b>IBackupCopyStrategy</b>" as Strategy #F7F9FC
+participant "<b>ICryptoService</b>\n(CryptoSoft / NoEncryption)" as Crypto #E8F5E9
 participant "<b>Logger</b>" as Logger #FCE4EC
 participant "<b>Systeme de fichiers</b>" as FS #E0F2F1
 
-' -------------------- FLUX --------------------
 == Selection du job ==
 Utilisateur -> UI : Choisit un job a executer
+activate Utilisateur
+activate UI
 UI -> JobService : GetById(jobId)
-JobService -> JobRepository : Charge le job
+activate JobService
+JobService -> JobRepository : Recherche le job demande
+activate JobRepository
 JobRepository --> JobService : BackupJob
+deactivate JobRepository
 JobService --> UI : BackupJob
+deactivate JobService
 
-== Validation de lancement ==
+== Lancement (appel synchrone, execution asynchrone) ==
 UI -> BackupService : Run(job)
+activate BackupService
 
 alt Job inactif
-  BackupService -> Logger : Log "job.skipped"
-  BackupService --> UI : Resultat "Job is inactive and was skipped"
-else Job actif
-  BackupService -> Detector : IsRunning(processName config)
-  alt Logiciel metier detecte (avant start)
-    BackupService -> Logger : Log "job.start.blocked.businesssoftware"
-    BackupService --> UI : Resultat erreur (blocage metier)
-  else Aucun blocage metier
-    BackupService -> BackupService : SyncJobs + set state Running
-    BackupService -> StateWriter : Write(snapshot)
-    BackupService -> BackupEngine : Run(job)
+  BackupService -> Logger : Write("job.skipped")
+  activate Logger
+  deactivate Logger
+  BackupService --> UI : BackupResultDto (skipped)
+  deactivate BackupService
+else Logiciel metier actif (pre-check service)
+  BackupService -> Detector : Verifie si le logiciel metier est en cours d'execution
+  activate Detector
+  Detector --> BackupService : true
+  deactivate Detector
+  BackupService -> Logger : Write("job.start.blocked.businesssoftware")
+  activate Logger
+  deactivate Logger
+  BackupService --> UI : BackupResultDto (erreur)
+  deactivate BackupService
+else Job deja en cours / stopping
+  BackupService -> BackupService : Verifie qu un lancement n'est pas deja en cours
+  activate BackupService
+  deactivate BackupService
+  BackupService --> UI : BackupResultDto ("already running or stopping")
+  deactivate BackupService
+else Demarrage accepte
+  BackupService -> Detector : Verifie si le logiciel metier est en cours d'execution
+  activate Detector
+  Detector --> BackupService : false
+  deactivate Detector
+  BackupService -> BackupService : Prepare l'etat du job (Running)
+  activate BackupService
+  deactivate BackupService
+  BackupService -> StateWriter : Enregistre un instantane de l'etat
+  activate StateWriter
+  deactivate StateWriter
+  BackupService -> UI : StateChanged (etat Running) [event]
+  activate UI
+  deactivate UI
+  BackupService -> ThreadPool : Lance la sauvegarde en tache de fond
+  activate ThreadPool
+  BackupService --> UI : BackupResultDto ("Job started asynchronously.")
+  deactivate BackupService
 
-    == Controle metier dans le moteur ==
-    BackupEngine -> Detector : ValidateNotRunning(processName config)
-    alt Logiciel metier detecte
-      BackupEngine -> Logger : Log blocage + summary
-      BackupEngine -> BackupService : StateChanged(Error)
-      BackupService -> StateWriter : Write(snapshot)
-      BackupEngine --> BackupService : Resultat erreur
-      BackupService -> JobService : MarkExecuted(job.Id)
-      BackupService --> UI : Retourne resultat
-    else Execution autorisee
-      BackupEngine -> FS : Verifie dossier source
+  == Execution de fond ==
+  ThreadPool -> BackupEngine : Demarre l'execution de la sauvegarde
+  activate BackupEngine
 
-      alt Dossier source manquant
-        BackupEngine -> Logger : Log summary erreur
-        BackupEngine -> BackupService : StateChanged(Error)
-        BackupService -> StateWriter : Write(snapshot)
-        BackupEngine --> BackupService : Resultat erreur
-        BackupService -> JobService : MarkExecuted(job.Id)
-        BackupService --> UI : Retourne resultat
-      else Dossier source present
-        BackupEngine -> BackupEngine : Choisit Strategy (Full/Differential)
-        BackupEngine -> FS : Enumere fichiers + calcule totaux
-        BackupEngine -> BackupService : StateChanged(Running init)
-        BackupService -> StateWriter : Write(snapshot)
+  alt Blocage metier au demarrage moteur
+    BackupEngine -> Detector : Refait un controle logiciel metier avant de commencer
+    activate Detector
+    Detector --> BackupEngine : Exception
+    activate BackupEngine
+    deactivate Detector
+    BackupEngine -> Logger : Write("job.start.blocked.businesssoftware")
+    activate Logger
+    deactivate Logger
+    deactivate BackupEngine
+    BackupEngine -> Logger : Ecrit le resume d'execution
+    activate Logger
+    deactivate Logger
+    BackupEngine -> BackupService : StateChanged(Error) [event]
+    activate BackupService
+    BackupService -> StateWriter : Enregistre un instantane de l'etat
+    activate StateWriter
+    deactivate StateWriter
+    BackupService -> UI : StateChanged(Error) [event]
+    activate UI
+    deactivate UI
+    deactivate BackupService
+    BackupEngine --> ThreadPool : BackupResultDto (erreur)
+    deactivate BackupEngine
+    ThreadPool -> JobService : Marque le job comme execute
+    activate JobService
+    deactivate JobService
+    deactivate ThreadPool
+  else Execution autorisee
+    BackupEngine -> Detector : Refait un controle logiciel metier avant de commencer
+    activate Detector
+    deactivate Detector
+    BackupEngine -> FS : Verifie que le dossier source existe
+    activate FS
+    deactivate FS
 
-        loop Pour chaque fichier
-          BackupEngine -> Strategy : ShouldCopy(source, target)
+    alt Dossier source manquant / type invalide
+      BackupEngine -> Logger : Ecrit le resume d'execution
+      activate Logger
+      deactivate Logger
+      BackupEngine -> BackupService : StateChanged(Error) [event]
+      activate BackupService
+      BackupService -> StateWriter : Enregistre un instantane de l'etat
+      activate StateWriter
+      deactivate StateWriter
+      BackupService -> UI : StateChanged(Error) [event]
+      activate UI
+      deactivate UI
+      deactivate BackupService
+      BackupEngine --> ThreadPool : BackupResultDto (erreur)
+      deactivate BackupEngine
+      ThreadPool -> JobService : Marque le job comme execute
+      activate JobService
+      deactivate JobService
+      deactivate ThreadPool
+    else Preparation OK
+      BackupEngine -> BackupEngine : Choisit la strategie de copie (complete ou differentielle)
+      activate BackupEngine
+      deactivate BackupEngine
+      BackupEngine -> FS : Liste les fichiers et calcule les totaux
+      activate FS
+      deactivate FS
+      BackupEngine -> BackupService : StateChanged(Running init/totals) [event]
+      activate BackupService
+      BackupService -> StateWriter : Enregistre un instantane de l'etat
+      activate StateWriter
+      deactivate StateWriter
+      BackupService -> UI : StateChanged(progress) [event]
+      activate UI
+      deactivate UI
+      deactivate BackupService
 
-          alt Doit copier
-            BackupEngine -> FS : EnsureTargetDirectory + CopyFile
-            BackupEngine -> Logger : Log transfert
-
-            opt Fichier eligibile chiffrement\n(encryption enabled + key + extension)
-              alt CryptoSoft disponible
-                BackupEngine -> Crypto : EncryptFileAsync(target, key)
-                Crypto --> BackupEngine : encryptionTimeMs / code erreur
-
-                alt Echec chiffrement
-                  BackupEngine -> BackupEngine : Ajoute erreur au resultat
-                  BackupEngine -> Logger : Log "file.encrypted" (failure)
-                else Chiffrement OK
-                  BackupEngine -> Logger : Log "file.encrypted" (success)
-                end
-              else CryptoSoft absent (fallback)
-                BackupEngine -> Logger : Log "crypto.fallback"
-                BackupEngine -> Logger : Log "file.encryption.skipped"
-              end
+      loop Pour chaque fichier
+        opt Pause auto si logiciel metier detecte
+          BackupEngine -> Detector : Verifie si le logiciel metier est ouvert
+          activate Detector
+          deactivate Detector
+          alt Detecte
+            BackupEngine -> BackupService : StateChanged(Paused) [event]
+            activate BackupService
+            BackupService -> StateWriter : Enregistre un instantane de l'etat
+            activate StateWriter
+            deactivate StateWriter
+            BackupService -> UI : StateChanged(Paused) [event]
+            activate UI
+            deactivate UI
+            deactivate BackupService
+            BackupEngine -> Logger : Write("job.paused")
+            activate Logger
+            deactivate Logger
+            loop Attente fermeture logiciel metier
+              BackupEngine -> Detector : Verifie periodiquement si le logiciel est toujours ouvert
+              activate Detector
+              deactivate Detector
             end
-          else Ne doit pas copier
-            BackupEngine -> BackupEngine : Incremente skipped
-            BackupEngine -> Logger : Log "file.skipped"
-          end
-
-          BackupEngine -> BackupService : StateChanged(progress)
-          BackupService -> StateWriter : Write(snapshot)
-
-          BackupEngine -> Detector : IsRunning(processName config)
-          alt Logiciel metier detecte en cours de run
-            BackupEngine -> Logger : Log "job.stopped.businesssoftware"
-            BackupEngine -> BackupEngine : Ajoute erreur puis break
+            BackupEngine -> Logger : Write("job.resumed")
+            activate Logger
+            deactivate Logger
+            BackupEngine -> BackupService : StateChanged(Running) [event]
+            activate BackupService
+            BackupService -> StateWriter : Enregistre un instantane de l'etat
+            activate StateWriter
+            deactivate StateWriter
+            BackupService -> UI : StateChanged(Running) [event]
+            activate UI
+            deactivate UI
+            deactivate BackupService
           end
         end
 
-        == Finalisation ==
-        BackupEngine -> Logger : WriteSummaryLog(job.summary)
-        BackupEngine -> BackupService : StateChanged(Completed/Error)
-        BackupService -> StateWriter : Write(snapshot)
-        BackupEngine --> BackupService : BackupResultDto
-        BackupService -> JobService : MarkExecuted(job.Id)
-        BackupService --> UI : Retourne resultat final
+        BackupEngine -> Strategy : Determine si le fichier doit etre copie
+        activate Strategy
+        alt Ne doit pas copier
+          BackupEngine -> Logger : Write("file.skipped")
+          activate Logger
+          deactivate Logger
+        else Doit copier
+          BackupEngine -> FS : Prepare le dossier de destination
+          activate FS
+          deactivate FS
+          opt Dossier cree
+            BackupEngine -> Logger : Write("directory.created")
+            activate Logger
+            deactivate Logger
+          end
+          BackupEngine -> BackupEngine : Calcule le seuil en octets\n(depuis LargeFileThresholdKb)
+          activate BackupEngine
+          deactivate BackupEngine
+          BackupEngine -> Limiter : AcquireAsync(fileSize, thresholdBytes)
+          activate Limiter
+          alt Fichier volumineux (>= seuil)
+            Limiter --> BackupEngine : Autorisation apres attente (si necessaire)
+            activate BackupEngine
+          else Fichier non volumineux
+            Limiter --> BackupEngine : Autorisation immediate
+            activate BackupEngine
+          end
+          deactivate BackupEngine
+          deactivate Limiter
+          BackupEngine -> FS : Copie le fichier vers la destination
+          activate FS
+          deactivate FS
+          BackupEngine -> Logger : Write("file.transferred")
+          activate Logger
+          deactivate Logger
+
+          opt Chiffrement requis
+            alt CryptoSoft disponible
+              BackupEngine -> Crypto : Chiffre le fichier copie
+              activate Crypto
+              Crypto --> BackupEngine : timeMs / errorCode
+              activate BackupEngine
+              deactivate Crypto
+              BackupEngine -> Logger : Write("file.encrypted")
+              activate Logger
+              deactivate Logger
+              deactivate BackupEngine
+            else CryptoSoft absent (NoEncryption)
+              BackupEngine -> Logger : Write("crypto.fallback")
+              activate Logger
+              deactivate Logger
+              BackupEngine -> Logger : Write("file.encryption.skipped")
+              activate Logger
+              deactivate Logger
+            end
+          end
+        end
+        deactivate Strategy
+
+        BackupEngine -> BackupService : StateChanged(progress) [event]
+        activate BackupService
+        BackupService -> StateWriter : Enregistre un instantane de l'etat
+        activate StateWriter
+        deactivate StateWriter
+        BackupService -> UI : StateChanged(progress) [event]
+        activate UI
+        deactivate UI
+        deactivate BackupService
       end
+
+      == Finalisation ==
+      BackupEngine -> Logger : Ecrit le resume d'execution
+      activate Logger
+      deactivate Logger
+      BackupEngine -> BackupService : StateChanged(Completed/Error) [event]
+      activate BackupService
+      BackupService -> StateWriter : Enregistre un instantane de l'etat
+      activate StateWriter
+      deactivate StateWriter
+      BackupService -> UI : StateChanged(final) [event]
+      activate UI
+      deactivate UI
+      deactivate BackupService
+      BackupEngine --> ThreadPool : BackupResultDto final
+      deactivate BackupEngine
+      ThreadPool -> JobService : Marque le job comme execute
+      activate JobService
+      deactivate JobService
+      deactivate ThreadPool
     end
   end
 end
 
-UI -> Utilisateur : Affiche le resultat
+note over UI,BackupService
+Run(job) retourne un resultat de lancement immediat.
+Le resultat final d'execution est visible via StateChanged + logs.
+end note
+
+UI -> Utilisateur : Affiche statut de lancement puis progression
+deactivate UI
+deactivate Utilisateur
 
 @enduml

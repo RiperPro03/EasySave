@@ -1,96 +1,125 @@
 flowchart TD
-  %% Diagramme d activite general - Utilisation GUI (langage naturel)
+  %% General activity diagram - V3 (GUI + live execution behavior)
+  %% Natural language, aligned with async run + state/log driven monitoring
 
-  start([Debut])
-  openApp[Ouvrir l application GUI]
-  loadConfig[Charger la configuration utilisateur]
-  applyLang[Appliquer la langue]
-  initApp[Initialiser les services et ecrans]
-  showDashboard[Afficher le tableau de bord]
-  nav{Action utilisateur}
+  start([Start])
+  openApp[Open the GUI application]
+  loadConfig[Load user configuration]
+  applyLang[Apply selected language]
+  initApp[Initialize services and screens]
+  showDashboard[Show dashboard]
+  nav{User action}
 
   start --> openApp --> loadConfig --> applyLang --> initApp --> showDashboard --> nav
 
-  %% -------------------- NAVIGATION PRINCIPALE --------------------
-  nav -- Gerer les travaux --> jobsList[Afficher la liste des travaux]
-  jobsList --> jobsAction{Que faire ?}
-  jobsAction -- Creer --> jobCreate[Creer un nouveau travail]
-  jobsAction -- Modifier --> jobEdit[Modifier un travail]
-  jobsAction -- Supprimer --> jobDelete[Supprimer un travail]
-  jobsAction -- Activer/Desactiver --> jobToggle[Changer l etat actif]
-  jobCreate --> saveJobs[Enregistrer les changements]
+  %% -------------------- MAIN NAVIGATION --------------------
+  nav -- Manage jobs --> jobsList[Show job list]
+  jobsList --> jobsAction{What to do?}
+  jobsAction -- Create --> jobCreate[Create a new job]
+  jobsAction -- Edit --> jobEdit[Edit an existing job]
+  jobsAction -- Delete --> jobDelete[Delete a job]
+  jobsAction -- Enable/Disable --> jobToggle[Change active status]
+  jobCreate --> saveJobs[Validate and save jobs]
   jobEdit --> saveJobs
   jobDelete --> saveJobs
   jobToggle --> saveJobs
   saveJobs --> showDashboard
 
-  nav -- Parametres --> settings[Modifier langue, format log, options de securite]
-  settings --> saveSettings[Enregistrer les parametres]
+  nav -- Settings --> settings[Change language, logging, encryption and business software settings]
+  settings --> saveSettings[Save settings]
   saveSettings --> showDashboard
 
-  nav -- Consulter les logs --> openLogs[Afficher les journaux recents]
+  nav -- View logs --> openLogs[Open logs screen - local or remote depending on mode]
   openLogs --> showDashboard
 
-  nav -- Suivi en direct --> openExecution[Afficher l ecran d execution]
-  openExecution --> runMode{Choix execution}
-  runMode -- Lancer un travail --> pickOne[Selectionner un travail]
-  runMode -- Lancer tous les travaux --> runAll[Executer les travaux actifs en sequence]
-  runMode -- Pause ou Reprendre ou Stop --> liveControl[Piloter un travail en cours]
-  liveControl --> openExecution
+  nav -- Live execution --> openExecution[Open execution screen]
+  openExecution --> runMode{Execution action}
+  runMode -- Start one job --> pickOne[Select one job]
+  runMode -- Start all runnable jobs --> runAll[Launch run all workflow]
+  runMode -- Pause / Resume / Stop --> liveControl[Control a running or paused job]
+  liveControl --> refreshExec[Refresh live state from state updates]
+  refreshExec --> openExecution
 
-  %% -------------------- EXECUTION D UN TRAVAIL --------------------
-  pickOne --> runOne[Demarrer le travail]
-  runAll --> seqCheckStart{Logiciel metier actif ?}
-  seqCheckStart -- Oui --> seqBlocked[Afficher blocage et arreter la sequence] --> openExecution
-  seqCheckStart -- Non --> seqLoop[Parcourir les travaux actifs]
-  seqLoop --> seqStepCheck{Logiciel metier actif avant ce travail ?}
-  seqStepCheck -- Oui --> seqStopNow[Arreter la sequence et informer utilisateur] --> openExecution
-  seqStepCheck -- Non --> runOne
+  %% -------------------- RUN ALL (GUI) --------------------
+  runAll --> globalCheck{Business software running before sequence?}
+  globalCheck -- Yes --> globalBlocked[Show sequence blocked message] --> openExecution
+  globalCheck -- No --> collectActions[Build list of paused jobs to resume and jobs to start]
+  collectActions --> anyAction{Anything to do?}
+  anyAction -- No --> noRunnable[Show no runnable job message] --> openExecution
+  anyAction -- Yes --> resumePaused[Resume paused jobs first]
+  resumePaused --> loopStartAll[Start runnable jobs one by one]
+  loopStartAll --> startLaunchOnly[Each start returns immediately - async launch result]
+  startLaunchOnly --> openExecution
 
-  runOne --> jobActive{Travail actif ?}
-  jobActive -- Non --> inactiveMsg[Afficher travail inactif] --> runReturn[Retour a l ecran d execution]
-  jobActive -- Oui --> preStartCheck{Logiciel metier actif ?}
-  preStartCheck -- Oui --> startBlocked[Afficher blocage au demarrage] --> runReturn
-  preStartCheck -- Non --> startRun[Passer le travail en cours + demarrer le suivi]
+  %% -------------------- RUN ONE (ASYNC START) --------------------
+  pickOne --> runOne[Request start for selected job]
+  runOne --> jobActive{Job is active?}
+  jobActive -- No --> inactiveMsg[Show inactive job skipped message] --> runReturn
+  jobActive -- Yes --> preStartCheck{Business software running?}
+  preStartCheck -- Yes --> startBlocked[Show blocked at start message] --> runReturn
+  preStartCheck -- No --> duplicateCheck{Already running or stopping?}
+  duplicateCheck -- Yes --> alreadyRunning[Show already running message] --> runReturn
+  duplicateCheck -- No --> publishRunning[Publish Running state snapshot]
+  publishRunning --> startBackground[Start backup in background]
+  startBackground --> launchResult[Return immediate launch result]
+  launchResult --> runReturn
 
-  startRun --> sourceCheck{Source disponible ?}
-  sourceCheck -- Non --> sourceError[Afficher erreur source] --> finishError[Fin du travail en erreur]
-  sourceCheck -- Oui --> strategy[Choisir le mode de copie complet ou differentiel]
-  strategy --> filesLoop{Fichier suivant ?}
-  filesLoop -- Non --> finalize[Finaliser le travail et ecrire le resume]
-  filesLoop -- Oui --> copyDecision{Le fichier doit etre copie ?}
+  %% -------------------- BACKGROUND EXECUTION (ENGINE) --------------------
+  startBackground --> engineStart[Background engine starts the job]
+  engineStart --> engineStartCheck{Business software still running?}
+  engineStartCheck -- Yes --> engineBlocked[Write logs + publish Error state] --> engineEnd
+  engineStartCheck -- No --> sourceCheck{Source folder available?}
+  sourceCheck -- No --> sourceError[Write summary + publish Error state] --> engineEnd
+  sourceCheck -- Yes --> chooseStrategy[Choose full or differential copy strategy]
+  chooseStrategy --> enumerateFiles[List files and compute totals]
+  enumerateFiles --> publishInitProgress[Publish initial progress state]
+  publishInitProgress --> filesLoop{Next file?}
 
-  copyDecision -- Non --> skipFile[Ignorer le fichier]
-  skipFile --> updateProgress[Mettre a jour progression et etat]
+  filesLoop -- No --> finalize[Write summary log and publish final state]
+  filesLoop -- Yes --> autoPauseCheck{Business software detected?}
 
-  copyDecision -- Oui --> copyFile[Copier le fichier]
-  copyFile --> cryptoNeeded{Chiffrement requis pour ce fichier ?}
-  cryptoNeeded -- Non --> updateProgress
-  cryptoNeeded -- Oui --> cryptoAvailable{CryptoSoft disponible ?}
-  cryptoAvailable -- Non --> cryptoSkip[Informer que le chiffrement est saute]
-  cryptoSkip --> updateProgress
-  cryptoAvailable -- Oui --> encryptFile[Chiffrer le fichier]
-  encryptFile --> encryptResult{Chiffrement reussi ?}
-  encryptResult -- Non --> cryptoError[Ajouter une erreur de chiffrement]
-  cryptoError --> updateProgress
-  encryptResult -- Oui --> updateProgress
+  %% V3 behavior: auto pause/resume instead of stopping the job
+  autoPauseCheck -- Yes --> autoPause[Publish Paused state + log auto-pause]
+  autoPause --> waitBusinessClose[Wait until business software is closed]
+  waitBusinessClose --> autoResume[Publish Running state + log auto-resume]
+  autoResume --> copyDecision
+  autoPauseCheck -- No --> copyDecision{Should this file be copied?}
 
-  updateProgress --> midRunCheck{Logiciel metier detecte en cours ?}
-  midRunCheck -- Oui --> stopAfterCurrent[Terminer le fichier courant puis arreter le travail]
-  stopAfterCurrent --> finalize
-  midRunCheck -- Non --> filesLoop
+  copyDecision -- No --> skipFile[Skip file and log skip]
+  skipFile --> updateProgress[Publish progress state]
 
-  finalize --> resultOk{Des erreurs existent ?}
-  resultOk -- Non --> finishOk[Marquer termine]
-  resultOk -- Oui --> finishWithErrors[Marquer termine avec erreurs]
-  finishOk --> runReturn
-  finishWithErrors --> runReturn
-  finishError --> runReturn
+  copyDecision -- Yes --> prepareTarget[Ensure target folder exists]
+  prepareTarget --> copyFile[Copy file]
+  copyFile --> logTransfer[Log file transfer]
+  logTransfer --> cryptoNeeded{Encryption required for this file?}
 
-  runReturn --> showResult[Afficher le resultat dans l ecran d execution]
-  showResult --> afterRun{Autre action ?}
-  afterRun -- Relancer --> openExecution
-  afterRun -- Retour accueil --> showDashboard
-  afterRun -- Quitter --> finishNode([Fin])
+  cryptoNeeded -- No --> updateProgress
+  cryptoNeeded -- Yes --> cryptoAvailable{CryptoSoft available?}
+  cryptoAvailable -- No --> cryptoSkip[Log encryption skipped - fallback] --> updateProgress
+  cryptoAvailable -- Yes --> encryptFile[Encrypt copied file]
+  encryptFile --> encryptResult{Encryption succeeded?}
+  encryptResult -- No --> cryptoError[Add encryption error and log failure] --> updateProgress
+  encryptResult -- Yes --> logCryptoOk[Log encryption success] --> updateProgress
 
-  nav -- Quitter --> finishNode
+  updateProgress --> stopRequested{Stop requested by user?}
+  stopRequested -- Yes --> stoppedByUser[Write summary + publish Error state - stopped] --> engineEnd
+  stopRequested -- No --> filesLoop
+
+  finalize --> markFinal{Errors found?}
+  markFinal -- No --> completeOk[Mark job completed]
+  markFinal -- Yes --> completeWithErrors[Mark job completed with errors]
+  completeOk --> engineEnd
+  completeWithErrors --> engineEnd
+
+  engineEnd[Background execution ends and marks job executed] --> monitorLoop
+
+  %% -------------------- LIVE MONITORING --------------------
+  runReturn --> showExecScreen[Show execution screen with launch result]
+  showExecScreen --> monitorLoop{Wait for next user action or state update}
+  monitorLoop -- State update received --> refreshFromState[Refresh job cards from state snapshot/event]
+  refreshFromState --> openExecution
+  monitorLoop -- User controls job --> liveControl
+  monitorLoop -- Back to dashboard --> showDashboard
+  monitorLoop -- Quit --> finishNode([End])
+
+  nav -- Quit --> finishNode
