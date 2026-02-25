@@ -1,4 +1,4 @@
-﻿# EasySave v1.0 support 
+﻿# EasySave v3.0 support
 
 ## 1. Prerequisites
 
@@ -80,20 +80,25 @@ Changes are saved automatically.
 For technical support, please check :
 
 - .NET 10 SDK is installed
-- the following command is running: **dotnet run --project src/EasySave.App.Console**
+- the GUI launches correctly: **dotnet run --project src/EasySave.App.Gui**
+- or (legacy CLI) the following command runs: **dotnet run --project src/EasySave.App.Console**
 
 In the event of a problem, check the locations of the logs and state.json files.
 
 ## 5. Simplified tree
 ```
-src/
-├── EasySave.App.Console      (console interface v1)
-├── EasySave.App              (engine, infrastructure)
-├── EasySave.Core             (core business)
-├── EasySave.EasyLog          (DLL dedicated to logging)
-├── EasySave.App.Gui          (graphical user interface v2)
+EasySave/
+├── src/
+│   ├── EasySave.Core           # Cœur métier, DTOs, interfaces
+│   ├── EasySave.App            # Services, infrastructure, persistance
+│   ├── EasySave.EasyLog        # DLL de logging
+│   ├── EasySave.App.Console    # Interface console
+│   ├── EasySave.App.Gui        # Interface graphique
+│   ├── CryptoSoft              # Chiffrement XOR
+│   └── LogHub.Server           # Centralized log server (Docker / WebSocket)
+│
 └── tests/
-    └── EasySave.Tests		  (Unit Tests)
+    └── EasySave.Tests          # Unit tests (xUnit)
 ```
 ## 6. Version 1.0 limitations
 
@@ -108,11 +113,11 @@ The open source tool used for testing is **xUnit**.
 Unit tests guarantee the reliability of the code and limit regressions during future evolutions.
 
 The tests cover :
-	- Validation of source and target paths
-	- Selection of files to be copied 
-	- Complete backup logic 
-	- Differential backup logic
-	- JSON file generation 
+- Validation of source and target paths
+- Selection of files to be copied 
+- Complete backup logic 
+- Differential backup logic
+- JSON file generation 
 
 # Version 2.0
 
@@ -158,3 +163,147 @@ The user can define a **business software to be monitored**.
 - Unlimited number of jobs
 - Integrated encryption parameters and business software
 - Logs enriched with encryption time
+
+# Version 3.0
+
+## 1. General new features
+
+EasySave version 3.0 introduces several major evolutions designed to improve performance, priority management and user experience.
+This version marks a major departure from previous versions, with the introduction of parallel mode, advanced file management and centralized logging.
+
+## 2. Parallel backup
+
+EasySave 3.0 abandons sequential mode for parallel operation: 
+- multiple jobs can run simultaneously
+- Each job can process several files in parallel
+
+## 3. Priority file management
+
+Users can now define a **priority extension list** in the parameters.
+As long as a priority file is pending in at least one job, no non-priority files can be transferred.
+
+## 4. Limit simultaneous transfers for large files
+
+To avoid network saturation, EasySave 3.0 introduces a user-configurable **maximum threshold (n KB)**.
+
+**Rule** :
+- Two files **above the threshold** cannot be transferred at the same time
+- While a large file is being transferred, other jobs can continue to transfer smaller files (if priority rules allow)
+This threshold can be configured in the general parameters.
+
+## 5. real-time interaction with jobs
+
+The user can now control each job individually or all jobs together:
+- **Pause**
+- **Resume**
+- **Immediate stop** Real-time monitoring
+- **Real-time monitoring** (progress, status, file in progress, etc.)
+This feature improves control and visibility of operations.
+
+## 6. Automatic pause on active business software
+
+If user-defined business software is detected :
+- All jobs are automatically paused
+- They resume automatically when the business software is closed
+This mechanism ensures that backups do not disrupt critical applications.
+
+## 7. CryptoSoft Mono-Instance
+
+CryptoSoft is now **mono-instance**:
+- Impossible to run multiple instances simultaneously
+
+## 8. Centralization of daily logs (Docker)
+
+EasySave 3.0 enables **centralization of logs** via a dedicated log server, deployed in a Docker container.
+
+### 8.1. Prerequisites
+- Docker installed
+- Access to LogHub.Server project
+- An available port (default: 9696)
+- A local folder on the server to store logs (e.g. : /home/nas/loghub-logs)
+
+### 8.2 Upload project to server
+
+From the local station :
+```
+scp -r .\src\LogHub.Server nas@192.168.74.137:/home/nas/easysave/
+```
+- nas = server user
+- 192.168.74.137 = server IP
+- /home/nas/easysave/ = target folder
+
+### 8.3. Building the Docker image
+In the folder containing both `Dockerfile` and `LogHub.Server.csproj` (usually `src/LogHub.Server`) :
+```
+docker build -t loghub-server:latest .
+```
+
+Alternative (from repository root):
+```bash
+docker build -f src/LogHub.Server/Dockerfile -t loghub-server:latest src/LogHub.Server
+```
+
+### 8.4. Container launch
+
+```
+docker run -d \
+  --name loghub-server \
+  -p 9696:9696 \
+  -e LogHub__Port=9696 \
+  -e LogHub__WebSocketPath=/ws/logs \
+  -e LogHub__LogDirectory=/app/logs \
+  -v ~/loghub-logs:/app/logs \
+  --restart unless-stopped \
+  loghub-server:latest
+```
+- **--name loghub-server : container name**
+
+- **-e LogHub__Port=9696 : configure internal port**
+
+- **-e LogHub__WebSocketPath=/ws/logs : configure WebSocket endpoint path**
+
+- **-e LogHub__LogDirectory=/app/logs : configure log storage directory in container**
+
+- **-p 9696:9696 : expose server port**
+
+- **-v ~/loghub-logs:/app/logs : persistent Docker volume containing logs**
+
+The centralized daily files will then be available in the host folder mounted in `-v` (example: `~/loghub-logs`) and inside the container at `/app/logs`.
+
+### 8.5 Check operation
+
+View active containers :
+```
+docker ps
+```
+View server logs :
+```
+docker logs -f loghub-server
+```
+Optional health check:
+```bash
+curl http://<host>:9696/health
+```
+### 8.6. EasySave side configuration
+In EasySave Settings :
+
+- **Log storage mode :**
+	- LocalOnly
+	- ServerOnly
+	- LocalAndServer
+- **Log server host** : server address
+- **Log server port** : exposed port
+
+EasySave builds the default endpoint as `ws://<host>:<port>/ws/logs` (or `wss://...` when TLS is enabled).
+If your deployment uses another path or a reverse proxy, configure the full WebSocket URL (if exposed by your build/settings).
+
+EasySave will then send the logs in real time to the Docker server via a **WebSocket**.
+The server exposes the following URL by default : ```ws://<host>:<port>/ws/logs``` 
+For a secure version (TLS via reverse proxy / TLS-enabled endpoint), the URL becomes : ```wss://<host>:<port>/ws/logs```
+
+## 9. New parameters 
+
+- List of priority extensions
+- Maximum size threshold (KB) for simultaneous transfers
+- Log centralization mode
+- CryptoSoft single-instance management

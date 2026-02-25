@@ -19,6 +19,7 @@ EasySave.EasyLog     -> logging library
 EasySave.App.Console -> console interface
 EasySave.App.Gui     -> graphical interface (Avalonia)
 CryptoSoft           -> external program for encryption
+LogHub.Server        -> Docker server for centralized logs (WebSocket)
 ```
 ---
 
@@ -78,6 +79,8 @@ Constraints :
 - `CryptoSoftProcessService` : Launch CryptoSoft to encrypt files
 - `NoEncryptionService`: Job processing without encryption (files not affected by encryption rules)
 - `JobExecutionControl`: Execution control / Play / Pause / Stop
+- `PriorityMonitor`: management of priority extensions
+- `LargeFileTransferLimiter`: management of large files
 
 **Repositories**
 - `JobRepository`: persistence in `jobs.json` (limit to 5 jobs).
@@ -93,9 +96,9 @@ Constraints :
 
 Components:
 - **Interfaces** : `ILogger<T>`, `ILogSerializer`, `ILogWriter`.
-- **Loggers**: `DailyLogger<T>`, `SafeLogger<T>`.
+- **Loggers**: `DailyLogger<T>`, `WebSocketLogger<T>`, `LocalAndServerLogger<T>`, `SafeLogger<T>`.
 - **Serialization**: JSON, XML.
-- **Options**: `LogOptions`, `LogFormat`.
+- **Options**: `LogOptions`, `LogFormat`, `LogServerOptions`.
 - **Factory**: `LoggerFactory`.
 - **Tools**: `DailyFileHelper`.
 - **Writers** : `FileLogWriter`
@@ -103,7 +106,9 @@ Components:
 Features :
 - daily writing,
 - JSON/XML formats,
-- `UseSafeLogger` option to absorb exceptions.
+- `UseSafeLogger` option to absorb exceptions,
+- real-time sending via WebSocket (`ws://` / `wss://`),
+- local / server / hybrid storage modes.
 
 ---
 
@@ -156,7 +161,20 @@ Components:
   - `>0` encryption time in ms  
   - <0 encryption error  
 ---
+### 7. LogHub.Server (Docker)
+**Role :**
+- WebSocket server receiving EasySave logs,
+- log storage in a persistent Docker volume,
+- a single log file for all users.
 
+**Features :**
+- WebSocket : `ws://<host>:<port>/ws/logs`
+- Docker volume : `/app/logs`
+- Persistence : `-v ~/loghub-logs:/app/logs`
+- Automatic restart : `--restart unless-stopped`
+- Health endpoint : `GET /health`
+- Configurable endpoint/path via `LogHub__Port` and `LogHub__WebSocketPath`
+---
 ## Main flows
 
 ### Launch application (Console)
@@ -172,12 +190,15 @@ Program
 ```
  UI (Console)
   -> BackupService.Run(job)
-     -> BackupEngine.Run(job)
-        -> Strategy (Full/Differential)
-        -> System.IO (enumeration + copy)
-        -> EasyLog (resume)
-     -> JobService.MarkExecuted(job.Id)
-  -> Display result
+     -> immediate start result (async launch)
+     -> Task.Run(...)
+        -> BackupEngine.Run(job)
+           -> Strategy (Full/Differential)
+           -> System.IO (enumeration + copy)
+           -> StateChanged events -> StateWriter
+           -> EasyLog (progress + resume)
+        -> JobService.MarkExecuted(job.Id)
+  -> Display start result + live progress
 ```
 
 ### Snapshot of global state (state.json)
@@ -250,8 +271,9 @@ The latest diagrams are in `docs/uml` :
 
 ## Points of attention
 
-- Unlimited job management  
-- Automatic file encryption via CryptoSoft
-- Job detection and blocking if business software active (configurable)
-- GUI now fully connected to App services for execution and parameterization
-- Enhanced logging, with integrated encryption time
+- Priority extensions
+- Large file threshold
+- Automatic pause if business software active
+- CryptoSoft single-instance encryption
+- Log centralization via WebSocket
+- Host/Port chosen by company
