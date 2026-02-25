@@ -185,19 +185,24 @@ Nommage des ressources :
     <value>1. Backup Job Configuration</value>
   </data>
     <data name="Step1_Desc" xml:space="preserve">
-    <value>Navigate to 'Backup Jobs'. Click the add button to define a new task. You must provide a unique name, a valid source directory, and a target destination. Choose between 'Full' (complete copy) or 'Differential' (only changed files).</value>
+    <value>Navigate to 'Backup Jobs'. Click the add button to define a new task. 
+You must provide a unique name, a valid source directory, and a target destination. 
+Choose between 'Full' (complete copy) or 'Differential' (only changed files).</value>
   </data>
     <data name="Step2_Title" xml:space="preserve">
     <value>2. Security &amp; Encryption Whitelist</value>
   </data>
     <data name="Step2_Desc" xml:space="preserve">
-    <value>In 'Settings', define your secret XOR key. Use the 'Extensions to encrypt' section to add specific formats (e.g., .txt, .docx). Only files with these extensions will be encrypted during the backup process.</value>
+    <value>In 'Settings', define your secret XOR key. 
+Use the 'Extensions to encrypt' section to add specific formats (e.g., .txt, .docx). 
+Only files with these extensions will be encrypted during the backup process.</value>
   </data>
     <data name="Step3_Title" xml:space="preserve">
     <value>3. Execution &amp; Logs</value>
   </data>
     <data name="Step3_Desc" xml:space="preserve">
-    <value>Go to 'Live Execution' to start your jobs. You can monitor progress bars in real-time. All actions are recorded in the 'Logs' folder (JSON or XML format) for auditing and error tracking.</value>
+    <value>Go to 'Live Execution' to start your jobs. You can monitor progress bars in real-time. 
+ All actions are recorded in the 'Logs' folder (JSON or XML format) for auditing and error tracking.</value>
   </data>
     <data name="Team_Title" xml:space="preserve">
     <value>DEVELOPMENT TEAM</value>
