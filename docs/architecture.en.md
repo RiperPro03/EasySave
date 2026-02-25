@@ -19,6 +19,7 @@ EasySave.EasyLog     -> logging library
 EasySave.App.Console -> console interface
 EasySave.App.Gui     -> graphical interface (Avalonia)
 CryptoSoft           -> external program for encryption
+LogHub.Server        -> Docker server for centralized logs (WebSocket)
 ```
 ---
 
@@ -78,6 +79,8 @@ Constraints :
 - `CryptoSoftProcessService` : Launch CryptoSoft to encrypt files
 - `NoEncryptionService`: Job processing without encryption (files not affected by encryption rules)
 - `JobExecutionControl`: Execution control / Play / Pause / Stop
+- `PriorityMonitor`: management of priority extensions
+- `LargeFileTransferLimiter`: management of large files
 
 **Repositories**
 - `JobRepository`: persistence in `jobs.json` (limit to 5 jobs).
@@ -103,7 +106,8 @@ Components:
 Features :
 - daily writing,
 - JSON/XML formats,
-- `UseSafeLogger` option to absorb exceptions.
+- `UseSafeLogger` option to absorb exceptions,
+- real-time sending via WebSocket.
 
 ---
 
@@ -156,7 +160,18 @@ Components:
   - `>0` encryption time in ms  
   - <0 encryption error  
 ---
+### 7. LogHub.Server (Docker)
+**Role :**
+- WebSocket server receiving EasySave logs,
+- log storage in a persistent Docker volume,
+- a single log file for all users.
 
+**Features :**
+- WebSocket : `ws://<host>:<port>/ws/logs`
+- Docker volume : `/app/logs`
+- Persistence : `-v ~/loghub-logs:/app/logs`
+- Automatic restart : `--restart unless-stopped`
+---
 ## Main flows
 
 ### Launch application (Console)
@@ -250,8 +265,9 @@ The latest diagrams are in `docs/uml` :
 
 ## Points of attention
 
-- Unlimited job management  
-- Automatic file encryption via CryptoSoft
-- Job detection and blocking if business software active (configurable)
-- GUI now fully connected to App services for execution and parameterization
-- Enhanced logging, with integrated encryption time
+- Priority extensions
+- Large file threshold
+- Automatic pause if business software active
+- CryptoSoft single-instance encryption
+- Log centralization via WebSocket
+- Host/Port chosen by company

@@ -19,6 +19,7 @@ EasySave.EasyLog     -> bibliotheque de logging
 EasySave.App.Console -> interface console
 EasySave.App.Gui     -> interface graphique (Avalonia)
 CryptoSoft           -> programme externe pour chiffrement
+LogHub.Server        -> serveur Docker pour centralisation des logs (WebSocket)
 ```
 
 ---
@@ -79,6 +80,8 @@ Contraintes :
 - `CryptoSoftProcessService` : Lancement de CryptoSoft pour chiffrer fichiers
 - `NoEncryptionService` : Traitement des jobs sans chiffrement (fichiers non concernés par les règles de cryptage)
 - `JobExecutionControl` : Contrôle exécution / Play / Pause / Stop
+- `PriorityMonitor`: gestion des extensions prioritaires
+- `LargeFileTransferLimiter`: gestion des fichiers volumineux
 
 **Repositories**
 - `JobRepository` : persistance dans `jobs.json` (limite a 5 jobs).
@@ -105,7 +108,8 @@ Composants :
 Caracteristiques :
 - ecriture journaliere,
 - formats JSON/XML,
-- option `UseSafeLogger` pour absorber les exceptions.
+- option `UseSafeLogger` pour absorber les exceptions,
+- envoi temps réel via WebSocket.
 
 ---
 
@@ -159,6 +163,18 @@ Composants :
   - <0 erreur de chiffrement  
 ---
 
+### 7. LogHub.Server (Docker)
+**Rôle :**
+- serveur WebSocket recevant les logs EasySave,
+- stockage des logs dans un volume Docker persistant,
+- un fichier journalier unique pour tous les utilisateurs.
+
+**Caractéristiques :**
+- WebSocket : `ws://<host>:<port>/ws/logs`
+- Volume Docker : `/app/logs`
+- Persistance : `-v ~/loghub-logs:/app/logs`
+- Redémarrage automatique : `--restart unless-stopped`
+---
 ## Flux principaux
 
 ### Lancement de l application (Console)
@@ -253,8 +269,9 @@ Les diagrammes a jour sont dans `docs/uml` :
 
 ## Points d attention
 
-- Gestion des jobs illimités  
-- Fichiers à chiffrer automatiquement via CryptoSoft
-- Détection et blocage des jobs si logiciel métier actif (configurable)
-- GUI maintenant pleinement connectée aux services App pour exécution et paramétrage
-- Logging enrichi, avec temps de cryptage intégré
+- Extensions prioritaires
+- Seuil fichiers volumineux
+- Pause automatique si logiciel métier actif
+- Chiffrement CryptoSoft mono-instance
+- Centralisation des logs via WebSocket
+- Host/Port choisis par l’entreprise
