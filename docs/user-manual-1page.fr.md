@@ -207,17 +207,30 @@ CryptoSoft ne peut plus être lancé plusieurs fois en même temps.
 
 ## 7 Centralisation des logs (Docker)
 
-EasySave 3.0 permet d’envoyer les logs vers un serveur Docker.
+EasySave 3.0 permet d’envoyer les journaux de sauvegarde vers un serveur centralisé fonctionnant dans un conteneur Docker.
+Cette fonctionnalité est utile lorsque plusieurs utilisateurs ou plusieurs machines utilisent EasySave dans une même entreprise.
 
-L’utilisateur peut choisir :
-- **Local uniquement**
-- **Centralisé uniquement**
-- **Local + centralisé**
+### 7.1. Modes de stockage disponibles
+L’utilisateur peut choisir entre trois modes :
 
-**Caractéristiques** :
-- Un fichier journalier unique pour tous les utilisateurs
-- Identification de l’utilisateur et de la machine
-- Envoi en temps réel au serveur Docker
+- Local uniquement : Les logs sont enregistrés uniquement sur la machine de l’utilisateur.
+- Centralisé uniquement : Les logs sont envoyés uniquement au serveur Docker.
+- Local + centralisé : Les logs sont enregistrés localement et envoyés au serveur Docker.
+
+### 7.2. Paramètres à renseigner
+Si vous choisissez un mode impliquant le serveur (Centralisé ou Local + centralisé), deux informations doivent être renseignées :
+
+- Host : l’adresse IP du serveur Docker
+- Port : port configuré sur le serveur 
+
+Ces paramètres sont accessibles dans le menu Settings.
+
+### 7.3. Caractéristiques de la centralisation
+- Un fichier journalier unique est généré pour tous les utilisateurs.
+- Chaque entrée de log contient l’identité de l’utilisateur et de la machine.
+- Envoi des logs en temps réel via WebSocket
+- Stockage persistant grâce au volume Docker (/app/logs).
+- Les logs restent disponibles même après un redémarrage du conteneur.
 
 ## 8. Nouveaux paramètres dans Settings
 
