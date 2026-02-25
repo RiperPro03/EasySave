@@ -386,7 +386,7 @@ Ce projet est développé dans le cadre d'un projet académique **CESI**.
 
 MIT License
 
-Copyright &copy; 2026 — Projet académique CESI
+Copyright &copy; 2026
 
 ## Diagrammes UML
 
@@ -394,7 +394,7 @@ Copyright &copy; 2026 — Projet académique CESI
 
 <div align="left">
 
-Le module **EasyLog** est une DLL dédiée au logging indépendant et réutilisable, il est de fait inchangé pour cette v2.
+Le module **EasyLog** est une DLL dédiée au logging indépendant et réutilisable, il est inchangé depuis la v1.
 
 ![Diagramme de classes EasyLog](docs/uml/EasyLog/DiagrammeClass_EasyLog.svg)
 
@@ -453,7 +453,7 @@ L'interface **Console** offre une expérience utilisateur en ligne de commande (
 
 L'interface **Gui** apporte l'expérience graphique d'EasySave en s'appuyant sur Avalonia et le pattern MVVM.
 
-![Diagramme de classes GUI](docs/uml/Gui/DiagrammeClass_Gui_v2.svg)
+![Diagramme de classes GUI](docs/uml/Gui/DiagrammeClass_EasySave_App_Gui_MVVM_Focus.svg)
 
 <details>
 <summary><strong>Voir le résumé du module GUI</strong></summary>
@@ -471,13 +471,36 @@ L'interface **Gui** apporte l'expérience graphique d'EasySave en s'appuyant sur
 
 ---
 
-### App - Logique Applicative
+### Diagramme de Classes Général
+
+<div align="left">
+
+Ce diagramme est composé de différents blocks : Encryption, State management, Backup execution, utilities, settings, Job management, App, Core et EasyLog 
+
+![Diagramme de classes Général](docs/uml/App/DiagrammeClass_General.svg)
+
+<details>
+<summary><strong>Voir les détails techniques du système EasySave</strong></summary>
+
+Résumé détaillé par module :
+
+- Configuration et Infrastructure : Utilisation d'un modèle central AppConfig pour centraliser les paramètres (langue, logs, chiffrement, seuils). La cohérence des répertoires est assurée par PathProvider (via IPathProvider), tandis que AppConfigRepository gère la persistance physique. Le SettingsService expose les méthodes de modification dynamique (langue, chiffrement, etc.).
+
+- Gestion des Travaux (Jobs) : Les travaux sont définis par la classe BackupJob (ID, chemins, type complet ou différentiel, extensions prioritaires). Le JobRepository assure le stockage et la récupération, tandis que le JobService orchestre la création, la mise à jour et la suppression des tâches.
+
+- Exécution et Moteur : Le BackupService pilote le cycle de vie (Run/Pause/Stop) et vérifie les logiciels métier. Le BackupEngine réalise le transfert selon les stratégies FullCopyStrategy ou DifferentialCopyStrategy. Le contrôle est affiné par JobExecutionControl (gestion des attentes), PriorityMonitor (priorisation des extensions) et LargeFileTransferLimiter (seuil de fichiers volumineux).
+
+- Suivi en Temps Réel : Capture de l'avancement via les DTOs JobStateDto et AppStateDto. Le StateWriter assure la persistance en temps réel dans le fichier state.json pour permettre un monitoring externe constant.
+
+- Sécurité et Utilitaires : Gestion du chiffrement via CryptoSoftProcessService (implémentant ICryptoService) avec un mécanisme de repli (NoEncryptionService). Le BusinessSoftwareDetector suspend l'exécution en cas de détection d'un logiciel interdit, et UncResolver normalise les chemins réseau pour la traçabilité.
+
+- Système de Journalisation : Couche d'abstraction AppLogService utilisant un LogEntryBuilder pour générer des logs enrichis (LogEntryDto). Le moteur technique EasyLog permet un stockage hybride (local via DailyLogger ou distant via WebSocketLogger), supporte les formats JSON/XML et propose des services de lecture via LogReaderService.
+
+</details>
 
 <div align="left">
 
 Le module **App** implémente la logique applicative concrète et orchestre l'exécution des sauvegardes.
-
-![Diagramme de classes App](docs/uml/App/DiagrammeClass_App_Implementation_v2.svg)
 
 <details>
 <summary><strong>Voir le résumé du module App</strong></summary>
@@ -496,15 +519,9 @@ Le module **App** implémente la logique applicative concrète et orchestre l'ex
 
 </div>
 
----
-
-### Core - Couche Métier
-
 <div align="left">
 
 Le module **Core** porte le domaine métier et les contrats partagés par toute l'application.
-
-![Diagramme de classes Core](docs/uml/Core/DiagrammeClass_Core_v2.svg)
 
 <details>
 <summary><strong>Voir le résumé du module Core</strong></summary>
