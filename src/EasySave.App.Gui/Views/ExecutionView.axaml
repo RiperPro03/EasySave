@@ -370,19 +370,6 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </ScrollViewer>
-
-        <Border Grid.Row="2"
-                IsVisible="{Binding HasError}"
-                Background="#15FF3B30"
-                BorderBrush="#FF3B30"
-                BorderThickness="1"
-                CornerRadius="8"
-                Padding="12"
-                Margin="0,12,0,0">
-            <TextBlock Text="{Binding LastError}"
-                       FontSize="12"
-                       Foreground="White"/>
-        </Border>
     </Grid>
 </UserControl>
 
