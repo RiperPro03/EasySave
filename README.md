@@ -425,7 +425,7 @@ Le module **EasyLog** est une DLL dédiée au logging indépendant et réutilisa
 
 <div align="left">
 
-L'interface **Console** offre une expérience utilisateur en ligne de commande (CLI), elle aussi est inchangé depuis la v1, cette dernière étant "abandonné" au profit de l'interface Gui
+L'interface **Console** offre une expérience utilisateur en ligne de commande (CLI), elle aussi est inchangé depuis la v1, cette dernière étant "abandonné" au profit de l'interface Gui depuis la v2
 
 ![Diagramme de classes Console](docs/uml/Console/DiagrammeClass_Console_(ConsoleUi).svg)
 
@@ -541,60 +541,38 @@ Le module **Core** porte le domaine métier et les contrats partagés par toute 
 
 ---
 
-## Diagrammes Généraux
-
 ### Diagramme d'Activité
 
 <div align="left">
 
 Vue d'ensemble du flux d'exécution des sauvegardes dans l'application.
 
-![Diagramme d'activité général](docs/uml/DiagrammeActivite_General_v2.svg)
+![Diagramme d'activité général](docs/uml/DiagrammeActivite_General.svg)
 
 <details>
 <summary><strong> Flux d'activité & Processus d'exécution</strong></summary>
 
 Étapes principales :
-
-Initialisation : Chargement de la configuration, application de la langue et injection des services au démarrage.
-
-Gestion des travaux : CRUD complet des jobs de sauvegarde avec persistance immédiate.
+- Initialisation : Chargement de la configuration, application de la langue et injection des services au démarrage.
+- Gestion des travaux : CRUD complet des jobs de sauvegarde avec persistance immédiate.
 
 Cycle d'exécution :
-
-Vérification préventive du logiciel métier (blocage si le processus est détecté).
-
-Sélection intelligente de la stratégie (Complet vs Différentiel via Hash).
-
-File d'attente séquentielle pour les lancements groupés.
+- Vérification préventive du logiciel métier (blocage si le processus est détecté).
+- Sélection intelligente de la stratégie (Complet vs Différentiel via Hash).
+- File d'attente séquentielle pour les lancements groupés.
 
 Moteur de copie & Sécurité :
-
-Boucle de copie de fichiers avec mise à jour en temps réel de l'état (Progression, Débit).
-
-Interfaçage avec CryptoSoft pour le chiffrement à la volée selon les extensions définies.
+- Boucle de copie de fichiers avec mise à jour en temps réel de l'état (Progression, Débit).
+- Interfaçage avec CryptoSoft pour le chiffrement à la volée selon les extensions définies.
 
 Finalisation : Génération automatique des rapports de fin (Success/Error) et mise à jour des logs.
 
 Contraintes de flux :
-
-Interruption immédiate ou mise en pause si le logiciel métier est lancé en cours de backup.
-
-Gestion des erreurs bloquantes (source indisponible) vs erreurs mineures (échec de chiffrement sur un fichier).
-
-Pilotage interactif : Pause, Reprise ou Stop à tout moment depuis l'interface.
+- Interruption immédiate ou mise en pause si le logiciel métier est lancé en cours de backup.
+- Gestion des erreurs bloquantes (source indisponible) vs erreurs mineures (échec de chiffrement sur un fichier).
+- Pilotage interactif : Pause, Reprise ou Stop à tout moment depuis l'interface.
 
 </details>
-
-</div>
-
-**Version alternative :**
-
-<div align="center">
-
-![Diagramme d'activité général - Mermaid](docs/uml/DiagrammeActivite_General_mermaid_v2.svg)
-
-</div>
 
 ---
 
@@ -604,7 +582,7 @@ Pilotage interactif : Pause, Reprise ou Stop à tout moment depuis l'interface.
 
 Ce diagramme formalise les interactions entre l'utilisateur, les services externes et les fonctionnalités métier d'EasySave v2.0.
 
-![Diagramme de cas d'utilisation](docs/uml/DiagrammeUseCase_General.png)
+![Diagramme de cas d'utilisation](docs/uml/DiagrammeUseCase_General.svg)
 
 <details>
 <summary><strong>Voir le résumé du scénario Use Case</strong></summary>
@@ -638,7 +616,7 @@ Ce diagramme formalise les interactions entre l'utilisateur, les services extern
 
 Ce diagramme illustre le cycle complet d'un job, de la sélection par l'utilisateur jusqu'au résultat final affiché.
 
-![Diagramme de séquence - Lancement d'un job](docs/uml/DiagrammeSequence_de_lancement_d_un_job_v2.svg)
+![Diagramme de séquence - Lancement d'un job](docs/uml/DiagrammeSequence_RunJob_General.svg)
 
 <details>
 <summary><strong>Voir le résumé du scénario</strong></summary>
@@ -663,7 +641,7 @@ Ce diagramme illustre le cycle complet d'un job, de la sélection par l'utilisat
 
 Ce diagramme décrit la logique de copie sélective en mode différentiel.
 
-![Diagramme de séquence - Sauvegarde différentielle](docs/uml/DiagrammeSequence_sauvegarde_differentielle_v2.svg)
+![Diagramme de séquence - Sauvegarde différentielle](docs/uml/DiagrammeSequence_Backup_Differential.svg)
 
 <details>
 <summary><strong>Voir le résumé du scénario</strong></summary>
@@ -681,37 +659,13 @@ Ce diagramme décrit la logique de copie sélective en mode différentiel.
 
 ---
 
-### Lancement d'un Batch via Arguments
-
-<div align="left">
-
-Ce diagramme montre l'exécution séquentielle de plusieurs jobs depuis la ligne de commande.
-
-![Diagramme de séquence - Batch via arguments](docs/uml/DiagrammeSequence_lancement_d_un_batch_via_arguments_v2.svg)
-
-<details>
-<summary><strong>Voir le résumé du scénario</strong></summary>
-
-**Résumé :**
-- Analyse des arguments (`ArgsParser`) avec support des formats `1;2;3` et `1-3`.
-- Gestion immédiate des erreurs de syntaxe/intervalle avant toute exécution.
-- Contrôle global puis contrôle par job (`CanStartSequence`) pour respecter la contrainte logiciel métier.
-- Boucle d'exécution séquentielle: chargement du job, lancement, retour de résultat, puis passage au suivant.
-- Isolation des erreurs par job et restitution d'un bilan global de batch en fin de traitement.
-
-</details>
-
-</div>
-
----
-
 ### Processus de Journalisation
 
 <div align="left">
 
 Ce diagramme présente la chaîne de journalisation, de la construction de l'entrée jusqu'à l'écriture disque.
 
-![Diagramme de séquence - Journalisation](docs/uml/DiagrammeSequence_de_journalisation_v2.svg)
+![Diagramme de séquence - Journalisation](docs/uml/DiagrammeSequence_de_journalisation.svg)
 
 <details>
 <summary><strong>Voir le résumé du scénario</strong></summary>
