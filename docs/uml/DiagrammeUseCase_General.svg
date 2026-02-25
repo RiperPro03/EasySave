@@ -28,9 +28,9 @@
      inkscape:pageopacity="0"
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#505050"
-     inkscape:zoom="1.1406306"
-     inkscape:cx="431.77871"
-     inkscape:cy="1564.4855"
+     inkscape:zoom="0.80654762"
+     inkscape:cx="528.79705"
+     inkscape:cy="574.67159"
      inkscape:window-width="1920"
      inkscape:window-height="1094"
      inkscape:window-x="-11"
@@ -42,7 +42,8 @@
   <defs
      id="defs1" />
   <g
-     id="g87">
+     id="g87"
+     transform="translate(-2,4)">
     <g
        class="title"
        data-source-line="17"
@@ -50,10 +51,10 @@
       <text
          fill="#000000"
          font-family="sans-serif"
-         font-size="14"
+         font-size="14px"
          font-weight="bold"
          lengthAdjust="spacing"
-         textLength="213.1309"
+         textLength="213.13091"
          x="502.3299"
          y="22.9951"
          id="text1">EasySave - Use case (V3.0)</text>
@@ -69,19 +70,19 @@
          height="1831"
          rx="2.5"
          ry="2.5"
-         style="stroke:#181818;stroke-width:1;"
+         style="stroke:#181818;stroke-width:1"
          width="1003.1"
-         x="98.01"
-         y="179.0969"
+         x="98.010002"
+         y="179.09689"
          id="rect1" />
       <text
          fill="#000000"
          font-family="sans-serif"
-         font-size="14"
+         font-size="14px"
          font-weight="bold"
          lengthAdjust="spacing"
          textLength="113.4219"
-         x="542.8491"
+         x="542.84912"
          y="194.092"
          id="text2">EasySave v3.0</text>
     </g>
@@ -92,12 +93,12 @@
        data-source-line="32"
        id="ent0007">
       <path
-         d="M177.36,1725.0969 L309.1246,1725.0969 A3.75,3.75 0 0 1 311.6246,1727.5969 L318.6246,1747.3938 L706.57,1747.3938 A2.5,2.5 0 0 1 709.07,1749.8938 L709.07,1983.5969 A2.5,2.5 0 0 1 706.57,1986.0969 L177.36,1986.0969 A2.5,2.5 0 0 1 174.86,1983.5969 L174.86,1727.5969 A2.5,2.5 0 0 1 177.36,1725.0969"
+         d="m 177.36,1725.0969 h 131.7646 a 3.75,3.75 0 0 1 2.5,2.5 l 7,19.7969 H 706.57 a 2.5,2.5 0 0 1 2.5,2.5 v 233.7031 a 2.5,2.5 0 0 1 -2.5,2.5 H 177.36 a 2.5,2.5 0 0 1 -2.5,-2.5 v -256 a 2.5,2.5 0 0 1 2.5,-2.5"
          fill="none"
-         style="stroke:#000000;stroke-width:1.5;"
+         style="stroke:#000000;stroke-width:1.5"
          id="path2" />
       <line
-         style="stroke:#000000;stroke-width:1.5;"
+         style="stroke:#000000;stroke-width:1.5"
          x1="174.86"
          x2="318.6246"
          y1="1747.3938"
@@ -106,7 +107,7 @@
       <text
          fill="#000000"
          font-family="sans-serif"
-         font-size="14"
+         font-size="14px"
          font-weight="bold"
          lengthAdjust="spacing"
          textLength="130.7646"
@@ -121,14 +122,14 @@
        data-source-line="39"
        id="ent0012">
       <path
-         d="M157.89,867.0969 L352.6,867.0969 A3.75,3.75 0 0 1 355.1,869.5969 L362.1,889.3938 L1074.61,889.3938 A2.5,2.5 0 0 1 1077.11,891.8938 L1077.11,1424.5969 A2.5,2.5 0 0 1 1074.61,1427.0969 L157.89,1427.0969 A2.5,2.5 0 0 1 155.39,1424.5969 L155.39,869.5969 A2.5,2.5 0 0 1 157.89,867.0969"
+         d="M 157.89,867.0969 H 352.6 a 3.75,3.75 0 0 1 2.5,2.5 l 7,19.7969 h 712.51 a 2.5,2.5 0 0 1 2.5,2.5 v 532.7031 a 2.5,2.5 0 0 1 -2.5,2.5 H 157.89 a 2.5,2.5 0 0 1 -2.5,-2.5 v -555 a 2.5,2.5 0 0 1 2.5,-2.5"
          fill="none"
-         style="stroke:#000000;stroke-width:1.5;"
+         style="stroke:#000000;stroke-width:1.5"
          id="path3" />
       <line
-         style="stroke:#000000;stroke-width:1.5;"
+         style="stroke:#000000;stroke-width:1.5"
          x1="155.39"
-         x2="362.1"
+         x2="362.10001"
          y1="889.3938"
          y2="889.3938"
          id="line3" />
@@ -150,12 +151,12 @@
        data-source-line="52"
        id="ent0022">
       <path
-         d="M143.23,1451.0969 L237.3423,1451.0969 A3.75,3.75 0 0 1 239.8423,1453.5969 L246.8423,1473.3938 L717.03,1473.3938 A2.5,2.5 0 0 1 719.53,1475.8938 L719.53,1698.5969 A2.5,2.5 0 0 1 717.03,1701.0969 L143.23,1701.0969 A2.5,2.5 0 0 1 140.73,1698.5969 L140.73,1453.5969 A2.5,2.5 0 0 1 143.23,1451.0969"
+         d="m 143.23,1451.0969 h 94.1123 a 3.75,3.75 0 0 1 2.5,2.5 l 7,19.7969 H 717.03 a 2.5,2.5 0 0 1 2.5,2.5 v 222.7031 a 2.5,2.5 0 0 1 -2.5,2.5 h -573.8 a 2.5,2.5 0 0 1 -2.5,-2.5 v -245 a 2.5,2.5 0 0 1 2.5,-2.5"
          fill="none"
-         style="stroke:#000000;stroke-width:1.5;"
+         style="stroke:#000000;stroke-width:1.5"
          id="path4" />
       <line
-         style="stroke:#000000;stroke-width:1.5;"
+         style="stroke:#000000;stroke-width:1.5"
          x1="140.73"
          x2="246.8423"
          y1="1473.3938"
@@ -164,10 +165,10 @@
       <text
          fill="#000000"
          font-family="sans-serif"
-         font-size="14"
+         font-size="14px"
          font-weight="bold"
          lengthAdjust="spacing"
-         textLength="93.1123"
+         textLength="93.112297"
          x="144.73"
          y="1466.092"
          id="text5">Supervision</text>
@@ -179,21 +180,21 @@
        data-source-line="59"
        id="ent0027">
       <path
-         d="M124.51,222.0969 L233.675,222.0969 A3.75,3.75 0 0 1 236.175,224.5969 L243.175,244.3937 L715.43,244.3937 A2.5,2.5 0 0 1 717.93,246.8937 L717.93,840.5969 A2.5,2.5 0 0 1 715.43,843.0969 L124.51,843.0969 A2.5,2.5 0 0 1 122.01,840.5969 L122.01,224.5969 A2.5,2.5 0 0 1 124.51,222.0969"
+         d="m 124.51,222.0969 h 109.165 a 3.75,3.75 0 0 1 2.5,2.5 l 7,19.7968 H 715.43 a 2.5,2.5 0 0 1 2.5,2.5 v 593.7032 a 2.5,2.5 0 0 1 -2.5,2.5 H 124.51 a 2.5,2.5 0 0 1 -2.5,-2.5 v -616 a 2.5,2.5 0 0 1 2.5,-2.5"
          fill="none"
-         style="stroke:#000000;stroke-width:1.5;"
+         style="stroke:#000000;stroke-width:1.5"
          id="path5" />
       <line
-         style="stroke:#000000;stroke-width:1.5;"
+         style="stroke:#000000;stroke-width:1.5"
          x1="122.01"
          x2="243.175"
-         y1="244.3937"
-         y2="244.3937"
+         y1="244.39371"
+         y2="244.39371"
          id="line5" />
       <text
          fill="#000000"
          font-family="sans-serif"
-         font-size="14"
+         font-size="14px"
          font-weight="bold"
          lengthAdjust="spacing"
          textLength="108.165"
@@ -208,27 +209,27 @@
        data-source-line="33"
        id="ent0008">
       <ellipse
-         cx="272.6202"
+         cx="272.62021"
          cy="1825.0931"
-         fill="#FFF3E0"
-         rx="81.7602"
+         fill="#fff3e0"
+         rx="81.760201"
          ry="25.9163"
-         style="stroke:#2F3A4A;stroke-width:0.5;"
+         style="stroke:#2f3a4a;stroke-width:0.5"
          id="ellipse6" />
       <text
          fill="#000000"
          font-family="sans-serif"
-         font-size="14"
+         font-size="14px"
          font-weight="bold"
          lengthAdjust="spacing"
          textLength="109.4365"
-         x="217.902"
+         x="217.90199"
          y="1821.4073"
          id="text7">Gerer les jobs</text>
       <text
          fill="#000000"
          font-family="sans-serif"
-         font-size="14"
+         font-size="14px"
          font-weight="bold"
          lengthAdjust="spacing"
          textLength="112.0205"
@@ -243,17 +244,17 @@
        data-source-line="34"
        id="ent0009">
       <ellipse
-         cx="585.3824"
+         cx="585.38239"
          cy="1947.1013"
-         fill="#FFF3E0"
+         fill="#fff3e0"
          rx="104.0224"
          ry="23.2045"
-         style="stroke:#2F3A4A;stroke-width:0.5;"
+         style="stroke:#2f3a4a;stroke-width:0.5"
          id="ellipse8" />
       <text
          fill="#000000"
          font-family="sans-serif"
-         font-size="14"
+         font-size="14px"
          font-weight="bold"
          lengthAdjust="spacing"
          textLength="184.8848"
@@ -268,31 +269,31 @@
        data-source-line="35"
        id="ent0010">
       <ellipse
-         cx="585.3794"
+         cx="585.37939"
          cy="1863.0953"
-         fill="#FFF3E0"
+         fill="#fff3e0"
          rx="107.6894"
          ry="25.8584"
-         style="stroke:#2F3A4A;stroke-width:0.5;"
+         style="stroke:#2f3a4a;stroke-width:0.5"
          id="ellipse9" />
       <text
          fill="#000000"
          font-family="sans-serif"
-         font-size="14"
+         font-size="14px"
          font-weight="bold"
          lengthAdjust="spacing"
          textLength="144.2793"
-         x="513.2397"
+         x="513.23969"
          y="1859.3271"
          id="text10">Definir extensions</text>
       <text
          fill="#000000"
          font-family="sans-serif"
-         font-size="14"
+         font-size="14px"
          font-weight="bold"
          lengthAdjust="spacing"
          textLength="149.2764"
-         x="510.7412"
+         x="510.74121"
          y="1875.6239"
          id="text11">prioritaires par job</text>
     </g>
@@ -303,21 +304,21 @@
        data-source-line="36"
        id="ent0011">
       <ellipse
-         cx="585.3767"
+         cx="585.37671"
          cy="1781.0942"
-         fill="#FFF3E0"
-         rx="95.4867"
-         ry="21.4973"
-         style="stroke:#2F3A4A;stroke-width:0.5;"
+         fill="#fff3e0"
+         rx="95.486702"
+         ry="21.497299"
+         style="stroke:#2f3a4a;stroke-width:0.5"
          id="ellipse11" />
       <text
          fill="#000000"
          font-family="sans-serif"
-         font-size="14"
+         font-size="14px"
          font-weight="bold"
          lengthAdjust="spacing"
-         textLength="166.0586"
-         x="502.3474"
+         textLength="166.05859"
+         x="502.34741"
          y="1785.7427"
          id="text12">Sauvegarder les jobs</text>
     </g>
@@ -328,31 +329,31 @@
        data-source-line="40"
        id="ent0013">
       <ellipse
-         cx="912.3245"
-         cy="1385.0998"
-         fill="#FFF3E0"
+         cx="912.32452"
+         cy="1385.0999"
+         fill="#fff3e0"
          rx="117.1145"
-         ry="25.8229"
-         style="stroke:#2F3A4A;stroke-width:0.5;"
+         ry="25.822901"
+         style="stroke:#2f3a4a;stroke-width:0.5"
          id="ellipse12" />
       <text
          fill="#000000"
          font-family="sans-serif"
-         font-size="14"
+         font-size="14px"
          font-weight="bold"
          lengthAdjust="spacing"
          textLength="106.6885"
-         x="858.9803"
+         x="858.98029"
          y="1377.7209"
          id="text13">Piloter un job</text>
       <text
          fill="#000000"
          font-family="sans-serif"
-         font-size="14"
+         font-size="14px"
          font-weight="bold"
          lengthAdjust="spacing"
          textLength="191.4883"
-         x="816.5803"
+         x="816.58032"
          y="1394.0178"
          id="text14">commandes d execution</text>
     </g>
@@ -363,31 +364,31 @@
        data-source-line="41"
        id="ent0014">
       <ellipse
-         cx="912.3177"
+         cx="912.31769"
          cy="1298.0924"
-         fill="#FFF3E0"
+         fill="#fff3e0"
          rx="119.5777"
          ry="26.3155"
-         style="stroke:#2F3A4A;stroke-width:0.5;"
+         style="stroke:#2f3a4a;stroke-width:0.5"
          id="ellipse14" />
       <text
          fill="#000000"
          font-family="sans-serif"
-         font-size="14"
+         font-size="14px"
          font-weight="bold"
          lengthAdjust="spacing"
          textLength="167.7061"
-         x="828.4647"
+         x="828.46472"
          y="1294.6917"
          id="text15">Piloter plusieurs jobs</text>
       <text
          fill="#000000"
          font-family="sans-serif"
-         font-size="14"
+         font-size="14px"
          font-weight="bold"
          lengthAdjust="spacing"
          textLength="165.7646"
-         x="829.4354"
+         x="829.43542"
          y="1310.9886"
          id="text16">commandes globales</text>
     </g>
@@ -398,21 +399,21 @@
        data-source-line="43"
        id="ent0015">
       <ellipse
-         cx="585.3774"
+         cx="585.37738"
          cy="1108.0983"
-         fill="#FFF3E0"
-         rx="77.0074"
+         fill="#fff3e0"
+         rx="77.007401"
          ry="17.8015"
-         style="stroke:#2F3A4A;stroke-width:0.5;"
+         style="stroke:#2f3a4a;stroke-width:0.5"
          id="ellipse16" />
       <text
          fill="#000000"
          font-family="sans-serif"
-         font-size="14"
+         font-size="14px"
          font-weight="bold"
          lengthAdjust="spacing"
          textLength="123.5664"
-         x="523.5942"
+         x="523.59418"
          y="1112.7468"
          id="text17">Executer un job</text>
     </g>
@@ -425,29 +426,29 @@
       <ellipse
          cx="912.3222"
          cy="1206.1013"
-         fill="#FFF3E0"
-         rx="140.8722"
+         fill="#fff3e0"
+         rx="140.87219"
          ry="30.5744"
-         style="stroke:#2F3A4A;stroke-width:0.5;"
+         style="stroke:#2f3a4a;stroke-width:0.5"
          id="ellipse17" />
       <text
          fill="#000000"
          font-family="sans-serif"
-         font-size="14"
+         font-size="14px"
          font-weight="bold"
          lengthAdjust="spacing"
          textLength="228.8398"
-         x="797.9022"
+         x="797.90222"
          y="1203.514"
          id="text18">Controler execution en cours</text>
       <text
          fill="#000000"
          font-family="sans-serif"
-         font-size="14"
+         font-size="14px"
          font-weight="bold"
          lengthAdjust="spacing"
          textLength="215.4482"
-         x="804.598"
+         x="804.59802"
          y="1219.8109"
          id="text19">etat + commandes runtime</text>
     </g>
@@ -458,12 +459,12 @@
        data-source-line="45"
        id="ent0017">
       <ellipse
-         cx="912.3206"
+         cx="912.32062"
          cy="1108.095"
-         fill="#FFF3E0"
+         fill="#fff3e0"
          rx="148.7906"
          ry="32.1581"
-         style="stroke:#2F3A4A;stroke-width:0.5;"
+         style="stroke:#2f3a4a;stroke-width:0.5"
          id="ellipse19" />
       <text
          fill="#000000"
@@ -478,11 +479,11 @@
       <text
          fill="#000000"
          font-family="sans-serif"
-         font-size="14"
+         font-size="14px"
          font-weight="bold"
          lengthAdjust="spacing"
          textLength="233.0439"
-         x="795.7986"
+         x="795.79858"
          y="1122.1193"
          id="text21">blocage + auto-pause/reprise</text>
     </g>
@@ -491,29 +492,30 @@
        class="entity"
        data-qualified-name="EasySave v3.0.Execution et pilotage V3.UC_PriorityFlow"
        data-source-line="46"
-       id="ent0018">
+       id="ent0018"
+       transform="translate(-332.27235,-4.8218945)">
       <ellipse
-         cx="912.3217"
+         cx="912.32172"
          cy="1015.1012"
-         fill="#FFF3E0"
+         fill="#fff3e0"
          rx="119.6717"
-         ry="26.3343"
-         style="stroke:#2F3A4A;stroke-width:0.5;"
+         ry="26.334299"
+         style="stroke:#2f3a4a;stroke-width:0.5"
          id="ellipse21" />
       <text
          fill="#000000"
          font-family="sans-serif"
-         font-size="14"
+         font-size="14px"
          font-weight="bold"
          lengthAdjust="spacing"
          textLength="194.7012"
-         x="814.9712"
+         x="814.97119"
          y="1015.0371"
          id="text22">Appliquer priorisation et</text>
       <text
          fill="#000000"
          font-family="sans-serif"
-         font-size="14"
+         font-size="14px"
          font-weight="bold"
          lengthAdjust="spacing"
          textLength="124.5439"
@@ -526,24 +528,25 @@
        class="entity"
        data-qualified-name="EasySave v3.0.Execution et pilotage V3.UC_Log"
        data-source-line="47"
-       id="ent0019">
+       id="ent0019"
+       transform="translate(35.068322,18.849223)">
       <ellipse
-         cx="912.3242"
-         cy="928.0997"
-         fill="#FFF3E0"
+         cx="912.32422"
+         cy="928.09967"
+         fill="#fff3e0"
          rx="117.7142"
-         ry="25.9428"
-         style="stroke:#2F3A4A;stroke-width:0.5;"
+         ry="25.942801"
+         style="stroke:#2f3a4a;stroke-width:0.5"
          id="ellipse23" />
       <text
          fill="#000000"
          font-family="sans-serif"
-         font-size="14"
+         font-size="14px"
          font-weight="bold"
          lengthAdjust="spacing"
          textLength="214.4707"
-         x="805.0888"
-         y="932.7482"
+         x="805.08881"
+         y="932.74823"
          id="text24">Journaliser les evenements</text>
     </g>
     <!--entity UC_LogServerWrite-->
@@ -553,32 +556,32 @@
        data-source-line="48"
        id="ent0020">
       <ellipse
-         cx="585.3792"
-         cy="928.0947"
-         fill="#FFF3E0"
+         cx="585.37921"
+         cy="928.09473"
+         fill="#fff3e0"
          rx="114.7892"
          ry="25.3578"
-         style="stroke:#2F3A4A;stroke-width:0.5;"
+         style="stroke:#2f3a4a;stroke-width:0.5"
          id="ellipse24" />
       <text
          fill="#000000"
          font-family="sans-serif"
-         font-size="14"
+         font-size="14px"
          font-weight="bold"
          lengthAdjust="spacing"
          textLength="190.832"
          x="489.9632"
-         y="929.2424"
+         y="929.24237"
          id="text25">Envoyer logs au serveur</text>
       <text
          fill="#000000"
          font-family="sans-serif"
-         font-size="14"
+         font-size="14px"
          font-weight="bold"
          lengthAdjust="spacing"
-         textLength="78.2305"
-         x="546.264"
-         y="945.5392"
+         textLength="78.230499"
+         x="546.26398"
+         y="945.53918"
          id="text26">centralise</text>
     </g>
     <!--entity UC_Crypto-->
@@ -588,21 +591,21 @@
        data-source-line="49"
        id="ent0021">
       <ellipse
-         cx="272.6209"
+         cx="272.62091"
          cy="1017.093"
-         fill="#FFF3E0"
+         fill="#fff3e0"
          rx="101.2309"
          ry="22.6462"
-         style="stroke:#2F3A4A;stroke-width:0.5;"
+         style="stroke:#2f3a4a;stroke-width:0.5"
          id="ellipse26" />
       <text
          fill="#000000"
          font-family="sans-serif"
-         font-size="14"
+         font-size="14px"
          font-weight="bold"
          lengthAdjust="spacing"
          textLength="178.7666"
-         x="183.2376"
+         x="183.23759"
          y="1021.7415"
          id="text27">Chiffrer via CryptoSoft</text>
     </g>
@@ -694,17 +697,17 @@
        data-source-line="60"
        id="ent0028">
       <ellipse
-         cx="272.6208"
+         cx="272.62079"
          cy="363.095"
-         fill="#FFF3E0"
+         fill="#fff3e0"
          rx="100.0908"
          ry="22.4182"
-         style="stroke:#2F3A4A;stroke-width:0.5;"
+         style="stroke:#2f3a4a;stroke-width:0.5"
          id="ellipse31" />
       <text
          fill="#000000"
          font-family="sans-serif"
-         font-size="14"
+         font-size="14px"
          font-weight="bold"
          lengthAdjust="spacing"
          textLength="176.2578"
@@ -719,30 +722,30 @@
        data-source-line="61"
        id="ent0029">
       <ellipse
-         cx="272.6175"
+         cx="272.61749"
          cy="281.0994"
-         fill="#FFF3E0"
-         rx="95.1675"
-         ry="24.1225"
-         style="stroke:#2F3A4A;stroke-width:0.5;"
+         fill="#fff3e0"
+         rx="95.167503"
+         ry="24.122499"
+         style="stroke:#2f3a4a;stroke-width:0.5"
          id="ellipse32" />
       <text
          fill="#000000"
          font-family="sans-serif"
-         font-size="14"
+         font-size="14px"
          font-weight="bold"
          lengthAdjust="spacing"
-         textLength="142.2217"
-         x="201.5066"
+         textLength="142.22169"
+         x="201.50661"
          y="280.4585"
          id="text33">Choisir format log</text>
       <text
          fill="#000000"
          font-family="sans-serif"
-         font-size="14"
+         font-size="14px"
          font-weight="bold"
          lengthAdjust="spacing"
-         textLength="77.6699"
+         textLength="77.669899"
          x="233.7825"
          y="296.7554"
          id="text34">JSON/XML</text>
@@ -754,31 +757,31 @@
        data-source-line="62"
        id="ent0030">
       <ellipse
-         cx="272.6183"
-         cy="798.0985"
-         fill="#FFF3E0"
-         rx="134.6083"
-         ry="29.3217"
-         style="stroke:#2F3A4A;stroke-width:0.5;"
+         cx="272.61829"
+         cy="798.09851"
+         fill="#fff3e0"
+         rx="134.60831"
+         ry="29.321699"
+         style="stroke:#2f3a4a;stroke-width:0.5"
          id="ellipse34" />
       <text
          fill="#000000"
          font-family="sans-serif"
-         font-size="14"
+         font-size="14px"
          font-weight="bold"
          lengthAdjust="spacing"
-         textLength="233.085"
-         x="156.0758"
-         y="798.6666"
+         textLength="233.08501"
+         x="156.07581"
+         y="798.66663"
          id="text35">Choisir mode de stockage log</text>
       <text
          fill="#000000"
          font-family="sans-serif"
-         font-size="14"
+         font-size="14px"
          font-weight="bold"
          lengthAdjust="spacing"
          textLength="166.7627"
-         x="189.2369"
+         x="189.23689"
          y="814.9635"
          id="text36">Local / Server / Mixte</text>
     </g>
@@ -789,17 +792,17 @@
        data-source-line="63"
        id="ent0031">
       <ellipse
-         cx="272.6182"
+         cx="272.61819"
          cy="706.0965"
-         fill="#FFF3E0"
+         fill="#fff3e0"
          rx="125.3982"
-         ry="27.4796"
-         style="stroke:#2F3A4A;stroke-width:0.5;"
+         ry="27.479601"
+         style="stroke:#2f3a4a;stroke-width:0.5"
          id="ellipse36" />
       <text
          fill="#000000"
          font-family="sans-serif"
-         font-size="14"
+         font-size="14px"
          font-weight="bold"
          lengthAdjust="spacing"
          textLength="211.1758"
@@ -809,12 +812,12 @@
       <text
          fill="#000000"
          font-family="sans-serif"
-         font-size="14"
+         font-size="14px"
          font-weight="bold"
          lengthAdjust="spacing"
-         textLength="138.0996"
+         textLength="138.09959"
          x="203.5683"
-         y="722.8088"
+         y="722.80878"
          id="text38">host/port LogHub</text>
     </g>
     <!--entity UC_CryptoConfig-->
@@ -825,31 +828,31 @@
        id="ent0032">
       <ellipse
          cx="272.6225"
-         cy="618.0964"
-         fill="#FFF3E0"
+         cy="618.09637"
+         fill="#fff3e0"
          rx="106.3125"
          ry="25.3095"
-         style="stroke:#2F3A4A;stroke-width:0.5;"
+         style="stroke:#2f3a4a;stroke-width:0.5"
          id="ellipse38" />
       <text
          fill="#000000"
          font-family="sans-serif"
-         font-size="14"
+         font-size="14px"
          font-weight="bold"
          lengthAdjust="spacing"
          textLength="150.9375"
-         x="197.1538"
-         y="615.6576"
+         x="197.15379"
+         y="615.65759"
          id="text39">Definir chiffrement</text>
       <text
          fill="#000000"
          font-family="sans-serif"
-         font-size="14"
+         font-size="14px"
          font-weight="bold"
          lengthAdjust="spacing"
          textLength="129.8008"
-         x="207.7221"
-         y="631.9544"
+         x="207.72211"
+         y="631.95441"
          id="text40">extensions + cle</text>
     </g>
     <!--entity UC_BusinessConfig-->
@@ -859,22 +862,22 @@
        data-source-line="65"
        id="ent0033">
       <ellipse
-         cx="272.6231"
+         cx="272.62311"
          cy="533.1015"
-         fill="#FFF3E0"
+         fill="#fff3e0"
          rx="110.7231"
          ry="24.5446"
-         style="stroke:#2F3A4A;stroke-width:0.5;"
+         style="stroke:#2f3a4a;stroke-width:0.5"
          id="ellipse40" />
       <text
          fill="#000000"
          font-family="sans-serif"
-         font-size="14"
+         font-size="14px"
          font-weight="bold"
          lengthAdjust="spacing"
          textLength="172.0264"
-         x="186.6099"
-         y="532.9276"
+         x="186.60989"
+         y="532.92761"
          id="text41">Definir logiciel metier</text>
       <text
          fill="#000000"
@@ -895,26 +898,26 @@
        id="ent0034">
       <ellipse
          cx="272.6174"
-         cy="447.0944"
-         fill="#FFF3E0"
+         cy="447.09439"
+         fill="#fff3e0"
          rx="120.8374"
-         ry="26.5675"
-         style="stroke:#2F3A4A;stroke-width:0.5;"
+         ry="26.567499"
+         style="stroke:#2f3a4a;stroke-width:0.5"
          id="ellipse42" />
       <text
          fill="#000000"
          font-family="sans-serif"
-         font-size="14"
+         font-size="14px"
          font-weight="bold"
          lengthAdjust="spacing"
-         textLength="199.2539"
+         textLength="199.25391"
          x="172.9904"
          y="447.3053"
          id="text43">Definir seuil gros fichiers</text>
       <text
          fill="#000000"
          font-family="sans-serif"
-         font-size="14"
+         font-size="14px"
          font-weight="bold"
          lengthAdjust="spacing"
          textLength="124.5439"
@@ -929,22 +932,22 @@
        data-source-line="67"
        id="ent0035">
       <ellipse
-         cx="585.3788"
-         cy="533.0966"
-         fill="#FFF3E0"
+         cx="585.37878"
+         cy="533.09662"
+         fill="#fff3e0"
          rx="116.5488"
-         ry="25.7098"
-         style="stroke:#2F3A4A;stroke-width:0.5;"
+         ry="25.709801"
+         style="stroke:#2f3a4a;stroke-width:0.5"
          id="ellipse44" />
       <text
          fill="#000000"
          font-family="sans-serif"
-         font-size="14"
+         font-size="14px"
          font-weight="bold"
          lengthAdjust="spacing"
          textLength="211.9756"
-         x="479.391"
-         y="537.7451"
+         x="479.39099"
+         y="537.74512"
          id="text45">Sauvegarder configuration</text>
     </g>
     <!--entity User-->
@@ -953,27 +956,26 @@
        data-qualified-name="User"
        data-source-line="22"
        id="ent0002">
-      <ellipse
-         cx="42.0049"
+      <circle
+         cx="42.004902"
          cy="722.4469"
-         fill="#E8F5E9"
-         rx="8"
-         ry="8"
-         style="stroke:#2F3A4A;stroke-width:0.5;"
-         id="ellipse45" />
+         fill="#e8f5e9"
+         style="stroke:#2f3a4a;stroke-width:0.5"
+         id="ellipse45"
+         r="8" />
       <path
-         d="M42.0049,730.4469 L42.0049,757.4469 M29.0049,738.4469 L55.0049,738.4469 M42.0049,757.4469 L29.0049,772.4469 M42.0049,757.4469 L55.0049,772.4469"
+         d="m 42.0049,730.4469 v 27 m -13,-19 h 26 m -13,19 -13,15 m 13,-15 13,15"
          fill="none"
-         style="stroke:#2F3A4A;stroke-width:0.5;"
+         style="stroke:#2f3a4a;stroke-width:0.5"
          id="path45" />
       <text
          fill="#000000"
          font-family="sans-serif"
-         font-size="14"
+         font-size="14px"
          lengthAdjust="spacing"
-         textLength="72.0098"
+         textLength="72.009804"
          x="6"
-         y="786.942"
+         y="786.94202"
          id="text46">Utilisateur</text>
     </g>
     <!--entity BusinessApp-->
@@ -982,23 +984,22 @@
        data-qualified-name="BusinessApp"
        data-source-line="23"
        id="ent0003">
-      <ellipse
+      <circle
          cx="1172.9503"
          cy="1070.2969"
-         fill="#E8F5E9"
-         rx="8"
-         ry="8"
-         style="stroke:#2F3A4A;stroke-width:0.5;"
-         id="ellipse46" />
+         fill="#e8f5e9"
+         style="stroke:#2f3a4a;stroke-width:0.5"
+         id="ellipse46"
+         r="8" />
       <path
-         d="M1172.9503,1078.2969 L1172.9503,1105.2969 M1159.9503,1086.2969 L1185.9503,1086.2969 M1172.9503,1105.2969 L1159.9503,1120.2969 M1172.9503,1105.2969 L1185.9503,1120.2969"
+         d="m 1172.9503,1078.2969 v 27 m -13,-19 h 26 m -13,19 -13,15 m 13,-15 13,15"
          fill="none"
-         style="stroke:#2F3A4A;stroke-width:0.5;"
+         style="stroke:#2f3a4a;stroke-width:0.5"
          id="path46" />
       <text
          fill="#000000"
          font-family="sans-serif"
-         font-size="14"
+         font-size="14px"
          lengthAdjust="spacing"
          textLength="103.6807"
          x="1121.11"
@@ -1007,9 +1008,9 @@
       <text
          fill="#000000"
          font-family="sans-serif"
-         font-size="14"
+         font-size="14px"
          lengthAdjust="spacing"
-         textLength="65.3994"
+         textLength="65.399399"
          x="1121.11"
          y="1151.0889"
          id="text48">(Externe)</text>
@@ -1019,35 +1020,35 @@
        class="entity"
        data-qualified-name="CryptoSoft"
        data-source-line="24"
-       id="ent0004">
-      <ellipse
-         cx="585.374"
-         cy="51.2969"
-         fill="#E8F5E9"
-         rx="8"
-         ry="8"
-         style="stroke:#2F3A4A;stroke-width:0.5;"
-         id="ellipse48" />
+       id="ent0004"
+       transform="translate(584.54634,1358.619)">
+      <circle
+         cx="585.37402"
+         cy="51.296902"
+         fill="#e8f5e9"
+         style="stroke:#2f3a4a;stroke-width:0.5"
+         id="ellipse48"
+         r="8" />
       <path
-         d="M585.374,59.2969 L585.374,86.2969 M572.374,67.2969 L598.374,67.2969 M585.374,86.2969 L572.374,101.2969 M585.374,86.2969 L598.374,101.2969"
+         d="m 585.374,59.2969 v 27 m -13,-19 h 26 m -13,19 -13,15 m 13,-15 13,15"
          fill="none"
-         style="stroke:#2F3A4A;stroke-width:0.5;"
+         style="stroke:#2f3a4a;stroke-width:0.5"
          id="path48" />
       <text
          fill="#000000"
          font-family="sans-serif"
-         font-size="14"
+         font-size="14px"
          lengthAdjust="spacing"
-         textLength="74.6279"
+         textLength="74.627899"
          x="548.06"
          y="115.792"
          id="text49">CryptoSoft</text>
       <text
          fill="#000000"
          font-family="sans-serif"
-         font-size="14"
+         font-size="14px"
          lengthAdjust="spacing"
-         textLength="65.3994"
+         textLength="65.399399"
          x="548.06"
          y="132.0889"
          id="text50">(Externe)</text>
@@ -1058,16 +1059,16 @@
        data-qualified-name="LogHub"
        data-source-line="25"
        id="ent0005"
-       transform="translate(-51.725774,-2.4109471)">
+       transform="translate(225.37185,772.77105)">
       <circle
-         cx="912.32129"
-         cy="79.296898"
+         cx="942.69769"
+         cy="83.636383"
          fill="#e8f5e9"
          style="stroke:#2f3a4a;stroke-width:0.5"
          id="ellipse50"
          r="8" />
       <path
-         d="m 912.3213,87.2969 v 27 m -13,-19 h 26 m -13,19 -13,15 m 13,-15 13,15"
+         d="m 942.69768,91.636383 v 26.999997 m -13,-18.999997 h 26 m -13,18.999997 -13,15 m 13,-15 13,15"
          fill="none"
          style="stroke:#2f3a4a;stroke-width:0.5"
          id="path50" />
@@ -1090,7 +1091,15 @@
          x="835.94"
          y="160.0889"
          id="text52"
-         transform="translate(55.698367,13.780823)">(Docker / WebSocket)</text>
+         transform="translate(55.698367,13.780823)"><tspan
+           sodipodi:role="line"
+           id="tspan95"
+           x="835.94"
+           y="160.0889">(Docker /</tspan><tspan
+           sodipodi:role="line"
+           id="tspan96"
+           x="835.94"
+           y="177.5889">WebSocket)</tspan></text>
     </g>
     <!--link User to UC_CRUD-->
     <g
@@ -1101,14 +1110,14 @@
        data-source-line="74"
        id="lnk36">
       <path
-         d="M18.79,790.5969 C18.79,982.3569 18.79,1825.0969 18.79,1825.0969 C18.79,1825.0969 110.4,1825.0969 184.56,1825.0969"
+         d="m 18.79,790.5969 c 0,191.76 0,1034.5 0,1034.5 0,0 91.61,0 165.77,0"
          fill="none"
          id="User-to-UC_CRUD"
-         style="stroke:#181818;stroke-width:1;" />
+         style="stroke:#181818;stroke-width:1" />
       <polygon
          fill="#181818"
-         points="190.56,1825.0969,181.56,1821.0969,185.56,1825.0969,181.56,1829.0969,190.56,1825.0969"
-         style="stroke:#181818;stroke-width:1;"
+         points="181.56,1821.0969 185.56,1825.0969 181.56,1829.0969 190.56,1825.0969 "
+         style="stroke:#181818;stroke-width:1"
          id="polygon52" />
     </g>
     <!--link User to UC_ControlOne-->
@@ -1120,14 +1129,14 @@
        data-source-line="76"
        id="lnk37">
       <path
-         d="M54.79,790.3069 C54.79,928.4369 54.79,1393.7069 54.79,1393.7069 C54.79,1393.7069 563.72,1393.7069 795.53,1393.7069"
+         d="m 54.79,790.3069 c 0,138.13 0,603.4 0,603.4 0,0 508.93,0 740.74,0"
          fill="none"
          id="User-to-UC_ControlOne"
-         style="stroke:#181818;stroke-width:1;" />
+         style="stroke:#181818;stroke-width:1" />
       <polygon
          fill="#181818"
-         points="801.53,1393.7069,792.53,1389.7069,796.53,1393.7069,792.53,1397.7069,801.53,1393.7069"
-         style="stroke:#181818;stroke-width:1;"
+         points="792.53,1389.7069 796.53,1393.7069 792.53,1397.7069 801.53,1393.7069 "
+         style="stroke:#181818;stroke-width:1"
          id="polygon53" />
     </g>
     <!--link User to UC_ControlMany-->
@@ -1139,14 +1148,14 @@
        data-source-line="77"
        id="lnk38">
       <path
-         d="M66.79,790.6669 C66.79,916.4769 66.79,1306.8669 66.79,1306.8669 C66.79,1306.8669 562.77,1306.8669 793.17,1306.8669"
+         d="m 66.79,790.6669 c 0,125.81 0,516.2 0,516.2 0,0 495.98,0 726.38,0"
          fill="none"
          id="User-to-UC_ControlMany"
-         style="stroke:#181818;stroke-width:1;" />
+         style="stroke:#181818;stroke-width:1" />
       <polygon
          fill="#181818"
-         points="799.17,1306.8669,790.17,1302.8669,794.17,1306.8669,790.17,1310.8669,799.17,1306.8669"
-         style="stroke:#181818;stroke-width:1;"
+         points="790.17,1302.8669 794.17,1306.8669 790.17,1310.8669 799.17,1306.8669 "
+         style="stroke:#181818;stroke-width:1"
          id="polygon54" />
     </g>
     <!--link User to UC_LiveState-->
@@ -1188,14 +1197,14 @@
        data-source-line="82"
        id="lnk41">
       <path
-         d="M30.79,713.7369 C30.79,615.5969 30.79,363.0969 30.79,363.0969 C30.79,363.0969 99.72,363.0969 166.16,363.0969"
+         d="m 30.79,713.7369 c 0,-98.14 0,-350.64 0,-350.64 0,0 68.93,0 135.37,0"
          fill="none"
          id="User-to-UC_Lang"
-         style="stroke:#181818;stroke-width:1;" />
+         style="stroke:#181818;stroke-width:1" />
       <polygon
          fill="#181818"
-         points="172.16,363.0969,163.16,359.0969,167.16,363.0969,163.16,367.0969,172.16,363.0969"
-         style="stroke:#181818;stroke-width:1;"
+         points="163.16,359.0969 167.16,363.0969 163.16,367.0969 172.16,363.0969 "
+         style="stroke:#181818;stroke-width:1"
          id="polygon57" />
     </g>
     <!--link User to UC_LogFormat-->
@@ -1207,14 +1216,14 @@
        data-source-line="83"
        id="lnk42">
       <path
-         d="M18.79,713.5569 C18.79,601.0669 18.79,281.0969 18.79,281.0969 C18.79,281.0969 99.07,281.0969 171.02,281.0969"
+         d="m 18.79,713.5569 c 0,-112.49 0,-432.46 0,-432.46 0,0 80.28,0 152.23,0"
          fill="none"
          id="User-to-UC_LogFormat"
-         style="stroke:#181818;stroke-width:1;" />
+         style="stroke:#181818;stroke-width:1" />
       <polygon
          fill="#181818"
-         points="177.02,281.0969,168.02,277.0969,172.02,281.0969,168.02,285.0969,177.02,281.0969"
-         style="stroke:#181818;stroke-width:1;"
+         points="168.02,277.0969 172.02,281.0969 168.02,285.0969 177.02,281.0969 "
+         style="stroke:#181818;stroke-width:1"
          id="polygon58" />
     </g>
     <!--link User to UC_LogStorageMode-->
@@ -1226,14 +1235,14 @@
        data-source-line="84"
        id="lnk43">
       <path
-         d="M78.29,779.5069 C102.33,779.5069 129.19,779.5069 161.06,779.5069"
+         d="m 78.29,779.5069 c 24.04,0 50.9,0 82.77,0"
          fill="none"
          id="User-to-UC_LogStorageMode"
-         style="stroke:#181818;stroke-width:1;" />
+         style="stroke:#181818;stroke-width:1" />
       <polygon
          fill="#181818"
-         points="167.06,779.5069,158.06,775.5069,162.06,779.5069,158.06,783.5069,167.06,779.5069"
-         style="stroke:#181818;stroke-width:1;"
+         points="158.06,775.5069 162.06,779.5069 158.06,783.5069 167.06,779.5069 "
+         style="stroke:#181818;stroke-width:1"
          id="polygon59" />
     </g>
     <!--link User to UC_LogServerConfig-->
@@ -1245,14 +1254,14 @@
        data-source-line="85"
        id="lnk44">
       <path
-         d="M78.29,723.7669 C104.36,723.7669 134.81,723.7669 169.1,723.7669"
+         d="m 78.29,723.7669 c 26.07,0 56.52,0 90.81,0"
          fill="none"
          id="User-to-UC_LogServerConfig"
-         style="stroke:#181818;stroke-width:1;" />
+         style="stroke:#181818;stroke-width:1" />
       <polygon
          fill="#181818"
-         points="175.1,723.7669,166.1,719.7669,170.1,723.7669,166.1,727.7669,175.1,723.7669"
-         style="stroke:#181818;stroke-width:1;"
+         points="166.1,719.7669 170.1,723.7669 166.1,727.7669 175.1,723.7669 "
+         style="stroke:#181818;stroke-width:1"
          id="polygon60" />
     </g>
     <!--link User to UC_CryptoConfig-->
@@ -1264,14 +1273,14 @@
        data-source-line="86"
        id="lnk45">
       <path
-         d="M66.79,713.6969 C66.79,674.0969 66.79,618.0969 66.79,618.0969 C66.79,618.0969 109.86,618.0969 160.09,618.0969"
+         d="m 66.79,713.6969 c 0,-39.6 0,-95.6 0,-95.6 0,0 43.07,0 93.3,0"
          fill="none"
          id="User-to-UC_CryptoConfig"
-         style="stroke:#181818;stroke-width:1;" />
+         style="stroke:#181818;stroke-width:1" />
       <polygon
          fill="#181818"
-         points="166.09,618.0969,157.09,614.0969,161.09,618.0969,157.09,622.0969,166.09,618.0969"
-         style="stroke:#181818;stroke-width:1;"
+         points="157.09,614.0969 161.09,618.0969 157.09,622.0969 166.09,618.0969 "
+         style="stroke:#181818;stroke-width:1"
          id="polygon61" />
     </g>
     <!--link User to UC_BusinessConfig-->
@@ -1283,14 +1292,14 @@
        data-source-line="87"
        id="lnk46">
       <path
-         d="M54.79,713.6969 C54.79,650.8869 54.79,533.0969 54.79,533.0969 C54.79,533.0969 101.77,533.0969 155.47,533.0969"
+         d="m 54.79,713.6969 c 0,-62.81 0,-180.6 0,-180.6 0,0 46.98,0 100.68,0"
          fill="none"
          id="User-to-UC_BusinessConfig"
-         style="stroke:#181818;stroke-width:1;" />
+         style="stroke:#181818;stroke-width:1" />
       <polygon
          fill="#181818"
-         points="161.47,533.0969,152.47,529.0969,156.47,533.0969,152.47,537.0969,161.47,533.0969"
-         style="stroke:#181818;stroke-width:1;"
+         points="152.47,529.0969 156.47,533.0969 152.47,537.0969 161.47,533.0969 "
+         style="stroke:#181818;stroke-width:1"
          id="polygon62" />
     </g>
     <!--link User to UC_LargeFileThreshold-->
@@ -1302,14 +1311,14 @@
        data-source-line="88"
        id="lnk47">
       <path
-         d="M42.79,713.4669 C42.79,631.3969 42.79,447.0969 42.79,447.0969 C42.79,447.0969 90.06,447.0969 145.31,447.0969"
+         d="m 42.79,713.4669 c 0,-82.07 0,-266.37 0,-266.37 0,0 47.27,0 102.52,0"
          fill="none"
          id="User-to-UC_LargeFileThreshold"
-         style="stroke:#181818;stroke-width:1;" />
+         style="stroke:#181818;stroke-width:1" />
       <polygon
          fill="#181818"
-         points="151.31,447.0969,142.31,443.0969,146.31,447.0969,142.31,451.0969,151.31,447.0969"
-         style="stroke:#181818;stroke-width:1;"
+         points="142.31,443.0969 146.31,447.0969 142.31,451.0969 151.31,447.0969 "
+         style="stroke:#181818;stroke-width:1"
          id="polygon63" />
     </g>
     <!--link UC_BusinessProtection to BusinessApp-->
@@ -1319,72 +1328,50 @@
        data-entity-2="ent0003"
        data-link-type="dependency"
        data-source-line="93"
-       id="lnk48">
+       id="lnk48"
+       transform="translate(2.4797048)">
       <path
-         d="M1061.29,1108.0969 C1082.61,1108.0969 1097.25,1108.0969 1114.87,1108.0969"
+         d="m 1061.29,1108.0969 c 21.32,0 35.96,0 53.58,0"
          fill="none"
          id="UC_BusinessProtection-to-BusinessApp"
-         style="stroke:#181818;stroke-width:1;" />
+         style="stroke:#181818;stroke-width:1" />
       <polygon
          fill="#181818"
-         points="1120.87,1108.0969,1111.87,1104.0969,1115.87,1108.0969,1111.87,1112.0969,1120.87,1108.0969"
-         style="stroke:#181818;stroke-width:1;"
+         points="1115.87,1108.0969 1111.87,1112.0969 1120.87,1108.0969 1111.87,1104.0969 "
+         style="stroke:#181818;stroke-width:1"
          id="polygon64" />
+      <polygon
+         fill="#181818"
+         points="1111.87,1112.0969 1120.87,1108.0969 1111.87,1104.0969 1115.87,1108.0969 "
+         style="stroke:#181818;stroke-width:1"
+         id="polygon64-4"
+         transform="translate(-0.50484907,-241.45919)"
+         inkscape:transform-center-x="-8.8601161"
+         inkscape:transform-center-y="-62.922509" />
+    </g>
+    <g
+       class="link"
+       data-entity-1="ent0017"
+       data-entity-2="ent0003"
+       data-link-type="dependency"
+       data-source-line="93"
+       id="lnk48-4"
+       transform="matrix(0.81798862,0,0,1.0036598,334.44981,-245.74469)">
+      <path
+         d="m 1061.29,1108.0969 c 21.32,0 35.96,0 53.58,0"
+         fill="none"
+         id="UC_BusinessProtection-to-BusinessApp-2"
+         style="stroke:#181818;stroke-width:1" />
+      <polygon
+         fill="#181818"
+         points="1115.87,1108.0969 1111.87,1112.0969 1120.87,1108.0969 1111.87,1104.0969 "
+         style="stroke:#181818;stroke-width:1"
+         id="polygon64-7"
+         transform="matrix(-1,0,0,1,2181.8447,-0.056611)" />
     </g>
     <!--link UC_Crypto to CryptoSoft-->
-    <g
-       class="link"
-       data-entity-1="ent0021"
-       data-entity-2="ent0004"
-       data-link-type="dependency"
-       data-source-line="94"
-       id="lnk49">
-      <path
-         d="M368.7,1024.6469 C405.04,1024.6469 437.79,1024.6469 437.79,1024.6469 C437.79,1024.6469 437.79,89.0969 437.79,89.0969 C437.79,89.0969 498.03,89.0969 541.75,89.0969"
-         fill="none"
-         id="UC_Crypto-to-CryptoSoft"
-         style="stroke:#181818;stroke-width:1;" />
-      <polygon
-         fill="#181818"
-         points="547.75,89.0969,538.75,85.0969,542.75,89.0969,538.75,93.0969,547.75,89.0969"
-         style="stroke:#181818;stroke-width:1;"
-         id="polygon65" />
-    </g>
     <!--link UC_LogServerWrite to LogHub-->
-    <g
-       class="link"
-       data-entity-1="ent0020"
-       data-entity-2="ent0005"
-       data-link-type="dependency"
-       data-source-line="95"
-       id="lnk50"
-       transform="matrix(0.99980127,0,0,1.0559744,0.1513404,-51.252353)">
-      <path
-         d="m 685.77,915.4169 c 47.09,0 93.02,0 93.02,0 0,0 0,-761.36 0,-761.36 0,0 21.18,0 51.02,0"
-         fill="none"
-         id="UC_LogServerWrite-to-LogHub"
-         style="stroke:#181818;stroke-width:1" />
-      <polygon
-         fill="#181818"
-         points="835.81,154.0569 826.81,150.0569 830.81,154.0569 826.81,158.0569 "
-         style="stroke:#181818;stroke-width:1"
-         id="polygon66" />
-    </g>
     <!--link UC_ReadServerLogs to LogHub-->
-    <g
-       class="link"
-       data-entity-1="ent0026"
-       data-entity-2="ent0005"
-       data-link-type="dependency"
-       data-source-line="96"
-       id="lnk51"
-       transform="matrix(0.37369651,0,0,1.0246997,523.99816,-37.016941)">
-      <path
-         d="m 365.28,1507.0969 c 132.04,0 358.51,0 358.51,0 0,0 0,-1362.37 0,-1362.37 0,0 53.65,0 105.85,0"
-         fill="none"
-         id="UC_ReadServerLogs-to-LogHub"
-         style="stroke:#181818;stroke-width:1" />
-    </g>
     <!--link UC_CRUD to UC_ValidateJob-->
     <g
        class="link"
@@ -1394,14 +1381,14 @@
        data-source-line="103"
        id="lnk52">
       <path
-         d="M272.79,1851.2669 C272.79,1887.1169 272.79,1947.0969 272.79,1947.0969 C272.79,1947.0969 383.99,1947.0969 474.86,1947.0969"
+         d="m 272.79,1851.2669 c 0,35.85 0,95.83 0,95.83 0,0 111.2,0 202.07,0"
          fill="none"
          id="UC_CRUD-to-UC_ValidateJob"
-         style="stroke:#181818;stroke-width:1;stroke-dasharray:7,7;" />
+         style="stroke:#181818;stroke-width:1;stroke-dasharray:7, 7" />
       <polygon
          fill="#181818"
-         points="480.86,1947.0969,471.86,1943.0969,475.86,1947.0969,471.86,1951.0969,480.86,1947.0969"
-         style="stroke:#181818;stroke-width:1;"
+         points="471.86,1943.0969 475.86,1947.0969 471.86,1951.0969 480.86,1947.0969 "
+         style="stroke:#181818;stroke-width:1"
          id="polygon68" />
       <text
          fill="#000000"
@@ -1423,22 +1410,22 @@
        data-source-line="104"
        id="lnk53">
       <path
-         d="M329.62,1844.1269 C380.36,1844.1269 448.94,1844.1269 504.49,1844.1269"
+         d="m 329.62,1844.1269 c 50.74,0 119.32,0 174.87,0"
          fill="none"
          id="UC_CRUD-to-UC_JobPriority"
-         style="stroke:#181818;stroke-width:1;stroke-dasharray:7,7;" />
+         style="stroke:#181818;stroke-width:1;stroke-dasharray:7, 7" />
       <polygon
          fill="#181818"
-         points="510.49,1844.1269,501.49,1840.1269,505.49,1844.1269,501.49,1848.1269,510.49,1844.1269"
-         style="stroke:#181818;stroke-width:1;"
+         points="501.49,1840.1269 505.49,1844.1269 501.49,1848.1269 510.49,1844.1269 "
+         style="stroke:#181818;stroke-width:1"
          id="polygon69" />
       <text
          fill="#000000"
          font-family="sans-serif"
-         font-size="13"
+         font-size="13px"
          lengthAdjust="spacing"
-         textLength="63.0068"
-         x="356.05"
+         textLength="63.006802"
+         x="356.04999"
          y="1857.1938"
          id="text69">«include»</text>
     </g>
@@ -1451,14 +1438,14 @@
        data-source-line="105"
        id="lnk54">
       <path
-         d="M272.79,1798.7769 C272.79,1788.6169 272.79,1779.3869 272.79,1779.3869 C272.79,1779.3869 391.97,1779.3869 483.89,1779.3869"
+         d="m 272.79,1798.7769 c 0,-10.16 0,-19.39 0,-19.39 0,0 119.18,0 211.1,0"
          fill="none"
          id="UC_CRUD-to-UC_SaveJobs"
-         style="stroke:#181818;stroke-width:1;stroke-dasharray:7,7;" />
+         style="stroke:#181818;stroke-width:1;stroke-dasharray:7, 7" />
       <polygon
          fill="#181818"
-         points="489.89,1779.3869,480.89,1775.3869,484.89,1779.3869,480.89,1783.3869,489.89,1779.3869"
-         style="stroke:#181818;stroke-width:1;"
+         points="480.89,1775.3869 484.89,1779.3869 480.89,1783.3869 489.89,1779.3869 "
+         style="stroke:#181818;stroke-width:1"
          id="polygon70" />
       <text
          fill="#000000"
@@ -1480,14 +1467,14 @@
        data-source-line="108"
        id="lnk55">
       <path
-         d="M547.79,1124.0869 C547.79,1181.8669 547.79,1376.4869 547.79,1376.4869 C547.79,1376.4869 688.22,1376.4869 795.47,1376.4869"
+         d="m 547.79,1124.0869 c 0,57.78 0,252.4 0,252.4 0,0 140.43,0 247.68,0"
          fill="none"
          id="UC_RunOne-to-UC_ControlOne"
-         style="stroke:#181818;stroke-width:1;stroke-dasharray:7,7;" />
+         style="stroke:#181818;stroke-width:1;stroke-dasharray:7, 7" />
       <polygon
          fill="#181818"
-         points="801.47,1376.4869,792.47,1372.4869,796.47,1376.4869,792.47,1380.4869,801.47,1376.4869"
-         style="stroke:#181818;stroke-width:1;"
+         points="792.47,1372.4869 796.47,1376.4869 792.47,1380.4869 801.47,1376.4869 "
+         style="stroke:#181818;stroke-width:1"
          id="polygon71" />
       <text
          fill="#000000"
@@ -1509,14 +1496,14 @@
        data-source-line="109"
        id="lnk56">
       <path
-         d="M585.79,1126.1369 C585.79,1171.9769 585.79,1289.3269 585.79,1289.3269 C585.79,1289.3269 698.72,1289.3269 793.03,1289.3269"
+         d="m 585.79,1126.1369 c 0,45.84 0,163.19 0,163.19 0,0 112.93,0 207.24,0"
          fill="none"
          id="UC_RunOne-to-UC_ControlMany"
-         style="stroke:#181818;stroke-width:1;stroke-dasharray:7,7;" />
+         style="stroke:#181818;stroke-width:1;stroke-dasharray:7, 7" />
       <polygon
          fill="#181818"
-         points="799.03,1289.3269,790.03,1285.3269,794.03,1289.3269,790.03,1293.3269,799.03,1289.3269"
-         style="stroke:#181818;stroke-width:1;"
+         points="790.03,1285.3269 794.03,1289.3269 790.03,1293.3269 799.03,1289.3269 "
+         style="stroke:#181818;stroke-width:1"
          id="polygon72" />
       <text
          fill="#000000"
@@ -1538,14 +1525,14 @@
        data-source-line="112"
        id="lnk57">
       <path
-         d="M624.79,1123.8469 C624.79,1151.5469 624.79,1206.0969 624.79,1206.0969 C624.79,1206.0969 692.37,1206.0969 765.08,1206.0969"
+         d="m 624.79,1123.8469 c 0,27.7 0,82.25 0,82.25 0,0 67.58,0 140.29,0"
          fill="none"
          id="UC_RunOne-to-UC_RuntimeControl"
-         style="stroke:#181818;stroke-width:1;stroke-dasharray:7,7;" />
+         style="stroke:#181818;stroke-width:1;stroke-dasharray:7, 7" />
       <polygon
          fill="#181818"
-         points="771.08,1206.0969,762.08,1202.0969,766.08,1206.0969,762.08,1210.0969,771.08,1206.0969"
-         style="stroke:#181818;stroke-width:1;"
+         points="762.08,1202.0969 766.08,1206.0969 762.08,1210.0969 771.08,1206.0969 "
+         style="stroke:#181818;stroke-width:1"
          id="polygon73" />
       <text
          fill="#000000"
@@ -1567,22 +1554,22 @@
        data-source-line="113"
        id="lnk58">
       <path
-         d="M658.34,1114.0269 C690.06,1114.0269 722.4,1114.0269 759.58,1114.0269"
+         d="m 658.34,1114.0269 c 31.72,0 64.06,0 101.24,0"
          fill="none"
          id="UC_RunOne-to-UC_BusinessProtection"
-         style="stroke:#181818;stroke-width:1;stroke-dasharray:7,7;" />
+         style="stroke:#181818;stroke-width:1;stroke-dasharray:7, 7" />
       <polygon
          fill="#181818"
-         points="765.58,1114.0269,756.58,1110.0269,760.58,1114.0269,756.58,1118.0269,765.58,1114.0269"
-         style="stroke:#181818;stroke-width:1;"
+         points="756.58,1110.0269 760.58,1114.0269 756.58,1118.0269 765.58,1114.0269 "
+         style="stroke:#181818;stroke-width:1"
          id="polygon74" />
       <text
          fill="#000000"
          font-family="sans-serif"
-         font-size="13"
+         font-size="13px"
          lengthAdjust="spacing"
-         textLength="63.0068"
-         x="647.96"
+         textLength="63.006802"
+         x="647.96002"
          y="1127.0938"
          id="text74">«include»</text>
     </g>
@@ -1593,27 +1580,14 @@
        data-entity-2="ent0018"
        data-link-type="dependency"
        data-source-line="114"
-       id="lnk59">
-      <path
-         d="M585.79,1090.0169 C585.79,1061.5669 585.79,1009.5469 585.79,1009.5469 C585.79,1009.5469 695.29,1009.5469 788.9,1009.5469"
-         fill="none"
-         id="UC_RunOne-to-UC_PriorityFlow"
-         style="stroke:#181818;stroke-width:1;stroke-dasharray:7,7;" />
+       id="lnk59"
+       transform="translate(28.98155,10.848709)">
       <polygon
          fill="#181818"
-         points="794.9,1009.5469,785.9,1005.5469,789.9,1009.5469,785.9,1013.5469,794.9,1009.5469"
-         style="stroke:#181818;stroke-width:1;"
-         id="polygon75" />
-      <text
-         fill="#000000"
-         font-family="sans-serif"
-         font-size="13px"
-         lengthAdjust="spacing"
-         textLength="63.006802"
-         x="586.10999"
-         y="1022.6138"
-         id="text75"
-         transform="translate(6,2)">«include»</text>
+         points="789.9,1009.5469 785.9,1013.5469 794.9,1009.5469 785.9,1005.5469 "
+         style="stroke:#181818;stroke-width:1"
+         id="polygon75"
+         transform="rotate(-90,681.26682,1139.5764)" />
       <text
          fill="#000000"
          font-family="sans-serif"
@@ -1623,7 +1597,17 @@
          x="586.10999"
          y="1022.6138"
          id="text75-4"
-         transform="translate(180.34184,37.739215)">«include»</text>
+         transform="translate(73.383459,25.465302)">«include»</text>
+      <text
+         fill="#000000"
+         font-family="sans-serif"
+         font-size="13px"
+         lengthAdjust="spacing"
+         textLength="63.006802"
+         x="586.10999"
+         y="1022.6138"
+         id="text75-2"
+         transform="translate(-101.11573,36.215229)">«include»</text>
     </g>
     <!--link UC_RunOne to UC_Log-->
     <g
@@ -1633,7 +1617,7 @@
        data-link-type="dependency"
        data-source-line="115"
        id="lnk60"
-       transform="matrix(1.2237091,0,0,0.93291927,-147.32588,73.967699)">
+       transform="matrix(1.1163059,0,0,0.95968029,-76.561638,44.49324)">
       <path
          d="m 658.56,1102.1669 c 41.5,0 85.23,0 85.23,0 0,0 0,-161.39 0,-161.39 0,0 24.27,0 59.16,0"
          fill="none"
@@ -1641,7 +1625,7 @@
          style="stroke:#181818;stroke-width:1;stroke-dasharray:7, 7" />
       <polygon
          fill="#181818"
-         points="803.95,940.7769 799.95,944.7769 808.95,940.7769 799.95,936.7769 "
+         points="799.95,936.7769 803.95,940.7769 799.95,944.7769 808.95,940.7769 "
          style="stroke:#181818;stroke-width:1"
          id="polygon76" />
     </g>
@@ -1654,14 +1638,14 @@
        data-source-line="116"
        id="lnk61">
       <path
-         d="M369.79,1023.9369 C369.79,1045.0969 369.79,1108.0969 369.79,1108.0969 C369.79,1108.0969 440.3,1108.0969 502.16,1108.0969"
+         d="m 369.79,1023.9369 c 0,21.16 0,84.16 0,84.16 0,0 70.51,0 132.37,0"
          fill="none"
          id="UC_Crypto-to-UC_RunOne"
-         style="stroke:#181818;stroke-width:1;stroke-dasharray:7,7;" />
+         style="stroke:#181818;stroke-width:1;stroke-dasharray:7, 7" />
       <polygon
          fill="#181818"
-         points="508.16,1108.0969,499.16,1104.0969,503.16,1108.0969,499.16,1112.0969,508.16,1108.0969"
-         style="stroke:#181818;stroke-width:1;"
+         points="499.16,1104.0969 503.16,1108.0969 499.16,1112.0969 508.16,1108.0969 "
+         style="stroke:#181818;stroke-width:1"
          id="polygon77" />
       <text
          fill="#000000"
@@ -1683,15 +1667,16 @@
        data-source-line="118"
        id="lnk62">
       <path
-         d="M700.65,928.0969 C730.98,928.0969 757.75,928.0969 788.23,928.0969"
+         d="m 700.65,927.98731 c 52.41795,0 98.68332,0 151.36051,0"
          fill="none"
          id="UC_LogServerWrite-to-UC_Log"
-         style="stroke:#181818;stroke-width:1;stroke-dasharray:7,7;" />
+         style="stroke:#181818;stroke-width:1.31463;stroke-dasharray:9.20242, 9.20242" />
       <polygon
          fill="#181818"
-         points="794.23,928.0969,785.23,924.0969,789.23,928.0969,785.23,932.0969,794.23,928.0969"
-         style="stroke:#181818;stroke-width:1;"
-         id="polygon78" />
+         points="789.23,928.0969 785.23,932.0969 794.23,928.0969 785.23,924.0969 "
+         style="stroke:#181818;stroke-width:1"
+         id="polygon78"
+         transform="translate(64.438041,0.21917701)" />
       <text
          fill="#000000"
          font-family="sans-serif"
@@ -1748,14 +1733,14 @@
        data-source-line="125"
        id="lnk65">
       <path
-         d="M373.11,363.0969 C432.34,363.0969 495.79,363.0969 495.79,363.0969 C495.79,363.0969 495.79,467.7069 495.79,510.4869"
+         d="m 373.11,363.0969 c 59.23,0 122.68,0 122.68,0 0,0 0,104.61 0,147.39"
          fill="none"
          id="UC_Lang-to-UC_SaveConfig"
-         style="stroke:#181818;stroke-width:1;stroke-dasharray:7,7;" />
+         style="stroke:#181818;stroke-width:1;stroke-dasharray:7, 7" />
       <polygon
          fill="#181818"
-         points="495.79,516.4869,499.79,507.4869,495.79,511.4869,491.79,507.4869,495.79,516.4869"
-         style="stroke:#181818;stroke-width:1;"
+         points="499.79,507.4869 495.79,511.4869 491.79,507.4869 495.79,516.4869 "
+         style="stroke:#181818;stroke-width:1"
          id="polygon81" />
       <text
          fill="#000000"
@@ -1783,7 +1768,7 @@
          style="stroke:#181818;stroke-width:1.10311;stroke-dasharray:7.72179, 7.72179" />
       <polygon
          fill="#181818"
-         points="495.79,511.4869 491.79,507.4869 495.79,516.4869 499.79,507.4869 "
+         points="491.79,507.4869 495.79,516.4869 499.79,507.4869 495.79,511.4869 "
          style="stroke:#181818;stroke-width:1"
          id="polygon81-5"
          transform="translate(70.552497,4.7021054)" />
@@ -1797,14 +1782,14 @@
        data-source-line="126"
        id="lnk66">
       <path
-         d="M368.24,281.0969 C438.51,281.0969 521.79,281.0969 521.79,281.0969 C521.79,281.0969 521.79,443.8669 521.79,505.1769"
+         d="m 368.24,281.0969 c 70.27,0 153.55,0 153.55,0 0,0 0,162.77 0,224.08"
          fill="none"
          id="UC_LogFormat-to-UC_SaveConfig"
-         style="stroke:#181818;stroke-width:1;stroke-dasharray:7,7;" />
+         style="stroke:#181818;stroke-width:1;stroke-dasharray:7, 7" />
       <polygon
          fill="#181818"
-         points="521.79,511.1769,525.79,502.1769,521.79,506.1769,517.79,502.1769,521.79,511.1769"
-         style="stroke:#181818;stroke-width:1;"
+         points="525.79,502.1769 521.79,506.1769 517.79,502.1769 521.79,511.1769 "
+         style="stroke:#181818;stroke-width:1"
          id="polygon82" />
       <text
          fill="#000000"
@@ -1826,14 +1811,14 @@
        data-source-line="127"
        id="lnk67">
       <path
-         d="M402.79,790.3369 C402.79,748.0869 402.79,547.8269 402.79,547.8269 C402.79,547.8269 438.94,547.8269 482.74,547.8269"
+         d="m 402.79,790.3369 c 0,-42.25 0,-242.51 0,-242.51 0,0 36.15,0 79.95,0"
          fill="none"
          id="UC_LogStorageMode-to-UC_SaveConfig"
-         style="stroke:#181818;stroke-width:1;stroke-dasharray:7,7;" />
+         style="stroke:#181818;stroke-width:1;stroke-dasharray:7, 7" />
       <polygon
          fill="#181818"
-         points="488.74,547.8269,479.74,543.8269,483.74,547.8269,479.74,551.8269,488.74,547.8269"
-         style="stroke:#181818;stroke-width:1;"
+         points="479.74,543.8269 483.74,547.8269 479.74,551.8269 488.74,547.8269 "
+         style="stroke:#181818;stroke-width:1"
          id="polygon83" />
       <text
          fill="#000000"
@@ -1855,14 +1840,14 @@
        data-source-line="128"
        id="lnk68">
       <path
-         d="M386.79,694.5469 C386.79,656.5669 386.79,538.0069 386.79,538.0069 C386.79,538.0069 420.52,538.0069 464.43,538.0069"
+         d="m 386.79,694.5469 c 0,-37.98 0,-156.54 0,-156.54 0,0 33.73,0 77.64,0"
          fill="none"
          id="UC_LogServerConfig-to-UC_SaveConfig"
-         style="stroke:#181818;stroke-width:1;stroke-dasharray:7,7;" />
+         style="stroke:#181818;stroke-width:1;stroke-dasharray:7, 7" />
       <polygon
          fill="#181818"
-         points="470.43,538.0069,461.43,534.0069,465.43,538.0069,461.43,542.0069,470.43,538.0069"
-         style="stroke:#181818;stroke-width:1;"
+         points="461.43,534.0069 465.43,538.0069 461.43,542.0069 470.43,538.0069 "
+         style="stroke:#181818;stroke-width:1"
          id="polygon84" />
       <text
          fill="#000000"
@@ -1884,23 +1869,23 @@
        data-source-line="129"
        id="lnk69">
       <path
-         d="M379.08,618.0969 C469.87,618.0969 585.79,618.0969 585.79,618.0969 C585.79,618.0969 585.79,590.0569 585.79,565.0569"
+         d="m 379.08,618.0969 c 90.79,0 206.71,0 206.71,0 0,0 0,-28.04 0,-53.04"
          fill="none"
          id="UC_CryptoConfig-to-UC_SaveConfig"
-         style="stroke:#181818;stroke-width:1;stroke-dasharray:7,7;" />
+         style="stroke:#181818;stroke-width:1;stroke-dasharray:7, 7" />
       <polygon
          fill="#181818"
-         points="585.79,559.0569,581.79,568.0569,585.79,564.0569,589.79,568.0569,585.79,559.0569"
-         style="stroke:#181818;stroke-width:1;"
+         points="581.79,568.0569 585.79,564.0569 589.79,568.0569 585.79,559.0569 "
+         style="stroke:#181818;stroke-width:1"
          id="polygon85" />
       <text
          fill="#000000"
          font-family="sans-serif"
-         font-size="13"
+         font-size="13px"
          lengthAdjust="spacing"
-         textLength="63.0068"
-         x="512.95"
-         y="631.1638"
+         textLength="63.006802"
+         x="512.95001"
+         y="631.16382"
          id="text85">«include»</text>
     </g>
     <!--link UC_BusinessConfig to UC_SaveConfig-->
@@ -1912,14 +1897,14 @@
        data-source-line="130"
        id="lnk70">
       <path
-         d="M381.57,528.1869 C410.3,528.1869 435.4,528.1869 464.44,528.1869"
+         d="m 381.57,528.1869 c 28.73,0 53.83,0 82.87,0"
          fill="none"
          id="UC_BusinessConfig-to-UC_SaveConfig"
-         style="stroke:#181818;stroke-width:1;stroke-dasharray:7,7;" />
+         style="stroke:#181818;stroke-width:1;stroke-dasharray:7, 7" />
       <polygon
          fill="#181818"
-         points="470.44,528.1869,461.44,524.1869,465.44,528.1869,461.44,532.1869,470.44,528.1869"
-         style="stroke:#181818;stroke-width:1;"
+         points="461.44,524.1869 465.44,528.1869 461.44,532.1869 470.44,528.1869 "
+         style="stroke:#181818;stroke-width:1"
          id="polygon86" />
       <text
          fill="#000000"
@@ -1941,14 +1926,14 @@
        data-source-line="131"
        id="lnk71">
       <path
-         d="M390.79,453.1769 C390.79,470.4069 390.79,518.3669 390.79,518.3669 C390.79,518.3669 433.82,518.3669 482.66,518.3669"
+         d="m 390.79,453.1769 c 0,17.23 0,65.19 0,65.19 0,0 43.03,0 91.87,0"
          fill="none"
          id="UC_LargeFileThreshold-to-UC_SaveConfig"
-         style="stroke:#181818;stroke-width:1;stroke-dasharray:7,7;" />
+         style="stroke:#181818;stroke-width:1;stroke-dasharray:7, 7" />
       <polygon
          fill="#181818"
-         points="488.66,518.3669,479.66,514.3669,483.66,518.3669,479.66,522.3669,488.66,518.3669"
-         style="stroke:#181818;stroke-width:1;"
+         points="479.66,514.3669 483.66,518.3669 479.66,522.3669 488.66,518.3669 "
+         style="stroke:#181818;stroke-width:1"
          id="polygon87" />
       <text
          fill="#000000"
@@ -1959,15 +1944,14 @@
          x="408.13"
          y="514.43378"
          id="text87"
-         transform="translate(-80.280443,-19.217712)">«include»</text>
+         transform="translate(-82.033859,-17.464296)">«include»</text>
     </g>
     <g
        class="entity"
        data-qualified-name="EasySave v3.0.Supervision.UC_ReadServerLogs"
        data-source-line="56"
        id="ent0026"
-       transform="translate(295.8047,0.06875769)"
-       style="width:1231px;height:2016px;background:#FFFFFF">
+       transform="translate(295.8047,0.06875769)">
       <ellipse
          cx="272.6218"
          cy="1507.1012"
@@ -1989,13 +1973,13 @@
     </g>
 <?plantuml-src bLRRRXit47tNLmpSXpW870Tr2xH5Qi1nLgaD-GAjdQI0WOBQ7KciAN93ScKBXV-zGt8lt5r5TlGYYJDpvdPcI85p2rQ1vekbXPnhp2nNScJkkIoOPYkOiUn-eLKfyrCbb8Q79RSOoSsIvUg1omNCcJ2nH729TbCWA6sNQXH9M6O9wRyHm8SU-a_9R-DVaz-THEaSTNNwy_Zev9UJqLCCKXhCcC7jCEFn-2XvznqOWB6IDhKRWJ1J8dUubblwbp2pITaQuG1k2ThZxty-UllkzMZq2lxyteTa9wStoUqqtQaLqjwxjLnmmooMUW-OSPvqBPke1Syu2bYXvQZlv7xoQ55BVErLFvI6YchCIL7K5gTwKrYLghdjAxUI2FslSWOfwhN7_gYoUzHm25zmbhhVDbW6lUTIJlzERvABPAUMunEJ2ohjNbFRDTLpZzf6VIYeRsn1maze7EyWHmF_gfdPysq5sF-4cY8KrV6TF9tUVWGk15yH3SrhNx_JVznfqF_C1CyhYrn9YS6oLlHYAlsvcWNzZpZdacj0gfmq50BvA3HNcbj6qs0eH1q3aE5r46y2GChADIwOpgCmQsMNBXaOqdpgf9iyObRwXD52mOMoxlZpKPFsjJiZn58wm3kPgTMAILUTd4AjZ9liYSrQYIk9NUD245s8PNNjMf25K3Ccele5X0icDwE04I9i8gWLfwLit5H6gDk802LaYZpUqUWp2s-WzQbBQVaA8oJtjmA9crreYjwl8H3zSPW9bRbIlG5MMdLGCDe2XngfOwP1heVaki49w3GqWdyhlGVNGHh1q05NcP0AyG_cedoieUfMZuLw223db9qa4fcgtRX6YIkKjgab3KzLGhbM6wUc5eR21UF6hgGaCbBN7YEo2KFvHRlj6igxvFEvgyUQisYMcvRvam6pqh8W8EwOt90fBVbQ8uXNlYVK8ekhWXg2A9e0-1fJahQjDQMmLOu-WKEtjVcQmcjcYUC31Mw2oOGx5qxJjQWjuHHPFg4JiKsrhOI9zKCjAeDkVXJPd2zAxNlNP7Ywf2NZegMl4c4yFKmkczJehDPIL1WDSwLNL0YAu4wUfrUNXryl9b4dnbxSDLcft9F3M1K2ySO-BwfCY9T-NF17ssaghLtIlY3hfh0-VDAkwE1GNItkv58PUrZGPLdjtm4vWd5tRsM19Ow1D7FD4dEJ9x3BbMtcWm5ZO4hoHHiMTN-WjW4OBBa0kdiDp3a5WzfyVvmcJ2zmp0NUB6crBjtLEzYXMTpWU94stf_SVRtxQfgS9PSftDwSJSxI4tSnxzHt5p0S71mtDqdtfDskMux3oem5xIZ5fysmT7KTDpi73Vrwfp6J-gAO79qGuxR7Wbv3kn4DMlIobmyaNs-IwMMo-mcqTJrxt_7JfedTIw9tp61LUeNgkJ9O7h7mcIIcoUJavkpAaUPYibENX0VqWVwBPLIH1zw-FUwzDE0FUF-UoqoKEHuVznMZ5yLknVeruKQcgrZ7T5s_9ChsYJbgRkqQfoLqmF5R8m_-jcewZdSrQuVjEuPB__AaDymGfdlLmp3-WSKMZZnZ4T_K02_nGSI0tcTO_i32DWzVj9v5MvKXFIDVMmiONTUZ_cK93PMgtJ7iLfVkEzLhZvqBT5Jje5uT8i85zM5bcaNrerRH8liHgsZ7lT0gtdulZx2x6bySuM1hFcVrFm00?>    <polygon
        fill="#181818"
-       points="457.94,1577.0969 461.94,1581.0969 457.94,1585.0969 466.94,1581.0969 "
+       points="461.94,1581.0969 457.94,1585.0969 466.94,1581.0969 457.94,1577.0969 "
        style="stroke:#181818;stroke-width:1"
        id="polygon79-6"
        transform="translate(-311.58457,-13.32657)" />
     <polygon
        fill="#181818"
-       points="457.94,1577.0969 461.94,1581.0969 457.94,1585.0969 466.94,1581.0969 "
+       points="461.94,1581.0969 457.94,1585.0969 466.94,1581.0969 457.94,1577.0969 "
        style="stroke:#181818;stroke-width:1"
        id="polygon79-6-8"
        transform="translate(-189.7781,77.907894)" />
@@ -2004,6 +1988,50 @@
        d="m 502.60831,1647.2213 8.25277,-4.3782 0.54243,0.8524 -3.37085,3.5258 3.29336,3.2159 -0.46494,0.8136 z"
        id="path87"
        sodipodi:nodetypes="ccccccc" />
+    <g
+       class="link"
+       data-entity-1="ent0015"
+       data-entity-2="ent0017"
+       data-link-type="dependency"
+       data-source-line="113"
+       id="lnk58-7"
+       transform="matrix(0,-0.51209708,1.0366548,0,-630.81268,1431.871)">
+      <path
+         d="m 669.23507,1168.1465 c 31.72,0 64.06,0 101.24,0"
+         fill="none"
+         id="UC_RunOne-to-UC_BusinessProtection-9"
+         style="stroke:#181818;stroke-width:1;stroke-dasharray:7, 7" />
+    </g>
+    <path
+       style="fill:#161616;fill-opacity:1;stroke:#000000;stroke-width:0.733064;stroke-dasharray:none;stroke-opacity:1"
+       d="m 670.76372,864.17336 444.47988,2.48723"
+       id="path91" />
+    <path
+       style="fill:#161616;fill-opacity:1;stroke:#000000;stroke-width:0.9;stroke-dasharray:none;stroke-opacity:1"
+       d="m 323.60148,1036.5166 v 409.1513"
+       id="path94" />
+    <path
+       style="fill:#161616;fill-opacity:1;stroke:#000000;stroke-width:0.904785;stroke-dasharray:none;stroke-opacity:1"
+       d="M 1113.2734,1445.5867 H 323.83764"
+       id="path95" />
+    <polygon
+       fill="#181818"
+       points="1120.87,1108.0969 1111.87,1104.0969 1115.87,1108.0969 1111.87,1112.0969 "
+       style="stroke:#181818;stroke-width:1"
+       id="polygon64-3"
+       transform="translate(-1.4536694,337.52236)" />
+    <path
+       style="fill:#161616;fill-opacity:1;stroke:#000000;stroke-width:0.9;stroke-dasharray:none;stroke-opacity:1"
+       d="m 660.53137,1507.0406 584.39403,2.6506"
+       id="path96" />
+    <path
+       style="fill:#161616;fill-opacity:1;stroke:#000000;stroke-width:0.9;stroke-dasharray:none;stroke-opacity:1"
+       d="M 1246.0517,866.17712 V 1508.4207"
+       id="path97" />
+    <path
+       style="fill:#161616;fill-opacity:1;stroke:#000000;stroke-width:0.9;stroke-dasharray:none;stroke-opacity:1"
+       d="m 670.45019,863.89668 0.92989,46.64945"
+       id="path98" />
   </g>
   <metadata
      id="metadata87">
