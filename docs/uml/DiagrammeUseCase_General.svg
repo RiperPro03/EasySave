@@ -28,9 +28,9 @@
      inkscape:pageopacity="0"
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#505050"
-     inkscape:zoom="0.80654762"
-     inkscape:cx="528.79705"
-     inkscape:cy="574.67159"
+     inkscape:zoom="2.2812612"
+     inkscape:cx="1107.5014"
+     inkscape:cy="1459.0614"
      inkscape:window-width="1920"
      inkscape:window-height="1094"
      inkscape:window-x="-11"
@@ -983,7 +983,8 @@
        class="entity"
        data-qualified-name="BusinessApp"
        data-source-line="23"
-       id="ent0003">
+       id="ent0003"
+       transform="translate(-14.258303,6.8191882)">
       <circle
          cx="1172.9503"
          cy="1070.2969"
@@ -1021,7 +1022,7 @@
        data-qualified-name="CryptoSoft"
        data-source-line="24"
        id="ent0004"
-       transform="translate(584.54634,1358.619)">
+       transform="translate(565.32863,1358.619)">
       <circle
          cx="585.37402"
          cy="51.296902"
@@ -1059,7 +1060,7 @@
        data-qualified-name="LogHub"
        data-source-line="25"
        id="ent0005"
-       transform="translate(225.37185,772.77105)">
+       transform="translate(215.45303,772.77105)">
       <circle
          cx="942.69769"
          cy="83.636383"
@@ -1356,7 +1357,7 @@
        data-link-type="dependency"
        data-source-line="93"
        id="lnk48-4"
-       transform="matrix(0.81798862,0,0,1.0036598,334.44981,-245.74469)">
+       transform="matrix(0.77348552,0,0,1.00721,366.56528,-249.67841)">
       <path
          d="m 1061.29,1108.0969 c 21.32,0 35.96,0 53.58,0"
          fill="none"
@@ -1364,7 +1365,7 @@
          style="stroke:#181818;stroke-width:1" />
       <polygon
          fill="#181818"
-         points="1115.87,1108.0969 1111.87,1112.0969 1120.87,1108.0969 1111.87,1104.0969 "
+         points="1120.87,1108.0969 1111.87,1104.0969 1115.87,1108.0969 1111.87,1112.0969 "
          style="stroke:#181818;stroke-width:1"
          id="polygon64-7"
          transform="matrix(-1,0,0,1,2181.8447,-0.056611)" />
@@ -2021,12 +2022,12 @@
        id="polygon64-3"
        transform="translate(-1.4536694,337.52236)" />
     <path
-       style="fill:#161616;fill-opacity:1;stroke:#000000;stroke-width:0.9;stroke-dasharray:none;stroke-opacity:1"
-       d="m 660.53137,1507.0406 584.39403,2.6506"
+       style="fill:#161616;fill-opacity:1;stroke:#000000;stroke-width:0.887359;stroke-dasharray:none;stroke-opacity:1"
+       d="m 660.53174,1507.0403 567.95506,2.6512"
        id="path96" />
     <path
-       style="fill:#161616;fill-opacity:1;stroke:#000000;stroke-width:0.9;stroke-dasharray:none;stroke-opacity:1"
-       d="M 1246.0517,866.17712 V 1508.4207"
+       style="fill:#161616;fill-opacity:1;stroke:#000000;stroke-width:0.901151;stroke-dasharray:none;stroke-opacity:1"
+       d="M 1228.0517,866.17712 V 1510.0645"
        id="path97" />
     <path
        style="fill:#161616;fill-opacity:1;stroke:#000000;stroke-width:0.9;stroke-dasharray:none;stroke-opacity:1"
