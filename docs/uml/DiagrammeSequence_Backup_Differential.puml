@@ -47,114 +47,233 @@ participant "<b>JobService</b>" as JobService #E6F4FF
 
 == Demarrage ==
 Utilisateur -> UI : Selectionne un job (type Differential)
+activate Utilisateur
+activate UI
 UI -> BackupService : Run(job)
+activate BackupService
 
 alt Job inactif / blocage service / deja en cours
   BackupService --> UI : BackupResultDto immediat (erreur/skipped)
+  deactivate BackupService
 else Demarrage accepte
   BackupService -> StateWriter : Enregistre un instantane (job en cours)
+  activate StateWriter
+  deactivate StateWriter
   BackupService -> UI : StateChanged(Running) [event]
+  activate UI
+  deactivate UI
   BackupService -> ThreadPool : Lance la sauvegarde en tache de fond
+  activate ThreadPool
   BackupService --> UI : BackupResultDto ("Job started asynchronously.")
+  deactivate BackupService
 
   == Execution differenielle (fond) ==
   ThreadPool -> BackupEngine : Demarre l execution de la sauvegarde
+  activate BackupEngine
   BackupEngine -> Detector : Refait un controle logiciel metier avant de commencer
+  activate Detector
+  deactivate Detector
 
   alt Blocage metier au start moteur
     BackupEngine -> Logger : Write("job.start.blocked.businesssoftware")
+    activate Logger
+    deactivate Logger
     BackupEngine -> Logger : Ecrit le resume d execution
+    activate Logger
+    deactivate Logger
     BackupEngine -> BackupService : StateChanged(Error) [event]
+    activate BackupService
     BackupService -> StateWriter : Enregistre un instantane de l etat
+    activate StateWriter
+    deactivate StateWriter
     BackupService -> UI : StateChanged(Error) [event]
+    activate UI
+    deactivate UI
+    deactivate BackupService
     BackupEngine --> ThreadPool : BackupResultDto erreur
+    deactivate BackupEngine
     ThreadPool -> JobService : Marque le job comme execute
+    activate JobService
+    deactivate JobService
+    deactivate ThreadPool
   else Moteur autorise
     BackupEngine -> FS : Verifie que le dossier source existe
+    activate FS
+    deactivate FS
     BackupEngine -> BackupEngine : Choisit la strategie differentielle
+    activate BackupEngine
+    deactivate BackupEngine
     BackupEngine -> FS : Liste les fichiers et calcule les totaux
+    activate FS
+    deactivate FS
     BackupEngine -> BackupService : StateChanged(Running init/totals) [event]
+    activate BackupService
     BackupService -> StateWriter : Enregistre un instantane de l etat
+    activate StateWriter
+    deactivate StateWriter
     BackupService -> UI : StateChanged(progress) [event]
+    activate UI
+    deactivate UI
+    deactivate BackupService
 
     loop Pour chaque fichier source
       opt Pause auto si logiciel metier detecte
         BackupEngine -> Detector : Verifie si le logiciel metier est ouvert
+        activate Detector
+        deactivate Detector
         alt Detecte
           BackupEngine -> BackupService : StateChanged(Paused) [event]
+          activate BackupService
           BackupService -> StateWriter : Enregistre un instantane de l etat
+          activate StateWriter
+          deactivate StateWriter
           BackupService -> UI : StateChanged(Paused) [event]
+          activate UI
+          deactivate UI
+          deactivate BackupService
           BackupEngine -> Logger : Write("job.paused")
+          activate Logger
+          deactivate Logger
           loop Attente fermeture logiciel
             BackupEngine -> Detector : Verifie periodiquement si le logiciel est toujours ouvert
+            activate Detector
+            deactivate Detector
           end
           BackupEngine -> Logger : Write("job.resumed")
+          activate Logger
+          deactivate Logger
           BackupEngine -> BackupService : StateChanged(Running) [event]
+          activate BackupService
           BackupService -> StateWriter : Enregistre un instantane de l etat
+          activate StateWriter
+          deactivate StateWriter
           BackupService -> UI : StateChanged(Running) [event]
+          activate UI
+          deactivate UI
+          deactivate BackupService
         end
       end
 
       BackupEngine -> Strategy : Determine si le fichier doit etre copie
+      activate Strategy
       Strategy -> FS : Verifie si la cible existe
+      activate FS
+      deactivate FS
       alt Cible absente
         Strategy --> BackupEngine : true
+        activate BackupEngine
       else Cible presente
         Strategy -> FS : Compare la taille
+        activate FS
+        deactivate FS
         alt Taille differente
           Strategy --> BackupEngine : true
+          activate BackupEngine
         else Taille identique
           Strategy -> FS : Compare la date de modification
+          activate FS
+          deactivate FS
           alt Date identique
             Strategy --> BackupEngine : false
+            activate BackupEngine
           else Date differente
             Strategy -> FS : Compare le contenu (hash source/cible)
+            activate FS
+            deactivate FS
             Strategy --> BackupEngine : true si le contenu est different
+            activate BackupEngine
           end
         end
       end
+      deactivate BackupEngine
+      deactivate Strategy
 
       alt ShouldCopy = false
         BackupEngine -> Logger : Write("file.skipped")
+        activate Logger
+        deactivate Logger
       else ShouldCopy = true
         BackupEngine -> FS : Prepare le dossier de destination
+        activate FS
+        deactivate FS
         opt Dossier cree
           BackupEngine -> Logger : Write("directory.created")
+          activate Logger
+          deactivate Logger
         end
         BackupEngine -> BackupEngine : Calcule le seuil en octets\n(depuis LargeFileThresholdKb)
+        activate BackupEngine
+        deactivate BackupEngine
         BackupEngine -> Limiter : AcquireAsync(fileSize, thresholdBytes)
+        activate Limiter
         alt Fichier volumineux (>= seuil)
           Limiter --> BackupEngine : Autorisation apres attente (si necessaire)
+          activate BackupEngine
         else Fichier non volumineux
           Limiter --> BackupEngine : Autorisation immediate
+          activate BackupEngine
         end
+        deactivate BackupEngine
+        deactivate Limiter
         BackupEngine -> FS : Copie le fichier vers la destination
+        activate FS
+        deactivate FS
         BackupEngine -> Logger : Write("file.transferred")
+        activate Logger
+        deactivate Logger
 
         opt Chiffrement requis
           alt CryptoSoft disponible
             BackupEngine -> Crypto : Chiffre le fichier copie
+            activate Crypto
             Crypto --> BackupEngine : timeMs / errorCode
+            activate BackupEngine
+            deactivate Crypto
             BackupEngine -> Logger : Write("file.encrypted")
+            activate Logger
+            deactivate Logger
+            deactivate BackupEngine
           else NoEncryptionService
             BackupEngine -> Logger : Write("crypto.fallback")
+            activate Logger
+            deactivate Logger
             BackupEngine -> Logger : Write("file.encryption.skipped")
+            activate Logger
+            deactivate Logger
           end
         end
       end
 
       BackupEngine -> BackupService : StateChanged(progress) [event]
+      activate BackupService
       BackupService -> StateWriter : Enregistre un instantane de l etat
+      activate StateWriter
+      deactivate StateWriter
       BackupService -> UI : StateChanged(progress) [event]
+      activate UI
+      deactivate UI
+      deactivate BackupService
     end
 
     == Finalisation ==
     BackupEngine -> Logger : Ecrit le resume d execution
+    activate Logger
+    deactivate Logger
     BackupEngine -> BackupService : StateChanged(Completed/Error) [event]
+    activate BackupService
     BackupService -> StateWriter : Enregistre un instantane de l etat
+    activate StateWriter
+    deactivate StateWriter
     BackupService -> UI : StateChanged(final) [event]
+    activate UI
+    deactivate UI
+    deactivate BackupService
     BackupEngine --> ThreadPool : BackupResultDto final
+    deactivate BackupEngine
     ThreadPool -> JobService : Marque le job comme execute
+    activate JobService
+    deactivate JobService
+    deactivate ThreadPool
   end
 end
 
@@ -164,5 +283,7 @@ La fin reelle est publiee via StateChanged + logs.
 end note
 
 UI -> Utilisateur : Affiche lancement puis progression
+deactivate UI
+deactivate Utilisateur
 
 @enduml

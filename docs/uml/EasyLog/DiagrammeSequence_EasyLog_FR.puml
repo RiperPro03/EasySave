@@ -40,41 +40,66 @@ participant "<b>Serveur logs</b>" as Server #E0F2F1
 
 == Construction de l entree ==
 Client -> Builder : Demarre la construction d une entree de journal
+activate Client
+activate Builder
 loop Enrichissement fluent (selon besoin)
   Client -> Builder : Ajoute les informations utiles (trace, job, fichier, crypto)
   Client -> Builder : Ajoute les parametres, le resume ou signale un echec
 end
 Client -> Builder : Finalise l entree
 Builder --> Client : LogEntryDto
+deactivate Builder
 
 == Creation du logger ==
 Client -> Factory : Demande un logger selon la configuration
+activate Factory
 
 alt Format JSON
   Factory -> Serializer : Selectionne le format JSON
+  activate Serializer
+  deactivate Serializer
 else Format XML
   Factory -> Serializer : Selectionne le format XML
+  activate Serializer
+  deactivate Serializer
 end
 
 alt StorageMode = LocalOnly
   Factory -> Writer : Prepare un ecrivain de fichier
+  activate Writer
+  deactivate Writer
   Factory -> DailyLogger : Construit un logger local quotidien
+  activate DailyLogger
+  deactivate DailyLogger
   Factory --> Client : ILogger<T> (DailyLogger ou SafeLogger)
 else StorageMode = ServerOnly
   Factory -> WsLogger : Construit un logger reseau (WebSocket)
+  activate WsLogger
+  deactivate WsLogger
   Factory --> Client : ILogger<T> (WebSocketLogger ou SafeLogger)
 else StorageMode = LocalAndServer
   Factory -> Writer : Prepare un ecrivain de fichier
+  activate Writer
+  deactivate Writer
   Factory -> DailyLogger : Construit un logger local quotidien
+  activate DailyLogger
+  deactivate DailyLogger
   Factory -> WsLogger : Construit un logger reseau (WebSocket)
+  activate WsLogger
+  deactivate WsLogger
   Factory -> DualLogger : Assemble un logger local + serveur
+  activate DualLogger
+  deactivate DualLogger
   Factory --> Client : ILogger<T> (DualLogger ou SafeLogger)
 end
 
 opt UseSafeLogger = true
   Factory -> SafeLogger : Ajoute une couche de securite autour du logger
+  activate SafeLogger
+  deactivate SafeLogger
   Factory --> Client : SafeLogger<T>
 end
+deactivate Factory
 
 note right of SafeLogger
   Catch toutes exceptions
@@ -84,36 +109,53 @@ end note
 == Ecriture (retour bool) ==
 alt Appel via SafeLogger
   Client -> SafeLogger : Write(entry)
+  activate SafeLogger
   alt inner = DailyLogger
     SafeLogger -> DailyLogger : Transmet l entree au logger local
+    activate DailyLogger
   else inner = WebSocketLogger
     SafeLogger -> WsLogger : Transmet l entree au logger reseau
+    activate WsLogger
   else inner = LocalAndServerLogger
     SafeLogger -> DualLogger : Transmet l entree au logger combine
+    activate DualLogger
   end
 else Appel direct
   alt Logger = DailyLogger
     Client -> DailyLogger : Envoie l entree au logger local
+    activate DailyLogger
   else Logger = WebSocketLogger
     Client -> WsLogger : Envoie l entree au logger reseau
+    activate WsLogger
   else Logger = LocalAndServerLogger
     Client -> DualLogger : Envoie l entree au logger combine
+    activate DualLogger
   end
 end
 
 opt Chemin local (DailyLogger)
   DailyLogger -> Serializer : Convertit l entree au format texte
+  activate Serializer
   Serializer --> DailyLogger : Texte formate + extension
+  deactivate Serializer
   DailyLogger -> DailyLogger : Determine le fichier du jour
+  activate DailyLogger
+  deactivate DailyLogger
 
   alt XML
     alt Fichier vide/inexistant
       DailyLogger -> Writer : Cree le fichier XML avec la balise racine et la premiere entree
+      activate Writer
+      deactivate Writer
     else Fichier existant
       DailyLogger -> DailyLogger : Insere la nouvelle entree avant la fermeture XML
+      activate DailyLogger
+      deactivate DailyLogger
     end
   else JSON
     DailyLogger -> Writer : Ajoute l entree dans le fichier JSON du jour
+    activate Writer
+    deactivate Writer
   end
 
   Writer --> DailyLogger : bool
@@ -121,29 +163,52 @@ end
 
 opt Chemin reseau (WebSocketLogger)
   WsLogger -> Serializer : Convertit l entree au format texte
+  activate Serializer
   Serializer --> WsLogger : string
+  deactivate Serializer
   WsLogger -> Server : Envoie le journal au serveur
+  activate Server
   Server --> WsLogger : Ack / fail
+  deactivate Server
 end
 
 opt LocalAndServerLogger
   DualLogger -> DailyLogger : Ecrit localement (synchrone)
+  activate DailyLogger
   DailyLogger --> DualLogger : localSuccess(bool)
+  deactivate DailyLogger
   DualLogger -> WsLogger : Lance une copie vers le serveur (asynchrone, best effort)
+  activate WsLogger
   WsLogger -> Server : Envoie le journal au serveur
+  activate Server
+  deactivate Server
+  deactivate WsLogger
   DualLogger --> Client : Retourne le resultat local
 end
 
 alt Appel via SafeLogger
   SafeLogger --> Client : Retourne succes / echec
+  alt inner = DailyLogger
+    deactivate DailyLogger
+  else inner = WebSocketLogger
+    deactivate WsLogger
+  else inner = LocalAndServerLogger
+    deactivate DualLogger
+  end
+  deactivate SafeLogger
 else Appel direct
   alt Logger = DailyLogger
     DailyLogger --> Client : Retourne succes / echec
+    deactivate DailyLogger
   else Logger = WebSocketLogger
     WsLogger --> Client : Retourne succes / echec
+    deactivate WsLogger
   else Logger = LocalAndServerLogger
     DualLogger --> Client : Retourne succes / echec
+    deactivate DualLogger
   end
 end
+
+deactivate Client
 
 @enduml
