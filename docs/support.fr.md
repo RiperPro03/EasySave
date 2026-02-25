@@ -277,7 +277,9 @@ Dans les Settings d’EasySave :
 - **Log server host** : adresse du serveur
 - **Log server port** : port exposé
 
-EasySave enverra alors les logs en temps réel au serveur Docker.
+EasySave enverra alors les logs en temps réel au serveur Docker via un **WebSocket**.
+Le serveur expose l'URL suivante : ```ws://<host>:<port>/ws/logs``` 
+Pour une version sécurisée (SSL), l'URL devient : ```wss://<host>:<port>/ws/logs```
 
 ## 9. Nouveaux paramètres 
 
