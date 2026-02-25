@@ -654,5 +654,59 @@ Only files with these extensions will be encrypted during the backup process.</v
     <data name="Gui_Execution_Error_BusinessSoftware" xml:space="preserve">
         <value>Business software is running. Cannot start sequence.</value>
     </data>
+    <data name="Gui_Settings_LargeFileThresholdLabel" xml:space="preserve">
+        <value>Large file threshold (KB)</value>
+    </data>
+    <data name="Gui_Settings_LargeFileThresholdTooltip" xml:space="preserve">
+        <value>Files larger than this size will be limited to one at a time.</value>
+    </data>
+    <data name="Gui_Settings_Notify_SaveSuccess" xml:space="preserve">
+        <value>Settings saved successfully.</value>
+    </data>
+    <data name="Gui_Settings_Notify_Error_HostRequired" xml:space="preserve">
+        <value>Central log server host is required.</value>
+    </data>
+    <data name="Gui_Settings_Notify_Error_PortInvalid" xml:space="preserve">
+        <value>Central log server port must be a number between 1 and 65535.</value>
+    </data>
+    <data name="Gui_Settings_Notify_Error_SaveFailedFormat" xml:space="preserve">
+        <value>Settings save failed: {0}</value>
+    </data>
+    <data name="Gui_Execution_Notify_RunningFormat" xml:space="preserve">
+        <value>Job '{0}' is running.</value>
+    </data>
+    <data name="Gui_Execution_Notify_PausedFormat" xml:space="preserve">
+        <value>Job '{0}' is paused.</value>
+    </data>
+    <data name="Gui_Execution_Notify_CompletedFormat" xml:space="preserve">
+        <value>Job '{0}' completed.</value>
+    </data>
+    <data name="Gui_Execution_Notify_ErrorSimpleFormat" xml:space="preserve">
+        <value>Job '{0}' ended with an error.</value>
+    </data>
+    <data name="Gui_Execution_Notify_ErrorWithDetailsFormat" xml:space="preserve">
+        <value>Job '{0}': {1}</value>
+    </data>
+    <data name="Gui_Jobs_Notify_CreatedFormat" xml:space="preserve">
+        <value>Job '{0}' created.</value>
+    </data>
+    <data name="Gui_Jobs_Notify_UpdatedFormat" xml:space="preserve">
+        <value>Job '{0}' updated.</value>
+    </data>
+    <data name="Gui_Jobs_Notify_DeletedFormat" xml:space="preserve">
+        <value>Job '{0}' deleted.</value>
+    </data>
+    <data name="Gui_Jobs_Notify_ErrorFormat" xml:space="preserve">
+        <value>Job operation failed: {0}</value>
+    </data>
+    <data name="Gui_LogHub_Notify_Title" xml:space="preserve">
+        <value>LogHub</value>
+    </data>
+    <data name="Gui_LogHub_Notify_Online" xml:space="preserve">
+        <value>LogHub connection restored.</value>
+    </data>
+    <data name="Gui_LogHub_Notify_Offline" xml:space="preserve">
+        <value>LogHub unreachable. Remote logs are unavailable.</value>
+    </data>
 </root>
 

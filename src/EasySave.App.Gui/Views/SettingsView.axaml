@@ -81,10 +81,13 @@
         <TextBox Text="{Binding BusinessSoftwareProcessName}"
                  Watermark="{Binding Source={StaticResource Loc}, Path=[Gui_Settings_BusinessProcessWatermark]}"
                  ToolTip.Tip="{Binding Source={StaticResource Loc}, Path=[Gui_Settings_BusinessProcessTooltip]}"/>
-		<TextBlock Text="Large file threshold (Kb)" />
-		<TextBox Text="{Binding LargeFileThreshold, UpdateSourceTrigger=PropertyChanged}"
-				 Watermark="10000"
-				 ToolTip.Tip="Files larger than this size will be limited to one at a time." />
+		<TextBlock Text="{Binding Source={StaticResource Loc}, Path=[Gui_Settings_LargeFileThresholdLabel]}" />
+		<NumericUpDown Value="{Binding LargeFileThresholdKb}"
+                       Minimum="1"
+                       Maximum="2147483647"
+                       Increment="1000"
+                       FormatString="F0"
+                       ToolTip.Tip="{Binding Source={StaticResource Loc}, Path=[Gui_Settings_LargeFileThresholdTooltip]}" />
 
         <Button Content="{Binding Source={StaticResource Loc}, Path=[Gui_JobEditor_SaveChanges]}"
                 Command="{Binding SaveSettingsCommand}"

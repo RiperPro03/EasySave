@@ -94,4 +94,14 @@ public class AppConfigTests
 
         Assert.Throws<ArgumentOutOfRangeException>(() => cfg.UpdateLogServerConnection("localhost", port));
     }
+
+    [Fact]
+    public void UpdateLargeFileThreshold_ShouldUpdateValue()
+    {
+        var cfg = AppConfig.LoadDefaults();
+
+        cfg.UpdateLargeFileThreshold(12345);
+
+        Assert.Equal(12345, cfg.LargeFileThresholdKb);
+    }
 }

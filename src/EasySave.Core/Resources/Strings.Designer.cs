@@ -1908,5 +1908,169 @@ namespace EasySave.Core.Resources {
                 return ResourceManager.GetString("UI_UpdateJob", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Gui_Settings_LargeFileThresholdLabel.
+        /// </summary>
+        public static string Gui_Settings_LargeFileThresholdLabel {
+            get {
+                return ResourceManager.GetString("Gui_Settings_LargeFileThresholdLabel", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Gui_Settings_LargeFileThresholdTooltip.
+        /// </summary>
+        public static string Gui_Settings_LargeFileThresholdTooltip {
+            get {
+                return ResourceManager.GetString("Gui_Settings_LargeFileThresholdTooltip", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Gui_Settings_Notify_SaveSuccess.
+        /// </summary>
+        public static string Gui_Settings_Notify_SaveSuccess {
+            get {
+                return ResourceManager.GetString("Gui_Settings_Notify_SaveSuccess", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Gui_Settings_Notify_Error_HostRequired.
+        /// </summary>
+        public static string Gui_Settings_Notify_Error_HostRequired {
+            get {
+                return ResourceManager.GetString("Gui_Settings_Notify_Error_HostRequired", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Gui_Settings_Notify_Error_PortInvalid.
+        /// </summary>
+        public static string Gui_Settings_Notify_Error_PortInvalid {
+            get {
+                return ResourceManager.GetString("Gui_Settings_Notify_Error_PortInvalid", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Gui_Settings_Notify_Error_SaveFailedFormat.
+        /// </summary>
+        public static string Gui_Settings_Notify_Error_SaveFailedFormat {
+            get {
+                return ResourceManager.GetString("Gui_Settings_Notify_Error_SaveFailedFormat", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Gui_Execution_Notify_RunningFormat.
+        /// </summary>
+        public static string Gui_Execution_Notify_RunningFormat {
+            get {
+                return ResourceManager.GetString("Gui_Execution_Notify_RunningFormat", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Gui_Execution_Notify_PausedFormat.
+        /// </summary>
+        public static string Gui_Execution_Notify_PausedFormat {
+            get {
+                return ResourceManager.GetString("Gui_Execution_Notify_PausedFormat", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Gui_Execution_Notify_CompletedFormat.
+        /// </summary>
+        public static string Gui_Execution_Notify_CompletedFormat {
+            get {
+                return ResourceManager.GetString("Gui_Execution_Notify_CompletedFormat", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Gui_Execution_Notify_ErrorSimpleFormat.
+        /// </summary>
+        public static string Gui_Execution_Notify_ErrorSimpleFormat {
+            get {
+                return ResourceManager.GetString("Gui_Execution_Notify_ErrorSimpleFormat", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Gui_Execution_Notify_ErrorWithDetailsFormat.
+        /// </summary>
+        public static string Gui_Execution_Notify_ErrorWithDetailsFormat {
+            get {
+                return ResourceManager.GetString("Gui_Execution_Notify_ErrorWithDetailsFormat", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Gui_Jobs_Notify_CreatedFormat.
+        /// </summary>
+        public static string Gui_Jobs_Notify_CreatedFormat {
+            get {
+                return ResourceManager.GetString("Gui_Jobs_Notify_CreatedFormat", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Gui_Jobs_Notify_UpdatedFormat.
+        /// </summary>
+        public static string Gui_Jobs_Notify_UpdatedFormat {
+            get {
+                return ResourceManager.GetString("Gui_Jobs_Notify_UpdatedFormat", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Gui_Jobs_Notify_DeletedFormat.
+        /// </summary>
+        public static string Gui_Jobs_Notify_DeletedFormat {
+            get {
+                return ResourceManager.GetString("Gui_Jobs_Notify_DeletedFormat", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Gui_Jobs_Notify_ErrorFormat.
+        /// </summary>
+        public static string Gui_Jobs_Notify_ErrorFormat {
+            get {
+                return ResourceManager.GetString("Gui_Jobs_Notify_ErrorFormat", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Gui_LogHub_Notify_Title.
+        /// </summary>
+        public static string Gui_LogHub_Notify_Title {
+            get {
+                return ResourceManager.GetString("Gui_LogHub_Notify_Title", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Gui_LogHub_Notify_Online.
+        /// </summary>
+        public static string Gui_LogHub_Notify_Online {
+            get {
+                return ResourceManager.GetString("Gui_LogHub_Notify_Online", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Gui_LogHub_Notify_Offline.
+        /// </summary>
+        public static string Gui_LogHub_Notify_Offline {
+            get {
+                return ResourceManager.GetString("Gui_LogHub_Notify_Offline", resourceCulture);
+            }
+        }
+
+
     }
 }

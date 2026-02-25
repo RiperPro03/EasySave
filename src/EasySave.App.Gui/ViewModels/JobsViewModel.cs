@@ -3,9 +3,11 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using EasySave.App.Gui.Models;
 using EasySave.Core.Enums;
 using EasySave.Core.Interfaces;
 using EasySave.Core.Models;
+using EasySave.Core.Resources;
 
 namespace EasySave.App.Gui.ViewModels;
 
@@ -15,6 +17,7 @@ namespace EasySave.App.Gui.ViewModels;
 public sealed partial class JobsViewModel : ViewModelBase
 {
     private readonly IJobService? _jobService;
+    public event EventHandler<UiNotificationEventArgs>? NotificationRequested;
 
     public ObservableCollection<BackupJob> Jobs { get; } = new();
 
@@ -78,20 +81,25 @@ public sealed partial class JobsViewModel : ViewModelBase
         {
             if (_jobService != null)
             {
+                var jobName = job.Name;
                 _jobService.Delete(job.Id);
                 LastError = null;
                 Refresh();
+                NotifySuccess(string.Format(Strings.Gui_Jobs_Notify_DeletedFormat, jobName));
             }
             else
             {
+                var jobName = job.Name;
                 Jobs.Remove(job);
                 LastError = null;
                 NotifyJobsChanged();
+                NotifySuccess(string.Format(Strings.Gui_Jobs_Notify_DeletedFormat, jobName));
             }
         }
         catch (Exception ex)
         {
             LastError = ex.Message;
+            NotifyError(string.Format(Strings.Gui_Jobs_Notify_ErrorFormat, ex.Message));
         }
     }
 
@@ -131,6 +139,7 @@ public sealed partial class JobsViewModel : ViewModelBase
                 _jobService.Create(id, editor.Name, editor.SourcePath, editor.TargetPath, editor.SelectedType, editor.IsActive, editor.PriorityExtensions);
                 LastError = null;
                 Refresh();
+                NotifySuccess(string.Format(Strings.Gui_Jobs_Notify_CreatedFormat, editor.Name));
             }
             else
             {
@@ -139,11 +148,13 @@ public sealed partial class JobsViewModel : ViewModelBase
                 Jobs.Add(new BackupJob(id, editor.Name, editor.SourcePath, editor.TargetPath, editor.SelectedType, editor.IsActive, editor.PriorityExtensions));
                 LastError = null;
                 NotifyJobsChanged();
+                NotifySuccess(string.Format(Strings.Gui_Jobs_Notify_CreatedFormat, editor.Name));
             }
         }
         catch (Exception ex)
         {
             LastError = ex.Message;
+            NotifyError(string.Format(Strings.Gui_Jobs_Notify_ErrorFormat, ex.Message));
         }
     }
 
@@ -160,6 +171,7 @@ public sealed partial class JobsViewModel : ViewModelBase
                 _jobService.Update(editor.JobId, editor.Name, editor.SourcePath, editor.TargetPath, editor.SelectedType, editor.IsActive, editor.PriorityExtensions);
                 LastError = null;
                 Refresh();
+                NotifySuccess(string.Format(Strings.Gui_Jobs_Notify_UpdatedFormat, editor.Name));
             }
             else
             {
@@ -177,11 +189,13 @@ public sealed partial class JobsViewModel : ViewModelBase
                 LastError = null;
                 UpdateDerivedState();
                 NotifyJobsChanged();
+                NotifySuccess(string.Format(Strings.Gui_Jobs_Notify_UpdatedFormat, editor.Name));
             }
         }
         catch (Exception ex)
         {
             LastError = ex.Message;
+            NotifyError(string.Format(Strings.Gui_Jobs_Notify_ErrorFormat, ex.Message));
         }
     }
 
@@ -211,6 +225,12 @@ public sealed partial class JobsViewModel : ViewModelBase
     {
         JobsChanged?.Invoke();
     }
+
+    private void NotifySuccess(string message)
+        => NotificationRequested?.Invoke(this, new UiNotificationEventArgs(Strings.Gui_Nav_BackupJobs, message, UiNotificationSeverity.Success));
+
+    private void NotifyError(string message)
+        => NotificationRequested?.Invoke(this, new UiNotificationEventArgs(Strings.Gui_Nav_BackupJobs, message, UiNotificationSeverity.Error));
 
     private void SeedSampleJobs()
     {

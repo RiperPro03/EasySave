@@ -127,7 +127,14 @@ public class LogEntryBuilderTests
                 language: Language.English,
                 logFormat: LogFormat.Json,
                 logDirectory: "C:\\Logs",
-                configPath: "C:\\Config\\settings.json")
+                configPath: "C:\\Config\\settings.json",
+                logStorageMode: LogStorageMode.LocalAndServer,
+                logServerHost: "localhost",
+                logServerPort: 9696,
+                encryptionEnabled: true,
+                extensionsToEncrypt: new[] { ".txt", ".pdf" },
+                businessSoftwareProcessName: "notepad",
+                largeFileThresholdKb: 10000)
             .Build();
 
         Assert.NotNull(entry.Settings);
@@ -135,6 +142,13 @@ public class LogEntryBuilderTests
         Assert.Equal(LogFormat.Json, entry.Settings?.LogFormat);
         Assert.Equal("C:\\Logs", entry.Settings?.LogDirectory);
         Assert.Equal("C:\\Config\\settings.json", entry.Settings?.ConfigPath);
+        Assert.Equal(LogStorageMode.LocalAndServer, entry.Settings?.LogStorageMode);
+        Assert.Equal("localhost", entry.Settings?.LogServerHost);
+        Assert.Equal(9696, entry.Settings?.LogServerPort);
+        Assert.True(entry.Settings?.EncryptionEnabled);
+        Assert.Equal(new[] { ".txt", ".pdf" }, entry.Settings?.ExtensionsToEncrypt);
+        Assert.Equal("notepad", entry.Settings?.BusinessSoftwareProcessName);
+        Assert.Equal(10000, entry.Settings?.LargeFileThresholdKb);
     }
 
     [Fact]
