@@ -209,18 +209,72 @@ CryptoSoft is now **mono-instance**:
 
 ## 8. Centralization of daily logs (Docker)
 
-EasySave 3.0 enables **centralization of logs** via a dedicated Docker service.
+EasySave 3.0 enables **centralization of logs** via a dedicated log server, deployed in a Docker container.
 
-Users can choose :
-- Local logs only
-- Centralized logs only
-- Local + centralized logs
+### 8.1. Prerequisites
+- Docker installed
+- Access to LogHub.Server project
+- An available port (default: 9696)
+- A local folder on the server to store logs (e.g. : /home/nas/loghub-logs)
 
-**Features**:
-- One single log file for all users
-- User and machine identification in each entry
-- Real-time transmission to Docker server
+### 8.2 Upload project to server
 
+From the local station :
+```
+scp -r .\src\LogHub.Server nas@192.168.74.137:/home/nas/easysave/
+```
+- nas = server user
+- 192.168.74.137 = server IP
+- /home/nas/easysave/ = target folder
+
+### 8.3. Building the Docker image
+In the folder containing the Dockerfile :
+```
+docker build -t loghub-server:latest .
+```
+
+### 8.4. Container launch
+
+```
+docker run -d \
+  --name loghub-server \
+  -p 9696:9696 \
+  -e LogHub__Port=9696 \
+  -v ~/loghub-logs:/app/logs \
+  --restart unless-stopped \
+  loghub-server:latest
+```
+- **--name loghub-server : container name**
+
+- **-e LogHub__Port=9696 : configure internal port**
+
+- **-p 9696:9696 : expose server port**
+
+- **-v ~/loghub-logs:/app/logs : persistent Docker volume containing logs**
+
+The centralized daily files will then be available in the server's /var/easysave/logs .
+
+### 8.5 Check operation
+
+View active containers :
+```
+docker ps
+```
+View server logs :
+```
+docker logs -f loghub-server
+```
+### 8.6. EasySave side configuration
+In EasySave Settings :
+
+- **Log storage mode :**
+	- LocalOnly
+	- ServerOnly
+	- LocalAndServer
+- **Log server host** : server address
+- **Log server port** : exposed port
+
+EasySave will then send the logs in real time to the Docker server.
 ## 9. New parameters 
 
 - List of priority extensions

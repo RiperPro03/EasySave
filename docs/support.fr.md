@@ -212,17 +212,72 @@ CryptoSoft est désormais **mono‑instance** :
 
 ## 8. Centralisation des logs journaliers (Docker)
 
-EasySave 3.0 permet la **centralisation des logs** via un service Docker dédié.
+EasySave 3.0 permet la **centralisation des logs** via un serveur de logs dédié, déployé dans un conteneur Docker.
 
-L’utilisateur peut choisir :
-- Logs uniquement locaux
-- Logs uniquement centralisés
-- Logs locaux + centralisés
+### 8.1. Prérequis
+- Docker installé
+- Accès au projet LogHub.Server
+- Un port disponible (par défaut : 9696)
+- Un dossier local sur le serveur pour stocker les logs (ex : /home/nas/loghub-logs)
 
-**Caractéristiques** :
-- Un seul fichier journalier unique pour tous les utilisateurs
-- Identification de l’utilisateur et de la machine dans chaque entrée
-- Transmission en temps réel au serveur Docker
+### 8.2 Upload du projet sur le serveur 
+
+Depuis le poste local :
+```
+scp -r .\src\LogHub.Server nas@192.168.74.137:/home/nas/easysave/
+```
+- nas = utilisateur du serveur
+- 192.168.74.137 = IP du serveur
+- /home/nas/easysave/ = dossier cible
+
+### 8.3. Construction de l’image Docker
+Dans le dossier contenant le Dockerfile :
+```
+docker build -t loghub-server:latest .
+```
+
+### 8.4. Lancement du conteneur
+
+```
+docker run -d \
+  --name loghub-server \
+  -p 9696:9696 \
+  -e LogHub__Port=9696 \
+  -v ~/loghub-logs:/app/logs \
+  --restart unless-stopped \
+  loghub-server:latest
+```
+- **--name loghub-server : nom du conteneur**
+
+- **-e LogHub__Port=9696 : configure le port interne**
+
+- **-p 9696:9696 : expose le port du serveur**
+
+- **-v ~/loghub-logs:/app/logs : volume Docker persistant contenant les logs**
+
+Les fichiers journaliers centralisés seront alors disponibles dans le dossier /var/easysave/logs du serveur.
+
+### 8.5 Vérifier le fonctionnement
+
+Voir les conteneurs actifs :
+```
+docker ps
+```
+Voir les logs du serveur :
+```
+docker logs -f loghub-server
+```
+### 8.6. Configuration côté EasySave
+Dans les Settings d’EasySave :
+
+- **Log storage mode :**
+	- LocalOnly
+	- ServerOnly
+	- LocalAndServer
+- **Log server host** : adresse du serveur
+- **Log server port** : port exposé
+
+EasySave enverra alors les logs en temps réel au serveur Docker.
 
 ## 9. Nouveaux paramètres 
 
