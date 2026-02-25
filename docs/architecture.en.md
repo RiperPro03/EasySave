@@ -96,9 +96,9 @@ Constraints :
 
 Components:
 - **Interfaces** : `ILogger<T>`, `ILogSerializer`, `ILogWriter`.
-- **Loggers**: `DailyLogger<T>`, `SafeLogger<T>`.
+- **Loggers**: `DailyLogger<T>`, `WebSocketLogger<T>`, `LocalAndServerLogger<T>`, `SafeLogger<T>`.
 - **Serialization**: JSON, XML.
-- **Options**: `LogOptions`, `LogFormat`.
+- **Options**: `LogOptions`, `LogFormat`, `LogServerOptions`.
 - **Factory**: `LoggerFactory`.
 - **Tools**: `DailyFileHelper`.
 - **Writers** : `FileLogWriter`
@@ -107,7 +107,8 @@ Features :
 - daily writing,
 - JSON/XML formats,
 - `UseSafeLogger` option to absorb exceptions,
-- real-time sending via WebSocket.
+- real-time sending via WebSocket (`ws://` / `wss://`),
+- local / server / hybrid storage modes.
 
 ---
 
@@ -171,6 +172,8 @@ Components:
 - Docker volume : `/app/logs`
 - Persistence : `-v ~/loghub-logs:/app/logs`
 - Automatic restart : `--restart unless-stopped`
+- Health endpoint : `GET /health`
+- Configurable endpoint/path via `LogHub__Port` and `LogHub__WebSocketPath`
 ---
 ## Main flows
 
@@ -187,12 +190,15 @@ Program
 ```
  UI (Console)
   -> BackupService.Run(job)
-     -> BackupEngine.Run(job)
-        -> Strategy (Full/Differential)
-        -> System.IO (enumeration + copy)
-        -> EasyLog (resume)
-     -> JobService.MarkExecuted(job.Id)
-  -> Display result
+     -> immediate start result (async launch)
+     -> Task.Run(...)
+        -> BackupEngine.Run(job)
+           -> Strategy (Full/Differential)
+           -> System.IO (enumeration + copy)
+           -> StateChanged events -> StateWriter
+           -> EasyLog (progress + resume)
+        -> JobService.MarkExecuted(job.Id)
+  -> Display start result + live progress
 ```
 
 ### Snapshot of global state (state.json)

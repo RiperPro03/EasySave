@@ -1,4 +1,4 @@
-﻿# Support EasySave v1.0 
+﻿# Support EasySave v3.0
 
 ## 1. Prérequis
 
@@ -81,20 +81,25 @@ Les modifications sont sauvegardées automatiquement.
 Pour le support technique, vérifier :
 
 - Que le SDK .NET 10 est installé
-- Que la commande suivante fonctionne : **dotnet run --project src/EasySave.App.Console**
+- Que la GUI se lance correctement : **dotnet run --project src/EasySave.App.Gui**
+- ou (CLI historique) que la commande suivante fonctionne : **dotnet run --project src/EasySave.App.Console**
 
 En cas de problème, vérifier les emplacements des fichiers logs et state.json.
 
 ## 5. Arborescence simplifié
 ```
-src/
-├── EasySave.App.Console      (interface console v1)
-├── EasySave.App              (moteur, infrastructure)
-├── EasySave.Core             (coeur métier)
-├── EasySave.EasyLog          (DLL dédiée au logging)
-├── EasySave.App.Gui          (interface graphique v2)
+EasySave/
+├── src/
+│   ├── EasySave.Core           # Cœur métier, DTOs, interfaces
+│   ├── EasySave.App            # Services, infrastructure, persistance
+│   ├── EasySave.EasyLog        # DLL de logging
+│   ├── EasySave.App.Console    # Interface console
+│   ├── EasySave.App.Gui        # Interface graphique
+│   ├── CryptoSoft              # Chiffrement XOR
+│   └── LogHub.Server           # Service de centralisation des logs (Docker / WebSocket)
+│
 └── tests/
-    └── EasySave.Tests		  (Tests Unitaires)
+    └── EasySave.Tests          # Tests unitaires (xUnit)
 ```
 
 ## 6. Limitations de la version 1.0
@@ -231,9 +236,14 @@ scp -r .\src\LogHub.Server nas@192.168.74.137:/home/nas/easysave/
 - /home/nas/easysave/ = dossier cible
 
 ### 8.3. Construction de l’image Docker
-Dans le dossier contenant le Dockerfile :
+Dans le dossier contenant à la fois `Dockerfile` et `LogHub.Server.csproj` (généralement `src/LogHub.Server`) :
 ```
 docker build -t loghub-server:latest .
+```
+
+Alternative (depuis la racine du dépôt) :
+```bash
+docker build -f src/LogHub.Server/Dockerfile -t loghub-server:latest src/LogHub.Server
 ```
 
 ### 8.4. Lancement du conteneur
@@ -250,12 +260,14 @@ docker run -d \
 - **--name loghub-server : nom du conteneur**
 
 - **-e LogHub__Port=9696 : configure le port interne**
+- **-e LogHub__WebSocketPath=/ws/logs : configure le chemin de l’endpoint WebSocket**
+- **-e LogHub__LogDirectory=/app/logs : configure le dossier de stockage des logs dans le conteneur**
 
 - **-p 9696:9696 : expose le port du serveur**
 
 - **-v ~/loghub-logs:/app/logs : volume Docker persistant contenant les logs**
 
-Les fichiers journaliers centralisés seront alors disponibles dans le dossier /var/easysave/logs du serveur.
+Les fichiers journaliers centralisés seront disponibles dans le dossier hôte monté via `-v` (exemple : `~/loghub-logs`) et dans le conteneur sous `/app/logs`.
 
 ### 8.5 Vérifier le fonctionnement
 
@@ -267,6 +279,10 @@ Voir les logs du serveur :
 ```
 docker logs -f loghub-server
 ```
+Healthcheck optionnel :
+```bash
+curl http://<host>:9696/health
+```
 ### 8.6. Configuration côté EasySave
 Dans les Settings d’EasySave :
 
@@ -277,9 +293,12 @@ Dans les Settings d’EasySave :
 - **Log server host** : adresse du serveur
 - **Log server port** : port exposé
 
+EasySave construit l’endpoint par défaut sous la forme `ws://<host>:<port>/ws/logs` (ou `wss://...` si TLS activé).
+Si votre déploiement utilise un autre chemin ou un reverse proxy, configurez l’URL WebSocket complète (si exposée par votre build/settings).
+
 EasySave enverra alors les logs en temps réel au serveur Docker via un **WebSocket**.
-Le serveur expose l'URL suivante : ```ws://<host>:<port>/ws/logs``` 
-Pour une version sécurisée (SSL), l'URL devient : ```wss://<host>:<port>/ws/logs```
+Le serveur expose par défaut l'URL suivante : ```ws://<host>:<port>/ws/logs``` 
+Pour une version sécurisée (TLS via reverse proxy / endpoint TLS), l'URL devient : ```wss://<host>:<port>/ws/logs```
 
 ## 9. Nouveaux paramètres 
 

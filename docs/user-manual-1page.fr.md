@@ -1,14 +1,14 @@
-# EasySave - Manuel Utilisateur (v1.0)
+﻿# EasySave - Manuel Utilisateur (v3.0)
 
 ## 1. Présentation 
 
-EasySave est un logiciel de sauvegarde de données en ligne de commande développé en C# / .NET.
+EasySave est un logiciel de sauvegarde développé en C# / .NET.
 Il permet de créer et d'exécuter des travaux de sauvegarde selon deux types de sauvegarde : 
 	
 - **Sauvegarde complète** : copie l'ensemble des fichiers
 - **Sauvegarde différentielle** : copie uniquement les fichiers modifiés depuis la dernière sauvegarde complète
 
-L'application est multilingue (français et anglais) et offre une interface utilisateur simple et intuitive.
+L'application est multilingue (français et anglais) et propose une interface GUI (Avalonia), avec une CLI historique toujours disponible.
 
 ## 2. Prérequis 
 
@@ -21,12 +21,13 @@ Vérifier l'installation : **dotnet --version**
 
 ## 3. Lancement de l'application 
 
-Depuis la racine du projet : **dotnet run --project src/EasySave.App.Console**
+Depuis la racine du projet (GUI recommandée) : **dotnet run --project src/EasySave.App.Gui**
 
 Alternatives :
 
- - Double-clic sur EasySave.App.Console.exe
- - Ligne de commande avec arguments (ID des travaux de sauvegarde) :
+ - Lancer la version CLI : **dotnet run --project src/EasySave.App.Console**
+ - Double-clic sur `EasySave.App.Gui.exe` (version publiée)
+ - Ligne de commande avec arguments (ID des travaux de sauvegarde, CLI) :
 
 ```bash
  .\EasySave.App.Console.exe 1
@@ -218,19 +219,22 @@ L’utilisateur peut choisir entre trois modes :
 - Local + centralisé : Les logs sont enregistrés localement et envoyés au serveur Docker.
 
 ### 7.2. Paramètres à renseigner
-Si vous choisissez un mode impliquant le serveur (Centralisé ou Local + centralisé), deux informations doivent être renseignées :
+Si vous choisissez un mode impliquant le serveur (Centralisé ou Local + centralisé), au minimum ces informations doivent être renseignées :
 
 - Host : l’adresse IP du serveur Docker
 - Port : port configuré sur le serveur 
 
+EasySave construit ensuite l’URL WebSocket avec le chemin par défaut : `/ws/logs`.
+
 Ces paramètres sont accessibles dans le menu Settings.
 
 ### 7.3. Caractéristiques de la centralisation
-- Un fichier journalier unique est généré pour tous les utilisateurs.
+- Un fichier journalier centralisé est généré sur le serveur (partagé par les utilisateurs connectés à la même instance LogHub).
 - Chaque entrée de log contient l’identité de l’utilisateur et de la machine.
 - Envoi des logs en temps réel via WebSocket
 - Stockage persistant grâce au volume Docker (/app/logs).
 - Les logs restent disponibles même après un redémarrage du conteneur.
+- Endpoint WebSocket par défaut : `ws://<host>:<port>/ws/logs`
 
 ## 8. Nouveaux paramètres dans Settings
 

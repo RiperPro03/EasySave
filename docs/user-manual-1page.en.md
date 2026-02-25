@@ -1,14 +1,14 @@
-# EasySave - User Manual (v1.0)
+# EasySave - User Manual (v3.0)
 
 ## 1. Overview 
 
-EasySave is a command-line data backup software developed in C# / .NET.
+EasySave is a backup software developed in C# / .NET.
 It allows you to create and run backup jobs according to two backup types: 
 	
 - **Full backup**: copies all files
 - **Differential backup**: copies only files modified since the last full backup.
 
-The application is multilingual (French and English) and offers a simple, intuitive user interface.
+The application is multilingual (French and English) and provides a GUI (Avalonia) with a legacy CLI still available.
 
 ## 2. Prerequisites 
 
@@ -21,12 +21,13 @@ Check installation: **dotnet --version**
 
 ## 3. Launch application 
 
-From project root: **dotnet run --project src/EasySave.App.Console**
+From project root (recommended GUI): **dotnet run --project src/EasySave.App.Gui**
 
 Alternatives :
 
- - Double-click on EasySave.App.Console.exe
- - Command line with arguments (backup job IDs):
+ - Run the CLI version: **dotnet run --project src/EasySave.App.Console**
+ - Double-click on `EasySave.App.Gui.exe` (published build)
+ - Command line with arguments (backup job IDs, CLI):
 
 ```bash
  .\EasySave.App.Console.exe 1
@@ -217,19 +218,22 @@ Users can choose between three modes:
 - **Local + centralized** : logs are saved locally and sent to the Docker server.
 
 ### 7.2. Parameters to be entered
-If you choose a mode involving the server (Centralized or Local + Centralized), two items of information must be entered:
+If you choose a mode involving the server (Centralized or Local + Centralized), at least these values must be entered:
 
 - Host: IP address of the Docker server
 - Port: port configured on the server 
 
+EasySave then builds the WebSocket endpoint using the default path: `/ws/logs`.
+
 These parameters can be accessed via the Settings menu.
 
 ### 7.3. Centralization features
-- A single log file is generated for all users.
+- A centralized daily log file is generated on the server (shared by users connected to the same LogHub instance).
 - Each log entry contains the identity of the user and the machine.
 - Sending logs in real time via WebSocket.
 - Persistent storage thanks to the Docker volume (/app/logs).
 - Logs remain available even after a container restart.
+- Default WebSocket endpoint: `ws://<host>:<port>/ws/logs`
 
 ## 8. New settings in Settings
 
