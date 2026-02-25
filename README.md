@@ -177,6 +177,112 @@ Le projet est conçu pour évoluer par versions successives (v1 → v3) en respe
 
 ---
 
+## Fonctionnalités (Version 3.0)
+
+<table>
+  <tr>
+    <td><strong>Interface</strong></td>
+    <td>Application graphique Avalonia</td>
+  </tr>
+  
+  <tr>
+    <td><strong>Multi-langues</strong></td>
+    <td>Français & Anglais (aucune chaîne en dur)</td>
+  </tr>
+  
+  <tr>
+    <td><strong>Travaux de sauvegarde</strong></td>
+    <td>Nombre illimité de travaux configurables</td>
+  </tr>
+  
+  <tr>
+    <td><strong>Type de fonctionnement Sauvegarde</strong></td>
+    <td>Exécution en parallèle uniquement (mode séquentiel supprimé)</td>
+  </tr>
+  
+  <tr>
+    <td><strong>Types de sauvegarde</strong></td>
+    <td>Complète & Différentielle</td>
+  </tr>
+  
+  <tr>
+    <td><strong>Gestion des fichiers prioritaires</strong></td>
+    <td>Oui — aucun fichier non prioritaire transféré tant qu’un fichier prioritaire est en attente</td>
+  </tr>
+  
+  <tr>
+    <td><strong>Interdiction de sauvegardes simultanées pour fichiers volumineux</strong></td>
+    <td>Oui — impossibilité de transférer simultanément deux fichiers &gt; n Ko (paramétrable)</td>
+  </tr>
+  
+  <tr>
+    <td><strong>Interaction temps réel</strong></td>
+    <td>
+    Pause / Play / Stop sur chaque travail ou tous les travaux<br>
+    • Pause effective après le fichier en cours<br>
+    • Reprise immédiate<br>
+    • Stop immédiat<br>
+    • Suivi en temps réel (progression %)
+    </td>
+  </tr>
+  
+  <tr>
+    <td><strong>Pause automatique (logiciel métier)</strong></td>
+    <td>Oui — tous les travaux se mettent en pause et reprennent automatiquement</td>
+  </tr>
+  
+  <tr>
+    <td><strong>Arrêt si détection logiciel métier</strong></td>
+    <td>Oui — arrêt de tous les transferts en cours</td>
+  </tr>
+  
+  <tr>
+    <td><strong>Cryptage</strong></td>
+    <td>
+    Intégration CryptoSoft<br>
+    • CryptoSoft Mono-instance<br>
+    • Gestion des conflits d’accès
+    </td>
+  </tr>
+  
+  <tr>
+    <td><strong>Logs</strong></td>
+    <td>
+    Fichier log journalier (JSON ou XML)<br>
+    • Temps de cryptage (ms) : 0 = pas de cryptage, &gt;0 = durée, &lt;0 = erreur<br>
+    • Centralisation possible via service Docker
+    </td>
+  </tr>
+  
+  <tr>
+    <td><strong>Centralisation des logs</strong></td>
+    <td>
+    Oui — service Docker temps réel<br>
+    • Local uniquement<br>
+    • Centralisé uniquement<br>
+    • Local + Centralisé<br>
+    • Un seul fichier journalier partagé entre utilisateurs
+    </td>
+  </tr>
+  
+  <tr>
+    <td><strong>Fichier d'état</strong></td>
+    <td><code>state.json</code></td>
+  </tr>
+  
+  <tr>
+    <td><strong>DLL dédiée</strong></td>
+    <td><code>EasyLog.dll</code> pour la gestion des logs</td>
+  </tr>
+  
+  <tr>
+    <td><strong>Ligne de commande</strong></td>
+    <td>Identique à la version 1.0</td>
+  </tr>
+</table>
+
+---
+
 ## Architecture
 
 ### Arborescence du projet
