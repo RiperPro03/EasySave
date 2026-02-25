@@ -477,7 +477,7 @@ L'interface **Gui** apporte l'expérience graphique d'EasySave en s'appuyant sur
 
 Ce diagramme est composé de différents blocks : Encryption, State management, Backup execution, utilities, settings, Job management, App, Core et EasyLog 
 
-![Diagramme de classes Général](docs/uml/App/DiagrammeClass_General.svg)
+![Diagramme de classes Général](docs/uml/DiagrammeClass_General.svg)
 
 <details>
 <summary><strong>Voir les détails techniques du système EasySave</strong></summary>
