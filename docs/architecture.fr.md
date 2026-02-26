@@ -1,7 +1,7 @@
 ﻿# Architecture du projet EasySave
 
 ## Objectif
-Ce document decrit l architecture du projet **EasySave**, les responsabilites de chaque projet
+Ce document decrit l'architecture du projet **EasySave**, les responsabilites de chaque projet
 et les flux principaux. Il vise a garder une vision claire et a jour du code reel :
 - separation des responsabilites,
 - testabilite,
@@ -10,7 +10,7 @@ et les flux principaux. Il vise a garder une vision claire et a jour du code ree
 
 ---
 
-## Vue d ensemble
+## Vue d'ensemble
 La solution est organisee en 5 projets et un programme externe pour le chiffrement:
 ```
 EasySave.Core        -> domaine, DTO, contrats
@@ -58,7 +58,7 @@ Contenu principal :
 
 Contraintes :
 - aucune dependance UI,
-- pas de code d infrastructure,
+- pas de code d'infrastructure,
 - expose des interfaces testables.
 
 ---
@@ -67,7 +67,7 @@ Contraintes :
 **Role :** implementations concretes de l'application.
 
 **Services**
-- `BackupEngine` : execution d un job, progression, logs.
+- `BackupEngine` : execution d'un job, progression, logs.
 - `BackupService` : orchestration + snapshot global `state.json`.
 - `JobService` : operations CRUD sur les jobs.
 - `PathProvider` : chemins applicatifs (AppData/ProSoft/EasySave).
@@ -119,7 +119,7 @@ Caracteristiques :
 
 Responsabilites :
 - menus et navigation,
-- lancement d un job ou d un batch,
+- lancement d'un job ou d'un batch,
 - affichage des resultats.
 
 Composants :
@@ -190,7 +190,7 @@ Program
   -> Controllers + Views
 ```
 
-### Execution d un job
+### Execution d'un job
 ```
 UI (Console)
   -> BackupService.Run(job)
@@ -205,7 +205,7 @@ UI (Console)
   -> Affichage resultat de lancement + progression temps reel
 ```
 
-### Snapshot d etat global (state.json)
+### Snapshot d'etat global (state.json)
 ```
 BackupEngine (event StateChanged)
   -> BackupService
@@ -273,7 +273,7 @@ Les diagrammes a jour sont dans `docs/uml` :
 
 ---
 
-## Points d attention
+## Points d'attention
 
 - Extensions prioritaires
 - Seuil fichiers volumineux
