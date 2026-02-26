@@ -78,6 +78,21 @@ Le projet est conçu pour évoluer par versions successives (v1 → v3) en respe
   </tr>
 </table>
 
+### Changelog
+
+<table>
+  <tr>
+    <td align="center" width="50%">
+      <img src="https://img.shields.io/badge/Langue-Français-blue" alt="FranÃ§ais"><br>
+      <a href="docs/CHANGELOG.fr.md">Historique des changements</a>
+    </td>
+    <td align="center" width="50%">
+      <img src="https://img.shields.io/badge/Language-English-red" alt="English"><br>
+      <a href="docs/CHANGELOG.en.md">Changelog</a>
+    </td>
+  </tr>
+</table>
+
 ---
 
 ## Fonctionnalités (Version 1.0)
