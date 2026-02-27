@@ -32,6 +32,10 @@ Le projet est conçu pour évoluer par versions successives de la v1 à la v3 et
 
 ## Documentation
 
+### Design Patterns utilisés dans l'application :
+- Detail des patterns de conception appliqués dans EasySave
+[Documentation Design Patterns](docs/design-patterns.md)
+
 ### Manuels Utilisateur
 
 
