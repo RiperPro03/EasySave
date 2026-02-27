@@ -19,7 +19,7 @@
 
 **EasySave** est un logiciel de sauvegarde développé en C# / .NET dans le cadre du projet fil rouge **ProSoft** (CESI).
 
-Le projet est conçu pour évoluer par versions successives de la v1 à la v3 et en préparant la v4, en respectant les principes de :
+Le projet est conçu pour évoluer par versions successives de la v1 à la v3 et aux futures versions, en respectant les principes de :
 - Qualité logicielle
 - Maintenabilité
 - Architecture propre
