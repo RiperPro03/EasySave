@@ -343,6 +343,38 @@ Avantage maintenabilite:
 Exemple de feature :
 - ajouter `MaxPayloadBytes` dans `LogHubOptions` et l'appliquer au endpoint WS.
 
+## 16. Pattern MVVM (Avalonia UI)
+
+But :
+-Découpler totalement l'interface graphique (XAML) de la logique métier pour permettre une testabilité accrue et une maintenance facilitée de l'UI.
+
+Comment ça marche :
+- Data Binding : La View "écoute" les propriétés du ViewModel qu'elle a via le moteur de liaison d'Avalonia.
+- Notification : Le ViewModel implémente ObservableObject (ou INotifyPropertyChanged) pour avertir la View d'un changement de donnée.
+- Commandes : Les interactions utilisateur (clics) appellent des ICommand définies dans le ViewModel.
+
+Avantage maintenabilité :
+- On peut modifier entièrement le design (XAML) sans toucher à une seule ligne de code C#.
+- Les tests unitaires s'effectuent sur le ViewModel sans même avoir besoin de lancer l'interface graphique.
+
+## 17. Pattern MVC (du mode console)
+
+But :
+- Structurer l'application CLI pour séparer le flux d'entrée utilisateur, le traitement logique et le formatage de sortie.
+
+Fichiers :
+- Model : `src/EasySave.App.Console/Models`
+- View : `src/EasySave.App.Console/Views`
+- Controller : `src/EasySave.App.Console/Controllers`
+
+Comment ça marche :
+- Input : Le Program.cs transmet les arguments au Controller.
+- Action : Le Controller interroge les services (Infrastructure) et met à jour le Model.
+- Output : Le Controller sélectionne la View appropriée pour afficher le résultat à l'utilisateur.
+
+Avantage maintenabilité :
+- Modifier l’interface n’impacte pas la logique métier, et inversement. 
+
 ## Preuve de maintenabilite (synthese)
 
 Ce que ces patterns prouvent concretement:
