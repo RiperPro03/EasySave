@@ -1,267 +1,353 @@
 # Design Patterns utilises dans EasySave
 
-Ce document decrit les patterns identifies dans le projet, leur implementation concrete, leur interet, et des exemples de features faciles a ajouter grace a eux.
+## Introduction
+
+Ce document sert a montrer pourquoi le code est maintenable:
+- separer les responsabilites (metier, persistence, UI, transport),
+- remplacer un composant sans casser les autres,
+- ajouter des features par extension plutôt que par modification risquée,
+- garder une base testable (interfaces, evenements, orchestration explicite).
+
+Patterns decrits dans ce document et raison d'existence:
+- `Factory`: créer la bonne implementation selon la configuration.
+- `Builder`: construire des logs riches de maniere uniforme.
+- `Strategy`: changer l'algorithme (copie, serialisation, chiffrement) sans changer l'orchestrateur.
+- `Decorator`: ajouter un comportement de securite autour d'un logger sans dupliquer les loggers existants.
+- `Repository`: isoler la persistence des regles metier.
+- `Command` (MVVM): declencher des actions UI sans coupler la vue au metier.
+- `Singleton`: partager une source unique de verite transversale.
+- `Observer`: propager les changements d'etat vers plusieurs consommateurs.
+- `Facade`: exposer une API metier simple au-dessus d'une orchestration complexe.
+- `Producer-Consumer`: decoupler ingestion et ecriture IO pour la charge.
+- `Pipeline` (architecture): chaine de traitement claire et extensible.
+- `State` (etat implicite): transitions de statut centralisees.
+- `Options Pattern` (.NET): centraliser les parametres runtime du serveur.
 
 ## 1. Factory
 
-Objectif: centraliser la creation d'objets selon une configuration.
+But:
+- centraliser la creation de Reader/Writer de logs selon `LogFormat` et `LogStorageMode`.
 
-Fichiers impliques:
-- `src/EasySave.EasyLog/Factories/LoggerFactory.cs`: construit `ILogger<T>` selon `LogFormat` et `LogStorageMode`.
-- `src/EasySave.EasyLog/Factories/LogReaderFactory.cs`: construit `ILogReader<T>` selon le mode de stockage.
-- `src/EasySave.App/Services/AppLogService.cs`: consomme la factory et recree le logger quand la config change.
+Fichiers et role:
+- `src/EasySave.EasyLog/Factories/LoggerFactory.cs`: cree `DailyLogger`, `WebSocketLogger`, `SafeLogger`, ou le mode mixte.
+- `src/EasySave.EasyLog/Factories/LogReaderFactory.cs`: cree `LocalFileLogReader`, `WebSocketLogReader`, ou le mode mixte.
+- `src/EasySave.App/Services/AppLogService.cs`: demande la creation et recrée le logger quand la config evolue.
 
-Fonctionnement:
-- Les `switch` dans les factories selectionnent les implementations concretes (JSON/XML, local/serveur/mixte).
-- Le code appelant reste decouple des classes concretes.
+Comment ca marche:
+- une decision centralisee par `switch` sur les options.
+- les appelants manipulent uniquement `ILogger<T>` et `ILogReader<T>`.
 
-Avantages:
-- Ajout d'un nouveau mode sans modifier les appelants.
-- Point unique de validation des options.
+Avantage maintenabilite:
+- ajout d'un backend en un seul endroit.
+- reduction du couplage aux classes concretes.
 
-Exemple de nouvelle feature:
-- Ajouter `LogFormat.Csv` avec `CsvSerializer` et le brancher uniquement dans `LoggerFactory`.
+Exemple de feature :
+- ajout d'un backend `DatabaseLogger` + `DatabaseLogReader` sans toucher l'orchestration.
 
 ## 2. Builder
 
-Objectif: construire des objets de log complexes de facon fluide.
+But:
+- construire des `LogEntryDto` complexes sans duplication de code.
 
-Fichiers impliques:
-- `src/EasySave.Core/Logging/LogEntryBuilder.cs`: API fluide `Create().WithJob().WithFile().WithCrypto().Build()`.
-- `src/EasySave.App/Services/BackupEngine.cs`: construit les logs metier par etapes.
-- `src/EasySave.App/Services/BackupService.cs`: construit les logs de controle utilisateur.
-- `src/EasySave.App/Repositories/AppConfigRepository.cs`: construit les logs de sauvegarde des settings.
+Fichiers et role:
+- `src/EasySave.Core/Logging/LogEntryBuilder.cs`: API fluide de construction.
+- utilise dans:
+  - `src/EasySave.App/Services/BackupEngine.cs`
+  - `src/EasySave.App/Services/BackupService.cs`
+  - `src/EasySave.App/Repositories/AppConfigRepository.cs`
 
-Fonctionnement:
-- Le builder initialise les champs obligatoires.
-- Les methodes `With...` enrichissent l'entree.
-- `Fail(...)` applique un standard d'erreur coherent.
+Comment ca marche:
+- `Create(...)` initialise le minimum.
+- `WithJob/WithFile/WithCrypto/WithSummary/...` enrichissent l'entree.
+- `Fail(...)` applique un format d'erreur coherent.
 
-Avantages:
-- Lisibilite des appels.
-- Uniformite du schema de logs.
+Avantage maintenabilite:
+- schema de logs homogene.
+- evolution du DTO sans rework massif des callsites.
 
-Exemple de nouvelle feature:
-- Ajouter `WithCorrelation(string correlationId)` pour relier logs GUI/API/serveur.
+Exemple de feature :
+- ajouter `WithCorrelationId(...)` pour tracer une operation de bout en bout.
 
-## 3. Strategy (serialisation des logs)
+## 3. Strategy (serialisation)
 
-Objectif: choisir l'algorithme de serialisation a runtime.
+But:
+- changer le format de serialisation sans changer le logger.
 
-Fichiers impliques:
-- `src/EasySave.EasyLog/Interfaces/ILogSerializer.cs`: contrat.
-- `src/EasySave.EasyLog/Serialization/JsonSerializer.cs`: strategie JSON.
-- `src/EasySave.EasyLog/Serialization/XmlSerializer.cs`: strategie XML.
-- `src/EasySave.EasyLog/Factories/LoggerFactory.cs`: selection de la strategie.
+Fichiers et role:
+- `src/EasySave.EasyLog/Interfaces/ILogSerializer.cs`
+- `src/EasySave.EasyLog/Serialization/JsonSerializer.cs`
+- `src/EasySave.EasyLog/Serialization/XmlSerializer.cs`
+- selection dans `src/EasySave.EasyLog/Factories/LoggerFactory.cs`
 
-Fonctionnement:
-- Le logger depend de `ILogSerializer`, pas d'un format concret.
-- La factory injecte la bonne implementation selon `LogOptions.Format`.
+Comment ca marche:
+- le logger depend de l'interface `ILogSerializer`.
+- la factory injecte la strategie concrete.
 
-Avantages:
-- Formats interchangeables sans toucher aux loggers.
-- Tests simplifies via mock de `ILogSerializer`.
+Avantage maintenabilite:
+- format extensible.
+- tests plus simples via mock/fake serializer.
 
-Exemple de nouvelle feature:
-- Support `protobuf` pour les logs distants a faible bande passante.
+Exemple de feature :
+- ajouter `CsvSerializer` pour générer des log en format CSV.
 
-## 4. Strategy (copie Full/Differential)
+## 4. Strategy (copie Full / Differential)
 
-Objectif: separer la regle "doit-on copier ce fichier?".
+But:
+- isoler la decision "copier ou non" par fichier.
 
-Fichiers impliques:
-- `src/EasySave.Core/Interfaces/IBackupCopyStrategy.cs`: contrat de decision.
-- `src/EasySave.App/Services/FullCopyStrategy.cs`: copie toujours.
-- `src/EasySave.App/Services/DifferentialCopyStrategy.cs`: compare presence/taille/date/hash.
-- `src/EasySave.App/Services/BackupEngine.cs`: choisit la strategie selon `BackupType`.
+Fichiers et role:
+- `src/EasySave.Core/Interfaces/IBackupCopyStrategy.cs`
+- `src/EasySave.App/Services/FullCopyStrategy.cs`
+- `src/EasySave.App/Services/DifferentialCopyStrategy.cs`
+- orchestration dans `src/EasySave.App/Services/BackupEngine.cs`
 
-Fonctionnement:
-- Le moteur appelle `strategy.ShouldCopy(source, target)` pour chaque fichier.
-- Le comportement change sans branchements disperses dans la boucle principale.
+Comment ca marche:
+- le moteur appelle `ShouldCopy(source, target)`.
+- la regle varie selon le type de backup.
 
-Avantages:
-- Extension simple des types de backup.
-- Cohesion de la logique de comparaison.
+Avantage maintenabilite:
+- ajout d'un nouveau mode sans complexifier la boucle principale.
 
-Exemple de nouvelle feature:
-- Ajouter `MirrorCopyStrategy` pour supprimer les fichiers cibles orphelins.
+Exemple de feature :
+- `MirrorCopyStrategy` avec purge des fichiers cibles orphelins.
 
 ## 5. Strategy (chiffrement)
 
-Objectif: isoler le mecanisme de chiffrement.
+But:
+- isoler la technologie de chiffrement du moteur de backup.
 
-Fichiers impliques:
-- `src/EasySave.Core/Interfaces/ICryptoService.cs`: contrat.
-- `src/EasySave.App/Services/CryptoSoftProcessService.cs`: chiffrement via process externe.
-- `src/EasySave.App/Services/NoEncryptionService.cs`: fallback no-op.
-- `src/EasySave.App/Services/BackupEngine.cs`: applique la strategie active.
+Fichiers et role:
+- `src/EasySave.Core/Interfaces/ICryptoService.cs`
+- `src/EasySave.App/Services/CryptoSoftProcessService.cs`
+- `src/EasySave.App/Services/NoEncryptionService.cs`
+- selection/fallback dans `src/EasySave.App/Services/BackupEngine.cs`
 
-Fonctionnement:
-- Le moteur reste agnostique de l'implementation.
-- La creation par defaut choisit `CryptoSoftProcessService` si binaire present, sinon fallback.
+Comment ca marche:
+- le moteur appelle `ICryptoService`.
+- fallback automatique vers no-op si l'outil externe est absent.
 
-Avantages:
-- Fiabilite du fallback.
-- Evolution facile vers d'autres providers.
+Avantage maintenabilite:
+- robustesse (pas de crash si chiffrement indisponible).
+- remplacement de provider sans toucher la logique metier.
 
-Exemple de nouvelle feature:
-- Ajouter `AesEncryptionService` natif .NET sans changer le moteur.
+Exemple de feature :
+- `AesEncryptionService` comme nouvelle strategie de chiffrement.
 
 ## 6. Decorator
 
-Objectif: ajouter un comportement autour d'un logger sans modifier son code.
+But:
+- ajouter un comportement de securite autour d'un logger existant.
 
-Fichiers impliques:
-- `src/EasySave.EasyLog/Loggers/SafeLogger.cs`: enveloppe un `ILogger<T>` et absorbe les exceptions.
-- `src/EasySave.EasyLog/Factories/LoggerFactory.cs`: active le decorator via `UseSafeLogger`.
+Fichiers et role:
+- `src/EasySave.EasyLog/Loggers/SafeLogger.cs`
+- branchement dans `src/EasySave.EasyLog/Factories/LoggerFactory.cs`
 
-Fonctionnement:
-- `SafeLogger.Write` appelle le logger interne dans un `try/catch`.
-- Le pattern est optionnel et activable par configuration.
+Comment ca marche:
+- `SafeLogger` enveloppe un `ILogger<T>` et capte les exceptions.
 
-Avantages:
-- Robustesse en production.
-- Separation claire entre logique metier et politique de resilience.
+Avantage maintenabilite:
+- resilience optionnelle sans dupliquer les loggers.
 
-Exemple de nouvelle feature:
-- `RetryLogger` decorator pour retenter les ecritures distantes.
+Exemple de feature :
+- `RetryLogger` (decorator de retry pour le distant).
 
 ## 7. Repository
 
-Objectif: encapsuler l'acces aux donnees persistantes.
+But:
+- encapsuler la persistence et proteger la logique metier des details IO.
 
-Fichiers impliques:
-- `src/EasySave.Core/Interfaces/IJobRepository.cs`: abstraction.
-- `src/EasySave.App/Repositories/JobRepository.cs`: persistance JSON des jobs.
-- `src/EasySave.App/Repositories/AppConfigRepository.cs`: persistance JSON de la config.
-- `src/EasySave.App/Services/JobService.cs`: depend de `IJobRepository`.
-- `src/EasySave.App/Services/SettingsService.cs`: depend de `AppConfigRepository`.
+Fichiers et role:
+- `src/EasySave.Core/Interfaces/IJobRepository.cs`
+- `src/EasySave.App/Repositories/JobRepository.cs`
+- `src/EasySave.App/Repositories/AppConfigRepository.cs`
+- services consommateurs:
+  - `src/EasySave.App/Services/JobService.cs`
+  - `src/EasySave.App/Services/SettingsService.cs`
 
-Fonctionnement:
-- Le service metier ne connait pas les details de fichier/JSON.
-- Les repositories gerent verrouillage, serialisation et migration defensive.
+Comment ca marche:
+- les services appellent des operations metier (`GetAll`, `Add`, `Update`, etc.).
+- les repositories gerent JSON, verrous, validation defensive.
 
-Avantages:
-- Testabilite de la couche metier.
-- Possibilite de changer le backend de persistance.
+Avantage maintenabilite:
+- migration de stockage possible sans impacter les services.
 
-Exemple de nouvelle feature:
-- Remplacer la persistance JSON des jobs par SQLite avec une nouvelle implementation repository.
+Exemple de feature :
+- migration jobs JSON -> SQLite.
 
 ## 8. Command (MVVM)
 
-Objectif: encapsuler les actions UI dans des commandes bindables.
+But:
+- representer les actions UI en commandes bindables/testables.
 
-Fichiers impliques:
-- `src/EasySave.App.Gui/ViewModels/ExecutionViewModel.cs`
-- `src/EasySave.App.Gui/ViewModels/JobsViewModel.cs`
-- `src/EasySave.App.Gui/ViewModels/MainWindowViewModel.cs`
-- `src/EasySave.App.Gui/ViewModels/SettingsViewModel.cs`
+Fichiers et role:
+- view models avec `[RelayCommand]`:
+  - `src/EasySave.App.Gui/ViewModels/ExecutionViewModel.cs`
+  - `src/EasySave.App.Gui/ViewModels/JobsViewModel.cs`
+  - `src/EasySave.App.Gui/ViewModels/MainWindowViewModel.cs`
+  - `src/EasySave.App.Gui/ViewModels/SettingsViewModel.cs`
 
-Fonctionnement:
-- Les methodes marquees `[RelayCommand]` sont exposees comme commandes Avalonia.
-- La vue declenche des intentions, pas des appels metier directs.
+Comment ca marche:
+- la vue declenche des commandes, pas des appels metier directs.
 
-Avantages:
-- UI decouplee et testable.
-- Gestion uniforme des actions synchrones/asynchrones.
+Avantage maintenabilite:
+- meilleure separation Vue / ViewModel / Services.
 
-Exemple de nouvelle feature:
-- Ajouter une commande `RetryFailedJobsCommand` dans `ExecutionViewModel`.
+Exemple de feature :
+- commande `RetryFailedJobs` pour relancer tous les jobs en erreur d'un coup.
 
 ## 9. Singleton
 
-Objectif: partager une instance unique de service transversal.
+But:
+- partager une instance globale coherente pour la localisation GUI.
 
-Fichiers impliques:
-- `src/EasySave.App.Gui/Localization/Loc.cs`: `public static Loc Instance { get; } = new();`
+Fichiers et role:
+- `src/EasySave.App.Gui/Localization/Loc.cs` (`Loc.Instance`)
 
-Fonctionnement:
-- Toute la GUI consomme la meme instance de localisation.
-- Le changement de langue notifie tous les bindings via `PropertyChanged`.
+Comment ca marche:
+- changement de langue central.
+- notification via `PropertyChanged`.
 
-Avantages:
-- Source unique de verite pour la culture.
-- Pas de propagation manuelle des instances.
+Avantage maintenabilite:
+- source unique de configuration de langue.
 
-Exemple de nouvelle feature:
-- Ajouter un cache de traductions dynamiques dans `Loc.Instance`.
+## 10. Observer
 
-## 10. Observer (events)
+But:
+- diffuser les changements d'etat aux consommateurs sans couplage fort.
 
-Objectif: diffuser les changements d'etat sans couplage fort.
+Fichiers et role:
+- contrats:
+  - `src/EasySave.Core/Interfaces/IBackupEngine.cs`
+  - `src/EasySave.Core/Interfaces/IBackupService.cs`
+- publication:
+  - `src/EasySave.App/Services/BackupEngine.cs`
+  - `src/EasySave.App/Services/BackupService.cs`
+- abonnements:
+  - `src/EasySave.App.Gui/ViewModels/ExecutionViewModel.cs`
+  - `src/EasySave.App.Gui/ViewModels/DashboardViewModel.cs`
+  - `src/EasySave.App.Gui/ViewModels/MainWindowViewModel.cs`
 
-Fichiers impliques:
-- `src/EasySave.Core/Interfaces/IBackupService.cs`: evenement `StateChanged`.
-- `src/EasySave.App/Services/BackupEngine.cs`: publie les transitions de job.
-- `src/EasySave.App/Services/BackupService.cs`: relaie l'evenement et persiste l'instantane.
-- `src/EasySave.App.Gui/ViewModels/ExecutionViewModel.cs`: s'abonne et met a jour l'ecran live.
-- `src/EasySave.App.Gui/ViewModels/DashboardViewModel.cs`: s'abonne pour les widgets dashboard.
-- `src/EasySave.App.Gui/ViewModels/MainWindowViewModel.cs`: s'abonne pour notifications globales.
+Comment ca marche:
+- `StateChanged` est publie par le moteur et relaie par le service.
+- plusieurs view models reagissent independamment.
 
-Fonctionnement:
-- Producteur: moteur de backup.
-- Intermediaire: service applicatif.
-- Consommateurs: ViewModels.
+Avantage maintenabilite:
+- ajout de nouveaux observateurs sans modification du moteur.
 
-Avantages:
-- Multiples consommateurs sans dependances croisees.
-- Ajout de nouveaux listeners sans toucher au moteur.
+Exemple de feature :
+- observateur de telemetrie temps reel vers un dashboard distant.
 
-Exemple de nouvelle feature:
-- Ajouter un listener qui pousse les events sur SignalR pour supervision distante.
+## 11. Facade
 
-## 11. Facade (service applicatif)
+But:
+- presenter une API metier simple au-dessus d'une orchestration complexe.
 
-Objectif: exposer une API metier simple et cacher la complexite interne.
-
-Fichier implique:
+Fichier et role:
 - `src/EasySave.App/Services/BackupService.cs`
 
-Fonctionnement:
-- `BackupService` fournit `Run/Pause/Resume/Stop/CanStartSequence`.
-- En interne, il orchestre moteur, snapshots, logs, synchronisation, protection anti double lancement.
+Comment ca marche:
+- expose `Run`, `Pause`, `Resume`, `Stop`, `CanStartSequence`.
+- masque la coordination moteur, snapshots, logs, synchronisation.
 
-Avantages:
-- Point d'entree unique pour GUI/CLI.
-- Evolution interne sans impact public.
+Avantage maintenabilite:
+- point d'entrée unique pour GUI et CLI.
 
-Exemple de nouvelle feature:
-- Ajouter `RunBatch(IEnumerable<string> jobIds)` uniquement dans la facade.
+Exemple de feature :
+- `RunBatch(IEnumerable<string> ids)`.
 
 ## 12. Producer-Consumer
 
-Objectif: decoupler production de messages et traitement IO.
+But:
+- absorber les pics d'entrees WS et decoupler ecriture disque.
 
-Fichiers impliques:
-- `src/LogHub.Server/WebSockets/WebSocketEndpoint.cs`: producteur (enqueue des ecritures).
-- `src/LogHub.Server/Infrastructure/Queueing/ChannelLogQueue.cs`: buffer borne.
-- `src/LogHub.Server/Workers/LogIngestWorker.cs`: consommateur en fond.
-- `src/LogHub.Server/Infrastructure/Storage/DailyFileLogWriter.cs`: ecriture disque.
+Fichiers et role:
+- producteur:
+  - `src/LogHub.Server/WebSockets/WebSocketEndpoint.cs`
+- queue:
+  - `src/LogHub.Server/Infrastructure/Queueing/ChannelLogQueue.cs`
+- consommateur:
+  - `src/LogHub.Server/Workers/LogIngestWorker.cs`
+- stockage:
+  - `src/LogHub.Server/Infrastructure/Storage/DailyFileLogWriter.cs`
 
-Fonctionnement:
-- Les requetes WS n'ecrivent pas directement sur disque.
-- Elles placent une tache en queue, puis le worker traite sequentiellement.
+Comment ca marche:
+- le endpoint enfile les ecritures.
+- le worker dépile et persiste en arriere-plan.
 
-Avantages:
-- Meilleure tenue en charge.
-- Isolation des latences disque vis-a-vis des clients WS.
+Avantage maintenabilite:
+- meilleure tenue en charge et isolation IO.
 
-Exemple de nouvelle feature:
-- Ajouter une politique de priorite de messages (erreurs > infos) dans la queue.
+Exemple de feature :
+- priorité de messages (erreur > info).
 
-## Architecture
+## 13. State (etat implicite / machine a etats)
 
-## A. Pipeline
+But:
+- gerer explicitement les transitions d'un job.
 
-Observation:
-- Pipeline de traitement net: ingress WS -> validation -> queue -> worker -> storage.
+Fichiers et role:
+- `src/EasySave.Core/Enums/JobStatus.cs`
+- `src/EasySave.App/Services/BackupEngine.cs`
+- `src/EasySave.App/Services/JobExecutionControl.cs`
 
-Fichiers:
+Comment ca marche:
+- transitions `Idle -> Running -> Paused -> Running -> Completed/Error`.
+- controles `Pause/Resume/Stop` centralises.
+
+Avantage maintenabilite:
+- comportement previsible et transitions traceables.
+
+Exemple de feature :
+- ajout de l'etat `Cancelling`.
+
+## 14. Pipeline (architecture)
+
+But:
+- decrire une chaine de traitement claire et decoupee.
+
+Fichiers et role:
 - `src/LogHub.Server/WebSockets/WebSocketEndpoint.cs`
 - `src/LogHub.Server/Infrastructure/Queueing/ChannelLogQueue.cs`
 - `src/LogHub.Server/Workers/LogIngestWorker.cs`
 - `src/LogHub.Server/Infrastructure/Storage/DailyFileLogWriter.cs`
 
-Exemple de feature:
-- Inserer une etape de sanitization RGPD avant l'ecriture.
+Comment ca marche:
+- reception -> validation -> enqueue -> ecriture.
+
+Avantage maintenabilite:
+- ajout d'etapes intermediaires sans casser le flux.
+
+Exemple de feature :
+- étape d'authentification avant l'enqueue.
+
+## 15. Options Pattern (.NET)
+
+But:
+- centraliser et typer la configuration du serveur LogHub.
+
+Fichiers et role:
+- `src/LogHub.Server/Options/LogHubOptions.cs`
+- `src/LogHub.Server/Program.cs` (`Configure<LogHubOptions>`)
+- consommateurs:
+  - `src/LogHub.Server/Infrastructure/Queueing/ChannelLogQueue.cs`
+  - `src/LogHub.Server/Infrastructure/Storage/DailyFileLogWriter.cs`
+  - `src/LogHub.Server/WebSockets/WebSocketEndpoint.cs`
+
+Comment ca marche:
+- binding config -> objet options.
+- injection `IOptions<LogHubOptions>` dans les services.
+
+Avantage maintenabilite:
+- configuration centralisee, validee, et facile a faire evoluer.
+
+Exemple de feature :
+- ajouter `MaxPayloadBytes` dans `LogHubOptions` et l'appliquer au endpoint WS.
+
+## Preuve de maintenabilite (synthese)
+
+Ce que ces patterns prouvent concretement:
+- extensibilite: ajout de formats/strategies sans refonte globale.
+- isolations nettes: UI, metier, persistence, transport restent separables.
+- testabilite: interfaces et injection permettent de tester chaque couche.
+- resilience: decorators, fallback strategies, producer-consumer limitent les pannes en cascade.
+- evolutivite: facade + factories + repositories reduisent le cout des changements. Builder assure une construction de logs robuste face a l'evolution du schema.
